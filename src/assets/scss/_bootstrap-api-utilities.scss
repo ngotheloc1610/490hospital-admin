@@ -1,0 +1,30 @@
+@import "node_modules/bootstrap/scss/variables-dark";
+@import "node_modules/bootstrap/scss/maps";
+@import "node_modules/bootstrap/scss/utilities";
+
+$utilities: (
+  "background-color": (
+    property: background-color,
+    class: bg,
+    state: hover focus active,
+    values:
+      map-merge(
+        $theme-colors,
+        (
+          "body": $body-bg,
+          "white": $white,
+          "transparent": transparent,
+          "gray": shade-color($primary, 30%),
+        )
+      ),
+  ),
+  "text": (
+    property: color,
+    class: text,
+    state: hover focus active,
+    values: (
+      "white": white,
+      "black": black,
+    ),
+  ),
+);

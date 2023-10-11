@@ -1,0 +1,43 @@
+.container-search {
+  padding: 20px 27px;
+  border-radius: 10px;
+  border: 1px solid #eee;
+  background: #fff;
+
+  .button-apply {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: 2px solid #9747ff;
+    color: #9747ff;
+    background: transparent;
+    transition: 0.2s ease-in all;
+
+    &:hover {
+      background: #9747ff;
+      color: $white-color;
+      transition: 0.2s ease-in all;
+    }
+  }
+}
+
+.info-patient {
+  &-title {
+    border-bottom: 2px solid #212121;
+
+    h3 {
+      text-transform: uppercase;
+      font-weight: bold;
+      color: #212121;
+    }
+  }
+
+  &-content {
+    p {
+      color: #212121;
+    }
+  }
+}
+
+.patient-detail {
+  margin: 40px 20px;
+}

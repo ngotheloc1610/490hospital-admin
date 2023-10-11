@@ -1,0 +1,68 @@
+.forgot {
+  width: 60%;
+  margin: auto;
+  border-radius: 10px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  padding: 100px 150px;
+
+  .title-email {
+    background-color: $gray-light-color;
+    border: 1px solid $gray-lighter-color;
+    padding: 3px;
+    border-radius: 20px;
+    p {
+      width: 35%;
+      background-color: $white-color;
+      padding: 15px 20px;
+      border-radius: 20px;
+      margin-bottom: 0;
+      text-align: center;
+      color: $primary-color;
+    }
+  }
+  .input-group {
+    background-color: $gray-light-color;
+    border: 1px solid $gray-lighter-color;
+
+    input {
+      outline: none;
+      border: none;
+      &:focus {
+        outline: none;
+        border: none;
+      }
+    }
+
+    .btn-hidden {
+      background-color: transparent;
+    }
+
+    label,
+    .icon-email {
+      margin: auto;
+
+      i {
+        color: $primary-color;
+      }
+    }
+  }
+
+  .icon-success {
+    width: 80px;
+    height: 80px;
+    border-radius: 100rem;
+    background-color: #afa9cd;
+    margin: auto;
+
+    position: relative;
+
+    i {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+
+      color: $primary-color;
+    }
+  }
+}

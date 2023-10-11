@@ -1,0 +1,140 @@
+body {
+  line-height: 1;
+  font-family: $font;
+  color: $text-color;
+  font-weight: 400;
+  background-color: $white-color;
+}
+
+button {
+  cursor: pointer;
+  outline: none;
+  border: none;
+  font-family: $font;
+}
+
+.button {
+  display: inline-block;
+  font-family: $font;
+  line-height: 1;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  text-align: center;
+  white-space: nowrap;
+
+  &:hover {
+    &--primary {
+      font-weight: 700;
+      background: $linear-color;
+      color: $white-color;
+    }
+
+    &--outline {
+      background-color: transparent;
+      color: $primary-color;
+      font-weight: 500;
+      border: 1px solid $linear-color;
+    }
+  }
+
+  &--small {
+    border-radius: 4px;
+    padding: 10px 25px;
+  }
+
+  &--large {
+    border-radius: 30px;
+  }
+
+  &--primary {
+    font-weight: 700;
+    background: $linear-color;
+    color: $white-color;
+    transition: 0.2s ease-in all;
+
+    &:hover {
+      background: #9747ff;
+      transition: 0.2s ease-in all;
+    }
+  }
+
+  &--danger {
+    font-weight: 700;
+    background: transparent;
+    color: #f42323;
+    border: 2px solid #f42323;
+    border-radius: 8px;
+    transition: 0.2s ease-in all;
+
+    &:hover {
+      background: #f42323;
+      transition: 0.2s ease-in all;
+      color: $white-color;
+    }
+  }
+
+  &--outline {
+    background-color: transparent;
+    color: $primary-color;
+    font-weight: 500;
+    border: 1px solid $linear-color;
+    transition: 0.2s ease-in all;
+
+    &:hover {
+      background-color: $primary-color;
+      color: $white-color;
+    }
+  }
+
+  &--rounded {
+    border-radius: 10px;
+    padding: 17px 65px;
+  }
+
+  &--shadow {
+    position: relative;
+
+    &:after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 90%;
+      height: 100%;
+      transform: translate(-50%, 50%);
+      background-color: $primary-color;
+      filter: blur(54px);
+      border-radius: inherit;
+    }
+  }
+}
+
+.table-container {
+  margin: 40px 30px 150px 30px;
+  border-radius: 16px;
+  border: 2px solid #fff;
+  background: var(--ffffff, #fff);
+  box-shadow: 0px 14px 14px 0px rgba(20, 23, 38, 0.02);
+}
+
+.border-bottom {
+  border-bottom: 2px solid #212121;
+}
+
+.border-top {
+  border-top: 2px solid #212121;
+}
+
+.button-add {
+  i {
+    color: #13b97d;
+  }
+  background: transparent;
+}
+
+.bg-image {
+  padding: 67.438px 45.547px 67.88px 46.36px;
+  background: rgba(199, 199, 199, 0.25);
+}

@@ -1,0 +1,24 @@
+// Import Bootstrap functions, vars and mixins
+@import "node_modules/bootstrap/scss/functions";
+@import "node_modules/bootstrap/scss/variables";
+@import "node_modules/bootstrap/scss/mixins";
+
+$pix-colors: (
+  "pix-primary": #01c0aa,
+  "pix-error": #fe5d70,
+  "pix-warning": #f4933c,
+  "pix-black": #1f263e,
+  "pix-white": #fff,
+  "pix-light-grey": #dcdcdc,
+);
+
+$theme-colors: map-merge-multiple($theme-colors, $pix-colors);
+
+$vil-ext-spacers: (
+  6: $spacer * 4.75,
+  7: $spacer * 6.75,
+  8: $spacer * 9,
+  9: $spacer * 11.5,
+);
+
+$spacers: map-merge($spacers, $vil-ext-spacers);

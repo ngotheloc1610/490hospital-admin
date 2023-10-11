@@ -1,0 +1,9 @@
+@import './map-amends';
+@import './bootstrap-api-utilities';
+// 8. Add additional custom code here
+// Bootstrap main import
+@import "node_modules/bootstrap/scss/bootstrap";
+
+button[class*=" btn-pix-"] {
+  min-width: 123px !important;
+}

@@ -1,0 +1,77 @@
+.register {
+    
+    &-container{
+        width: 70%;
+        margin: auto;
+        padding: 50px;
+        background-color: $gray-color;
+        border-radius: 10px;
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+
+        &-header{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin-bottom: 20px;
+    
+            img{
+                margin-bottom: 10px;
+            }
+        }
+
+        &-body{
+            button{
+                background-color: transparent;
+            }
+        }
+
+        &-footer{
+            width: 300px;
+            margin: auto;
+            margin-top: 20px;
+        }
+    }
+}
+
+.input-group{
+    display: flex;
+    border-radius: 20px;
+    border: 2px solid black;
+    padding: 5px 20px;
+
+    label{
+        margin: auto;
+    }
+    input{
+        width: 90%;
+        border-radius: 20px;
+        border: none;
+        outline: none;
+        background-color: transparent;
+        &:focus{
+            border: none !important;
+            outline: none !important;
+            background-color: transparent;
+        } 
+        
+    }
+}
+
+.radio-group{
+    display: flex;
+    justify-content: space-between;
+}
+.form-check{
+    border-radius: 20px ;
+    border: 1px solid black !important;
+    width: 100%;
+    padding: 15px 20px;
+    margin: 5px;
+
+    input{
+        margin: 0 10px !important;
+        border: 2px solid black;
+    }
+
+}

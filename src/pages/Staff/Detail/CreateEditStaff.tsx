@@ -19,7 +19,7 @@ const validationSchema = Yup.object().shape({
   level: Yup.string().required("Required"),
 });
 
-const defaultValue: any = {
+const defaultValue = {
   id: "",
   name: "",
   birthday: "",
@@ -34,11 +34,12 @@ const defaultValue: any = {
   level: "",
 };
 
-const CreateEditDepartment = () => {
+const CreateEditStaff = () => {
   const inputRef = useRef<any>(null);
+  const [departmentList, setDepartmentList] = useState([]);
   const [image, setImage] = useState<any>("");
 
-  const [department, setDepartment] = useState<any>(defaultValue);
+  const [staff, setStaff] = useState<any>(defaultValue);
 
   const handleChangeImage = (event: any) => {
     const file = event.target.files[0];
@@ -171,6 +172,29 @@ const CreateEditDepartment = () => {
         <p className="fw-bold border-top pt-2 text-dark">Work Information</p>
         <div className="row">
           <div className="col-6 mb-3">
+            <label htmlFor="department">
+              Department <span className="text-danger">*</span>
+            </label>
+            <Field
+              as="select"
+              name="department"
+              id="department"
+              className={`form-select ${
+                errors?.department && touched?.department ? "is-invalid" : ""
+              }`}
+            >
+              {departmentList.length > 0 ? (
+                departmentList.map((item: any) => (
+                  <option value={item.code} key={item.code}>
+                    {item.name}
+                  </option>
+                ))
+              ) : (
+                <option disabled>No option</option>
+              )}
+            </Field>
+          </div>
+          <div className="col-6 mb-3">
             <label htmlFor="startDate">
               Starting date <span className="text-danger">*</span>
             </label>
@@ -246,7 +270,7 @@ const CreateEditDepartment = () => {
 
   return (
     <Formik
-      initialValues={department}
+      initialValues={staff}
       validationSchema={validationSchema}
       onSubmit={(values, actions) => {
         console.log("values:", values);
@@ -264,7 +288,7 @@ const CreateEditDepartment = () => {
                   <div className="col-4">{_renderImage()}</div>
                   <div className="col-8">
                     <h3 className="fw-bold text-uppercase text-dark">
-                      {department?.id ? "edit" : "add"} new
+                      {staff?.id ? "edit" : "add"} new
                     </h3>
                     {_renderBasicInfo({ errors, touched })}
                   </div>
@@ -274,7 +298,7 @@ const CreateEditDepartment = () => {
             </div>
           </Form>
           <div className="mt-3 d-flex justify-content-end">
-            {department.id && (
+            {staff.id && (
               <button className="button button--small button--danger me-3">
                 Delete
               </button>
@@ -293,4 +317,4 @@ const CreateEditDepartment = () => {
   );
 };
 
-export default CreateEditDepartment;
+export default CreateEditStaff;

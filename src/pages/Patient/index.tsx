@@ -1,11 +1,14 @@
 import { memo, useEffect, useState } from "react";
-import axios from 'axios';
+import axios from "axios";
 import { Outlet, useNavigate, useOutlet } from "react-router-dom";
 import Layout from "../../components/Layout";
 import TotalView from "../../components/common/TotalView";
 import { DEFAULT_ITEM_PER_PAGE, GENDER, START_PAGE } from "../../constants";
 import PaginationComponent from "../../components/common/Pagination";
-import { API_ALL_GET_DEPARTMENT, API_ALL_GET_PATIENT } from "../../constants/api.constant";
+import {
+  API_ALL_GET_DEPARTMENT,
+  API_ALL_GET_PATIENT,
+} from "../../constants/api.constant";
 import { defineConfigGet, defineConfigPost } from "../../Common/utils";
 
 import PopUpConfirm from "./PopupConfirm";
@@ -35,17 +38,19 @@ const Patient = () => {
   useEffect(() => {
     const url = `${url_api}${API_ALL_GET_PATIENT}`;
 
-    axios.get(url, defineConfigGet({ page: currentPage, size: itemPerPage })).then((resp: any) => {
-      if (resp) {
-        setListData(resp.data.content)
-        setTotalItem(resp.data.totalElements)
-        setIsDelete(false);
-      }
-    }).catch(err => {
-      console.log("err:", err)
-
-    })
-  }, [currentPage, itemPerPage, isDelete])
+    axios
+      .get(url, defineConfigGet({ page: currentPage, size: itemPerPage }))
+      .then((resp: any) => {
+        if (resp) {
+          setListData(resp.data.content);
+          setTotalItem(resp.data.totalElements);
+          setIsDelete(false);
+        }
+      })
+      .catch((err) => {
+        console.log("err:", err);
+      });
+  }, [currentPage, itemPerPage, isDelete]);
 
   // useEffect(() => {
   //   const url = `${url_api}${API_ALL_GET_DEPARTMENT}`;
@@ -61,25 +66,21 @@ const Patient = () => {
   //   })
   // }, [])
 
+  const handleChangeName = (value: string) => {};
 
-  const handleChangeName = (value: string) => { };
+  const handleChangeGender = (value: string) => {};
 
-  const handleChangeGender = (value: string) => { };
-
-  const handleChangeDepartment = (event: any, values: any) => { };
-
+  const handleChangeDepartment = (event: any, values: any) => {};
 
   const handleCancel = (patient: any) => {
     setShowPopUpConfirm(true);
     setPatientDetail(patient);
   };
 
-  const handleModify = (item: any) => {
-
-  };
+  const handleModify = (item: any) => {};
 
   const getCurrentPage = (item: number) => {
-    setCurrentPage(item);
+    setCurrentPage(item - 1);
   };
 
   const getItemPerPage = (item: number) => {
@@ -103,22 +104,32 @@ const Patient = () => {
         </thead>
         <tbody>
           {listData.map((item: any, idx: number) => {
-            const email = item.telecom.find((i: any) => i?.system === "email")?.value;
+            const email = item.telecom.find(
+              (i: any) => i?.system === "email"
+            )?.value;
 
             return (
               <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
                 <th scope="row">{++idx}</th>
-                <td onClick={() => navigate(item.id)}>{item.nameFirstRep.text}</td>
+                <td onClick={() => navigate(item.id)}>
+                  {item.nameFirstRep.text}
+                </td>
                 <td onClick={() => navigate(item.id)}>{item.gender}</td>
                 <td onClick={() => navigate(item.id)}>{item.birthDate}</td>
-                <td onClick={() => navigate(item.id)}>{item.telecomFirstRep.value}</td>
+                <td onClick={() => navigate(item.id)}>
+                  {item.telecomFirstRep.value}
+                </td>
                 <td onClick={() => navigate(item.id)}>{email}</td>
                 <td>
-                  <span><ICON_TRASH /></span>
-                  <span className="ms-1"><ICON_PENCIL /></span>
+                  <span>
+                    <ICON_TRASH />
+                  </span>
+                  <span className="ms-1">
+                    <ICON_PENCIL />
+                  </span>
                 </td>
               </tr>
-            )
+            );
           })}
         </tbody>
       </table>
@@ -194,9 +205,12 @@ const Patient = () => {
 
   return (
     <Layout>
-      {outlet ? <Outlet /> : <>
-        <TotalView />
-        {/* <div className="d-flex justify-content-end me-4">
+      {outlet ? (
+        <Outlet />
+      ) : (
+        <>
+          <TotalView />
+          {/* <div className="d-flex justify-content-end me-4">
           <button
             className="button button--small button--primary"
             onClick={() => navigate("create")}
@@ -204,30 +218,35 @@ const Patient = () => {
             <i className="bi bi-plus"></i> Add
           </button>
         </div> */}
-        <section className="table-container">
-          <div className="table-container-contain">
-            <div className="d-flex justify-content-center align-item-center">
-              <h6 className="mb-0 text-center fw-bold p-3">
-                List of Patient
-              </h6>
+          <section className="table-container">
+            <div className="table-container-contain">
+              <div className="d-flex justify-content-center align-item-center">
+                <h6 className="mb-0 text-center fw-bold p-3">
+                  List of Patient
+                </h6>
+              </div>
+              <div>
+                <div className="container-search">{_renderSearch()}</div>
+                <div>{_renderTableListPatient()}</div>
+                <PaginationComponent
+                  totalItem={totalItem}
+                  itemPerPage={itemPerPage}
+                  currentPage={currentPage === 0 ? 1 : currentPage + 1}
+                  getItemPerPage={getItemPerPage}
+                  getCurrentPage={getCurrentPage}
+                />
+              </div>
             </div>
-            <div>
-              <div className="container-search">{_renderSearch()}</div>
-              <div>{_renderTableListPatient()}</div>
-              <PaginationComponent
-                totalItem={totalItem}
-                itemPerPage={itemPerPage}
-                currentPage={currentPage}
-                getItemPerPage={getItemPerPage}
-                getCurrentPage={getCurrentPage}
-              />
-            </div>
-          </div>
-        </section>
-      </>}
+          </section>
+        </>
+      )}
 
       {showPopUpConfirm && (
-        <PopUpConfirm handleCloseConfirmPopup={setShowPopUpConfirm} patientDetail={patientDetail} setIsDelete={setIsDelete} />
+        <PopUpConfirm
+          handleCloseConfirmPopup={setShowPopUpConfirm}
+          patientDetail={patientDetail}
+          setIsDelete={setIsDelete}
+        />
       )}
     </Layout>
   );

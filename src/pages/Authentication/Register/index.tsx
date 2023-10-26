@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { LOGO_HOSPITAL } from "../../../assets";
+import { GENDER_ALL } from "../../../constants";
 
-interface IPropRegister {}
-
-const Register = (props: IPropRegister) => {
-  const [isShowPassword, setIsShowPassword] = useState(false);
-  const [isShowCfPassword, setIsShowCfPassword] = useState(false);
+const Register = () => {
+  const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
+  const [isShowCfPassword, setIsShowCfPassword] = useState<boolean>(false);
 
   return (
     <div className="register">
@@ -15,142 +14,118 @@ const Register = (props: IPropRegister) => {
           <h3>Register</h3>
         </div>
 
-        <div className="register-container-body">
+        <div className="register-container-body mt-3">
           <div className="container">
             <div className="row mb-3">
               <div className="col-6">
                 <div className="input-group">
-                  <label htmlFor="gmail">
-                    <i className="bi bi-person-fill fs-5"></i>
-                  </label>
+                  <span className="input-group-text" id="basic-addon1">
+                    <i className="bi bi-person-fill fs-5 icon-gray"></i>
+                  </span>
                   <input
                     type="text"
                     className="form-control"
-                    id="gmail"
                     placeholder="Gmail"
                   />
+                  <span className="input-group-text"></span>
                 </div>
               </div>
               <div className="col-6">
-                <div className="input-group">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Full name"
-                  />
-                </div>
+                <input
+                  type="text"
+                  className="form-control h-100"
+                  placeholder="Full name"
+                />
               </div>
             </div>
             <div className="row mb-3">
               <div className="col-6">
                 <div className="input-group">
-                  <label htmlFor="password">
-                    <i className="bi bi-lock-fill fs-5"></i>
-                  </label>
+                  <span className="input-group-text">
+                    <i className="bi bi-lock-fill fs-5 icon-gray"></i>
+                  </span>
                   <input
-                    type={isShowPassword ? "text" : "password"}
+                    type={`${isShowPassword ? "text" : "password"}`}
                     className="form-control"
-                    id="password"
-                    placeholder="Password"
                   />
-                  <button onClick={() => setIsShowPassword(!isShowPassword)}>
+                  <span
+                    className="input-group-text"
+                    onClick={() => setIsShowPassword(!isShowPassword)}
+                  >
                     <i
                       className={`bi ${
                         isShowPassword ? "bi-eye-slash" : "bi-eye-fill"
-                      } fs-5`}
+                      } fs-5 icon-gray`}
                     />
-                  </button>
+                  </span>
                 </div>
               </div>
               <div className="col-6">
-                <div className="input-group">
-                  <input
-                    type="datetime"
-                    className="form-control"
-                    placeholder="Date of birth"
-                  />
-                </div>
+                <input
+                  type="date"
+                  className="form-control h-100"
+                  placeholder="Date of birth"
+                />
               </div>
             </div>
             <div className="row mb-3">
               <div className="col-6">
                 <div className="input-group">
-                  <label htmlFor="cfPassword">
-                    <i className="bi bi-lock-fill fs-5"></i>
-                  </label>
+                  <span className="input-group-text">
+                    <i className="bi bi-lock-fill fs-5 icon-gray"></i>
+                  </span>
                   <input
-                    type={isShowCfPassword ? "text" : "password"}
+                    type={`${isShowCfPassword ? "text" : "password"}`}
                     className="form-control"
-                    placeholder="Confirm Password"
-                    id="cfPassword"
                   />
-                  <button
+                  <span
+                    className="input-group-text"
                     onClick={() => setIsShowCfPassword(!isShowCfPassword)}
                   >
                     <i
                       className={`bi ${
                         isShowCfPassword ? "bi-eye-slash" : "bi-eye-fill"
-                      } fs-5`}
+                      } fs-5 icon-gray`}
                     />
-                  </button>
+                  </span>
                 </div>
               </div>
               <div className="col-6">
-                <div className="input-group">
-                  <input
-                    type="number"
-                    className="form-control"
-                    placeholder="Phone number"
-                  />
-                </div>
+                <input
+                  type="text"
+                  className="form-control h-100"
+                  placeholder="Phone number"
+                />
               </div>
             </div>
             <div className="row mb-3 ">
               <div className="col-6"></div>
-              <div className="col-6 radio-group">
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="radio"
-                    name="gender"
-                    id="male"
-                    value="male"
-                  />
-                  <label className="form-check-label" htmlFor="male">
-                    Male
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="radio"
-                    name="gender"
-                    id="female"
-                    value="female"
-                  />
-                  <label className="form-check-label" htmlFor="female">
-                    Female
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="radio"
-                    name="gender"
-                    id="other"
-                    value="other"
-                  />
-                  <label className="form-check-label" htmlFor="other">
-                    Other
-                  </label>
-                </div>
+              <div className="col-6 d-flex justify-content-between ">
+                {GENDER_ALL.map((item: any, idx: number) => {
+                  return (
+                    <div className="form-check form-check-inline">
+                      <div>
+                        <input
+                          className="form-check-input"
+                          type="radio"
+                          name="gender"
+                          id={item.code}
+                          value={item.code}
+                        />
+                        <label className="form-check-label" htmlFor={item.code}>
+                          {item.name}
+                        </label>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
         </div>
 
         <div className="register-container-footer">
-          <button className="button button--large button--large--primary w-100">
+          <button className="button button--large button--primary w-100">
             Register
           </button>
         </div>

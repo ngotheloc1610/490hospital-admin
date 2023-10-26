@@ -9,6 +9,11 @@ export const API_GET_PATIENT = "/patient/detail/";
 export const API_ALL_GET_DOCTOR = "/admin/doctor";
 export const API_GET_DOCTOR = "/doctor/detail/";
 
+export const API_ALL_GET_STAFF = "/admin/staff";
+export const API_GET_STAFF = "/staff/detail/";
 
-export const API_ALL_GET_DEPARTMENT = "/homepage/listDepartment";
+export const API_ALL_GET_DEPARTMENT = "/admin/department";
+export const API_GET_DEPARTMENT = "/department/detail/";
 
+export const API_ALL_GET_DIAGNOSTIC = "/admin/diagnostic-report";
+export const API_GET_DIAGNOSTIC = "/diagnostic-report/detail/";

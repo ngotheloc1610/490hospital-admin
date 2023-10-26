@@ -3,7 +3,12 @@ import Layout from "../../components/Layout";
 import TotalView from "../../components/common/TotalView";
 import axios from "axios";
 
-import { GENDER, STATUS } from "../../constants";
+import {
+  DEFAULT_ITEM_PER_PAGE,
+  GENDER,
+  START_PAGE,
+  STATUS,
+} from "../../constants";
 import PaginationComponent from "../../components/common/Pagination";
 import { API_ALL_GET_DOCTOR } from "../../constants/api.constant";
 import { defineConfigGet } from "../../Common/utils";
@@ -14,8 +19,8 @@ import PopUpConfirm from "./PopupConfirm";
 const Doctor = () => {
   const [showPopUpConfirm, setShowPopUpConfirm] = useState<boolean>(false);
   const [listData, setListData] = useState([]);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [itemPerPage, setItemPerPage] = useState<number>(7);
+  const [currentPage, setCurrentPage] = useState<number>(START_PAGE);
+  const [itemPerPage, setItemPerPage] = useState<number>(DEFAULT_ITEM_PER_PAGE);
   const [totalItem, setTotalItem] = useState<number>(0);
 
   const [departmentList, setDepartmentList] = useState([]);
@@ -40,7 +45,7 @@ const Doctor = () => {
           setTotalItem(resp.data.totalElements);
         }
       })
-      .catch((err) => {
+      .catch((err: any) => {
         console.log("err:", err);
       });
   }, [currentPage, itemPerPage]);
@@ -55,18 +60,17 @@ const Doctor = () => {
 
   const handleCancel = (item: any) => {
     setShowPopUpConfirm(true);
-
   };
 
   const handleModify = (item: any) => {};
 
   const getCurrentPage = (item: number) => {
-    setCurrentPage(item);
+    setCurrentPage(item - 1);
   };
 
   const getItemPerPage = (item: number) => {
     setItemPerPage(item);
-    setCurrentPage(1);
+    setCurrentPage(0);
   };
 
   const _renderTableListPatient = () => {
@@ -239,7 +243,7 @@ const Doctor = () => {
                 <PaginationComponent
                   totalItem={totalItem}
                   itemPerPage={itemPerPage}
-                  currentPage={currentPage}
+                  currentPage={currentPage === 0 ? 1 : currentPage + 1}
                   getItemPerPage={getItemPerPage}
                   getCurrentPage={getCurrentPage}
                 />

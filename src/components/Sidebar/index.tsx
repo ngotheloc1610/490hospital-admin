@@ -55,13 +55,13 @@ const Sidebar = () => {
               <span>Department</span>
             </a>
           </li>
-          <li className={`${getClass(RouterUrl.APPOINTMENT)}`}>
+          <li className={`${getClass(RouterUrl.SCHEDULE)}`}>
             <a
-              onClick={() => goToLink(RouterUrl.APPOINTMENT)}
-              data-content-id="appointment"
+              onClick={() => goToLink(RouterUrl.SCHEDULE)}
+              data-content-id="schedule"
             >
               <ICON_APPOINTMENT />
-              <span>Appointment</span>
+              <span>Schedule</span>
             </a>
           </li>
           <li className={`${getClass(RouterUrl.DIAGNOSTIC_REPORT)}`}>

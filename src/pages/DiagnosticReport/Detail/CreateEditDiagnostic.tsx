@@ -22,23 +22,16 @@ const validationSchema = Yup.object().shape({
 const defaultValue: any = {
   id: "",
   name: "",
-  birthday: "",
-  gender: "",
-  phoneNumber: "",
-  email: "",
-  residence: "",
-  city: "",
   department: "",
-  position: "",
-  startDate: "",
-  level: "",
+  diagnosedBy: "",
+  date: "",
 };
 
-const CreateEditDepartment = () => {
+const CreateEditDiagnostic = () => {
   const inputRef = useRef<any>(null);
   const [image, setImage] = useState<any>("");
 
-  const [department, setDepartment] = useState<any>(defaultValue);
+  const [diagnostic, setDiagnostic] = useState<any>(defaultValue);
 
   const handleChangeImage = (event: any) => {
     const file = event.target.files[0];
@@ -163,63 +156,6 @@ const CreateEditDepartment = () => {
     );
   };
 
-  const _renderWorkInfo = (props: any) => {
-    const { errors, touched } = props;
-
-    return (
-      <div className="mt-5">
-        <p className="fw-bold border-top pt-2 text-dark">Work Information</p>
-        <div className="row">
-          <div className="col-6 mb-3">
-            <label htmlFor="startDate">
-              Starting date <span className="text-danger">*</span>
-            </label>
-            <Field
-              name="startDate"
-              id="startDate"
-              className="form-control is-invalid"
-              render={({ field }: any) => (
-                <input
-                  {...field}
-                  type="date"
-                  className={`form-control input-select ${
-                    errors?.startDate && touched?.startDate ? "is-invalid" : ""
-                  }`}
-                  max="9999-12-31"
-                />
-              )}
-            />
-          </div>
-          <div className="col-6 mb-3">
-            <label htmlFor="position">
-              Position <span className="text-danger">*</span>
-            </label>
-            <Field
-              name="position"
-              type="text"
-              id="position"
-              className={`form-control ${
-                errors?.position && touched?.position ? "is-invalid" : ""
-              }`}
-            />
-          </div>
-          <div className="col-6 mb-3">
-            <label htmlFor="level">
-              Level <span className="text-danger">*</span>
-            </label>
-            <Field
-              name="level"
-              id="level"
-              className={`form-control ${
-                errors?.level && touched?.level ? "is-invalid" : ""
-              }`}
-            />
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   const _renderImage = () => {
     return (
       <div className="h-100 d-flex flex-column" onClick={handlePickImage}>
@@ -246,7 +182,7 @@ const CreateEditDepartment = () => {
 
   return (
     <Formik
-      initialValues={department}
+      initialValues={diagnostic}
       validationSchema={validationSchema}
       onSubmit={(values, actions) => {
         console.log("values:", values);
@@ -264,17 +200,16 @@ const CreateEditDepartment = () => {
                   <div className="col-4">{_renderImage()}</div>
                   <div className="col-8">
                     <h3 className="fw-bold text-uppercase text-dark">
-                      {department?.id ? "edit" : "add"} new
+                      {diagnostic?.id ? "edit" : "add"} new
                     </h3>
                     {_renderBasicInfo({ errors, touched })}
                   </div>
                 </div>
               </div>
-              {_renderWorkInfo({ errors, touched })}
             </div>
           </Form>
           <div className="mt-3 d-flex justify-content-end">
-            {department.id && (
+            {diagnostic.id && (
               <button className="button button--small button--danger me-3">
                 Delete
               </button>
@@ -293,4 +228,4 @@ const CreateEditDepartment = () => {
   );
 };
 
-export default CreateEditDepartment;
+export default CreateEditDiagnostic;

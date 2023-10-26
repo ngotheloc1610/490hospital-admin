@@ -1,7 +1,10 @@
 import OverviewDepartment from "../pages/Department/Detail/OverviewDepartment";
+import OverviewDiagnostic from "../pages/DiagnosticReport/Detail/OverviewDiagnostic";
 import OverviewDoctor from "../pages/Doctor/Detail/OverviewDoctor";
 import ScheduleDoctor from "../pages/Doctor/Detail/ScheduleDoctor";
 import InformationPatient from "../pages/Patient/Detail/InformationPatient";
+import OverviewStaff from "../pages/Staff/Detail/OverviewStaff";
+import ScheduleStaff from "../pages/Staff/Detail/ScheduleStaff";
 
 export const RouterUrl = {
   DASHBOARD: "/dashboard",
@@ -13,6 +16,7 @@ export const RouterUrl = {
   STAFF: "/staff",
   LOGIN: "/login",
   REGISTER: "/register",
+  FORGOT_PASSWORD: "/forgot-password",
 };
 
 export const START_PAGE = 0;
@@ -44,6 +48,24 @@ export const MenuDataPatient = [
   },
 ];
 
+export const MenuDataStaff = [
+  {
+    title: "Overview",
+    content: OverviewStaff,
+  },
+  {
+    title: "Schedule",
+    content: ScheduleStaff,
+  },
+];
+
+export const MenuDataDiagnostic = [
+  {
+    title: "Overview",
+    content: OverviewDiagnostic,
+  },
+];
+
 export const GENDER = [
   {
     name: "Male",
@@ -52,6 +74,21 @@ export const GENDER = [
   {
     name: "Female",
     code: "female",
+  },
+];
+
+export const GENDER_ALL = [
+  {
+    name: "Male",
+    code: "male",
+  },
+  {
+    name: "Female",
+    code: "female",
+  },
+  {
+    name: "Other",
+    code: "other",
   },
 ];
 

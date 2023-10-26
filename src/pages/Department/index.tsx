@@ -1,17 +1,21 @@
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import Layout from "../../components/Layout";
 import { Outlet, useNavigate, useOutlet } from "react-router-dom";
 import TotalView from "../../components/common/TotalView";
 import PaginationComponent from "../../components/common/Pagination";
 import PopUpConfirm from "./PopupConfirm";
 import { ICON_PENCIL, ICON_TRASH } from "../../assets";
+import { DEFAULT_ITEM_PER_PAGE, START_PAGE } from "../../constants";
+import { API_ALL_GET_DEPARTMENT } from "../../constants/api.constant";
+import axios from "axios";
+import { defineConfigGet } from "../../Common/utils";
 
 const Department = () => {
   const outlet = useOutlet();
   const navigate = useNavigate();
 
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [itemPerPage, setItemPerPage] = useState<number>(7);
+  const [currentPage, setCurrentPage] = useState<number>(START_PAGE);
+  const [itemPerPage, setItemPerPage] = useState<number>(DEFAULT_ITEM_PER_PAGE);
   const [totalItem, setTotalItem] = useState<number>(0);
 
   const [listData, setListData] = useState([]);
@@ -19,13 +23,31 @@ const Department = () => {
   const [name, setName] = useState("");
   const [showPopUpConfirm, setShowPopUpConfirm] = useState<boolean>(false);
 
+  const url_api = process.env.REACT_APP_API_URL;
+
+  useEffect(() => {
+    const url = `${url_api}${API_ALL_GET_DEPARTMENT}`;
+
+    axios
+      .get(url, defineConfigGet({ page: currentPage, size: itemPerPage }))
+      .then((resp: any) => {
+        if (resp) {
+          setListData(resp.data.content);
+          setTotalItem(resp.data.totalElements);
+        }
+      })
+      .catch((err: any) => {
+        console.log("err:", err);
+      });
+  }, [currentPage, itemPerPage]);
+
   const getCurrentPage = (item: number) => {
-    setCurrentPage(item);
+    setCurrentPage(item - 1);
   };
 
   const getItemPerPage = (item: number) => {
     setItemPerPage(item);
-    setCurrentPage(1);
+    setCurrentPage(0);
   };
 
   const handleCancel = (item: any) => {
@@ -135,7 +157,7 @@ const Department = () => {
                 <PaginationComponent
                   totalItem={totalItem}
                   itemPerPage={itemPerPage}
-                  currentPage={currentPage}
+                  currentPage={currentPage === 0 ? 1 : currentPage + 1}
                   getItemPerPage={getItemPerPage}
                   getCurrentPage={getCurrentPage}
                 />

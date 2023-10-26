@@ -3,31 +3,31 @@ import { USER } from "../../../assets";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { defineConfigGet } from "../../../Common/utils";
-import { API_GET_DEPARTMENT } from "../../../constants/api.constant";
+import { API_GET_STAFF } from "../../../constants/api.constant";
 
-const InfoDepartment = () => {
-  const [department, setDepartment] = useState<any>({});
+const InfoStaff = () => {
+  const [staff, setStaff] = useState<any>({});
 
   const param = useParams();
   const navigate = useNavigate();
   const url_api = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
-    const id = param.departmentId;
-    const url = `${url_api}${API_GET_DEPARTMENT}${id}`;
+    const id = param.staffId;
+    const url = `${url_api}${API_GET_STAFF}${id}`;
 
     axios
       .get(url, defineConfigGet({}))
       .then((resp: any) => {
         if (resp) {
           console.log("resp:", resp);
-          setDepartment(resp.data);
+          setStaff(resp.data);
         }
       })
       .catch((err) => {
         console.log("err:", err);
       });
-  }, [param.departmentId]);
+  }, [param.staffId]);
 
   const _renderBasicInfo = () => {
     return (
@@ -124,7 +124,7 @@ const InfoDepartment = () => {
         <button
           type="submit"
           className="button button--small button--danger"
-          onClick={() => navigate("/department")}
+          onClick={() => navigate("/staff")}
         >
           Back
         </button>
@@ -133,4 +133,4 @@ const InfoDepartment = () => {
   );
 };
 
-export default InfoDepartment;
+export default InfoStaff;

@@ -1,9 +1,23 @@
 .forgot {
-  width: 60%;
-  margin: auto;
-  border-radius: 10px;
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-  padding: 100px 150px;
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  background: url("../../images/primary-care.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  &-container {
+    width: 40%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    padding: 60px 70px;
+    transform: translate(-50%, -50%);
+    background-color: $white-color;
+    border-radius: 10px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  }
 
   .title-email {
     background-color: $gray-light-color;
@@ -20,38 +34,12 @@
       color: $primary-color;
     }
   }
-  .input-group {
-    background-color: $gray-light-color;
-    border: 1px solid $gray-lighter-color;
-
-    input {
-      outline: none;
-      border: none;
-      &:focus {
-        outline: none;
-        border: none;
-      }
-    }
-
-    .btn-hidden {
-      background-color: transparent;
-    }
-
-    label,
-    .icon-email {
-      margin: auto;
-
-      i {
-        color: $primary-color;
-      }
-    }
-  }
 
   .icon-success {
     width: 80px;
     height: 80px;
     border-radius: 100rem;
-    background-color: #afa9cd;
+    background-color: rgba(144, 131, 213, 0.13);;
     margin: auto;
 
     position: relative;
@@ -63,6 +51,40 @@
       transform: translate(-50%, -50%);
 
       color: $primary-color;
+    }
+  }
+
+  .input-group {
+    &-text:first-child {
+      background: $gray-light-color;
+      border-right: none;
+      i {
+        color: $primary-color;
+      }
+    }
+
+    &-text:last-child {
+      background: $gray-light-color;
+      border-left: none;
+      i {
+        color: #13b97d;
+      }
+    }
+
+    .form-control {
+      border-left: none;
+      border-right: none;
+      background: $gray-light-color;
+
+      &:focus {
+        box-shadow: none;
+      }
+    }
+  }
+
+  .form-control {
+    &:focus {
+      box-shadow: none;
     }
   }
 }

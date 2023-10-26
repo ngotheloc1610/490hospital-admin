@@ -24,21 +24,6 @@ button {
   text-align: center;
   white-space: nowrap;
 
-  &:hover {
-    &--primary {
-      font-weight: 700;
-      background: $linear-color;
-      color: $white-color;
-    }
-
-    &--outline {
-      background-color: transparent;
-      color: $primary-color;
-      font-weight: 500;
-      border: 1px solid $linear-color;
-    }
-  }
-
   &--small {
     border-radius: 4px;
     padding: 10px 25px;
@@ -46,6 +31,7 @@ button {
 
   &--large {
     border-radius: 30px;
+    padding: 15px 26px;
   }
 
   &--primary {
@@ -55,7 +41,7 @@ button {
     transition: 0.2s ease-in all;
 
     &:hover {
-      background: #9747ff;
+      background: $linear-color-light;
       transition: 0.2s ease-in all;
     }
   }
@@ -79,7 +65,7 @@ button {
     background-color: transparent;
     color: $primary-color;
     font-weight: 500;
-    border: 1px solid $linear-color;
+    border: 1px solid $primary-color;
     transition: 0.2s ease-in all;
 
     &:hover {
@@ -137,4 +123,9 @@ button {
 .bg-image {
   padding: 67.438px 45.547px 67.88px 46.36px;
   background: rgba(199, 199, 199, 0.25);
+}
+
+.icon-gray {
+  color: #333333 !important;
+  opacity: 0.3;
 }

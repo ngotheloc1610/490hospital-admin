@@ -3,31 +3,31 @@ import { USER } from "../../../assets";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { defineConfigGet } from "../../../Common/utils";
-import { API_GET_DEPARTMENT } from "../../../constants/api.constant";
+import { API_GET_DIAGNOSTIC } from "../../../constants/api.constant";
 
-const InfoDepartment = () => {
-  const [department, setDepartment] = useState<any>({});
+const InfoDiagnostic = () => {
+  const [diagnostic, setDiagnostic] = useState<any>({});
 
   const param = useParams();
   const navigate = useNavigate();
   const url_api = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
-    const id = param.departmentId;
-    const url = `${url_api}${API_GET_DEPARTMENT}${id}`;
+    const id = param.diagnosticId;
+    const url = `${url_api}${API_GET_DIAGNOSTIC}${id}`;
 
     axios
       .get(url, defineConfigGet({}))
       .then((resp: any) => {
         if (resp) {
           console.log("resp:", resp);
-          setDepartment(resp.data);
+          setDiagnostic(resp.data);
         }
       })
       .catch((err) => {
         console.log("err:", err);
       });
-  }, [param.departmentId]);
+  }, [param.diagnosticId]);
 
   const _renderBasicInfo = () => {
     return (
@@ -67,36 +67,6 @@ const InfoDepartment = () => {
     );
   };
 
-  const _renderWorkInfo = () => {
-    return (
-      <div className="mt-5">
-        <p className="fw-bold border-top pt-2 text-dark">Work information</p>
-        <table className="table">
-          <tbody>
-            <tr>
-              <th scope="row" style={{ width: "15%" }}>
-                Starting date
-              </th>
-              <td>01/01/2010</td>
-            </tr>
-            <tr>
-              <th scope="row">Department</th>
-              <td>General Surgery Department</td>
-            </tr>
-            <tr>
-              <th scope="row">Position</th>
-              <td>Resident</td>
-            </tr>
-            <tr>
-              <th scope="row">Level</th>
-              <td>PhD</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    );
-  };
-
   return (
     <div>
       <div className="overview-container">
@@ -117,14 +87,13 @@ const InfoDepartment = () => {
             </div>
           </div>
         </div>
-        {_renderWorkInfo()}
       </div>
 
       <div className="mt-3">
         <button
           type="submit"
           className="button button--small button--danger"
-          onClick={() => navigate("/department")}
+          onClick={() => navigate("/diagnostic-report")}
         >
           Back
         </button>
@@ -133,4 +102,4 @@ const InfoDepartment = () => {
   );
 };
 
-export default InfoDepartment;
+export default InfoDiagnostic;

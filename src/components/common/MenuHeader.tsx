@@ -4,8 +4,8 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import { TabPanel } from "@mui/lab";
 import { useState } from "react";
-import { MenuItem } from "../../interface/commons/interface-commons";
 import "./commons.scss";
+import { MenuItem } from "../../interface/general.interface";
 interface PropMenuRouter {
   menuData: MenuItem[];
 }

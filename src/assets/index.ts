@@ -1,6 +1,7 @@
 import LOGO from "./images/logo.png";
 import LOGO_HOSPITAL from "./images/logoHospital.png";
 import USER from "./images/user.png";
+import BACKGROUND from "./images/background.jpg";
 
 import { ReactComponent as ICON_DASHBOARD } from "./icons/dashboard.svg";
 import { ReactComponent as ICON_DEPARTMENT } from "./icons/department.svg";
@@ -17,6 +18,7 @@ export {
   LOGO,
   LOGO_HOSPITAL,
   USER,
+  BACKGROUND,
   ICON_DASHBOARD,
   ICON_DEPARTMENT,
   ICON_DOCTOR,

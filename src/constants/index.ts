@@ -11,7 +11,7 @@ export const RouterUrl = {
   DOCTOR: "/doctor",
   PATIENT: "/patient",
   DEPARTMENT: "/department",
-  APPOINTMENT: "/appointment",
+  SCHEDULE: "/schedule",
   DIAGNOSTIC_REPORT: "/diagnostic-report",
   STAFF: "/staff",
   LOGIN: "/login",

@@ -1,9 +1,4 @@
-
-interface IPropScheduleDoctor {
-   
-}
-
-const ScheduleDoctor = (props: IPropScheduleDoctor) => {
+const ScheduleDoctor = () => {
     return (
         <div>ScheduleDoctor</div>
     )

@@ -6,6 +6,8 @@ import OverviewStaff from "../pages/Staff/Detail/OverviewStaff";
 
 import ScheduleDoctor from "../pages/Doctor/Detail/ScheduleDoctor";
 import ScheduleStaff from "../pages/Staff/Detail/ScheduleStaff";
+import PreviousAppointment from "../pages/Appointment/PreviousAppointment";
+import UpcomingAppointment from "../pages/Appointment/UpcomingAppointment";
 
 export const RouterUrl = {
   DASHBOARD: "/dashboard",
@@ -65,6 +67,17 @@ export const MenuDataDiagnostic = [
   {
     title: "Overview",
     content: OverviewDiagnostic,
+  },
+];
+
+export const MenuDataAppointment = [
+  {
+    title: "Upcoming Appointments",
+    content: UpcomingAppointment,
+  },
+  {
+    title: "Previous Appointments",
+    content: PreviousAppointment,
   },
 ];
 

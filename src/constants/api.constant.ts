@@ -21,3 +21,5 @@ export const API_GET_DEPARTMENT = "/department/detail/";
 
 export const API_ALL_GET_DIAGNOSTIC = "/admin/diagnostic-report";
 export const API_GET_DIAGNOSTIC = "/diagnostic-report/detail/";
+
+export const API_ALL_GET_APPOINTMENT = "/appointment/appointment";

@@ -123,15 +123,15 @@ const Patient = () => {
             return (
               <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
                 <th scope="row">{++idx}</th>
-                <td onClick={() => navigate(item.id)}>
+                <td onClick={() => navigate(`overview/${item.id}`)}>
                   {item.nameFirstRep.nameAsSingleString}
                 </td>
-                <td onClick={() => navigate(item.id)}>{item.gender}</td>
-                <td onClick={() => navigate(item.id)}>{item.birthDate}</td>
-                <td onClick={() => navigate(item.id)}>
+                <td onClick={() => navigate(`overview/${item.id}`)}>{item.gender}</td>
+                <td onClick={() => navigate(`overview/${item.id}`)}>{item.birthDate}</td>
+                <td onClick={() => navigate(`overview/${item.id}`)}>
                   {item.telecomFirstRep.value}
                 </td>
-                <td onClick={() => navigate(item.id)}>{email}</td>
+                <td onClick={() => navigate(`overview/${item.id}`)}>{email}</td>
                 <td>
                   <span className="cursor-pointer">
                     <ICON_TRASH />

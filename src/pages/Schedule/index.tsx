@@ -5,6 +5,7 @@ import {
   ScheduleComponent, Day, Week, WorkWeek, Month, Inject,
   ViewsDirective, ViewDirective
 } from '@syncfusion/ej2-react-schedule';
+import TotalView from "../../components/common/TotalView";
 
 const Schedule = () => {
   const scheduleObj = useRef<any>(null);
@@ -41,18 +42,18 @@ const Schedule = () => {
 
   return (
     <Layout>
+      <TotalView />
       <section id="schedule">
-        <button onClick={onAddClick}>Add</button>
-    <ScheduleComponent ref={scheduleObj} width='100%' height='100%' selectedDate=
-      {new Date(2023,10,26)} eventSettings={eventSettings}>
-      <ViewsDirective>
-        <ViewDirective option='Day' />
-        <ViewDirective option='Week' />
-        <ViewDirective option='WorkWeek' />
-        <ViewDirective option='Month' />
-      </ViewsDirective>
-      <Inject services={[Day, Week, WorkWeek, Month]} />
-    </ScheduleComponent>
+        <ScheduleComponent ref={scheduleObj} width='100%' height='100%' selectedDate=
+          {new Date(2023, 10, 26)} eventSettings={eventSettings}>
+          <ViewsDirective>
+            <ViewDirective option='Day' />
+            <ViewDirective option='Week' />
+            <ViewDirective option='WorkWeek' />
+            <ViewDirective option='Month' />
+          </ViewsDirective>
+          <Inject services={[Day, Week, WorkWeek, Month]} />
+        </ScheduleComponent>
       </section>
     </Layout>
   );

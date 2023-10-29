@@ -39,12 +39,11 @@ import "../node_modules/@syncfusion/ej2-splitbuttons/styles/material.css";
 import "../node_modules/@syncfusion/ej2-react-schedule/styles/material.css";
 
 
-import PatientDetail from "./pages/Patient/PatientDetail";
-import DetailPatient from "./pages/Patient/Detail";
 import DetailDoctor from "./pages/Doctor/Detail";
 import DetailStaff from "./pages/Staff/Detail";
 import DetailDepartment from "./pages/Department/Detail";
 import DetailDiagnostic from "./pages/DiagnosticReport/Detail";
+import DetailPatient from "./pages/Patient/Detail";
 import InfoDoctor from "./pages/Doctor/Detail/InfoDoctor";
 import CreateEditDoctor from "./pages/Doctor/Detail/CreateEditDoctor";
 import InfoDepartment from "./pages/Department/Detail/InfoDepartment";
@@ -54,6 +53,9 @@ import CreateEditStaff from "./pages/Staff/Detail/CreateEditStaff";
 import InfoDiagnostic from "./pages/DiagnosticReport/Detail/InfoDiagnostic";
 import CreateEditDiagnostic from "./pages/DiagnosticReport/Detail/CreateEditDiagnostic";
 import ForgotPassword from "./pages/Authentication/ForgotPassword";
+import InfoPatient from "./pages/Patient/Detail/InfoPatient";
+import CreateEditPatient from "./pages/Patient/Detail/CreateEditPatient";
+import Appointment from "./pages/Appointment";
 
 if (typeof window !== "undefined") {
   require("bootstrap/dist/js/bootstrap.bundle.min");
@@ -70,35 +72,46 @@ const RouterDom = () => (
     <Routes>
       <Route path="/" element={<Dashboard />} />
       <Route path={RouterUrl.DASHBOARD} element={<Dashboard />} />
+
       <Route path={RouterUrl.DOCTOR} element={<Doctor />}>
         <Route path="overview" element={<DetailDoctor />}>
           <Route path=":doctorId" element={<InfoDoctor />} />
           <Route path="detail" element={<CreateEditDoctor />} />
         </Route>
       </Route>
+
       <Route path={RouterUrl.PATIENT} element={<Patient />}>
-        <Route path=":patientId" element={<PatientDetail />} />
-        <Route path="create" element={<DetailPatient />} />
+        <Route path="overview" element={<DetailPatient />}>
+          <Route path=":patientId" element={<InfoPatient />} />
+          <Route path="detail" element={<CreateEditPatient />} />
+        </Route>
       </Route>
+
       <Route path={RouterUrl.DEPARTMENT} element={<Department />}>
         <Route path="overview" element={<DetailDepartment />}>
           <Route path=":departmentId" element={<InfoDepartment />} />
           <Route path="detail" element={<CreateEditDepartment />} />
         </Route>
       </Route>
+
       <Route path={RouterUrl.SCHEDULE} element={<Schedule />} />
+
+      <Route path={RouterUrl.APPOINTMENT} element={<Appointment />} />
+
       <Route path={RouterUrl.DIAGNOSTIC_REPORT} element={<DiagnosticReport />}>
         <Route path="overview" element={<DetailDiagnostic />}>
           <Route path=":diagnosticId" element={<InfoDiagnostic />} />
           <Route path="detail" element={<CreateEditDiagnostic />} />
         </Route>
       </Route>
+
       <Route path={RouterUrl.STAFF} element={<Staff />}>
         <Route path="overview" element={<DetailStaff />}>
           <Route path=":staffId" element={<InfoStaff />} />
           <Route path="detail" element={<CreateEditStaff />} />
         </Route>
       </Route>
+
       <Route path={RouterUrl.LOGIN} element={<Login />} />
       <Route path={RouterUrl.REGISTER} element={<Register />} />
       <Route path={RouterUrl.FORGOT_PASSWORD} element={<ForgotPassword />} />

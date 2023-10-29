@@ -1,9 +1,10 @@
 import OverviewDepartment from "../pages/Department/Detail/OverviewDepartment";
 import OverviewDiagnostic from "../pages/DiagnosticReport/Detail/OverviewDiagnostic";
 import OverviewDoctor from "../pages/Doctor/Detail/OverviewDoctor";
-import ScheduleDoctor from "../pages/Doctor/Detail/ScheduleDoctor";
-import InformationPatient from "../pages/Patient/Detail/InformationPatient";
+import OverviewPatient from "../pages/Patient/Detail/OverviewPatient";
 import OverviewStaff from "../pages/Staff/Detail/OverviewStaff";
+
+import ScheduleDoctor from "../pages/Doctor/Detail/ScheduleDoctor";
 import ScheduleStaff from "../pages/Staff/Detail/ScheduleStaff";
 
 export const RouterUrl = {
@@ -12,6 +13,7 @@ export const RouterUrl = {
   PATIENT: "/patient",
   DEPARTMENT: "/department",
   SCHEDULE: "/schedule",
+  APPOINTMENT: "/appointment",
   DIAGNOSTIC_REPORT: "/diagnostic-report",
   STAFF: "/staff",
   LOGIN: "/login",
@@ -43,8 +45,8 @@ export const MenuDataDepartment = [
 
 export const MenuDataPatient = [
   {
-    title: "Information",
-    content: InformationPatient,
+    title: "Overview",
+    content: OverviewPatient,
   },
 ];
 

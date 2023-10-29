@@ -117,6 +117,7 @@ button {
   i {
     color: #13b97d;
   }
+
   background: transparent;
 }
 
@@ -128,4 +129,8 @@ button {
 .icon-gray {
   color: #333333 !important;
   opacity: 0.3;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }

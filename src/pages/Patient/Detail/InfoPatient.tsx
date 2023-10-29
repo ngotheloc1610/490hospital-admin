@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import PaginationComponent from "../../components/common/Pagination";
 import { useParams } from "react-router-dom";
-import { API_GET_PATIENT } from "../../constants/api.constant";
-import { defineConfigGet } from "../../Common/utils";
 import axios from "axios";
+import { defineConfigGet } from "../../../Common/utils";
+import { API_GET_PATIENT } from "../../../constants/api.constant";
+import PaginationComponent from "../../../components/common/Pagination";
 
-const PatientDetail = () => {
+const InfoPatient = () => {
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [itemPerPage, setItemPerPage] = useState<number>(3);
   const [totalItem, setTotalItem] = useState<number>(0);
@@ -125,4 +125,4 @@ const PatientDetail = () => {
   );
 };
 
-export default PatientDetail;
+export default InfoPatient;

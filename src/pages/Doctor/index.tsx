@@ -10,7 +10,7 @@ import {
   STATUS,
 } from "../../constants";
 import PaginationComponent from "../../components/common/Pagination";
-import { API_ALL_GET_DOCTOR } from "../../constants/api.constant";
+import { API_ALL_GET_DOCTOR, API_SEARCH_DOCTOR } from "../../constants/api.constant";
 import { defineConfigGet } from "../../Common/utils";
 import { Outlet, useNavigate, useOutlet } from "react-router-dom";
 import { ICON_PENCIL, ICON_TRASH } from "../../assets";
@@ -28,6 +28,7 @@ const Doctor = () => {
   const [name, setName] = useState<string>("");
   const [gender, setGender] = useState<string>("");
   const [department, setDepartment] = useState<string>("");
+  const [status, setStatus] = useState<string>("");
 
   const url_api = process.env.REACT_APP_API_URL;
 
@@ -41,6 +42,7 @@ const Doctor = () => {
       .get(url, defineConfigGet({ page: currentPage, size: itemPerPage }))
       .then((resp: any) => {
         if (resp) {
+          console.log("resp:", resp)
           setListData(resp.data.content);
           setTotalItem(resp.data.totalElements);
         }
@@ -50,19 +52,11 @@ const Doctor = () => {
       });
   }, [currentPage, itemPerPage]);
 
-  const handleChangeName = (value: string) => {};
-
-  const handleChangeGender = (value: string) => {};
-
-  const handleChangStatus = (value: string) => {};
-
-  const handleChangeDepartment = (value: any) => {};
-
   const handleCancel = (item: any) => {
     setShowPopUpConfirm(true);
   };
 
-  const handleModify = (item: any) => {};
+  const handleModify = (item: any) => { };
 
   const getCurrentPage = (item: number) => {
     setCurrentPage(item - 1);
@@ -72,6 +66,23 @@ const Doctor = () => {
     setItemPerPage(item);
     setCurrentPage(0);
   };
+
+  const handleSearch = () => {
+    const url = `${url_api}${API_SEARCH_DOCTOR}${name}`;
+
+    axios
+      .get(url, defineConfigGet({ page: currentPage, size: itemPerPage }))
+      .then((resp: any) => {
+        if (resp) {
+          console.log("resp search:", resp)
+          setListData(resp.data.content);
+          setTotalItem(resp.data.totalElements);
+        }
+      })
+      .catch((err: any) => {
+        console.log("err:", err);
+      });
+  }
 
   const _renderTableListPatient = () => {
     return (
@@ -90,16 +101,13 @@ const Doctor = () => {
           </tr>
         </thead>
         <tbody>
-          {listData.map((item: any, idx: number) => {
-            const email = item.telecom.find(
-              (i: any) => i?.system === "email"
-            )?.value;
+          {listData?.map((item: any, idx: number) => {
 
             return (
               <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
                 <th scope="row">{++idx}</th>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
-                  {item.nameFirstRep.text}
+                  {item.nameFirstRep.nameAsSingleString}
                 </td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
                   {item.gender}
@@ -110,14 +118,14 @@ const Doctor = () => {
                 <td onClick={() => navigate(`overview/${item.id}`)}>
                   {item.telecomFirstRep.value}
                 </td>
-                <td onClick={() => navigate(`overview/${item.id}`)}>{email}</td>
-                <td onClick={() => navigate(`overview/${item.id}`)}>{email}</td>
-                <td onClick={() => navigate(`overview/${item.id}`)}>{email}</td>
+                <td onClick={() => navigate(`overview/${item.id}`)}>empty</td>
+                <td onClick={() => navigate(`overview/${item.id}`)}>empty</td>
+                <td onClick={() => navigate(`overview/${item.id}`)}>empty</td>
                 <td>
-                  <span onClick={handleCancel}>
+                  <span className="cursor-pointer" onClick={handleCancel}>
                     <ICON_TRASH />
                   </span>
-                  <span className="ms-1">
+                  <span className="ms-1 cursor-pointer">
                     <ICON_PENCIL />
                   </span>
                 </td>
@@ -180,7 +188,7 @@ const Doctor = () => {
             <input
               type="text"
               placeholder="Name"
-              onChange={(e) => handleChangeName(e.target.value)}
+              onChange={(e) => setName(e.target.value)}
               value={name}
               className="form-control"
             />
@@ -188,7 +196,7 @@ const Doctor = () => {
           <div className="col-3">
             <select
               className="form-select"
-              onChange={(e) => handleChangeGender(e.target.value)}
+              onChange={(e) => setGender(e.target.value)}
             >
               {_renderListGender()}
             </select>
@@ -196,7 +204,7 @@ const Doctor = () => {
           <div className="col-3">
             <select
               className="form-select"
-              onChange={(e) => handleChangeDepartment(e.target.value)}
+              onChange={(e) => setDepartment(e.target.value)}
             >
               {_renderListDepartment()}
             </select>
@@ -204,14 +212,14 @@ const Doctor = () => {
           <div className="col-3">
             <select
               className="form-select"
-              onChange={(e) => handleChangStatus(e.target.value)}
+              onChange={(e) => setStatus(e.target.value)}
             >
               {_renderListStatus()}
             </select>
           </div>
         </div>
         <div className="col-4">
-          <button className="button-apply">Apply</button>
+          <button className="button-apply" onClick={() => handleSearch()}>Apply</button>
         </div>
       </div>
     );

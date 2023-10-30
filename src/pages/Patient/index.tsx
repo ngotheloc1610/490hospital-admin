@@ -8,6 +8,7 @@ import PaginationComponent from "../../components/common/Pagination";
 import {
   API_ALL_GET_DEPARTMENT,
   API_ALL_GET_PATIENT,
+  API_SEARCH_PATIENT,
 } from "../../constants/api.constant";
 import { defineConfigGet, defineConfigPost } from "../../Common/utils";
 
@@ -66,18 +67,29 @@ const Patient = () => {
   //   })
   // }, [])
 
-  const handleChangeName = (value: string) => {};
-
-  const handleChangeGender = (value: string) => {};
-
-  const handleChangeDepartment = (event: any, values: any) => {};
-
   const handleCancel = (patient: any) => {
     setShowPopUpConfirm(true);
     setPatientDetail(patient);
   };
 
-  const handleModify = (item: any) => {};
+  const handleModify = (item: any) => { };
+
+  const handleSearch = () => {
+    const url = `${url_api}${API_SEARCH_PATIENT}${name}`;
+
+    axios
+      .get(url, defineConfigGet({ page: currentPage, size: itemPerPage }))
+      .then((resp: any) => {
+        if (resp) {
+          setListData(resp.data.content);
+          setTotalItem(resp.data.totalElements);
+          setIsDelete(false);
+        }
+      })
+      .catch((err) => {
+        console.log("err:", err);
+      });
+  }
 
   const getCurrentPage = (item: number) => {
     setCurrentPage(item - 1);
@@ -103,28 +115,28 @@ const Patient = () => {
           </tr>
         </thead>
         <tbody>
-          {listData.map((item: any, idx: number) => {
-            const email = item.telecom.find(
+          {listData?.map((item: any, idx: number) => {
+            const email = item.telecom?.find(
               (i: any) => i?.system === "email"
             )?.value;
 
             return (
               <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
                 <th scope="row">{++idx}</th>
-                <td onClick={() => navigate(item.id)}>
-                  {item.nameFirstRep.text}
+                <td onClick={() => navigate(`overview/${item.id}`)}>
+                  {item.nameFirstRep.nameAsSingleString}
                 </td>
-                <td onClick={() => navigate(item.id)}>{item.gender}</td>
-                <td onClick={() => navigate(item.id)}>{item.birthDate}</td>
-                <td onClick={() => navigate(item.id)}>
+                <td onClick={() => navigate(`overview/${item.id}`)}>{item.gender}</td>
+                <td onClick={() => navigate(`overview/${item.id}`)}>{item.birthDate}</td>
+                <td onClick={() => navigate(`overview/${item.id}`)}>
                   {item.telecomFirstRep.value}
                 </td>
-                <td onClick={() => navigate(item.id)}>{email}</td>
+                <td onClick={() => navigate(`overview/${item.id}`)}>{email}</td>
                 <td>
-                  <span>
+                  <span className="cursor-pointer">
                     <ICON_TRASH />
                   </span>
-                  <span className="ms-1">
+                  <span className="ms-1 cursor-pointer">
                     <ICON_PENCIL />
                   </span>
                 </td>
@@ -174,7 +186,7 @@ const Patient = () => {
             <input
               type="text"
               placeholder="Name"
-              onChange={(e) => handleChangeName(e.target.value)}
+              onChange={(e) => setName(e.target.value)}
               value={name}
               className="form-control"
             />
@@ -182,7 +194,7 @@ const Patient = () => {
           <div className="col-4">
             <select
               className="form-select"
-              onChange={(e) => handleChangeGender(e.target.value)}
+              onChange={(e) => setGender(e.target.value)}
             >
               {_renderListGender()}
             </select>
@@ -190,14 +202,14 @@ const Patient = () => {
           <div className="col-4">
             <select
               className="form-select"
-              onChange={(e) => handleChangeDepartment(e, e.target.value)}
+              onChange={(e) => setDepartment(e.target.value)}
             >
               {_renderListDepartment()}
             </select>
           </div>
         </div>
         <div className="col-4">
-          <button className="button-apply">Apply</button>
+          <button className="button-apply" onClick={() => handleSearch()}>Apply</button>
         </div>
       </div>
     );
@@ -210,14 +222,14 @@ const Patient = () => {
       ) : (
         <>
           <TotalView />
-          {/* <div className="d-flex justify-content-end me-4">
-          <button
-            className="button button--small button--primary"
-            onClick={() => navigate("create")}
-          >
-            <i className="bi bi-plus"></i> Add
-          </button>
-        </div> */}
+          <div className="d-flex justify-content-end me-4">
+            <button
+              className="button button--small button--primary"
+              onClick={() => navigate("/patient/overview/detail")}
+            >
+              <i className="bi bi-plus"></i> Add
+            </button>
+          </div>
           <section className="table-container">
             <div className="table-container-contain">
               <div className="d-flex justify-content-center align-item-center">

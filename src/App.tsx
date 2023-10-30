@@ -1,12 +1,10 @@
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
-import { Suspense } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useState } from "react";
 import { ToastContainer } from "react-toastify";
+import { PersistGate } from "redux-persist/integration/react";
+
 import { RouterUrl } from "./constants";
+import { persistor } from "./redux/store/configureStore";
 
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
@@ -38,7 +36,6 @@ import "../node_modules/@syncfusion/ej2-popups/styles/material.css";
 import "../node_modules/@syncfusion/ej2-splitbuttons/styles/material.css";
 import "../node_modules/@syncfusion/ej2-react-schedule/styles/material.css";
 
-
 import PatientDetail from "./pages/Patient/PatientDetail";
 import DetailPatient from "./pages/Patient/Detail";
 import DetailDoctor from "./pages/Doctor/Detail";
@@ -66,7 +63,7 @@ const loading = (
 );
 
 const RouterDom = () => (
-  <Suspense fallback={loading}>
+  <BrowserRouter>
     <Routes>
       <Route path="/" element={<Dashboard />} />
       <Route path={RouterUrl.DASHBOARD} element={<Dashboard />} />
@@ -105,17 +102,30 @@ const RouterDom = () => (
 
       <Route path="*" element={<Navigate to={RouterUrl.DASHBOARD} />} />
     </Routes>
-  </Suspense>
+  </BrowserRouter>
 );
 
-const App = () => {
+const _renderMainPage = () => {
   return (
-    <BrowserRouter>
+    <>
       <Header />
       <Sidebar />
       <RouterDom />
+    </>
+  );
+};
+
+const App = () => {
+  const [isLogin, setIsLogin] = useState<boolean>(false);
+  const [isForgotPassword, setIsForgotPassword] = useState<boolean>(false);
+
+  return (
+    <PersistGate loading={null} persistor={persistor}>
+      {_renderMainPage()}
+      {isLogin && <Login />}
+      {isForgotPassword && <ForgotPassword />}
       <ToastContainer theme="colored" />
-    </BrowserRouter>
+    </PersistGate>
   );
 };
 

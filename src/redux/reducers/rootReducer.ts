@@ -1,10 +1,9 @@
-import { combineReducers } from 'redux';
-import auth from './authReducer';
-import toggle from './toggleReducer';
+import { combineReducers } from '@reduxjs/toolkit';
+
+import authSlice from '../features/auth/authSlice';
 
 const rootReducer = combineReducers({
-  auth,
-  toggle,
+  authSlice,
 });
 
 export default rootReducer;

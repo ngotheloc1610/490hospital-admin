@@ -1,4 +1,4 @@
-import storage from 'redux-persist/lib/storage' 
+import storage from 'redux-persist/lib/storage'
 
 const ReduxPersist = {
   active: true,
@@ -6,7 +6,7 @@ const ReduxPersist = {
   storeConfig: {
     key: 'primary',
     storage: storage,
-    whitelist: ['user', 'orders', 'auth'],
+    whitelist: ['authSlice'],
   },
 };
 

@@ -1,48 +1,133 @@
-import { useRef, useState } from "react";
-import { Field, FieldArray, Form, Formik } from "formik";
+import { useEffect, useRef, useState } from "react";
+import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 
 import { GENDER } from "../../../constants";
-import { ICON_TRASH, USER } from "../../../assets";
-import { IDoctorDetail } from "../../../interface/general.interface";
+import { USER } from "../../../assets";
+import { API_ALL_GET_DEPARTMENT, API_CREATE_PATIENT, API_GET_PATIENT } from "../../../constants/api.constant";
+import axios from "axios";
+import { defineConfigGet, defineConfigPost } from "../../../Common/utils";
+import { useParams } from "react-router-dom";
 
 const validationSchema = Yup.object().shape({
-  name: Yup.string().required("Required"),
-  birthday: Yup.string().required("Required"),
+  name: Yup.string().min(3).required("Required"),
+  dateOfBirth: Yup.string().required("Required"),
   gender: Yup.string().required("Required"),
-  phoneNumber: Yup.string().required("Required"),
-  email: Yup.string().required("Required"),
-  residence: Yup.string().required("Required"),
+  address: Yup.string().required("Required"),
   city: Yup.string().required("Required"),
+  phoneNumber: Yup.number()
+    .positive("A phone number can't start with a minus")
+    .integer("A phone number can't include a decimal point")
+    .min(10)
+    .max(11)
+    .required("Required"),
+  email: Yup.string().email().required("Required"),
   department: Yup.string().required("Required"),
-  position: Yup.string().required("Required"),
   startDate: Yup.string().required("Required"),
-  level: Yup.string().required("Required"),
+  endDate: Yup.string().required("Required"),
 });
 
 const defaultValue = {
   id: "",
   name: "",
-  birthday: "",
+  dateOfBirth: "",
   gender: "",
+  address: "",
+  city: "",
   phoneNumber: "",
   email: "",
-  residence: "",
-  city: "",
   department: "",
-  position: "",
   startDate: "",
-  level: "",
-  education: [{ time: "", content: "" }],
+  endDate: "",
 };
 
 const CreateEditPatient = () => {
+  const url_api = process.env.REACT_APP_API_URL;
 
+  const params = useParams();
   const inputRef = useRef<any>(null);
   const [departmentList, setDepartmentList] = useState([]);
   const [image, setImage] = useState<any>("");
 
   const [patient, setPatient] = useState(defaultValue);
+
+  useEffect(() => {
+    getDepartment()
+  }, [])
+
+  useEffect(() => {
+    getPatientInfo(params.patientId)
+  }, [params.patientId])
+
+  useEffect(() => {
+    console.log("patient", patient);
+
+  }, [patient])
+
+
+  const getDepartment = () => {
+    const url = `${url_api}${API_ALL_GET_DEPARTMENT}`;
+
+    axios
+      .get(url, defineConfigGet({}))
+      .then((resp: any) => {
+        if (resp) {
+          setDepartmentList(resp.data);
+        }
+      })
+      .catch((err: any) => {
+        console.log("err:", err);
+      });
+  }
+
+  const getPatientInfo = (id: any) => {
+    const url = `${url_api}${API_GET_PATIENT}${id}`;
+
+    axios
+      .get(url, defineConfigGet({}))
+      .then((resp: any) => {
+        if (resp) {
+          console.log("resp:", resp)
+          const data = resp.data;
+          const patientDetail = {
+            id: data.id,
+            name: data.nameFirstRep.nameAsSingleString,
+            dateOfBirth: data.birthDate,
+            gender: data.gender,
+            address: "",
+            city: "",
+            phoneNumber: data?.telecom?.find((i: any) => i?.system === "phone")?.value,
+            email: data?.telecom?.find((i: any) => i?.system === "email")?.value,
+            department: "",
+            startDate: "",
+            endDate: "",
+          }
+          console.log("patientDetail:", patientDetail)
+          setPatient(patientDetail);
+        }
+      })
+      .catch((err: any) => {
+        console.log("err:", err);
+      });
+  }
+
+  const createPatient = () => {
+    const url = `${url_api}${API_CREATE_PATIENT}`;
+    const param = {
+
+    }
+
+    axios
+      .post(url, param, defineConfigPost())
+      .then((resp: any) => {
+        if (resp) {
+          console.log("resp:", resp)
+        }
+      })
+      .catch((err: any) => {
+        console.log("err:", err);
+      });
+  }
 
   const handleChangeImage = (event: any) => {
     const file = event.target.files[0];
@@ -67,23 +152,22 @@ const CreateEditPatient = () => {
             <Field
               name="name"
               id="name"
-              className={`form-control ${errors?.name && touched?.name ? "is-invalid" : ""
-                }`}
+              className={`form-control ${errors?.name && touched?.name ? "is-invalid" : ""}`}
             />
           </div>
           <div className="col-6 mb-3">
-            <label htmlFor="birthday">
+            <label htmlFor="dateOfBirth">
               Date of birth <span className="text-danger">*</span>
             </label>
             <Field
-              name="birthday"
-              id="birthday"
+              name="dateOfBirth"
+              id="dateOfBirth"
               className="form-control"
               render={({ field }: any) => (
                 <input
                   {...field}
                   type="date"
-                  className={`form-control input-select ${errors?.birthday && touched?.birthday ? "is-invalid" : ""
+                  className={`form-control input-select ${errors?.dateOfBirth && touched?.dateOfBirth ? "is-invalid" : ""
                     }`}
                   max="9999-12-31"
                 />
@@ -109,14 +193,14 @@ const CreateEditPatient = () => {
             </Field>
           </div>
           <div className="col-6 mb-3">
-            <label htmlFor="residence">
-              Current residence <span className="text-danger">*</span>
+            <label htmlFor="address">
+              Address <span className="text-danger">*</span>
             </label>
             <Field
-              name="residence"
+              name="address"
               type="text"
-              id="residence"
-              className={`form-control ${errors?.residence && touched?.residence ? "is-invalid" : ""
+              id="address"
+              className={`form-control ${errors?.address && touched?.address ? "is-invalid" : ""
                 }`}
             />
           </div>
@@ -167,7 +251,7 @@ const CreateEditPatient = () => {
       <div className="mt-5">
         <p className="fw-bold border-top pt-2 text-dark">Work Information</p>
         <div className="row">
-          <div className="col-6 mb-3">
+          <div className="col-12 mb-3">
             <label htmlFor="department">
               Department <span className="text-danger">*</span>
             </label>
@@ -180,9 +264,11 @@ const CreateEditPatient = () => {
             >
               {departmentList.length > 0 ? (
                 departmentList.map((item: any) => (
-                  <option value={item.code} key={item.code}>
-                    {item.name}
-                  </option>
+                  <>
+                    <option hidden>Department</option>
+                    <option value={item.codeableConcept.coding[0].code} key={item.id}>
+                      {item.codeableConcept.coding[0].display}
+                    </option></>
                 ))
               ) : (
                 <option disabled>No option</option>
@@ -209,28 +295,25 @@ const CreateEditPatient = () => {
             />
           </div>
           <div className="col-6 mb-3">
-            <label htmlFor="position">
-              Position <span className="text-danger">*</span>
+            <label htmlFor="endDate">
+              End date <span className="text-danger">*</span>
             </label>
             <Field
-              name="position"
-              type="text"
-              id="position"
-              className={`form-control ${errors?.position && touched?.position ? "is-invalid" : ""
-                }`}
+              name="endDate"
+              id="endDate"
+              className="form-control is-invalid"
+              render={({ field }: any) => (
+                <input
+                  {...field}
+                  type="date"
+                  className={`form-control input-select ${errors?.endDate && touched?.endDate ? "is-invalid" : ""
+                    }`}
+                  max="9999-12-31"
+                />
+              )}
             />
           </div>
-          <div className="col-6 mb-3">
-            <label htmlFor="level">
-              Level <span className="text-danger">*</span>
-            </label>
-            <Field
-              name="level"
-              id="level"
-              className={`form-control ${errors?.level && touched?.level ? "is-invalid" : ""
-                }`}
-            />
-          </div>
+
         </div>
       </div>
     );
@@ -265,13 +348,12 @@ const CreateEditPatient = () => {
       initialValues={patient}
       validationSchema={validationSchema}
       onSubmit={(values, actions) => {
-        console.log("values:", values);
-        console.log("actions:", actions);
+        createPatient();
         actions.setSubmitting(false);
         actions.resetForm();
       }}
     >
-      {({ values, errors, touched, submitForm }) => (
+      {({ values, errors, touched, submitForm, setFieldValue }) => (
         <>
           <Form>
             <div className="overview-container">
@@ -291,7 +373,7 @@ const CreateEditPatient = () => {
           </Form>
           <div className="mt-3 d-flex justify-content-end">
             {patient.id && (
-              <button className="button button--small button--danger me-3">
+              <button className="button button--small button--danger me-3" >
                 Delete
               </button>
             )}

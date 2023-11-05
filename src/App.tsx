@@ -71,7 +71,7 @@ const RouterDom = () => (
     <Route path={RouterUrl.PATIENT} element={<Patient />}>
       <Route path="overview" element={<DetailPatient />}>
         <Route path=":patientId" element={<InfoPatient />} />
-        <Route path="detail" element={<CreateEditPatient />} />
+        <Route path="detail/:patientId" element={<CreateEditPatient />} />
       </Route>
     </Route>
 

@@ -109,11 +109,15 @@ export const GENDER_ALL = [
 
 export const STATUS = [
   {
-    name: "Present",
-    code: 1,
+    name: "Fulfilled",
+    code: "fulfilled",
   },
   {
-    name: "Absent",
-    code: 0,
+    name: "Canceled",
+    code: "canceled",
+  },
+  {
+    name: "No Show",
+    code: "no show",
   },
 ];

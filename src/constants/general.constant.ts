@@ -11,3 +11,8 @@ export const MESSAGE_TOAST = {
 export const KEY_LOCAL_STORAGE = {
   AUTHEN: "objAuthen",
 };
+
+export const FORMAT_DATE = "DD/MM/YYYY";
+
+export const FORMAT_TIME = "HH:mm";
+

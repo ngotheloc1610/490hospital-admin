@@ -1,19 +1,21 @@
 import { memo, useEffect, useState } from "react";
 import axios from "axios";
 import { Outlet, useNavigate, useOutlet } from "react-router-dom";
-import Layout from "../../components/Layout";
-import TotalView from "../../components/common/TotalView";
+
 import { DEFAULT_ITEM_PER_PAGE, GENDER, START_PAGE } from "../../constants";
-import PaginationComponent from "../../components/common/Pagination";
 import {
-  API_ALL_GET_DEPARTMENT,
   API_ALL_GET_PATIENT,
   API_SEARCH_PATIENT,
 } from "../../constants/api.constant";
-import { defineConfigGet, defineConfigPost } from "../../Common/utils";
+import {
+  defineConfigGet
+} from "../../Common/utils";
+import { ICON_PENCIL, ICON_TRASH } from "../../assets";
 
 import PopUpConfirm from "./PopupConfirm";
-import { ICON_PENCIL, ICON_TRASH } from "../../assets";
+import Layout from "../../components/Layout";
+import TotalView from "../../components/common/TotalView";
+import PaginationComponent from "../../components/common/Pagination";
 
 const Patient = () => {
   const [showPopUpConfirm, setShowPopUpConfirm] = useState<boolean>(false);
@@ -22,14 +24,11 @@ const Patient = () => {
   const [itemPerPage, setItemPerPage] = useState<number>(DEFAULT_ITEM_PER_PAGE);
   const [totalItem, setTotalItem] = useState<number>(0);
 
-  const [departmentList, setDepartmentList] = useState([]);
-
   const [name, setName] = useState<string>("");
   const [gender, setGender] = useState<string>("");
-  const [department, setDepartment] = useState<string>("");
 
-  const [patientDetail, setPatientDetail] = useState<any>({});
-  const [isDelete, setIsDelete] = useState<boolean>(false);
+  const [patientDetail, setPatientDetail] = useState<any>();
+  const [triggerDelete, setTriggerDelete] = useState<boolean>(false);
 
   const outlet = useOutlet();
   const navigate = useNavigate();
@@ -37,6 +36,10 @@ const Patient = () => {
   const url_api = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
+    getPatient();
+  }, [currentPage, itemPerPage, triggerDelete]);
+
+  const getPatient = () => {
     const url = `${url_api}${API_ALL_GET_PATIENT}`;
 
     axios
@@ -45,51 +48,38 @@ const Patient = () => {
         if (resp) {
           setListData(resp.data.content);
           setTotalItem(resp.data.totalElements);
-          setIsDelete(false);
-        }
-      })
-      .catch((err) => {
-        console.log("err:", err);
-      });
-  }, [currentPage, itemPerPage, isDelete]);
-
-  // useEffect(() => {
-  //   const url = `${url_api}${API_ALL_GET_DEPARTMENT}`;
-
-  //   axios.get(url, defineConfigPost()).then((resp: any) => {
-  //     if (resp) {
-  //       console.log("resp:", resp)
-  //       setDepartmentList(resp.data.content)
-  //     }
-  //   }).catch(err => {
-  //     console.log("err:", err)
-
-  //   })
-  // }, [])
-
-  const handleCancel = (patient: any) => {
-    setShowPopUpConfirm(true);
-    setPatientDetail(patient);
-  };
-
-  const handleModify = (item: any) => { };
-
-  const handleSearch = () => {
-    const url = `${url_api}${API_SEARCH_PATIENT}${name}`;
-
-    axios
-      .get(url, defineConfigGet({ page: currentPage, size: itemPerPage }))
-      .then((resp: any) => {
-        if (resp) {
-          setListData(resp.data.content);
-          setTotalItem(resp.data.totalElements);
-          setIsDelete(false);
         }
       })
       .catch((err) => {
         console.log("err:", err);
       });
   }
+
+  const handleSearch = () => {
+    const url = `${url_api}${API_SEARCH_PATIENT}`;
+
+    axios
+      .get(url, defineConfigGet({ page: currentPage, size: itemPerPage, gender: gender, nameSearch: name }))
+      .then((resp: any) => {
+        if (resp) {
+          setListData(resp.data.content);
+          setTotalItem(resp.data.totalElements);
+        }
+      })
+      .catch((err) => {
+        console.log("err:", err);
+      });
+  }
+
+  const handleDelete = (patient: any) => {
+    console.log("patient:", patient)
+    setShowPopUpConfirm(true);
+    setPatientDetail(patient);
+  };
+
+  const handleModify = (id: string) => {
+    navigate(`/patient/overview/detail/${id}`);
+  };
 
   const getCurrentPage = (item: number) => {
     setCurrentPage(item - 1);
@@ -119,6 +109,9 @@ const Patient = () => {
             const email = item.telecom?.find(
               (i: any) => i?.system === "email"
             )?.value;
+            const phone = item.telecom?.find(
+              (i: any) => i?.system === "phone"
+            )?.value;
 
             return (
               <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
@@ -129,15 +122,15 @@ const Patient = () => {
                 <td onClick={() => navigate(`overview/${item.id}`)}>{item.gender}</td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>{item.birthDate}</td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
-                  {item.telecomFirstRep.value}
+                  {phone}
                 </td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>{email}</td>
                 <td>
-                  <span className="cursor-pointer">
+                  <span className="cursor-pointer" onClick={() => handleDelete(item)}>
                     <ICON_TRASH />
                   </span>
                   <span className="ms-1 cursor-pointer">
-                    <ICON_PENCIL />
+                    <ICON_PENCIL onClick={() => handleModify(item.id)} />
                   </span>
                 </td>
               </tr>
@@ -161,28 +154,11 @@ const Patient = () => {
     );
   };
 
-  const _renderListDepartment = () => {
-    return (
-      <>
-        <option hidden>Department</option>
-        {departmentList.length > 0 ? (
-          departmentList.map((item: any) => (
-            <option value={item.code} key={item.code}>
-              {item.name}
-            </option>
-          ))
-        ) : (
-          <option disabled>No option</option>
-        )}
-      </>
-    );
-  };
-
   const _renderSearch = () => {
     return (
       <div className="row">
-        <div className="col-8 row">
-          <div className="col-4">
+        <div className="col-6 row">
+          <div className="col-6">
             <input
               type="text"
               placeholder="Name"
@@ -191,7 +167,7 @@ const Patient = () => {
               className="form-control"
             />
           </div>
-          <div className="col-4">
+          <div className="col-6">
             <select
               className="form-select"
               onChange={(e) => setGender(e.target.value)}
@@ -199,16 +175,8 @@ const Patient = () => {
               {_renderListGender()}
             </select>
           </div>
-          <div className="col-4">
-            <select
-              className="form-select"
-              onChange={(e) => setDepartment(e.target.value)}
-            >
-              {_renderListDepartment()}
-            </select>
-          </div>
         </div>
-        <div className="col-4">
+        <div className="col-6">
           <button className="button-apply" onClick={() => handleSearch()}>Apply</button>
         </div>
       </div>
@@ -225,7 +193,7 @@ const Patient = () => {
           <div className="d-flex justify-content-end me-4">
             <button
               className="button button--small button--primary"
-              onClick={() => navigate("/patient/overview/detail")}
+              onClick={() => navigate("/patient/overview/detail/create")}
             >
               <i className="bi bi-plus"></i> Add
             </button>
@@ -257,7 +225,8 @@ const Patient = () => {
         <PopUpConfirm
           handleCloseConfirmPopup={setShowPopUpConfirm}
           patientDetail={patientDetail}
-          setIsDelete={setIsDelete}
+          triggerDelete={triggerDelete}
+          setTriggerDelete={setTriggerDelete}
         />
       )}
     </Layout>

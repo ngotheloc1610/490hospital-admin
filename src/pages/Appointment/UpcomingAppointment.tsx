@@ -1,37 +1,32 @@
-import { Outlet, useOutlet } from "react-router-dom";
-import Layout from "../../components/Layout";
-import TotalView from "../../components/common/TotalView";
-import PaginationComponent from "../../components/common/Pagination";
 import { useEffect, useState } from "react";
-import { DEFAULT_ITEM_PER_PAGE, START_PAGE, STATUS } from "../../constants";
 import axios from "axios";
-import { convertToTime, defineConfigGet, defineConfigPost } from "../../Common/utils";
-import { API_ALL_GET_APPOINTMENT } from "../../constants/api.constant";
+
+import { DEFAULT_ITEM_PER_PAGE, START_PAGE, STATUS } from "../../constants";
+import { convertToDate, convertToTime, defineConfigGet } from "../../Common/utils";
+import { API_ALL_GET_APPOINTMENT_UPCOMING } from "../../constants/api.constant";
+
+import PaginationComponent from "../../components/common/Pagination";
 
 const UpcomingAppointment = () => {
-    const outlet = useOutlet();
 
     const [listData, setListData] = useState([]);
     const [currentPage, setCurrentPage] = useState<number>(START_PAGE);
     const [itemPerPage, setItemPerPage] = useState<number>(DEFAULT_ITEM_PER_PAGE);
     const [totalItem, setTotalItem] = useState<number>(0);
 
-
     const [name, setName] = useState<string>("");
     const [status, setStatus] = useState<string>("");
-    const [range, setRange] = useState<string>("");
 
     const url_api = process.env.REACT_APP_API_URL;
 
     useEffect(() => {
-        const url = `${url_api}${API_ALL_GET_APPOINTMENT}`;
+        const url = `${url_api}${API_ALL_GET_APPOINTMENT_UPCOMING}`;
 
         axios
-            .get(url, defineConfigPost())
+            .get(url, defineConfigGet({ page: currentPage, size: itemPerPage }))
             .then((resp: any) => {
                 if (resp) {
-                    console.log("resp:", resp)
-                    // setListData(resp.data);
+                    setListData(resp.data.content);
                     setTotalItem(resp.data.totalElements);
                 }
             })
@@ -78,20 +73,20 @@ const UpcomingAppointment = () => {
                                     avatar
                                 </td>
                                 <td >
-                                    doctor
+                                    {item.patientName}
                                 </td>
                                 <td >
-                                    email
+                                    {item.patientEmail}
                                 </td>
                                 <td >
-                                    phone
+                                    {item.patientPhone}
                                 </td>
-                                <td >date</td>
+                                <td >{convertToDate(item.appointDate)}</td>
                                 <td >
-                                    {/* <p>{convertToTime(item?.start)}</p>
-                                    <p>{convertToTime(item?.end)}</p> */}
+                                    <span>{convertToTime(item.appointmentTimeStart)}</span> -
+                                    <span>{convertToTime(item.appointmentTimeEnd)}</span>
                                 </td>
-                                <td >doctor</td>
+                                <td >{item.doctorName}</td>
                                 <td >status</td>
                             </tr>
                         );
@@ -124,13 +119,13 @@ const UpcomingAppointment = () => {
                             placeholder="Search by patients or doctor name"
                             onChange={(e) => setName(e.target.value)}
                             value={name}
-                            className="form-control"
+                            className="form-control h-100"
                         />
                     </div>
 
                     <div className="col-4">
                         <select
-                            className="form-select"
+                            className="form-select h-100"
                             onChange={(e) => setStatus(e.target.value)}
                         >
                             {_renderListStatus()}

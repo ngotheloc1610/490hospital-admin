@@ -1,7 +1,7 @@
 import { memo, useEffect, useState } from "react";
-import Layout from "../../components/Layout";
-import TotalView from "../../components/common/TotalView";
 import axios from "axios";
+import { Outlet, useNavigate, useOutlet } from "react-router-dom";
+import { ICON_PENCIL, ICON_TRASH } from "../../assets";
 
 import {
   DEFAULT_ITEM_PER_PAGE,
@@ -10,10 +10,11 @@ import {
   STATUS,
 } from "../../constants";
 import PaginationComponent from "../../components/common/Pagination";
-import { API_ALL_GET_DOCTOR, API_SEARCH_DOCTOR } from "../../constants/api.constant";
+import { API_ALL_GET_DOCTOR, API_ALL_GET_SPECIALTY, API_SEARCH_DOCTOR } from "../../constants/api.constant";
 import { defineConfigGet } from "../../Common/utils";
-import { Outlet, useNavigate, useOutlet } from "react-router-dom";
-import { ICON_PENCIL, ICON_TRASH } from "../../assets";
+
+import Layout from "../../components/Layout";
+import TotalView from "../../components/common/TotalView";
 import PopUpConfirm from "./PopupConfirm";
 
 const Doctor = () => {
@@ -23,12 +24,10 @@ const Doctor = () => {
   const [itemPerPage, setItemPerPage] = useState<number>(DEFAULT_ITEM_PER_PAGE);
   const [totalItem, setTotalItem] = useState<number>(0);
 
-  const [departmentList, setDepartmentList] = useState([]);
+  const [specialtyList, setSpecialtyList] = useState([]);
 
   const [name, setName] = useState<string>("");
-  const [gender, setGender] = useState<string>("");
-  const [department, setDepartment] = useState<string>("");
-  const [status, setStatus] = useState<string>("");
+  const [specialty, setSpecialty] = useState<string>("");
 
   const url_api = process.env.REACT_APP_API_URL;
 
@@ -36,13 +35,20 @@ const Doctor = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    getSpecialty();
+  }, [])
+
+  useEffect(() => {
+    getDoctor()
+  }, [currentPage, itemPerPage]);
+
+  const getDoctor = () => {
     const url = `${url_api}${API_ALL_GET_DOCTOR}`;
 
     axios
       .get(url, defineConfigGet({ page: currentPage, size: itemPerPage }))
       .then((resp: any) => {
         if (resp) {
-          console.log("resp:", resp)
           setListData(resp.data.content);
           setTotalItem(resp.data.totalElements);
         }
@@ -50,7 +56,22 @@ const Doctor = () => {
       .catch((err: any) => {
         console.log("err:", err);
       });
-  }, [currentPage, itemPerPage]);
+  }
+
+  const getSpecialty = () => {
+    const url = `${url_api}${API_ALL_GET_SPECIALTY}`;
+
+    axios
+      .get(url, defineConfigGet({ page: 0, size: 100 }))
+      .then((resp: any) => {
+        if (resp) {
+          setSpecialtyList(resp.data.content);
+        }
+      })
+      .catch((err: any) => {
+        console.log("err:", err);
+      });
+  }
 
   const handleCancel = (item: any) => {
     setShowPopUpConfirm(true);
@@ -68,13 +89,12 @@ const Doctor = () => {
   };
 
   const handleSearch = () => {
-    const url = `${url_api}${API_SEARCH_DOCTOR}${name}`;
+    const url = `${url_api}${API_SEARCH_DOCTOR}`;
 
     axios
-      .get(url, defineConfigGet({ page: currentPage, size: itemPerPage }))
+      .get(url, defineConfigGet({ page: currentPage, size: itemPerPage, specialty: specialty, nameSearch: name }))
       .then((resp: any) => {
         if (resp) {
-          console.log("resp search:", resp)
           setListData(resp.data.content);
           setTotalItem(resp.data.totalElements);
         }
@@ -137,40 +157,14 @@ const Doctor = () => {
     );
   };
 
-  const _renderListGender = () => {
+  const _renderListSpecialty = () => {
     return (
       <>
-        <option hidden>Gender</option>
-        {GENDER.map((item: any) => (
-          <option value={item.code} key={item.code}>
-            {item.name}
-          </option>
-        ))}
-      </>
-    );
-  };
-
-  const _renderListStatus = () => {
-    return (
-      <>
-        <option hidden>Status</option>
-        {STATUS.map((item: any) => (
-          <option value={item.code} key={item.code}>
-            {item.name}
-          </option>
-        ))}
-      </>
-    );
-  };
-
-  const _renderListDepartment = () => {
-    return (
-      <>
-        <option hidden>Department</option>
-        {departmentList.length > 0 ? (
-          departmentList.map((item: any) => (
+        <option hidden>Specialty</option>
+        {specialtyList.length > 0 ? (
+          specialtyList.map((item: any) => (
             <option value={item.code} key={item.code}>
-              {item.name}
+              {item.display}
             </option>
           ))
         ) : (
@@ -183,8 +177,8 @@ const Doctor = () => {
   const _renderSearch = () => {
     return (
       <div className="row">
-        <div className="col-8 row">
-          <div className="col-3">
+        <div className="col-6 row">
+          <div className="col-6">
             <input
               type="text"
               placeholder="Name"
@@ -193,32 +187,17 @@ const Doctor = () => {
               className="form-control"
             />
           </div>
-          <div className="col-3">
+          <div className="col-6">
             <select
               className="form-select"
-              onChange={(e) => setGender(e.target.value)}
+              onChange={(e) => setSpecialty(e.target.value)}
             >
-              {_renderListGender()}
+              {_renderListSpecialty()}
             </select>
           </div>
-          <div className="col-3">
-            <select
-              className="form-select"
-              onChange={(e) => setDepartment(e.target.value)}
-            >
-              {_renderListDepartment()}
-            </select>
-          </div>
-          <div className="col-3">
-            <select
-              className="form-select"
-              onChange={(e) => setStatus(e.target.value)}
-            >
-              {_renderListStatus()}
-            </select>
-          </div>
+
         </div>
-        <div className="col-4">
+        <div className="col-6">
           <button className="button-apply" onClick={() => handleSearch()}>Apply</button>
         </div>
       </div>
@@ -232,14 +211,6 @@ const Doctor = () => {
       ) : (
         <>
           <TotalView />
-          <div className="d-flex justify-content-end me-4">
-            <button
-              className="button button--small button--primary"
-              onClick={() => navigate("/doctor/overview/detail")}
-            >
-              <i className="bi bi-plus"></i> Add
-            </button>
-          </div>
           <section className="table-container">
             <div className="table-container-contain">
               <div className="d-flex justify-content-center align-item-center">

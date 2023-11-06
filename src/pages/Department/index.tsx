@@ -1,14 +1,16 @@
 import { memo, useEffect, useState } from "react";
-import Layout from "../../components/Layout";
+import axios from "axios";
 import { Outlet, useNavigate, useOutlet } from "react-router-dom";
-import TotalView from "../../components/common/TotalView";
-import PaginationComponent from "../../components/common/Pagination";
-import PopUpConfirm from "./PopupConfirm";
+
 import { ICON_PENCIL, ICON_TRASH } from "../../assets";
 import { DEFAULT_ITEM_PER_PAGE, START_PAGE } from "../../constants";
 import { API_ALL_GET_DEPARTMENT } from "../../constants/api.constant";
-import axios from "axios";
 import { defineConfigGet } from "../../Common/utils";
+
+import Layout from "../../components/Layout";
+import TotalView from "../../components/common/TotalView";
+import PaginationComponent from "../../components/common/Pagination";
+import PopUpConfirm from "./PopupConfirm";
 
 const Department = () => {
   const outlet = useOutlet();
@@ -32,7 +34,7 @@ const Department = () => {
       .get(url, defineConfigGet({ page: currentPage, size: itemPerPage }))
       .then((resp: any) => {
         if (resp) {
-          setListData(resp.data.content);
+          setListData(resp.data);
           setTotalItem(resp.data.totalElements);
         }
       })
@@ -92,27 +94,20 @@ const Department = () => {
         </thead>
         <tbody>
           {listData.map((item: any, idx: number) => {
-            const email = item.telecom.find(
-              (i: any) => i?.system === "email"
-            )?.value;
-
             return (
               <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
                 <th scope="row">{++idx}</th>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
-                  {item.nameFirstRep.text}
+                 
                 </td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
-                  {item.gender}
                 </td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
-                  {item.birthDate}
                 </td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
-                  {item.telecomFirstRep.value}
                 </td>
-                <td onClick={() => navigate(`overview/${item.id}`)}>{email}</td>
-                <td onClick={() => navigate(`overview/${item.id}`)}>{email}</td>
+                <td onClick={() => navigate(`overview/${item.id}`)}></td>
+                <td onClick={() => navigate(`overview/${item.id}`)}></td>
                 <td>
                   <span onClick={handleCancel}>
                     <ICON_TRASH />

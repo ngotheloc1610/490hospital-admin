@@ -15,9 +15,8 @@ const validationSchema = Yup.object().shape({
   residence: Yup.string().required("Required"),
   city: Yup.string().required("Required"),
   department: Yup.string().required("Required"),
-  position: Yup.string().required("Required"),
   startDate: Yup.string().required("Required"),
-  level: Yup.string().required("Required"),
+  endDate: Yup.string().required("Required"),
 });
 
 const defaultValue: IDoctorDetail = {
@@ -30,9 +29,8 @@ const defaultValue: IDoctorDetail = {
   residence: "",
   city: "",
   department: "",
-  position: "",
   startDate: "",
-  level: "",
+  endDate : "",
   education: [{ time: "", content: "" }],
   specialize: [{ time: "", content: "" }],
   achievement: [{ time: "", content: "" }],
@@ -219,31 +217,28 @@ const CreateEditDoctor = () => {
               )}
             />
           </div>
+         
           <div className="col-6 mb-3">
-            <label htmlFor="position">
-              Position <span className="text-danger">*</span>
+            <label htmlFor="endDate">
+              End date <span className="text-danger">*</span>
             </label>
             <Field
-              name="position"
-              type="text"
-              id="position"
-              className={`form-control ${
-                errors?.position && touched?.position ? "is-invalid" : ""
-              }`}
+              name="endDate"
+              id="endDate"
+              className="form-control is-invalid"
+              render={({ field }: any) => (
+                <input
+                  {...field}
+                  type="date"
+                  className={`form-control input-select ${
+                    errors?.endDate && touched?.endDate ? "is-invalid" : ""
+                  }`}
+                  max="9999-12-31"
+                />
+              )}
             />
           </div>
-          <div className="col-6 mb-3">
-            <label htmlFor="level">
-              Level <span className="text-danger">*</span>
-            </label>
-            <Field
-              name="level"
-              id="level"
-              className={`form-control ${
-                errors?.level && touched?.level ? "is-invalid" : ""
-              }`}
-            />
-          </div>
+          
         </div>
       </div>
     );
@@ -467,10 +462,9 @@ const CreateEditDoctor = () => {
   return (
     <Formik
       initialValues={doctor}
+      enableReinitialize={true}
       validationSchema={validationSchema}
       onSubmit={(values, actions) => {
-        console.log("values:", values);
-        console.log("actions:", actions);
         actions.setSubmitting(false);
         actions.resetForm();
       }}

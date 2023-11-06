@@ -5,27 +5,30 @@ import { defineConfigPost } from "../../Common/utils";
 import { success } from "../../Common/notify";
 import { API_DELETE_PATIENT } from "../../constants/api.constant";
 
-interface IPropsConfirm {
-  handleCloseConfirmPopup: (value: boolean) => void;
-  setTriggerDelete: any;
-  triggerDelete: boolean;
-  patientDetail: any;
-}
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { setShowPopUpConfirm, setTriggerDelete } from "../../redux/features/patient/patientSlice";
+import { useNavigate } from "react-router-dom";
 
-const PopUpConfirm = (props: IPropsConfirm) => {
-  const { handleCloseConfirmPopup, patientDetail, setTriggerDelete, triggerDelete } = props;
+
+const PopUpConfirm = () => {
 
   const url_api = process.env.REACT_APP_API_URL;
 
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { triggerDelete, patient } = useAppSelector((state) => state.patientSlice)
+
+
   const handleDelete = () => {
-    const url = `${url_api}${API_DELETE_PATIENT}${patientDetail.id}`;
+    const url = `${url_api}${API_DELETE_PATIENT}${patient.id}`;
     axios.delete(url, defineConfigPost()).then(resp => {
       if (resp) {
         success("Delete Successfully");
-        setTriggerDelete(!triggerDelete);
-        handleCloseConfirmPopup(false);
+        dispatch(setTriggerDelete(!triggerDelete));
+        dispatch(setShowPopUpConfirm(false));
+        navigate("/patient");
       }
-    }).catch(err => {
+    }).catch((err: any) => {
       console.log("err:", err)
     })
   };
@@ -36,7 +39,7 @@ const PopUpConfirm = (props: IPropsConfirm) => {
         centered
         show={true}
         onHide={() => {
-          handleCloseConfirmPopup(false);
+          dispatch(setShowPopUpConfirm(false));
         }}
       >
         <Modal.Body className="mt-2 mb-2">
@@ -45,7 +48,7 @@ const PopUpConfirm = (props: IPropsConfirm) => {
           </span>
           <span className="ms-3 fs-18 fw-600 text-center">
             Are you sure to delete
-            <span className="fw-bold">{patientDetail?.nameFirstRep?.nameAsSingleString}</span> in Patient
+            <span className="fw-bold">{patient?.nameFirstRep?.nameAsSingleString || patient?.name}</span> in Patient
             list？
           </span>
         </Modal.Body>
@@ -53,7 +56,7 @@ const PopUpConfirm = (props: IPropsConfirm) => {
           <Button
             className="button button--small button--outline"
             onClick={() => {
-              handleCloseConfirmPopup(false);
+              dispatch(setShowPopUpConfirm(false));
             }}
           >
             No

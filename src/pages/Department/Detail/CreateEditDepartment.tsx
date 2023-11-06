@@ -247,6 +247,7 @@ const CreateEditDepartment = () => {
   return (
     <Formik
       initialValues={department}
+      enableReinitialize={true}
       validationSchema={validationSchema}
       onSubmit={(values, actions) => {
         console.log("values:", values);

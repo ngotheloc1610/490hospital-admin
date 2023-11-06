@@ -1,13 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-
-import { GENDER } from "../../../constants";
-import { USER } from "../../../assets";
-import { API_ALL_GET_DEPARTMENT, API_CREATE_PATIENT, API_GET_PATIENT } from "../../../constants/api.constant";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { defineConfigGet, defineConfigPost } from "../../../Common/utils";
-import { useParams } from "react-router-dom";
+
+import { useAppDispatch } from "../../../../redux/hooks";
+
+import { GENDER } from "../../../../constants";
+import { USER } from "../../../../assets";
+import { API_CREATE_PATIENT, API_GET_PATIENT } from "../../../../constants/api.constant";
+import { defineConfigGet, defineConfigPost } from "../../../../Common/utils";
+import { setPatient, setShowPopUpConfirm } from "../../../../redux/features/patient/patientSlice";
+import { success } from "../../../../Common/notify";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().min(3).required("Required"),
@@ -22,9 +26,6 @@ const validationSchema = Yup.object().shape({
     .max(11)
     .required("Required"),
   email: Yup.string().email().required("Required"),
-  department: Yup.string().required("Required"),
-  startDate: Yup.string().required("Required"),
-  endDate: Yup.string().required("Required"),
 });
 
 const defaultValue = {
@@ -36,49 +37,23 @@ const defaultValue = {
   city: "",
   phoneNumber: "",
   email: "",
-  department: "",
-  startDate: "",
-  endDate: "",
 };
 
 const CreateEditPatient = () => {
   const url_api = process.env.REACT_APP_API_URL;
 
   const params = useParams();
+  const navigate = useNavigate();
   const inputRef = useRef<any>(null);
-  const [departmentList, setDepartmentList] = useState([]);
   const [image, setImage] = useState<any>("");
 
-  const [patient, setPatient] = useState(defaultValue);
+  const [patientInfo, setPatientInfo] = useState(defaultValue);
 
-  useEffect(() => {
-    getDepartment()
-  }, [])
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     getPatientInfo(params.patientId)
   }, [params.patientId])
-
-  useEffect(() => {
-    console.log("patient", patient);
-
-  }, [patient])
-
-
-  const getDepartment = () => {
-    const url = `${url_api}${API_ALL_GET_DEPARTMENT}`;
-
-    axios
-      .get(url, defineConfigGet({}))
-      .then((resp: any) => {
-        if (resp) {
-          setDepartmentList(resp.data);
-        }
-      })
-      .catch((err: any) => {
-        console.log("err:", err);
-      });
-  }
 
   const getPatientInfo = (id: any) => {
     const url = `${url_api}${API_GET_PATIENT}${id}`;
@@ -87,23 +62,18 @@ const CreateEditPatient = () => {
       .get(url, defineConfigGet({}))
       .then((resp: any) => {
         if (resp) {
-          console.log("resp:", resp)
           const data = resp.data;
           const patientDetail = {
             id: data.id,
             name: data.nameFirstRep.nameAsSingleString,
             dateOfBirth: data.birthDate,
             gender: data.gender,
-            address: "",
-            city: "",
             phoneNumber: data?.telecom?.find((i: any) => i?.system === "phone")?.value,
             email: data?.telecom?.find((i: any) => i?.system === "email")?.value,
-            department: "",
-            startDate: "",
-            endDate: "",
+            address: "",
+            city: "",
           }
-          console.log("patientDetail:", patientDetail)
-          setPatient(patientDetail);
+          setPatientInfo(patientDetail);
         }
       })
       .catch((err: any) => {
@@ -121,6 +91,8 @@ const CreateEditPatient = () => {
       .post(url, param, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
+          success("Created Successfully!!!");
+          navigate("/patient");
           console.log("resp:", resp)
         }
       })
@@ -137,6 +109,11 @@ const CreateEditPatient = () => {
   const handlePickImage = () => {
     inputRef.current.click();
   };
+
+  const handleDelete = ()=> {
+    dispatch(setShowPopUpConfirm(true))
+    dispatch(setPatient(patientInfo))
+  }
 
   const _renderBasicInfo = (props: any) => {
     const { errors, touched } = props;
@@ -244,81 +221,6 @@ const CreateEditPatient = () => {
     );
   };
 
-  const _renderWorkInfo = (props: any) => {
-    const { errors, touched } = props;
-
-    return (
-      <div className="mt-5">
-        <p className="fw-bold border-top pt-2 text-dark">Work Information</p>
-        <div className="row">
-          <div className="col-12 mb-3">
-            <label htmlFor="department">
-              Department <span className="text-danger">*</span>
-            </label>
-            <Field
-              as="select"
-              name="department"
-              id="department"
-              className={`form-select ${errors?.department && touched?.department ? "is-invalid" : ""
-                }`}
-            >
-              {departmentList.length > 0 ? (
-                departmentList.map((item: any) => (
-                  <>
-                    <option hidden>Department</option>
-                    <option value={item.codeableConcept.coding[0].code} key={item.id}>
-                      {item.codeableConcept.coding[0].display}
-                    </option></>
-                ))
-              ) : (
-                <option disabled>No option</option>
-              )}
-            </Field>
-          </div>
-          <div className="col-6 mb-3">
-            <label htmlFor="startDate">
-              Starting date <span className="text-danger">*</span>
-            </label>
-            <Field
-              name="startDate"
-              id="startDate"
-              className="form-control is-invalid"
-              render={({ field }: any) => (
-                <input
-                  {...field}
-                  type="date"
-                  className={`form-control input-select ${errors?.startDate && touched?.startDate ? "is-invalid" : ""
-                    }`}
-                  max="9999-12-31"
-                />
-              )}
-            />
-          </div>
-          <div className="col-6 mb-3">
-            <label htmlFor="endDate">
-              End date <span className="text-danger">*</span>
-            </label>
-            <Field
-              name="endDate"
-              id="endDate"
-              className="form-control is-invalid"
-              render={({ field }: any) => (
-                <input
-                  {...field}
-                  type="date"
-                  className={`form-control input-select ${errors?.endDate && touched?.endDate ? "is-invalid" : ""
-                    }`}
-                  max="9999-12-31"
-                />
-              )}
-            />
-          </div>
-
-        </div>
-      </div>
-    );
-  };
-
   const _renderImage = () => {
     return (
       <div className="h-100 d-flex flex-column" onClick={handlePickImage}>
@@ -345,7 +247,8 @@ const CreateEditPatient = () => {
 
   return (
     <Formik
-      initialValues={patient}
+      initialValues={patientInfo}
+      enableReinitialize={true}
       validationSchema={validationSchema}
       onSubmit={(values, actions) => {
         createPatient();
@@ -353,7 +256,7 @@ const CreateEditPatient = () => {
         actions.resetForm();
       }}
     >
-      {({ values, errors, touched, submitForm, setFieldValue }) => (
+      {({errors, touched, submitForm }) => (
         <>
           <Form>
             <div className="overview-container">
@@ -362,21 +265,27 @@ const CreateEditPatient = () => {
                   <div className="col-4">{_renderImage()}</div>
                   <div className="col-8">
                     <h3 className="fw-bold text-uppercase text-dark">
-                      {patient?.id ? "edit" : "add"} new
+                      {patientInfo?.id ? "edit" : "add"} new
                     </h3>
                     {_renderBasicInfo({ errors, touched })}
                   </div>
                 </div>
               </div>
-              {_renderWorkInfo({ errors, touched })}
             </div>
           </Form>
           <div className="mt-3 d-flex justify-content-end">
-            {patient.id && (
-              <button className="button button--small button--danger me-3" >
+            {patientInfo.id && (
+              <button className="button button--small button--danger me-3" onClick={()=> handleDelete()}>
                 Delete
               </button>
             )}
+
+            <button
+              className="button button--small button--danger me-3"
+              onClick={() => navigate("/patient")}
+            >
+              Cancel
+            </button>
 
             <button
               className="button button--small button--primary"

@@ -3,9 +3,18 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 
 import { RootState } from "../../store/configureStore";
 
-const initialState: any = {
+interface IPatientStatus {
+    triggerDelete: boolean,
+    triggerCreate: boolean,
+    showPopUpConfirm: boolean,
+    patient: any
+}
+
+const initialState: IPatientStatus = {
     triggerDelete: false,
     triggerCreate: false,
+    showPopUpConfirm: false,
+    patient: {}
 };
 
 export const patientSlice = createSlice({
@@ -18,10 +27,16 @@ export const patientSlice = createSlice({
         setTriggerCreate: (state, action: PayloadAction<boolean>) => {
             state.triggerCreate = action.payload;
         },
+        setShowPopUpConfirm: (state, action: PayloadAction<boolean>) => {
+            state.showPopUpConfirm = action.payload;
+        },
+        setPatient: (state, action: PayloadAction<any>) => {
+            state.patient = action.payload;
+        }, 
     },
 });
 
-export const { setTriggerDelete, setTriggerCreate } = patientSlice.actions;
+export const { setTriggerDelete, setTriggerCreate, setShowPopUpConfirm, setPatient } = patientSlice.actions;
 
 export const selectPatient = (state: RootState) => state.patientSlice;
 

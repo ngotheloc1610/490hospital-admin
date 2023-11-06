@@ -3,7 +3,11 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 
 import { RootState } from "../../store/configureStore";
 
-const initialState: any = {
+interface IAuthState {
+  isLogin: boolean,
+}
+
+const initialState: IAuthState = {
   isLogin: false,
 };
 

@@ -48,9 +48,11 @@ import CreateEditStaff from "./pages/Staff/Detail/CreateEditStaff";
 import InfoDiagnostic from "./pages/DiagnosticReport/Detail/InfoDiagnostic";
 import CreateEditDiagnostic from "./pages/DiagnosticReport/Detail/CreateEditDiagnostic";
 import ForgotPassword from "./pages/Authentication/ForgotPassword";
-import InfoPatient from "./pages/Patient/Detail/InfoPatient";
-import CreateEditPatient from "./pages/Patient/Detail/CreateEditPatient";
+import InfoPatient from "./pages/Patient/Detail/Infomation/InfoPatient";
+import CreateEditPatient from "./pages/Patient/Detail/Infomation/CreateEditPatient";
 import Appointment from "./pages/Appointment";
+import ChangePassword from "./pages/Authentication/ChangePassword";
+import AccountPatient from "./pages/Patient/Detail/Account";
 
 if (typeof window !== "undefined") {
   require("bootstrap/dist/js/bootstrap.bundle.min");
@@ -69,9 +71,10 @@ const RouterDom = () => (
     </Route>
 
     <Route path={RouterUrl.PATIENT} element={<Patient />}>
-      <Route path="overview" element={<DetailPatient />}>
+      <Route path="information" element={<DetailPatient />}>
         <Route path=":patientId" element={<InfoPatient />} />
         <Route path="detail/:patientId" element={<CreateEditPatient />} />
+        <Route path="account" element={<AccountPatient />} />
       </Route>
     </Route>
 
@@ -103,6 +106,7 @@ const RouterDom = () => (
     <Route path={RouterUrl.LOGIN} element={<Login />} />
     <Route path={RouterUrl.REGISTER} element={<Register />} />
     <Route path={RouterUrl.FORGOT_PASSWORD} element={<ForgotPassword />} />
+    <Route path={RouterUrl.CHANGE_PASSWORD} element={<ChangePassword />} />
 
     <Route path="*" element={<Navigate to={RouterUrl.DASHBOARD} />} />
   </Routes>
@@ -121,12 +125,14 @@ const _renderMainPage = () => {
 const App = () => {
   const [isLogin, setIsLogin] = useState<boolean>(false);
   const [isForgotPassword, setIsForgotPassword] = useState<boolean>(false);
+  const [isChangePassword, setIsChangePassword] = useState<boolean>(false);
 
   return (
     <BrowserRouter basename={process.env.PUBLIC_URL}>
       {_renderMainPage()}
       {isLogin && <Login />}
       {isForgotPassword && <ForgotPassword />}
+      {isChangePassword && <ChangePassword />}
       <ToastContainer theme="colored" />
     </BrowserRouter>
   );

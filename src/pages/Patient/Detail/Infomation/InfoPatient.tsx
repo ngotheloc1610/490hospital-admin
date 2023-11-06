@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { defineConfigGet } from "../../../Common/utils";
-import { API_GET_PATIENT } from "../../../constants/api.constant";
-import PaginationComponent from "../../../components/common/Pagination";
-import { USER } from "../../../assets";
+
+import { defineConfigGet } from "../../../../Common/utils";
+import { API_GET_PATIENT } from "../../../../constants/api.constant";
+import { USER } from "../../../../assets";
+
+import PaginationComponent from "../../../../components/common/Pagination";
 
 const InfoPatient = () => {
   const [currentPage, setCurrentPage] = useState<number>(0);
@@ -15,9 +17,8 @@ const InfoPatient = () => {
   const [patient, setPatient] = useState<any>({});
   const [image, setImage] = useState<any>("");
 
-
-
   const param = useParams();
+  const navigate = useNavigate();
   const url_api = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
@@ -63,8 +64,8 @@ const InfoPatient = () => {
         <div className="pb-3 mb-3 border-bottom d-flex justify-content-between">
           <h3 className="fw-bold text-uppercase">{patient?.nameFirstRep?.text}</h3>
           <div>
-            <button className="button button--info button--small me-3">Change Password</button>
-            <button className="button button--primary button--small">Edit</button>
+            <button className="button button--info button--small me-3" onClick={()=> navigate("/patient/information/account")}>Change Password</button>
+            <button className="button button--primary button--small" onClick={()=> navigate(`/patient/information/detail/${patient?.id}`)}>Edit</button>
           </div>
         </div>
 

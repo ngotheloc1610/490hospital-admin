@@ -1,7 +1,6 @@
 import { Outlet } from "react-router-dom";
 
-
-const OverviewPatient = () => {
+const InformationPatient = () => {
   return (
     <section className="overview">
       <Outlet />
@@ -9,4 +8,4 @@ const OverviewPatient = () => {
   );
 };
 
-export default OverviewPatient;
+export default InformationPatient;

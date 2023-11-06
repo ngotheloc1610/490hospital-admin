@@ -17,8 +17,10 @@ import Layout from "../../components/Layout";
 import TotalView from "../../components/common/TotalView";
 import PaginationComponent from "../../components/common/Pagination";
 
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { setPatient, setShowPopUpConfirm } from "../../redux/features/patient/patientSlice";
+
 const Patient = () => {
-  const [showPopUpConfirm, setShowPopUpConfirm] = useState<boolean>(false);
   const [listData, setListData] = useState<any>([]);
   const [currentPage, setCurrentPage] = useState<number>(START_PAGE);
   const [itemPerPage, setItemPerPage] = useState<number>(DEFAULT_ITEM_PER_PAGE);
@@ -27,9 +29,8 @@ const Patient = () => {
   const [name, setName] = useState<string>("");
   const [gender, setGender] = useState<string>("");
 
-  const [patientDetail, setPatientDetail] = useState<any>();
-  const [triggerDelete, setTriggerDelete] = useState<boolean>(false);
-
+  const { triggerDelete, showPopUpConfirm } = useAppSelector((state) => state.patientSlice)
+  const dispatch = useAppDispatch();
   const outlet = useOutlet();
   const navigate = useNavigate();
 
@@ -72,13 +73,12 @@ const Patient = () => {
   }
 
   const handleDelete = (patient: any) => {
-    console.log("patient:", patient)
-    setShowPopUpConfirm(true);
-    setPatientDetail(patient);
+    dispatch(setShowPopUpConfirm(true));
+    dispatch(setPatient(patient));
   };
 
   const handleModify = (id: string) => {
-    navigate(`/patient/overview/detail/${id}`);
+    navigate(`/patient/information/detail/${id}`);
   };
 
   const getCurrentPage = (item: number) => {
@@ -116,15 +116,15 @@ const Patient = () => {
             return (
               <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
                 <th scope="row">{++idx}</th>
-                <td onClick={() => navigate(`overview/${item.id}`)}>
+                <td onClick={() => navigate(`information/${item.id}`)}>
                   {item.nameFirstRep.nameAsSingleString}
                 </td>
-                <td onClick={() => navigate(`overview/${item.id}`)}>{item.gender}</td>
-                <td onClick={() => navigate(`overview/${item.id}`)}>{item.birthDate}</td>
-                <td onClick={() => navigate(`overview/${item.id}`)}>
+                <td onClick={() => navigate(`information/${item.id}`)}>{item.gender}</td>
+                <td onClick={() => navigate(`information/${item.id}`)}>{item.birthDate}</td>
+                <td onClick={() => navigate(`information/${item.id}`)}>
                   {phone}
                 </td>
-                <td onClick={() => navigate(`overview/${item.id}`)}>{email}</td>
+                <td onClick={() => navigate(`information/${item.id}`)}>{email}</td>
                 <td>
                   <span className="cursor-pointer" onClick={() => handleDelete(item)}>
                     <ICON_TRASH />
@@ -193,7 +193,7 @@ const Patient = () => {
           <div className="d-flex justify-content-end me-4">
             <button
               className="button button--small button--primary"
-              onClick={() => navigate("/patient/overview/detail/create")}
+              onClick={() => navigate("/patient/information/detail/create")}
             >
               <i className="bi bi-plus"></i> Add
             </button>
@@ -222,12 +222,7 @@ const Patient = () => {
       )}
 
       {showPopUpConfirm && (
-        <PopUpConfirm
-          handleCloseConfirmPopup={setShowPopUpConfirm}
-          patientDetail={patientDetail}
-          triggerDelete={triggerDelete}
-          setTriggerDelete={setTriggerDelete}
-        />
+        <PopUpConfirm/>
       )}
     </Layout>
   );

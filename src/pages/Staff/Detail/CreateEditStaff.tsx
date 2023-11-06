@@ -14,9 +14,8 @@ const validationSchema = Yup.object().shape({
   residence: Yup.string().required("Required"),
   city: Yup.string().required("Required"),
   department: Yup.string().required("Required"),
-  position: Yup.string().required("Required"),
   startDate: Yup.string().required("Required"),
-  level: Yup.string().required("Required"),
+  endDate: Yup.string().required("Required"),
 });
 
 const defaultValue = {
@@ -29,9 +28,8 @@ const defaultValue = {
   residence: "",
   city: "",
   department: "",
-  position: "",
   startDate: "",
-  level: "",
+  endDate: ""
 };
 
 const CreateEditStaff = () => {
@@ -171,7 +169,7 @@ const CreateEditStaff = () => {
       <div className="mt-5">
         <p className="fw-bold border-top pt-2 text-dark">Work Information</p>
         <div className="row">
-          <div className="col-6 mb-3">
+          <div className="col-12 mb-3">
             <label htmlFor="department">
               Department <span className="text-danger">*</span>
             </label>
@@ -214,29 +212,25 @@ const CreateEditStaff = () => {
               )}
             />
           </div>
+
           <div className="col-6 mb-3">
-            <label htmlFor="position">
-              Position <span className="text-danger">*</span>
+            <label htmlFor="endDate">
+              End date <span className="text-danger">*</span>
             </label>
             <Field
-              name="position"
-              type="text"
-              id="position"
-              className={`form-control ${
-                errors?.position && touched?.position ? "is-invalid" : ""
-              }`}
-            />
-          </div>
-          <div className="col-6 mb-3">
-            <label htmlFor="level">
-              Level <span className="text-danger">*</span>
-            </label>
-            <Field
-              name="level"
-              id="level"
-              className={`form-control ${
-                errors?.level && touched?.level ? "is-invalid" : ""
-              }`}
+              name="endDate"
+              id="endDate"
+              className="form-control is-invalid"
+              render={({ field }: any) => (
+                <input
+                  {...field}
+                  type="date"
+                  className={`form-control input-select ${
+                    errors?.endDate && touched?.endDate ? "is-invalid" : ""
+                  }`}
+                  max="9999-12-31"
+                />
+              )}
             />
           </div>
         </div>
@@ -271,15 +265,14 @@ const CreateEditStaff = () => {
   return (
     <Formik
       initialValues={staff}
+      enableReinitialize={true}
       validationSchema={validationSchema}
       onSubmit={(values, actions) => {
-        console.log("values:", values);
-        console.log("actions:", actions);
         actions.setSubmitting(false);
         actions.resetForm();
       }}
     >
-      {({ values, errors, touched, submitForm }) => (
+      {({ errors, touched, submitForm }) => (
         <>
           <Form>
             <div className="overview-container">

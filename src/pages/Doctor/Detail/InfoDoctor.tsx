@@ -194,9 +194,13 @@ const InfoDoctor = () => {
               </div>
             </div>
             <div className="col-8">
-              <h3 className="fw-bold text-uppercase text-dark">
-                Dr. Ivan TKU tovic
-              </h3>
+            <div className="pb-3 mb-3 border-bottom d-flex justify-content-between">
+              <h3 className="fw-bold text-uppercase">aaa</h3>
+              <div>
+                <button className="button button--info button--small me-3" onClick={()=> navigate("/change-password")}>Change Password</button>
+                <button className="button button--primary button--small">Edit</button>
+              </div>
+            </div>
               {_renderBasicInfo()}
             </div>
           </div>

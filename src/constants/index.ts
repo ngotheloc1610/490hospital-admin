@@ -1,13 +1,14 @@
 import OverviewDepartment from "../pages/Department/Detail/OverviewDepartment";
 import OverviewDiagnostic from "../pages/DiagnosticReport/Detail/OverviewDiagnostic";
 import OverviewDoctor from "../pages/Doctor/Detail/OverviewDoctor";
-import OverviewPatient from "../pages/Patient/Detail/OverviewPatient";
 import OverviewStaff from "../pages/Staff/Detail/OverviewStaff";
 
 import ScheduleDoctor from "../pages/Doctor/Detail/ScheduleDoctor";
 import ScheduleStaff from "../pages/Staff/Detail/ScheduleStaff";
 import PreviousAppointment from "../pages/Appointment/PreviousAppointment";
 import UpcomingAppointment from "../pages/Appointment/UpcomingAppointment";
+import InformationPatient from "../pages/Patient/Detail/Infomation";
+import AccountPatient from "../pages/Patient/Detail/Account";
 
 export const RouterUrl = {
   DASHBOARD: "/dashboard",
@@ -21,6 +22,7 @@ export const RouterUrl = {
   LOGIN: "/login",
   REGISTER: "/register",
   FORGOT_PASSWORD: "/forgot-password",
+  CHANGE_PASSWORD: "/change-password",
 };
 
 export const START_PAGE = 0;
@@ -47,8 +49,12 @@ export const MenuDataDepartment = [
 
 export const MenuDataPatient = [
   {
-    title: "Overview",
-    content: OverviewPatient,
+    title: "Information",
+    content: InformationPatient,
+  },
+  {
+    title: "Account",
+    content: AccountPatient,
   },
 ];
 

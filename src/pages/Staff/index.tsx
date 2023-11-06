@@ -189,23 +189,29 @@ const Staff = () => {
         </thead>
         <tbody>
           {listData?.map((item: any, idx: number) => {
-
+            const email = item.practitionerTarget.telecom?.find(
+              (i: any) => i?.system === "email"
+            )?.value;
+            const phone = item.practitionerTarget.telecom?.find(
+              (i: any) => i?.system === "phone"
+            )?.value;
+            
             return (
               <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
                 <th scope="row">{++idx}</th>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
-                  {item.nameFirstRep.nameAsSingleString}
+                  {item.practitionerTarget.nameFirstRep.nameAsSingleString}
                 </td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
-                  {item.gender}
+                  {item.practitionerTarget.gender}
                 </td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
-                  {item.birthDate}
+                  {item.practitionerTarget.birthDate}
                 </td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
-                  {item.telecomFirstRep.value}
+                  {phone}
                 </td>
-                <td onClick={() => navigate(`overview/${item.id}`)}>empty</td>
+                <td onClick={() => navigate(`overview/${item.id}`)}>{email}</td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>empty</td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>empty</td>
                 <td>

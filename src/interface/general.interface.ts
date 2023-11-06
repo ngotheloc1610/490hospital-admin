@@ -15,9 +15,8 @@ export interface IDoctorDetail {
   residence: string;
   city: string;
   department: string;
-  position: string;
   startDate: string;
-  level: string;
+  endDate: string;
   education: [{ time: string; content: string }];
   specialize: [{ time: string; content: string }];
   achievement: [{ time: string; content: string }];

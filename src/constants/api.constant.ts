@@ -10,6 +10,7 @@ export const API_UPDATE_PATIENT = "/api/v1/patient/update/";
 export const API_DELETE_PATIENT = "/admin/patient/delete/";
 export const API_BLOCK_PATIENT = "/admin/blockPatient/";
 export const API_SEARCH_PATIENT = "/admin/searchPatient/";
+export const API_GET_LIST_APPOINTMENT_PATIENT = "/api/v1/patient/listAppointment/";
 
 export const API_ALL_GET_DOCTOR = "/admin/doctors";
 export const API_GET_DOCTOR = "/doctor/detail/";

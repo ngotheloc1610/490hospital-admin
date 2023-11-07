@@ -182,7 +182,7 @@ const Staff = () => {
             <th scope="col">Date of Birth</th>
             <th scope="col">Phone number</th>
             <th scope="col">Email</th>
-            <th scope="col">Department</th>
+            <th scope="col">Specialty</th>
             <th scope="col">Status</th>
             <th scope="col"></th>
           </tr>
@@ -195,7 +195,7 @@ const Staff = () => {
             const phone = item.practitionerTarget.telecom?.find(
               (i: any) => i?.system === "phone"
             )?.value;
-            
+
             return (
               <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
                 <th scope="row">{++idx}</th>
@@ -212,8 +212,14 @@ const Staff = () => {
                   {phone}
                 </td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>{email}</td>
-                <td onClick={() => navigate(`overview/${item.id}`)}>empty</td>
-                <td onClick={() => navigate(`overview/${item.id}`)}>empty</td>
+                <td onClick={() => navigate(`overview/${item.id}`)}>{item?.practitionerTarget?.specialty?.map((spec: any) => {
+                  return (
+                    <span>{spec.display}</span>
+                  )
+                })}</td>
+                <td onClick={() => navigate(`overview/${item.id}`)}>
+                  {item.active ? "Active" : "Deactive"}
+                </td>
                 <td>
                   <span className="cursor-pointer" onClick={handleCancel}>
                     <ICON_TRASH />

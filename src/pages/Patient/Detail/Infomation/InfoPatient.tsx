@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
-import { defineConfigGet } from "../../../../Common/utils";
-import { API_GET_PATIENT } from "../../../../constants/api.constant";
+import { convertToDate, convertToTime, defineConfigGet } from "../../../../Common/utils";
+import { API_GET_LIST_APPOINTMENT_PATIENT, API_GET_PATIENT } from "../../../../constants/api.constant";
 import { USER } from "../../../../assets";
 
 import PaginationComponent from "../../../../components/common/Pagination";
@@ -15,6 +15,7 @@ const InfoPatient = () => {
 
   const inputRef = useRef<any>(null);
   const [patient, setPatient] = useState<any>({});
+  const [listAppointment, setListAppointment] = useState<any>([]);
   const [image, setImage] = useState<any>("");
 
   const param = useParams();
@@ -24,6 +25,10 @@ const InfoPatient = () => {
   useEffect(() => {
     getPatientDetail(param.patientId)
   }, [param.patientId]);
+
+  useEffect(() => {
+    getListAppointment(param.patientId)
+  }, [param.patientId, currentPage, itemPerPage]);
 
   const getPatientDetail = (id: any) => {
     const url = `${url_api}${API_GET_PATIENT}${id}`;
@@ -40,6 +45,20 @@ const InfoPatient = () => {
       });
   }
 
+  const getListAppointment = (id: any) => {
+    const url = `${url_api}${API_GET_LIST_APPOINTMENT_PATIENT}${id}`;
+
+    axios
+      .get(url, defineConfigGet({ page: currentPage, size: itemPerPage }))
+      .then((resp: any) => {
+        if (resp) {
+          setListAppointment(resp.data);
+        }
+      })
+      .catch((err) => {
+        console.log("err:", err);
+      });
+  }
   const handleChangeImage = (event: any) => {
     const file = event.target.files[0];
     setImage(file);
@@ -64,8 +83,8 @@ const InfoPatient = () => {
         <div className="pb-3 mb-3 border-bottom d-flex justify-content-between">
           <h3 className="fw-bold text-uppercase">{patient?.nameFirstRep?.text}</h3>
           <div>
-            <button className="button button--info button--small me-3" onClick={()=> navigate("/patient/information/account")}>Change Password</button>
-            <button className="button button--primary button--small" onClick={()=> navigate(`/patient/information/detail/${patient?.id}`)}>Edit</button>
+            <button className="button button--info button--small me-3" onClick={() => navigate("/patient/information/account")}>Change Password</button>
+            <button className="button button--primary button--small" onClick={() => navigate(`/patient/information/detail/${patient?.id}`)}>Edit</button>
           </div>
         </div>
 
@@ -146,14 +165,23 @@ const InfoPatient = () => {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>Otto</td>
-              <td>Otto</td>
-            </tr>
+            {listAppointment?.map((item: any, idx: number) => {
+              return (
+                <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
+                  <td >
+                    {item.patientName}
+                  </td>
 
+                  <td >{convertToDate(item.appointDate)}</td>
+                  <td >
+                    <span>{convertToTime(item.appointmentTimeStart)} </span> -
+                    <span>{convertToTime(item.appointmentTimeEnd)}</span>
+                  </td>
+                  <td >{item.doctorName}</td>
+                  <td >{item.status}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
         <PaginationComponent

@@ -115,7 +115,7 @@ const Doctor = () => {
             <th scope="col">Date of Birth</th>
             <th scope="col">Phone number</th>
             <th scope="col">Email</th>
-            <th scope="col">Department</th>
+            <th scope="col">Specialty</th>
             <th scope="col">Status</th>
             <th scope="col"></th>
           </tr>

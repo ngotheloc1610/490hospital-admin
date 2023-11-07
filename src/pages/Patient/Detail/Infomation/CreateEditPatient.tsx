@@ -8,10 +8,10 @@ import { useAppDispatch } from "../../../../redux/hooks";
 
 import { GENDER } from "../../../../constants";
 import { USER } from "../../../../assets";
-import { API_CREATE_PATIENT, API_GET_PATIENT } from "../../../../constants/api.constant";
+import { API_CREATE_PATIENT, API_GET_PATIENT, API_UPDATE_PATIENT } from "../../../../constants/api.constant";
 import { defineConfigGet, defineConfigPost } from "../../../../Common/utils";
 import { setPatient, setShowPopUpConfirm } from "../../../../redux/features/patient/patientSlice";
-import { success } from "../../../../Common/notify";
+import { error, success } from "../../../../Common/notify";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().min(3).required("Required"),
@@ -19,12 +19,12 @@ const validationSchema = Yup.object().shape({
   gender: Yup.string().required("Required"),
   address: Yup.string().required("Required"),
   city: Yup.string().required("Required"),
-  phoneNumber: Yup.number()
-    .positive("A phone number can't start with a minus")
-    .integer("A phone number can't include a decimal point")
-    .min(10)
-    .max(11)
-    .required("Required"),
+  // phoneNumber: Yup.number()
+  //   .positive("A phone number can't start with a minus")
+  //   .integer("A phone number can't include a decimal point")
+  //   .min(10)
+  //   .max(11)
+  //   .required("Required"),
   email: Yup.string().email().required("Required"),
 });
 
@@ -70,8 +70,8 @@ const CreateEditPatient = () => {
             gender: data.gender,
             phoneNumber: data?.telecom?.find((i: any) => i?.system === "phone")?.value,
             email: data?.telecom?.find((i: any) => i?.system === "email")?.value,
-            address: "",
-            city: "",
+            address: data?.addressFirstRep?.text,
+            city: data?.addressFirstRep?.city,
           }
           setPatientInfo(patientDetail);
         }
@@ -81,10 +81,25 @@ const CreateEditPatient = () => {
       });
   }
 
-  const createPatient = () => {
+  const createPatient = (values: any) => {
     const url = `${url_api}${API_CREATE_PATIENT}`;
-    const param = {
 
+    const param = {
+      username: values.name,
+      email: values.email,
+      active: true,
+      name: values.name,
+      phoneNumber: values.phoneNumber,
+      type: "PATIENT",
+      dateOfBirth: values.dateOfBirth,
+      city: values.city,
+      district: "",
+      ward: "",
+      address: values.address,
+      address2: "",
+      gender: values.gender,
+      country: "",
+      postalCode: "",
     }
 
     axios
@@ -97,6 +112,47 @@ const CreateEditPatient = () => {
         }
       })
       .catch((err: any) => {
+        if (err.response.data.status === 401) {
+          error(err.response.data.error)
+        }
+        console.log("err:", err);
+      });
+  }
+
+  const updatePatient = (values: any) => {
+    const url = `${url_api}${API_UPDATE_PATIENT}${values.id}`;
+
+    const param = {
+      username: values.name,
+      email: values.email,
+      active: true,
+      name: values.name,
+      phoneNumber: values.phoneNumber,
+      type: "PATIENT",
+      dateOfBirth: values.dateOfBirth,
+      city: values.city,
+      district: "",
+      ward: "",
+      address: values.address,
+      address2: "",
+      gender: values.gender,
+      country: "",
+      postalCode: "",
+    }
+
+    axios
+      .put(url, param, defineConfigPost())
+      .then((resp: any) => {
+        if (resp) {
+          success("Update Successfully!!!");
+          navigate("/patient");
+          console.log("resp:", resp)
+        }
+      })
+      .catch((err: any) => {
+        if (err.response.data.status === 401) {
+          error(err.response.data.error)
+        }
         console.log("err:", err);
       });
   }
@@ -110,7 +166,7 @@ const CreateEditPatient = () => {
     inputRef.current.click();
   };
 
-  const handleDelete = ()=> {
+  const handleDelete = () => {
     dispatch(setShowPopUpConfirm(true))
     dispatch(setPatient(patientInfo))
   }
@@ -251,12 +307,16 @@ const CreateEditPatient = () => {
       enableReinitialize={true}
       validationSchema={validationSchema}
       onSubmit={(values, actions) => {
-        createPatient();
+        if (values.id) {
+          updatePatient(values)
+        } else {
+          createPatient(values);
+        }
         actions.setSubmitting(false);
         actions.resetForm();
       }}
     >
-      {({errors, touched, submitForm }) => (
+      {({ errors, touched, submitForm }) => (
         <>
           <Form>
             <div className="overview-container">
@@ -275,7 +335,7 @@ const CreateEditPatient = () => {
           </Form>
           <div className="mt-3 d-flex justify-content-end">
             {patientInfo.id && (
-              <button className="button button--small button--danger me-3" onClick={()=> handleDelete()}>
+              <button className="button button--small button--danger me-3" onClick={() => handleDelete()}>
                 Delete
               </button>
             )}

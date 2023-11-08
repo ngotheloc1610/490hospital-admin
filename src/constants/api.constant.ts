@@ -31,3 +31,5 @@ export const API_ALL_GET_APPOINTMENT_UPCOMING = "/appointment/listAppointmentUpc
 
 export const API_ALL_GET_SPECIALTY = "/homepage/listSpecialty";
 export const API_ALL_GET_DEPARTMENT = "/homepage/listDepartment";
+
+export const API_CREATE_PRACTITIONER = "/practitioner/create"

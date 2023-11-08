@@ -243,14 +243,14 @@ const Staff = () => {
       ) : (
         <>
           <TotalView />
-          <div className="d-flex justify-content-end me-4">
+          {/* <div className="d-flex justify-content-end me-4">
             <button
               className="button button--small button--primary"
               onClick={() => navigate("/staff/overview/detail")}
             >
               <i className="bi bi-plus"></i> Add
             </button>
-          </div>
+          </div> */}
           <section className="table-container">
             <div className="table-container-contain">
               <div className="d-flex justify-content-center align-item-center">

@@ -55,7 +55,7 @@ const Sidebar = () => {
               <span>Department</span>
             </a>
           </li>
-          <li className={`${getClass(RouterUrl.SCHEDULE)}`}>
+          {/* <li className={`${getClass(RouterUrl.SCHEDULE)}`}>
             <a
               onClick={() => goToLink(RouterUrl.SCHEDULE)}
               data-content-id="schedule"
@@ -63,7 +63,7 @@ const Sidebar = () => {
               <ICON_APPOINTMENT />
               <span>Schedule</span>
             </a>
-          </li>
+          </li> */}
 
           <li className={`${getClass(RouterUrl.APPOINTMENT)}`}>
             <a
@@ -71,10 +71,10 @@ const Sidebar = () => {
               data-content-id="appointment"
             >
               <ICON_APPOINTMENT />
-              <span>Appointment</span>
+              <span>List Appointment</span>
             </a>
           </li>
-          <li className={`${getClass(RouterUrl.DIAGNOSTIC_REPORT)}`}>
+          {/* <li className={`${getClass(RouterUrl.DIAGNOSTIC_REPORT)}`}>
             <a
               onClick={() => goToLink(RouterUrl.DIAGNOSTIC_REPORT)}
               data-content-id="diagnostic-report"
@@ -82,7 +82,7 @@ const Sidebar = () => {
               <ICON_DIAGNOSTIC />
               <span>Diagnostic Report</span>
             </a>
-          </li>
+          </li> */}
           <li className={`${getClass(RouterUrl.STAFF)}`}>
             <a
               onClick={() => goToLink(RouterUrl.STAFF)}
@@ -90,6 +90,16 @@ const Sidebar = () => {
             >
               <ICON_STAFF />
               <span>Staff</span>
+            </a>
+          </li>
+
+          <li className={`${getClass(RouterUrl.PRACTITIONER)}`}>
+            <a
+              onClick={() => goToLink(RouterUrl.PRACTITIONER)}
+              data-content-id="practitioner"
+            >
+              <ICON_STAFF />
+              <span>Create Practitioner</span>
             </a>
           </li>
         </ul>

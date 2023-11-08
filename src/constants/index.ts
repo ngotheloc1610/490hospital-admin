@@ -19,6 +19,7 @@ export const RouterUrl = {
   APPOINTMENT: "/appointment",
   DIAGNOSTIC_REPORT: "/diagnostic-report",
   STAFF: "/staff",
+  PRACTITIONER: "/practitioner",
   LOGIN: "/login",
   REGISTER: "/register",
   FORGOT_PASSWORD: "/forgot-password",
@@ -126,4 +127,16 @@ export const STATUS = [
     name: "No Show",
     code: "no show",
   },
+];
+
+export const TYPE_PRACTITIONER = [
+  {
+    name: "Doctor",
+    code: "Doctor",
+  },
+  {
+    name: "Staff",
+    code: "Staff",
+  },
+
 ];

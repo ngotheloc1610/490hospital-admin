@@ -53,6 +53,7 @@ import CreateEditPatient from "./pages/Patient/Detail/Infomation/CreateEditPatie
 import Appointment from "./pages/Appointment";
 import ChangePassword from "./pages/Authentication/ChangePassword";
 import AccountPatient from "./pages/Patient/Detail/Account";
+import Practitioner from "./pages/Practitioner";
 
 if (typeof window !== "undefined") {
   require("bootstrap/dist/js/bootstrap.bundle.min");
@@ -88,6 +89,8 @@ const RouterDom = () => (
     <Route path={RouterUrl.SCHEDULE} element={<Schedule />} />
 
     <Route path={RouterUrl.APPOINTMENT} element={<Appointment />} />
+
+    <Route path={RouterUrl.PRACTITIONER} element={<Practitioner />} />
 
     <Route path={RouterUrl.DIAGNOSTIC_REPORT} element={<DiagnosticReport />}>
       <Route path="overview" element={<DetailDiagnostic />}>

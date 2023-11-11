@@ -1,13 +1,38 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 import {
     ScheduleComponent, Day, Week, WorkWeek, Month, Inject,
     ViewsDirective, ViewDirective
 } from '@syncfusion/ej2-react-schedule';
+import { defineConfigGet } from "../../../Common/utils";
+import { SCHEDULE_MONTH } from "../../../constants/api.constant";
+import axios from "axios";
+import { useParams } from "react-router";
 
 const ScheduleDoctor = () => {
     const scheduleObj = useRef<any>(null);
     const buttonObj = useRef<any>(null);
+    const param = useParams();
+
+    // const url_api = process.env.REACT_APP_API_URL;
+
+    // useEffect(() => {
+    //     const id = param.doctorId;
+    //     const url = `${url_api}${SCHEDULE_MONTH}${id}`;
+
+    //     axios
+    //         .get(url, defineConfigGet({}))
+    //         .then((resp: any) => {
+    //             if (resp) {
+    //                 console.log("resp:", resp)
+    //             }
+    //         })
+    //         .catch((err) => {
+    //             console.log("err:", err);
+    //         });
+    // }, [param.doctorId]);
+
+
 
     const data = [
         {

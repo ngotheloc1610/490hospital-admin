@@ -54,6 +54,10 @@ import Appointment from "./pages/Appointment";
 import ChangePassword from "./pages/Authentication/ChangePassword";
 import AccountPatient from "./pages/Patient/Detail/Account";
 import Practitioner from "./pages/Practitioner";
+import ScheduleDoctor from "./pages/Doctor/Detail/ScheduleDoctor";
+import Information from "./pages/Information";
+import EditPractitioner from "./pages/Information/EditPractitioner";
+import { useAppSelector } from "./redux/hooks";
 
 if (typeof window !== "undefined") {
   require("bootstrap/dist/js/bootstrap.bundle.min");
@@ -67,7 +71,9 @@ const RouterDom = () => (
     <Route path={RouterUrl.DOCTOR} element={<Doctor />}>
       <Route path="overview" element={<DetailDoctor />}>
         <Route path=":doctorId" element={<InfoDoctor />} />
-        <Route path="detail" element={<CreateEditDoctor />} />
+        <Route path="detail/:doctorId" element={<CreateEditDoctor />} />
+        {/* <Route path="scheduler" element={<ScheduleDoctor />} /> */}
+        <Route path="account" element={<ScheduleDoctor />} />
       </Route>
     </Route>
 
@@ -102,7 +108,7 @@ const RouterDom = () => (
     <Route path={RouterUrl.STAFF} element={<Staff />}>
       <Route path="overview" element={<DetailStaff />}>
         <Route path=":staffId" element={<InfoStaff />} />
-        <Route path="detail" element={<CreateEditStaff />} />
+        <Route path="detail/:staffId" element={<CreateEditStaff />} />
       </Route>
     </Route>
 
@@ -110,6 +116,10 @@ const RouterDom = () => (
     <Route path={RouterUrl.REGISTER} element={<Register />} />
     <Route path={RouterUrl.FORGOT_PASSWORD} element={<ForgotPassword />} />
     <Route path={RouterUrl.CHANGE_PASSWORD} element={<ChangePassword />} />
+
+    <Route path={RouterUrl.INFORMATION} element={<Information />} >
+      <Route path=":practitionerId" element={<EditPractitioner />} />
+    </Route>
 
     <Route path="*" element={<Navigate to={RouterUrl.DASHBOARD} />} />
   </Routes>
@@ -126,14 +136,15 @@ const _renderMainPage = () => {
 };
 
 const App = () => {
-  const [isLogin, setIsLogin] = useState<boolean>(false);
   const [isForgotPassword, setIsForgotPassword] = useState<boolean>(false);
   const [isChangePassword, setIsChangePassword] = useState<boolean>(false);
 
+  const { isLogin } = useAppSelector((state) => state.authSlice)
+
   return (
     <BrowserRouter basename={process.env.PUBLIC_URL}>
-      {_renderMainPage()}
-      {isLogin && <Login />}
+      {isLogin && _renderMainPage()}
+      {!isLogin && <Login />}
       {isForgotPassword && <ForgotPassword />}
       {isChangePassword && <ChangePassword />}
       <ToastContainer theme="colored" />

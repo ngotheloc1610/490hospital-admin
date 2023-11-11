@@ -176,7 +176,7 @@ const Staff = () => {
       <table className="table table-hover">
         <thead className="table-light">
           <tr>
-            <th scope="col">#</th>
+            <th scope="col">Avatar</th>
             <th scope="col">Name</th>
             <th scope="col">Gender</th>
             <th scope="col">Date of Birth</th>
@@ -189,16 +189,19 @@ const Staff = () => {
         </thead>
         <tbody>
           {listData?.map((item: any, idx: number) => {
-            const email = item.practitionerTarget.telecom?.find(
+            const email = item.practitionerTarget?.telecom?.find(
               (i: any) => i?.system === "email"
             )?.value;
-            const phone = item.practitionerTarget.telecom?.find(
+            const phone = item.practitionerTarget?.telecom?.find(
               (i: any) => i?.system === "phone"
             )?.value;
+            const src = `data:${item?.practitionerTarget?.photo[0]?.contentType};base64,${item?.practitionerTarget?.photo[0]?.data}`;
 
             return (
               <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
-                <th scope="row">{++idx}</th>
+                <th scope="row">
+                  <img src={src} alt="image" />
+                </th>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
                   {item.practitionerTarget.nameFirstRep.nameAsSingleString}
                 </td>
@@ -212,9 +215,9 @@ const Staff = () => {
                   {phone}
                 </td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>{email}</td>
-                <td onClick={() => navigate(`overview/${item.id}`)}>{item?.practitionerTarget?.specialty?.map((spec: any) => {
+                <td onClick={() => navigate(`overview/${item.id}`)}>{item.specialty && item.specialty.map((spec: any) => {
                   return (
-                    <span>{spec.display}</span>
+                    <span>{spec.coding[0].display}</span>
                   )
                 })}</td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>

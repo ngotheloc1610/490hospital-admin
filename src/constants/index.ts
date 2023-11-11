@@ -24,6 +24,7 @@ export const RouterUrl = {
   REGISTER: "/register",
   FORGOT_PASSWORD: "/forgot-password",
   CHANGE_PASSWORD: "/change-password",
+  INFORMATION: "/information",
 };
 
 export const START_PAGE = 0;
@@ -97,6 +98,10 @@ export const GENDER = [
     name: "Female",
     code: "female",
   },
+  {
+    name: "All",
+    code: "",
+  },
 ];
 
 export const GENDER_ALL = [
@@ -127,6 +132,10 @@ export const STATUS = [
     name: "No Show",
     code: "no show",
   },
+  {
+    name: "All",
+    code: "",
+  },
 ];
 
 export const TYPE_PRACTITIONER = [
@@ -138,5 +147,8 @@ export const TYPE_PRACTITIONER = [
     name: "Staff",
     code: "Staff",
   },
-
+  {
+    name: "Admin",
+    code: "Admin",
+  },
 ];

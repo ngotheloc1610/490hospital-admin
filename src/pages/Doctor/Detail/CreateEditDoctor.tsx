@@ -1,10 +1,13 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Field, FieldArray, Form, Formik } from "formik";
 import * as Yup from "yup";
 
 import { GENDER } from "../../../constants";
 import { ICON_TRASH, USER } from "../../../assets";
 import { IDoctorDetail } from "../../../interface/general.interface";
+import { defineConfigGet } from "../../../Common/utils";
+import axios from "axios";
+import { API_ALL_GET_SPECIALTY } from "../../../constants/api.constant";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Required"),
@@ -12,9 +15,9 @@ const validationSchema = Yup.object().shape({
   gender: Yup.string().required("Required"),
   phoneNumber: Yup.string().required("Required"),
   email: Yup.string().required("Required"),
-  residence: Yup.string().required("Required"),
+  address: Yup.string().required("Required"),
   city: Yup.string().required("Required"),
-  department: Yup.string().required("Required"),
+  specialty: Yup.string().required("Required"),
   startDate: Yup.string().required("Required"),
   endDate: Yup.string().required("Required"),
 });
@@ -26,23 +29,45 @@ const defaultValue: IDoctorDetail = {
   gender: "",
   phoneNumber: "",
   email: "",
-  residence: "",
+  address: "",
   city: "",
-  department: "",
+  specialty: "",
   startDate: "",
-  endDate : "",
+  endDate: "",
   education: [{ time: "", content: "" }],
   specialize: [{ time: "", content: "" }],
   achievement: [{ time: "", content: "" }],
 };
 
 const CreateEditDoctor = () => {
+  const url_api = process.env.REACT_APP_API_URL;
 
   const inputRef = useRef<any>(null);
-  const [departmentList, setDepartmentList] = useState([]);
+  const [specialtyList, setListSpecialty] = useState([]);
   const [image, setImage] = useState<any>("");
 
   const [doctor, setDoctor] = useState<IDoctorDetail>(defaultValue);
+
+  useEffect(() => {
+    getSpecialty();
+  }, [])
+
+
+  const getSpecialty = () => {
+    const url = `${url_api}${API_ALL_GET_SPECIALTY}`;
+
+    axios
+      .get(url, defineConfigGet({ page: 0, size: 100 }))
+      .then((resp: any) => {
+        if (resp) {
+          setListSpecialty(resp.data.content);
+        }
+      })
+      .catch((err: any) => {
+        console.log("err:", err);
+      });
+  }
+
 
   const handleChangeImage = (event: any) => {
     const file = event.target.files[0];
@@ -67,9 +92,8 @@ const CreateEditDoctor = () => {
             <Field
               name="name"
               id="name"
-              className={`form-control ${
-                errors?.name && touched?.name ? "is-invalid" : ""
-              }`}
+              className={`form-control ${errors?.name && touched?.name ? "is-invalid" : ""
+                }`}
             />
           </div>
           <div className="col-6 mb-3">
@@ -84,9 +108,8 @@ const CreateEditDoctor = () => {
                 <input
                   {...field}
                   type="date"
-                  className={`form-control input-select ${
-                    errors?.birthday && touched?.birthday ? "is-invalid" : ""
-                  }`}
+                  className={`form-control input-select ${errors?.birthday && touched?.birthday ? "is-invalid" : ""
+                    }`}
                   max="9999-12-31"
                 />
               )}
@@ -100,9 +123,8 @@ const CreateEditDoctor = () => {
               as="select"
               name="gender"
               id="gender"
-              className={`form-select ${
-                errors?.gender && touched?.gender ? "is-invalid" : ""
-              }`}
+              className={`form-select ${errors?.gender && touched?.gender ? "is-invalid" : ""
+                }`}
             >
               {GENDER.map((item: any) => (
                 <option value={item.code} key={item.code}>
@@ -112,16 +134,15 @@ const CreateEditDoctor = () => {
             </Field>
           </div>
           <div className="col-6 mb-3">
-            <label htmlFor="residence">
-              Current residence <span className="text-danger">*</span>
+            <label htmlFor="address">
+              Address <span className="text-danger">*</span>
             </label>
             <Field
-              name="residence"
+              name="address"
               type="text"
-              id="residence"
-              className={`form-control ${
-                errors?.residence && touched?.residence ? "is-invalid" : ""
-              }`}
+              id="address"
+              className={`form-control ${errors?.address && touched?.address ? "is-invalid" : ""
+                }`}
             />
           </div>
           <div className="col-6 mb-3">
@@ -132,9 +153,8 @@ const CreateEditDoctor = () => {
               name="city"
               type="text"
               id="city"
-              className={`form-control ${
-                errors?.city && touched?.city ? "is-invalid" : ""
-              }`}
+              className={`form-control ${errors?.city && touched?.city ? "is-invalid" : ""
+                }`}
             />
           </div>
           <div className="col-6 mb-3">
@@ -144,9 +164,8 @@ const CreateEditDoctor = () => {
             <Field
               name="phoneNumber"
               id="phoneNumber"
-              className={`form-control ${
-                errors?.phoneNumber && touched?.phoneNumber ? "is-invalid" : ""
-              }`}
+              className={`form-control ${errors?.phoneNumber && touched?.phoneNumber ? "is-invalid" : ""
+                }`}
             />
           </div>
           <div className="col-6 mb-3">
@@ -157,9 +176,8 @@ const CreateEditDoctor = () => {
               name="email"
               type="email"
               id="email"
-              className={`form-control ${
-                errors?.email && touched?.email ? "is-invalid" : ""
-              }`}
+              className={`form-control ${errors?.email && touched?.email ? "is-invalid" : ""
+                }`}
             />
           </div>
         </div>
@@ -174,20 +192,19 @@ const CreateEditDoctor = () => {
       <div className="mt-5">
         <p className="fw-bold border-top pt-2 text-dark">Work Information</p>
         <div className="row">
-          <div className="col-6 mb-3">
-            <label htmlFor="department">
-              Department <span className="text-danger">*</span>
+          <div className="col-12 mb-3">
+            <label htmlFor="specialty">
+              Specialty <span className="text-danger">*</span>
             </label>
             <Field
               as="select"
-              name="department"
-              id="department"
-              className={`form-select ${
-                errors?.department && touched?.department ? "is-invalid" : ""
-              }`}
+              name="specialty"
+              id="specialty"
+              className={`form-select ${errors?.specialty && touched?.specialty ? "is-invalid" : ""
+                }`}
             >
-              {departmentList.length > 0 ? (
-                departmentList.map((item: any) => (
+              {specialtyList.length > 0 ? (
+                specialtyList.map((item: any) => (
                   <option value={item.code} key={item.code}>
                     {item.name}
                   </option>
@@ -209,15 +226,14 @@ const CreateEditDoctor = () => {
                 <input
                   {...field}
                   type="date"
-                  className={`form-control input-select ${
-                    errors?.startDate && touched?.startDate ? "is-invalid" : ""
-                  }`}
+                  className={`form-control input-select ${errors?.startDate && touched?.startDate ? "is-invalid" : ""
+                    }`}
                   max="9999-12-31"
                 />
               )}
             />
           </div>
-         
+
           <div className="col-6 mb-3">
             <label htmlFor="endDate">
               End date <span className="text-danger">*</span>
@@ -230,15 +246,14 @@ const CreateEditDoctor = () => {
                 <input
                   {...field}
                   type="date"
-                  className={`form-control input-select ${
-                    errors?.endDate && touched?.endDate ? "is-invalid" : ""
-                  }`}
+                  className={`form-control input-select ${errors?.endDate && touched?.endDate ? "is-invalid" : ""
+                    }`}
                   max="9999-12-31"
                 />
               )}
             />
           </div>
-          
+
         </div>
       </div>
     );

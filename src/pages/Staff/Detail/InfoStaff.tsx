@@ -3,7 +3,9 @@ import { USER } from "../../../assets";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { defineConfigGet } from "../../../Common/utils";
-import { API_GET_STAFF } from "../../../constants/api.constant";
+import { API_DETAIL_PRACTITIONER } from "../../../constants/api.constant";
+import moment from "moment";
+import { FORMAT_DATE } from "../../../constants/general.constant";
 
 const InfoStaff = () => {
   const [staff, setStaff] = useState<any>({});
@@ -14,13 +16,12 @@ const InfoStaff = () => {
 
   useEffect(() => {
     const id = param.staffId;
-    const url = `${url_api}${API_GET_STAFF}${id}`;
+    const url = `${url_api}${API_DETAIL_PRACTITIONER}${id}`;
 
     axios
       .get(url, defineConfigGet({}))
       .then((resp: any) => {
         if (resp) {
-          console.log("resp:", resp);
           setStaff(resp.data);
         }
       })
@@ -30,36 +31,41 @@ const InfoStaff = () => {
   }, [param.staffId]);
 
   const _renderBasicInfo = () => {
+    const email = staff.practitionerTarget?.telecom?.find(
+      (i: any) => i?.system === "email"
+    )?.value;
+    const phone = staff.practitionerTarget?.telecom?.find(
+      (i: any) => i?.system === "phone"
+    )?.value;
+
     return (
       <div>
         <p className="fw-bold border-top pt-2 text-dark">Basic Information</p>
         <table className="table">
           <tbody>
             <tr>
-              <th scope="row" style={{ width: "35%" }}>
-                Gender
-              </th>
-              <td>gender</td>
+              <th scope="row" style={{ width: "35%" }}>Gender</th>
+              <td>{staff?.practitionerTarget?.gender}</td>
             </tr>
             <tr>
               <th scope="row">Date of birth</th>
-              <td>01/01/1975</td>
+              <td>{staff?.practitionerTarget?.birthDate}</td>
             </tr>
             <tr>
-              <th scope="row">Current residence</th>
-              <td>abcdefgh</td>
+              <th scope="row">Address</th>
+              <td>{staff?.practitionerTarget?.address[0].text}</td>
             </tr>
             <tr>
               <th scope="row">Citizen identification</th>
-              <td>[CCCD] 12345678910</td>
+              <td>{staff?.practitionerTarget?.address[0].city}</td>
             </tr>
             <tr>
               <th scope="row">Phone number</th>
-              <td>0987654321</td>
+              <td>{phone}</td>
             </tr>
             <tr>
               <th scope="row">Email</th>
-              <td>abc@gmail.com</td>
+              <td>{email}</td>
             </tr>
           </tbody>
         </table>
@@ -77,19 +83,25 @@ const InfoStaff = () => {
               <th scope="row" style={{ width: "15%" }}>
                 Starting date
               </th>
-              <td>01/01/2010</td>
+              <td>{moment(staff.period?.start, 'ddd MMM DD HH:mm:ss z YYYY').format(FORMAT_DATE)}</td>
             </tr>
             <tr>
-              <th scope="row">Department</th>
-              <td>General Surgery Department</td>
+              <th scope="row">End date</th>
+              <td>{moment(staff.period?.end, 'ddd MMM DD HH:mm:ss z YYYY').format(FORMAT_DATE)}</td>
             </tr>
             <tr>
               <th scope="row">Position</th>
-              <td>Resident</td>
+              <td>{staff.location && staff.location.map((item: any) => {
+                return (
+                  <span>{item.display}</span>
+                )
+              })}</td>
             </tr>
             <tr>
-              <th scope="row">Level</th>
-              <td>PhD</td>
+              <th scope="row">Specialty</th>
+              <td>{staff.specialty && staff.specialty.map((spec: any) => {
+                return <span>{spec.coding[0].display}</span>
+              })}</td>
             </tr>
           </tbody>
         </table>
@@ -105,18 +117,18 @@ const InfoStaff = () => {
             <div className="col-4">
               <div className="h-100 d-flex flex-column">
                 <div className="h-100">
-                  <img src={USER} alt="" className="h-100 d-block m-auto" />
+                  <img src={staff?.practitionerTarget?.photo ? `data:${staff.practitionerTarget.photo[0].contentType};base64,${staff.practitionerTarget.photo[0].data}` : USER} alt="image" className="h-100 d-block m-auto" />
                 </div>
               </div>
             </div>
             <div className="col-8">
-            <div className="pb-3 mb-3 border-bottom d-flex justify-content-between">
-              <h3 className="fw-bold text-uppercase">aaa</h3>
-              <div>
-                <button className="button button--info button--small me-3" onClick={()=> navigate("/change-password")}>Change Password</button>
-                <button className="button button--primary button--small">Edit</button>
+              <div className="pb-3 mb-3 border-bottom d-flex justify-content-between">
+                <h3 className="fw-bold text-uppercase">{staff?.practitionerTarget?.nameFirstRep?.nameAsSingleString}</h3>
+                <div>
+                  <button className="button button--info button--small me-3" onClick={() => navigate("/change-password")}>Change Password</button>
+                  <button className="button button--primary button--small" onClick={() => navigate(`/staff/overview/detail/${staff?.id}`)}>Edit</button>
+                </div>
               </div>
-            </div>
               {_renderBasicInfo()}
             </div>
           </div>

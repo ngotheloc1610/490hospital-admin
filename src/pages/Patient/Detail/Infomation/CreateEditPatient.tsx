@@ -8,7 +8,7 @@ import { useAppDispatch } from "../../../../redux/hooks";
 
 import { GENDER } from "../../../../constants";
 import { USER } from "../../../../assets";
-import { API_CREATE_PATIENT, API_GET_PATIENT, API_UPDATE_PATIENT } from "../../../../constants/api.constant";
+import { API_GET_PATIENT, API_UPDATE_PATIENT } from "../../../../constants/api.constant";
 import { defineConfigGet, defineConfigPost } from "../../../../Common/utils";
 import { setPatient, setShowPopUpConfirm } from "../../../../redux/features/patient/patientSlice";
 import { error, success } from "../../../../Common/notify";
@@ -37,6 +37,7 @@ const defaultValue = {
   city: "",
   phoneNumber: "",
   email: "",
+  photo: []
 };
 
 const CreateEditPatient = () => {
@@ -47,7 +48,7 @@ const CreateEditPatient = () => {
   const inputRef = useRef<any>(null);
   const [image, setImage] = useState<any>("");
 
-  const [patientInfo, setPatientInfo] = useState(defaultValue);
+  const [patientInfo, setPatientInfo] = useState<any>(defaultValue);
 
   const dispatch = useAppDispatch();
 
@@ -72,6 +73,7 @@ const CreateEditPatient = () => {
             email: data?.telecom?.find((i: any) => i?.system === "email")?.value,
             address: data?.addressFirstRep?.text,
             city: data?.addressFirstRep?.city,
+            photo: data?.photo
           }
           setPatientInfo(patientDetail);
         }
@@ -81,48 +83,11 @@ const CreateEditPatient = () => {
       });
   }
 
-  const createPatient = (values: any) => {
-    const url = `${url_api}${API_CREATE_PATIENT}`;
-
-    const param = {
-      username: values.name,
-      email: values.email,
-      active: true,
-      name: values.name,
-      phoneNumber: values.phoneNumber,
-      type: "PATIENT",
-      dateOfBirth: values.dateOfBirth,
-      city: values.city,
-      district: "",
-      ward: "",
-      address: values.address,
-      address2: "",
-      gender: values.gender,
-      country: "",
-      postalCode: "",
-    }
-
-    axios
-      .post(url, param, defineConfigPost())
-      .then((resp: any) => {
-        if (resp) {
-          success("Created Successfully!!!");
-          navigate("/patient");
-          console.log("resp:", resp)
-        }
-      })
-      .catch((err: any) => {
-        if (err.response.data.status === 401) {
-          error(err.response.data.error)
-        }
-        console.log("err:", err);
-      });
-  }
-
   const updatePatient = (values: any) => {
     const url = `${url_api}${API_UPDATE_PATIENT}${values.id}`;
 
     const param = {
+      id: values.id,
       username: values.name,
       email: values.email,
       active: true,
@@ -144,6 +109,7 @@ const CreateEditPatient = () => {
       .put(url, param, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
+          console.log("resp:", resp)
           success("Update Successfully!!!");
           navigate("/patient");
           console.log("resp:", resp)
@@ -282,8 +248,8 @@ const CreateEditPatient = () => {
       <div className="h-100 d-flex flex-column" onClick={handlePickImage}>
         <div className="h-100">
           <img
-            src={image ? URL.createObjectURL(image) : USER}
-            alt=""
+            src={patientInfo.photo.length > 0 ? `data:${patientInfo.photo[0]?.contentType};base64,${patientInfo.photo[0]?.data}` : USER}
+            alt="imagee"
             className={`h-100 w-100 d-block m-auto ${image ? "" : "bg-image"}`}
             style={{ objectFit: "cover" }}
           />
@@ -307,11 +273,7 @@ const CreateEditPatient = () => {
       enableReinitialize={true}
       validationSchema={validationSchema}
       onSubmit={(values, actions) => {
-        if (values.id) {
-          updatePatient(values)
-        } else {
-          createPatient(values);
-        }
+        updatePatient(values)
         actions.setSubmitting(false);
         actions.resetForm();
       }}

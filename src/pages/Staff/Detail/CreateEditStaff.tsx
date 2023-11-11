@@ -62,9 +62,8 @@ const CreateEditStaff = () => {
             <Field
               name="name"
               id="name"
-              className={`form-control ${
-                errors?.name && touched?.name ? "is-invalid" : ""
-              }`}
+              className={`form-control ${errors?.name && touched?.name ? "is-invalid" : ""
+                }`}
             />
           </div>
           <div className="col-6 mb-3">
@@ -79,9 +78,8 @@ const CreateEditStaff = () => {
                 <input
                   {...field}
                   type="date"
-                  className={`form-control input-select ${
-                    errors?.birthday && touched?.birthday ? "is-invalid" : ""
-                  }`}
+                  className={`form-control input-select ${errors?.birthday && touched?.birthday ? "is-invalid" : ""
+                    }`}
                   max="9999-12-31"
                 />
               )}
@@ -95,9 +93,8 @@ const CreateEditStaff = () => {
               as="select"
               name="gender"
               id="gender"
-              className={`form-select ${
-                errors?.gender && touched?.gender ? "is-invalid" : ""
-              }`}
+              className={`form-select ${errors?.gender && touched?.gender ? "is-invalid" : ""
+                }`}
             >
               {GENDER.map((item: any) => (
                 <option value={item.code} key={item.code}>
@@ -114,9 +111,8 @@ const CreateEditStaff = () => {
               name="residence"
               type="text"
               id="residence"
-              className={`form-control ${
-                errors?.residence && touched?.residence ? "is-invalid" : ""
-              }`}
+              className={`form-control ${errors?.residence && touched?.residence ? "is-invalid" : ""
+                }`}
             />
           </div>
           <div className="col-6 mb-3">
@@ -127,9 +123,8 @@ const CreateEditStaff = () => {
               name="city"
               type="text"
               id="city"
-              className={`form-control ${
-                errors?.city && touched?.city ? "is-invalid" : ""
-              }`}
+              className={`form-control ${errors?.city && touched?.city ? "is-invalid" : ""
+                }`}
             />
           </div>
           <div className="col-6 mb-3">
@@ -139,9 +134,8 @@ const CreateEditStaff = () => {
             <Field
               name="phoneNumber"
               id="phoneNumber"
-              className={`form-control ${
-                errors?.phoneNumber && touched?.phoneNumber ? "is-invalid" : ""
-              }`}
+              className={`form-control ${errors?.phoneNumber && touched?.phoneNumber ? "is-invalid" : ""
+                }`}
             />
           </div>
           <div className="col-6 mb-3">
@@ -152,9 +146,8 @@ const CreateEditStaff = () => {
               name="email"
               type="email"
               id="email"
-              className={`form-control ${
-                errors?.email && touched?.email ? "is-invalid" : ""
-              }`}
+              className={`form-control ${errors?.email && touched?.email ? "is-invalid" : ""
+                }`}
             />
           </div>
         </div>
@@ -177,9 +170,8 @@ const CreateEditStaff = () => {
               as="select"
               name="department"
               id="department"
-              className={`form-select ${
-                errors?.department && touched?.department ? "is-invalid" : ""
-              }`}
+              className={`form-select ${errors?.department && touched?.department ? "is-invalid" : ""
+                }`}
             >
               {departmentList.length > 0 ? (
                 departmentList.map((item: any) => (
@@ -204,9 +196,8 @@ const CreateEditStaff = () => {
                 <input
                   {...field}
                   type="date"
-                  className={`form-control input-select ${
-                    errors?.startDate && touched?.startDate ? "is-invalid" : ""
-                  }`}
+                  className={`form-control input-select ${errors?.startDate && touched?.startDate ? "is-invalid" : ""
+                    }`}
                   max="9999-12-31"
                 />
               )}
@@ -225,9 +216,8 @@ const CreateEditStaff = () => {
                 <input
                   {...field}
                   type="date"
-                  className={`form-control input-select ${
-                    errors?.endDate && touched?.endDate ? "is-invalid" : ""
-                  }`}
+                  className={`form-control input-select ${errors?.endDate && touched?.endDate ? "is-invalid" : ""
+                    }`}
                   max="9999-12-31"
                 />
               )}

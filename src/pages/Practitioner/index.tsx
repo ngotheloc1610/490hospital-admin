@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LOGO_HOSPITAL } from "../../assets";
 import Layout from "../../components/Layout";
-import { GENDER_ALL, TYPE_PRACTITIONER } from "../../constants";
-import { API_CREATE_PRACTITIONER } from "../../constants/api.constant";
-import { defineConfigPost } from "../../Common/utils";
+import { GENDER, TYPE_PRACTITIONER } from "../../constants";
+import { API_ALL_GET_SPECIALTY, API_CREATE_PRACTITIONER } from "../../constants/api.constant";
+import { defineConfigGet, defineConfigPost } from "../../Common/utils";
 import axios from "axios";
 import { success, warn } from "../../Common/notify";
 
@@ -13,6 +13,8 @@ const Practitioner = () => {
     const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
     const [isShowCfPassword, setIsShowCfPassword] = useState<boolean>(false);
 
+    const [listSpecialty, setListSpecialty] = useState([]);
+
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [cfPassword, setCfPassword] = useState<string>("");
@@ -21,44 +23,61 @@ const Practitioner = () => {
     const [phoneNumber, setPhoneNumber] = useState<string>("");
     const [gender, setGender] = useState<string>("");
     const [type, setType] = useState<string>("");
+    const [specialty, setSpecialty] = useState<string>("");
+    const [startDate, setStartDate] = useState<string>("");
+    const [endDate, setEndDate] = useState<string>("");
+
+    useEffect(() => {
+        getSpecialty();
+    }, [])
+
+
+    const getSpecialty = () => {
+        const url = `${url_api}${API_ALL_GET_SPECIALTY}`;
+
+        axios
+            .get(url, defineConfigGet({ page: 0, size: 100 }))
+            .then((resp: any) => {
+                if (resp) {
+                    setListSpecialty(resp.data.content);
+                }
+            })
+            .catch((err: any) => {
+                console.log("err:", err);
+            });
+    }
+
 
     const createPractitioner = () => {
         const url = `${url_api}${API_CREATE_PRACTITIONER}`;
 
         const params = {
-            identifier: [],
             username: username,
             password: password,
-            active: true,
-            name: [{
-                use: name,
-                text: name,
-                family: name,
-                given: [],
-                prefix: [],
-                suffix: [],
-                period: null
-            }],
+            identifier: [],
+            name: name,
+            phoneNumber: phoneNumber,
             type: type,
-            telecom: [{
-                system: "",
-                value: phoneNumber,
-                use: "",
-                rank: 0,
-                period: null
-            }],
-            address: [],
+            dateOfBirth: birthDay,
+            photo: "",
+            city: "",
+            district: "",
+            state: "",
+            address: "",
+            address2: "",
             gender: gender,
-            birthDate: birthDay,
-            photo: [],
-            qualification: [],
-            communication: []
+            country: "",
+            postalCode: "",
+            code: specialty,
+            start: startDate,
+            end: endDate,
         }
 
         axios
             .post(url, params, defineConfigPost())
             .then((resp: any) => {
                 if (resp) {
+                    console.log("resp:", resp)
                     success(`Create practitioner ${type} successfully!`);
 
                 }
@@ -67,6 +86,47 @@ const Practitioner = () => {
                 console.log("err:", err);
             });
     }
+
+    const _renderListType = () => {
+        return (
+            <>
+                <option hidden>Type of practitioner</option>
+                {TYPE_PRACTITIONER.map((item: any) => (
+                    <option value={item.code} key={item.code}>
+                        {item.name}
+                    </option>
+                ))}
+            </>
+        );
+    };
+    const _renderListGender = () => {
+        return (
+            <>
+                <option hidden>Gender</option>
+                {GENDER.map((item: any) => (
+                    <option value={item.code} key={item.code}>
+                        {item.name}
+                    </option>
+                ))}
+            </>
+        );
+    };
+
+    const _renderListSpecialty = () => {
+        return (
+            <>
+                {listSpecialty.length > 0 ? (
+                    listSpecialty.map((item: any) => (
+                        <option value={item.code} key={item.code}>
+                            {item.name}
+                        </option>
+                    ))
+                ) : (
+                    <option disabled>No option</option>
+                )}
+            </>
+        );
+    };
 
     const handleCreatePractitioner = () => {
         if (password !== cfPassword) {
@@ -183,48 +243,53 @@ const Practitioner = () => {
                             </div>
                             <div className="row mb-3 ">
                                 <div className="col-6 d-flex">
-                                    {TYPE_PRACTITIONER.map((item: any, idx: number) => {
-                                        return (
-                                            <div className="form-check form-check-inline">
-                                                <div>
-                                                    <input
-                                                        className="form-check-input"
-                                                        type="radio"
-                                                        name="type"
-                                                        id={item.code}
-                                                        value={item.code}
-                                                        onChange={(e: any) => setType(e.target.value)}
-                                                    />
-                                                    <label className="form-check-label" htmlFor={item.code}>
-                                                        {item.name}
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
+                                    <select
+                                        className="form-select"
+                                        onChange={(e) => setType(e.target.value)}
+                                    >
+                                        {_renderListType()}
+                                    </select>
                                 </div>
                                 <div className="col-6 d-flex justify-content-between ">
-                                    {GENDER_ALL.map((item: any, idx: number) => {
-                                        return (
-                                            <div className="form-check form-check-inline">
-                                                <div>
-                                                    <input
-                                                        className="form-check-input"
-                                                        type="radio"
-                                                        name="gender"
-                                                        id={item.code}
-                                                        value={item.code}
-                                                        onChange={(e: any) => setGender(e.target.value)}
-                                                    />
-                                                    <label className="form-check-label" htmlFor={item.code}>
-                                                        {item.name}
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
+                                    <select
+                                        className="form-select"
+                                        onChange={(e) => setGender(e.target.value)}
+                                    >
+                                        {_renderListGender()}
+                                    </select>
                                 </div>
                             </div>
+                            <div className="row mb-3">
+                                <div className="col-6">
+                                    <input
+                                        type="date"
+                                        className="form-control h-100"
+                                        placeholder="Start Date"
+                                        value={startDate}
+                                        onChange={(e: any) => setStartDate(e.target.value)}
+                                    />
+                                </div>
+                                <div className="col-6">
+                                    <input
+                                        type="date"
+                                        className="form-control h-100"
+                                        placeholder="End Date"
+                                        value={endDate}
+                                        onChange={(e: any) => setEndDate(e.target.value)}
+                                    />
+                                </div>
+                            </div>
+                            <div className="row mb-3 ">
+                                <div className="col-6 d-flex">
+                                    <select
+                                        className="form-select"
+                                        onChange={(e) => setSpecialty(e.target.value)}
+                                    >
+                                        {_renderListSpecialty()}
+                                    </select>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
 

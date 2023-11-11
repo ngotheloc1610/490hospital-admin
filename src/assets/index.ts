@@ -13,6 +13,7 @@ import { ReactComponent as ICON_APPOINTMENT } from "./icons/appointment.svg";
 import { ReactComponent as ICON_TRASH } from "./icons/trash.svg";
 import { ReactComponent as ICON_PENCIL } from "./icons/pencil.svg";
 import { ReactComponent as ICON_PLUS } from "./icons/plus-icon.svg";
+import { ReactComponent as ICON_BLOCK } from "./icons/block.svg";
 
 export {
   LOGO,
@@ -29,4 +30,5 @@ export {
   ICON_TRASH,
   ICON_PENCIL,
   ICON_PLUS,
+  ICON_BLOCK
 };

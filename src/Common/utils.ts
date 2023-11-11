@@ -3,7 +3,7 @@ import moment from "moment";
 
 export const defineConfigGet = (param: any) => {
     const data = {
-        headers: { Authorization: `Bearer ${sessionStorage.getItem(KEY_LOCAL_STORAGE.AUTHEN)}` },
+        headers: { Authorization: `Bearer ${localStorage.getItem(KEY_LOCAL_STORAGE.AUTHEN)}` },
         params: param
     }
     return data;
@@ -11,7 +11,7 @@ export const defineConfigGet = (param: any) => {
 
 export const defineConfigPost = () => {
     const data = {
-        headers: { Authorization: `Bearer ${sessionStorage.getItem(KEY_LOCAL_STORAGE.AUTHEN)}` }
+        headers: { Authorization: `Bearer ${localStorage.getItem(KEY_LOCAL_STORAGE.AUTHEN)}` }
     }
     return data;
 }

@@ -12,9 +12,9 @@ export interface IDoctorDetail {
   gender: string;
   phoneNumber: string;
   email: string;
-  residence: string;
+  address: string;
   city: string;
-  department: string;
+  specialty: string;
   startDate: string;
   endDate: string;
   education: [{ time: string; content: string }];

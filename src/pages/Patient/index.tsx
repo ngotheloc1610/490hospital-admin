@@ -10,7 +10,7 @@ import {
 import {
   defineConfigGet
 } from "../../Common/utils";
-import { ICON_PENCIL, ICON_TRASH } from "../../assets";
+import { ICON_BLOCK, ICON_PENCIL, ICON_TRASH } from "../../assets";
 
 import PopUpConfirm from "./PopupConfirm";
 import Layout from "../../components/Layout";
@@ -18,27 +18,41 @@ import TotalView from "../../components/common/TotalView";
 import PaginationComponent from "../../components/common/Pagination";
 
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setPatient, setShowPopUpConfirm } from "../../redux/features/patient/patientSlice";
+import { setPatient, setShowPopUpConfirm, setShowPopUpConfirmBlock } from "../../redux/features/patient/patientSlice";
+import PopUpConfirmBlock from "./PopupConfirmBlock";
 
 const Patient = () => {
   const [listData, setListData] = useState<any>([]);
   const [currentPage, setCurrentPage] = useState<number>(START_PAGE);
   const [itemPerPage, setItemPerPage] = useState<number>(DEFAULT_ITEM_PER_PAGE);
   const [totalItem, setTotalItem] = useState<number>(0);
+  const [isSearch, setIsSearch] = useState<boolean>(false)
 
   const [name, setName] = useState<string>("");
   const [gender, setGender] = useState<string>("");
 
-  const { triggerDelete, showPopUpConfirm } = useAppSelector((state) => state.patientSlice)
+  const { triggerDelete, showPopUpConfirm, showPopUpConfirmBlock, triggerBlock, listBlock, patient } = useAppSelector((state) => state.patientSlice)
   const dispatch = useAppDispatch();
   const outlet = useOutlet();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    console.log("listBlock", listBlock);
+  }, [listBlock])
+  useEffect(() => {
+    console.log("patient", patient);
+  }, [patient])
+
+
   const url_api = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
-    getPatient();
-  }, [currentPage, itemPerPage, triggerDelete]);
+    if (isSearch) {
+      searchPatient()
+    } else {
+      getPatient();
+    }
+  }, [currentPage, itemPerPage, triggerDelete, triggerBlock]);
 
   const getPatient = () => {
     const url = `${url_api}${API_ALL_GET_PATIENT}`;
@@ -56,11 +70,11 @@ const Patient = () => {
       });
   }
 
-  const handleSearch = () => {
+  const searchPatient = () => {
     const url = `${url_api}${API_SEARCH_PATIENT}`;
 
     axios
-      .get(url, defineConfigGet({ page: currentPage, size: itemPerPage, gender: gender, nameSearch: name }))
+      .get(url, defineConfigGet({ page: currentPage, size: itemPerPage, gender: gender, nameOrPhone: name }))
       .then((resp: any) => {
         if (resp) {
           setListData(resp.data.content);
@@ -72,8 +86,19 @@ const Patient = () => {
       });
   }
 
+  const handleSearch = () => {
+    searchPatient();
+    setIsSearch(true);
+    setCurrentPage(0)
+  }
+
   const handleDelete = (patient: any) => {
     dispatch(setShowPopUpConfirm(true));
+    dispatch(setPatient(patient));
+  };
+
+  const handleBlock = (patient: any) => {
+    dispatch(setShowPopUpConfirmBlock(true));
     dispatch(setPatient(patient));
   };
 
@@ -90,12 +115,16 @@ const Patient = () => {
     setCurrentPage(0);
   };
 
+  const checkBlock = (id: string) => {
+    return listBlock.some((block: string) => block === id)
+  }
+
   const _renderTableListPatient = () => {
     return (
       <table className="table table-hover">
         <thead className="table-light">
           <tr>
-            <th scope="col">#</th>
+            <th scope="col">Avatar</th>
             <th scope="col">Name</th>
             <th scope="col">Gender</th>
             <th scope="col">Date of Birth</th>
@@ -112,10 +141,13 @@ const Patient = () => {
             const phone = item.telecom?.find(
               (i: any) => i?.system === "phone"
             )?.value;
+            const src = `data:${item?.photo[0]?.contentType};base64,${item?.photo[0]?.data}`;
 
             return (
-              <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
-                <th scope="row">{++idx}</th>
+              <tr className={`${idx % 2 === 1 ? "table-light" : ""} ${checkBlock(item.id) ? "text-decoration-line-through" : ""}`}>
+                <th scope="row">
+                  <img src={src} alt="image" />
+                </th>
                 <td onClick={() => navigate(`information/${item.id}`)}>
                   {item.nameFirstRep.nameAsSingleString}
                 </td>
@@ -129,8 +161,11 @@ const Patient = () => {
                   <span className="cursor-pointer" onClick={() => handleDelete(item)}>
                     <ICON_TRASH />
                   </span>
-                  <span className="ms-1 cursor-pointer">
-                    <ICON_PENCIL onClick={() => handleModify(item.id)} />
+                  <span className="ms-1 cursor-pointer" onClick={() => handleModify(item.id)}>
+                    <ICON_PENCIL />
+                  </span>
+                  <span className="ms-1 cursor-pointer" onClick={() => handleBlock(item)}>
+                    <ICON_BLOCK />
                   </span>
                 </td>
               </tr>
@@ -223,6 +258,10 @@ const Patient = () => {
 
       {showPopUpConfirm && (
         <PopUpConfirm />
+      )}
+
+      {showPopUpConfirmBlock && (
+        <PopUpConfirmBlock />
       )}
     </Layout>
   );

@@ -10,6 +10,9 @@ export const MESSAGE_TOAST = {
 
 export const KEY_LOCAL_STORAGE = {
   AUTHEN: "objAuthen",
+  EXP: "exp",
+  IAT: "iat",
+  SUB: "sub",
 };
 
 export const FORMAT_DATE = "DD/MM/YYYY";

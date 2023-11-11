@@ -19,7 +19,7 @@ const PopUpConfirm = () => {
   const { triggerDelete, patient } = useAppSelector((state) => state.patientSlice)
 
 
-  const handleDelete = () => {
+  const deletePatient = () => {
     const url = `${url_api}${API_DELETE_PATIENT}${patient.id}`;
     axios.delete(url, defineConfigPost()).then(resp => {
       if (resp) {
@@ -31,6 +31,10 @@ const PopUpConfirm = () => {
     }).catch((err: any) => {
       console.log("err:", err)
     })
+  }
+
+  const handleDelete = () => {
+    deletePatient()
   };
 
   return (

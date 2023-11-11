@@ -13,10 +13,8 @@ const InfoPatient = () => {
   const [itemPerPage, setItemPerPage] = useState<number>(3);
   const [totalItem, setTotalItem] = useState<number>(0);
 
-  const inputRef = useRef<any>(null);
   const [patient, setPatient] = useState<any>({});
   const [listAppointment, setListAppointment] = useState<any>([]);
-  const [image, setImage] = useState<any>("");
 
   const param = useParams();
   const navigate = useNavigate();
@@ -58,14 +56,6 @@ const InfoPatient = () => {
       .catch((err) => {
         console.log("err:", err);
       });
-  }
-  const handleChangeImage = (event: any) => {
-    const file = event.target.files[0];
-    setImage(file);
-  };
-
-  const handlePickImage = () => {
-    inputRef.current.click();
   }
 
   const getCurrentPage = (item: number) => {
@@ -126,24 +116,16 @@ const InfoPatient = () => {
             </table>
           </div>
           <div className="col-4">
-            <div className="h-100 d-flex flex-column" onClick={handlePickImage}>
+            <div className="h-100 d-flex flex-column">
               <div className="h-100">
                 <img
-                  src={image ? URL.createObjectURL(image) : USER}
-                  alt=""
-                  className={`h-100 w-100 d-block m-auto ${image ? "" : "bg-image"}`}
+                  src={patient.photo?.length > 0 ? `data:${patient.photo[0].contentType};base64,${patient.photo[0].data}` : USER}
+                  alt="image"
+                  className={`h-100 w-100 d-block m-auto`}
                   style={{ objectFit: "cover" }}
                 />
-                <input
-                  type="file"
-                  className="d-none"
-                  ref={inputRef}
-                  onChange={handleChangeImage}
-                />
               </div>
-              <button className="button button--small button--primary w-90 mx-auto mt-3">
-                {image ? "Edit" : "Add"} profile picture
-              </button>
+
             </div>
           </div>
         </div>

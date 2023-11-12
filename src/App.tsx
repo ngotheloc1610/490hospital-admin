@@ -139,12 +139,13 @@ const App = () => {
   const [isForgotPassword, setIsForgotPassword] = useState<boolean>(false);
   const [isChangePassword, setIsChangePassword] = useState<boolean>(false);
 
-  const { isLogin } = useAppSelector((state) => state.authSlice)
+  const { isLogin, isRegister } = useAppSelector((state) => state.authSlice)
 
   return (
     <BrowserRouter basename={process.env.PUBLIC_URL}>
       {isLogin && _renderMainPage()}
-      {!isLogin && <Login />}
+      {!isLogin && !isRegister && <Login />}
+      {isRegister && <Register />}
       {isForgotPassword && <ForgotPassword />}
       {isChangePassword && <ChangePassword />}
       <ToastContainer theme="colored" />

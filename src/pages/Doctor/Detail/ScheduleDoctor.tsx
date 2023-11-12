@@ -1,72 +1,103 @@
-import { useEffect, useRef } from "react";
-
+import { useEffect, useRef, useState } from "react";
 import {
-    ScheduleComponent, Day, Week, WorkWeek, Month, Inject,
-    ViewsDirective, ViewDirective
+    ScheduleComponent,
+    ViewsDirective,
+    ViewDirective,
+    Inject,
+    Day,
+    Week,
+    WorkWeek,
+    Month,
 } from '@syncfusion/ej2-react-schedule';
-import { defineConfigGet } from "../../../Common/utils";
-import { SCHEDULE_MONTH } from "../../../constants/api.constant";
+import { ButtonComponent } from '@syncfusion/ej2-react-buttons';
 import axios from "axios";
 import { useParams } from "react-router";
 
+import { SCHEDULE_ALL } from "../../../constants/api.constant";
+import { defineConfigPost } from "../../../Common/utils";
+
+import PopUpAddEvent from "./PopupAddEvent";
+
+interface EventData {
+    Subject: string;
+    StartTime: Date;
+    EndTime: Date;
+}
+
 const ScheduleDoctor = () => {
-    const scheduleObj = useRef<any>(null);
-    const buttonObj = useRef<any>(null);
+    const url_api = process.env.REACT_APP_API_URL;
+
     const param = useParams();
 
-    // const url_api = process.env.REACT_APP_API_URL;
+    const scheduleRef = useRef<ScheduleComponent>(null);
+    const [isPopupOpen, setPopupOpen] = useState<boolean>(false);
 
-    // useEffect(() => {
-    //     const id = param.doctorId;
-    //     const url = `${url_api}${SCHEDULE_MONTH}${id}`;
+    const [schedules, setSchedules] = useState<any>([]);
 
-    //     axios
-    //         .get(url, defineConfigGet({}))
-    //         .then((resp: any) => {
-    //             if (resp) {
-    //                 console.log("resp:", resp)
-    //             }
-    //         })
-    //         .catch((err) => {
-    //             console.log("err:", err);
-    //         });
-    // }, [param.doctorId]);
+    const [dataSchedule, setDataSchedule] = useState<any>([]);
 
+    const getAllScheduler = () => {
+        const id = param.doctorId;
+        const url = `${url_api}${SCHEDULE_ALL}${id}`;
 
-
-    const data = [
-        {
-            Id: 1,
-            Subject: "Paris",
-            StartTime: new Date(2023, 10, 26, 10, 0),
-            EndTime: new Date(2023, 10, 26, 12, 30),
-        },
-    ];
-
-    const onAddClick = () => {
-        let Data = [{
-            Id: 2,
-            Subject: 'Conference',
-            StartTime: new Date(2023, 10, 26, 9, 0),
-            EndTime: new Date(2023, 10, 26, 10, 0),
-            IsAllDay: false
-        }, {
-            Id: 3,
-            Subject: 'Meeting',
-            StartTime: new Date(2023, 10, 26, 10, 0),
-            EndTime: new Date(2023, 10, 26, 11, 30),
-            IsAllDay: false
-        }];
-        scheduleObj.current.addEvent(Data);
-        console.log("scheduleObj:", scheduleObj.current)
+        axios
+            .get(url, defineConfigPost())
+            .then((resp: any) => {
+                if (resp) {
+                    console.log("resp:", resp)
+                    setSchedules(resp.data);
+                }
+            })
+            .catch((err) => {
+                console.log("err:", err);
+            });
     }
 
-    const eventSettings = { dataSource: data };
+    useEffect(() => {
+        getAllScheduler()
+    }, [])
+
+    useEffect(() => {
+        schedules.forEach((item: any) => {
+            dataSchedule.push({
+                Id: item.id,
+                Subject: item.comment,
+                StartTime: new Date(item.planningHorizon.start),
+                EndTime: new Date(item.planningHorizon.end),
+            })
+        })
+    }, [schedules])
+
+    const openPopup = () => {
+        setPopupOpen(true);
+    };
+
+    const closePopup = () => {
+        setPopupOpen(false);
+    };
+
+    const handleAddEvent = () => {
+        const scheduleComponent = scheduleRef.current;
+
+        if (scheduleComponent) {
+            // Logic to add the event to the scheduler data
+            const newEvent: EventData = {
+                Subject: 'New Event',
+                StartTime: new Date(),
+                EndTime: new Date(),
+            };
+
+            // You can use scheduleComponent.addEvent() to add events programmatically
+            scheduleComponent.addEvent(newEvent);
+            closePopup();
+        }
+    };
+
+    const eventSettings = { dataSource: dataSchedule };
 
     return (
         <section id="schedule">
-            <ScheduleComponent ref={scheduleObj} width='100%' height='100%' selectedDate=
-                {new Date(2023, 10, 26)} eventSettings={eventSettings}>
+            <ScheduleComponent ref={scheduleRef} width='100%' height='100%' selectedDate={new Date()} eventSettings={eventSettings}>
                 <ViewsDirective>
                     <ViewDirective option='Day' />
                     <ViewDirective option='Week' />
@@ -75,6 +106,10 @@ const ScheduleDoctor = () => {
                 </ViewsDirective>
                 <Inject services={[Day, Week, WorkWeek, Month]} />
             </ScheduleComponent>
+
+            <ButtonComponent onClick={openPopup}>Add Event</ButtonComponent>
+
+            {isPopupOpen && <PopUpAddEvent handleCloseConfirmPopup={setPopupOpen} />}
         </section>
     )
 }

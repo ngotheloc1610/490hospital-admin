@@ -8,7 +8,7 @@ import { API_LOGIN } from "../../../constants/api.constant";
 import { defineConfigPost } from "../../../Common/utils";
 import { KEY_LOCAL_STORAGE } from "../../../constants/general.constant";
 import { useAppDispatch } from "../../../redux/hooks";
-import { setLogin } from "../../../redux/features/auth/authSlice";
+import { setLogin, setRegister } from "../../../redux/features/auth/authSlice";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -98,7 +98,7 @@ const Login = () => {
           </p>
           <button
             className="button w-100 button--large button--outline fw-bold"
-            onClick={() => navigate("/register")}
+            onClick={() => { dispatch(setRegister(true)); navigate("/register") }}
           >
             Create new account
           </button>

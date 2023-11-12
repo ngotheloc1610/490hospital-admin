@@ -38,6 +38,7 @@ export const API_GET_DOCTOR_APPOINTMENT = "/appointment/doctor";
 export const API_SCHEDULE_GET_APPOINTMENT = "/appointment/schedule";
 export const API_CREATE_APPOINTMENT = "/appointment/create";
 
+export const SCHEDULE_ALL = "/schedule/schedule-by-doctorId/"
 export const SCHEDULE_DATE = "/schedule/schedule-by-date/"
 export const SCHEDULE_WEEK = "/schedule/schedule-by-week/"
 export const SCHEDULE_MONTH = "/schedule/schedule-by-month/"

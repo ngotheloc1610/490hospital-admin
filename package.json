@@ -84,6 +84,5 @@
   "devDependencies": {
     "@types/react-js-pagination": "^3.0.5",
     "@types/react-virtualized": "^9.21.23"
-  },
-  "homepage": "/admin"
+  }
 }

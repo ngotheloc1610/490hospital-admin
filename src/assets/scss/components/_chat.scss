@@ -1,0 +1,106 @@
+.chat {
+    width: 100%;
+    height: 100vh;
+
+    &-container {
+        display: flex;
+
+        height: 100%;
+
+    }
+
+    &-room {
+        border-right: 1px solid $dark-light-color;
+        width: 25%;
+        background: $gray-light-color;
+
+        &-header {
+            border-bottom: 1px solid $dark-light-color;
+            padding: 15px 10px;
+
+            span {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+
+        &-content {
+            overflow-y: scroll;
+
+            &-item {
+                border-bottom: 1px;
+                padding: 20px;
+                border-bottom: 1px solid $dark-light-color;
+
+                img {
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 100rem;
+                }
+            }
+        }
+    }
+
+    &-message {
+        width: 75%;
+
+
+        &-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            border-bottom: 1px solid $dark-light-color;
+            background: $gray-light-color;
+
+            img {
+                width: 50px;
+                height: 50px;
+                border-radius: 100rem;
+            }
+        }
+
+        &-content {
+            overflow-y: scroll;
+            height: 80%;
+
+            padding-right: 100px;
+            background: $white-color;
+
+            &-msg {
+                display: flex;
+                flex-direction: column;
+                justify-content: end;
+                align-items: end;
+
+                .text-message {
+                    background: #007aff;
+                    color: $white-color;
+                    border-radius: 10px;
+                    padding: 15px;
+                }
+            }
+        }
+
+        &-footer {
+            padding: 10px;
+            border-top: 1px solid $dark-light-color;
+            padding-top: 20px;
+            display: flex;
+            background: $white-color;
+
+
+            .message-input {
+                width: 85%;
+            }
+
+            .send-message {
+                svg {
+                    fill: #007aff !important;
+                }
+            }
+
+        }
+    }
+
+}

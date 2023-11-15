@@ -58,6 +58,7 @@ import ScheduleDoctor from "./pages/Doctor/Detail/ScheduleDoctor";
 import Information from "./pages/Information";
 import EditPractitioner from "./pages/Information/EditPractitioner";
 import { useAppSelector } from "./redux/hooks";
+import Chat from "./pages/Chat";
 
 if (typeof window !== "undefined") {
   require("bootstrap/dist/js/bootstrap.bundle.min");
@@ -120,6 +121,9 @@ const RouterDom = () => (
     <Route path={RouterUrl.INFORMATION} element={<Information />} >
       <Route path=":practitionerId" element={<EditPractitioner />} />
     </Route>
+
+    <Route path={RouterUrl.CHAT} element={<Chat />} />
+
 
     <Route path="*" element={<Navigate to={RouterUrl.DASHBOARD} />} />
   </Routes>

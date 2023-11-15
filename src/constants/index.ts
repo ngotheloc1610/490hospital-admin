@@ -25,6 +25,7 @@ export const RouterUrl = {
   FORGOT_PASSWORD: "/forgot-password",
   CHANGE_PASSWORD: "/change-password",
   INFORMATION: "/information",
+  CHAT: "/chat",
 };
 
 export const START_PAGE = 0;

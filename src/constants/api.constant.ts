@@ -19,7 +19,7 @@ export const API_SEARCH_STAFF = "/admin/searchStaff";
 
 export const API_DETAIL_PRACTITIONER = "/admin/practitionerRole/detail/";
 export const API_UPDATE_PRACTITIONER = "/api/v1/practitioner/update/";
-export const API_CREATE_PRACTITIONER = "/api/v1/practitioner/create"
+export const API_CREATE_PRACTITIONER = "/admin/practitioner/create"
 export const API_PROFILE_PRACTITIONER = "/api/v1/practitioner/profile"
 
 // export const API_ALL_GET_DEPARTMENT = "/admin/department";
@@ -44,6 +44,9 @@ export const SCHEDULE_WEEK = "/schedule/schedule-by-week/"
 export const SCHEDULE_MONTH = "/schedule/schedule-by-month/"
 export const SCHEDULE_CREATE = "/schedule/create"
 export const SCHEDULE_CANCEL = "/schedule/cancer-Schedule/"
+
+export const API_GET_ROOM = "/admin/rooms";
+export const API_GET_ROOM_BY_SPECIALTY = "/admin/rooms/";
 
 
 

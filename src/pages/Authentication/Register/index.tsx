@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 import { LOGO_HOSPITAL } from "../../../assets";
 import { GENDER, TYPE_PRACTITIONER } from "../../../constants";
-import { success, warn } from "../../../Common/notify";
+import { error, success, warn } from "../../../Common/notify";
 import { defineConfigGet, defineConfigPost } from "../../../Common/utils";
 import axios from "axios";
-import { API_ALL_GET_SPECIALTY, API_CREATE_PRACTITIONER } from "../../../constants/api.constant";
+import {
+  API_ALL_GET_SPECIALTY,
+  API_CREATE_PRACTITIONER,
+  API_GET_ROOM,
+} from "../../../constants/api.constant";
 import { useAppDispatch } from "../../../redux/hooks";
 import { setRegister } from "../../../redux/features/auth/authSlice";
 import { useNavigate } from "react-router";
@@ -13,13 +17,13 @@ const Register = () => {
   const url_api = process.env.REACT_APP_API_URL;
 
   const dispatch = useAppDispatch();
-  const navigate = useNavigate()
-
+  const navigate = useNavigate();
 
   const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
   const [isShowCfPassword, setIsShowCfPassword] = useState<boolean>(false);
 
-  const [listSpecialty, setListSpecialty] = useState([]);
+  const [listSpecialty, setListSpecialty] = useState<any>([]);
+  const [listRoom, setListRoom] = useState<any>([]);
 
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -32,11 +36,12 @@ const Register = () => {
   const [specialty, setSpecialty] = useState<string>("");
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
+  const [room, setRoom] = useState<string>("");
 
   useEffect(() => {
     getSpecialty();
-  }, [])
-
+    getRoom();
+  }, []);
 
   const getSpecialty = () => {
     const url = `${url_api}${API_ALL_GET_SPECIALTY}`;
@@ -51,18 +56,53 @@ const Register = () => {
       .catch((err: any) => {
         console.log("err:", err);
       });
-  }
+  };
 
+  const getRoom = () => {
+    const url = `${url_api}${API_GET_ROOM}`;
+
+    axios
+      .get(url, defineConfigPost())
+      .then((resp: any) => {
+        if (resp) {
+          setListRoom(resp.data);
+        }
+      })
+      .catch((err: any) => {
+        console.log("err:", err);
+      });
+  };
 
   const createPractitioner = () => {
     const url = `${url_api}${API_CREATE_PRACTITIONER}`;
 
+    const idSpecialty = listSpecialty.filter((item: any) => {
+      return item.id === specialty;
+    })[0]?.id;
+    const displaySpecialty = listSpecialty.filter((item: any) => {
+      return item.id === specialty;
+    })[0]?.name;
+    const codeSpecialty = listSpecialty.filter((item: any) => {
+      return item.id === specialty;
+    })[0]?.code;
+
+    const idRoom = listRoom.filter((item: any) => {
+      return item.id === room;
+    })[0]?.id;
+    const desRoom = listRoom.filter((item: any) => {
+      return item.id === room;
+    })[0]?.describe;
+
     const params = {
       username: username,
-      password: password,
-      identifier: [],
+      identifier: "",
       name: name,
       phoneNumber: phoneNumber,
+      idSpecialty: idSpecialty,
+      displaySpecialty: displaySpecialty,
+      desRoom: desRoom,
+      idRoom: idRoom,
+      password: password,
       type: type,
       dateOfBirth: birthDay,
       photo: "",
@@ -70,28 +110,28 @@ const Register = () => {
       district: "",
       state: "",
       address: "",
-      address2: "",
       gender: gender,
       country: "",
       postalCode: "",
-      code: specialty,
+      code: codeSpecialty,
+      qualitification: "",
       start: startDate,
       end: endDate,
-    }
+    };
 
     axios
       .post(url, params, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
-          console.log("resp:", resp)
+          console.log("resp:", resp);
           success(`Create practitioner ${type} successfully!`);
-
         }
       })
       .catch((err) => {
         console.log("err:", err);
+        error(err.response.data.message);
       });
-  }
+  };
 
   const _renderListType = () => {
     return (
@@ -124,8 +164,24 @@ const Register = () => {
       <>
         {listSpecialty.length > 0 ? (
           listSpecialty.map((item: any) => (
-            <option value={item.code} key={item.code}>
+            <option value={item.id} key={item.code}>
               {item.name}
+            </option>
+          ))
+        ) : (
+          <option disabled>No option</option>
+        )}
+      </>
+    );
+  };
+
+  const _renderListRoom = () => {
+    return (
+      <>
+        {listRoom.length > 0 ? (
+          listRoom.map((item: any) => (
+            <option value={item.id} key={item.code}>
+              {item.codeableConcept.coding[0].display}
             </option>
           ))
         ) : (
@@ -141,7 +197,7 @@ const Register = () => {
       return;
     }
     createPractitioner();
-  }
+  };
 
   return (
     <div className="register">
@@ -197,8 +253,9 @@ const Register = () => {
                     onClick={() => setIsShowPassword(!isShowPassword)}
                   >
                     <i
-                      className={`bi ${isShowPassword ? "bi-eye-slash" : "bi-eye-fill"
-                        } fs-5 icon-gray`}
+                      className={`bi ${
+                        isShowPassword ? "bi-eye-slash" : "bi-eye-fill"
+                      } fs-5 icon-gray`}
                     />
                   </span>
                 </div>
@@ -231,8 +288,9 @@ const Register = () => {
                     onClick={() => setIsShowCfPassword(!isShowCfPassword)}
                   >
                     <i
-                      className={`bi ${isShowCfPassword ? "bi-eye-slash" : "bi-eye-fill"
-                        } fs-5 icon-gray`}
+                      className={`bi ${
+                        isShowCfPassword ? "bi-eye-slash" : "bi-eye-fill"
+                      } fs-5 icon-gray`}
                     />
                   </span>
                 </div>
@@ -294,17 +352,33 @@ const Register = () => {
                   {_renderListSpecialty()}
                 </select>
               </div>
+
+              <div className="col-6 d-flex">
+                <select
+                  className="form-select"
+                  onChange={(e) => setRoom(e.target.value)}
+                >
+                  {_renderListRoom()}
+                </select>
+              </div>
             </div>
           </div>
         </div>
 
         <div className="register-container-footer d-flex">
-          <button className="button button--large button--primary w-100 me-3" onClick={() => handleCreatePractitioner()}>
+          <button
+            className="button button--large button--primary w-100 me-3"
+            onClick={() => handleCreatePractitioner()}
+          >
             Register
           </button>
-          <button className="button button--large button--primary w-100" onClick={() => {
-            dispatch(setRegister(false)); navigate("/login")
-          }}>
+          <button
+            className="button button--large button--primary w-100"
+            onClick={() => {
+              dispatch(setRegister(false));
+              navigate("/login");
+            }}
+          >
             Login
           </button>
         </div>

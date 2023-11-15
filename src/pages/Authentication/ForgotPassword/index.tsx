@@ -106,8 +106,8 @@ const ForgotPassword = () => {
   return (
     <>
       {_renderForgotYourPw()}
-      {_renderCreateNewPw()}
-      {_renderSuccess()}
+      {/* {_renderCreateNewPw()}
+      {_renderSuccess()} */}
     </>
   );
 };

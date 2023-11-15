@@ -92,11 +92,11 @@ export const MenuDataAppointment = [
 export const GENDER = [
   {
     name: "Male",
-    code: "male",
+    code: "MALE",
   },
   {
     name: "Female",
-    code: "female",
+    code: "FEMALE",
   },
   {
     name: "All",

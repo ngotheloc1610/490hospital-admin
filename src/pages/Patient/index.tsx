@@ -36,14 +36,6 @@ const Patient = () => {
   const outlet = useOutlet();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log("listBlock", listBlock);
-  }, [listBlock])
-  useEffect(() => {
-    console.log("patient", patient);
-  }, [patient])
-
-
   const url_api = process.env.REACT_APP_API_URL;
 
   useEffect(() => {

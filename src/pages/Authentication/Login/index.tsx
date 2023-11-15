@@ -9,6 +9,7 @@ import { defineConfigPost } from "../../../Common/utils";
 import { KEY_LOCAL_STORAGE } from "../../../constants/general.constant";
 import { useAppDispatch } from "../../../redux/hooks";
 import { setLogin, setRegister } from "../../../redux/features/auth/authSlice";
+import { error } from "../../../Common/notify";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -24,7 +25,6 @@ const Login = () => {
     const url = `${url_api}${API_LOGIN}`;
 
     const params = {
-      email: username.trim(),
       username: username.trim(),
       password: password.trim()
     }
@@ -46,6 +46,7 @@ const Login = () => {
         }
       })
       .catch((err: any) => {
+        error(err.response.data.error.message)
         console.log("err:", err);
       });
   }

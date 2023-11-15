@@ -128,8 +128,8 @@ const Register = () => {
         }
       })
       .catch((err) => {
+        error(err.response.data.error.message)
         console.log("err:", err);
-        error(err.response.data.message);
       });
   };
 
@@ -162,7 +162,7 @@ const Register = () => {
   const _renderListSpecialty = () => {
     return (
       <>
-        {listSpecialty.length > 0 ? (
+        {listSpecialty ? (
           listSpecialty.map((item: any) => (
             <option value={item.id} key={item.code}>
               {item.name}
@@ -178,7 +178,7 @@ const Register = () => {
   const _renderListRoom = () => {
     return (
       <>
-        {listRoom.length > 0 ? (
+        {listRoom ? (
           listRoom.map((item: any) => (
             <option value={item.id} key={item.code}>
               {item.codeableConcept.coding[0].display}
@@ -253,9 +253,8 @@ const Register = () => {
                     onClick={() => setIsShowPassword(!isShowPassword)}
                   >
                     <i
-                      className={`bi ${
-                        isShowPassword ? "bi-eye-slash" : "bi-eye-fill"
-                      } fs-5 icon-gray`}
+                      className={`bi ${isShowPassword ? "bi-eye-slash" : "bi-eye-fill"
+                        } fs-5 icon-gray`}
                     />
                   </span>
                 </div>
@@ -288,9 +287,8 @@ const Register = () => {
                     onClick={() => setIsShowCfPassword(!isShowCfPassword)}
                   >
                     <i
-                      className={`bi ${
-                        isShowCfPassword ? "bi-eye-slash" : "bi-eye-fill"
-                      } fs-5 icon-gray`}
+                      className={`bi ${isShowCfPassword ? "bi-eye-slash" : "bi-eye-fill"
+                        } fs-5 icon-gray`}
                     />
                   </span>
                 </div>

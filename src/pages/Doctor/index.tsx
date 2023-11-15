@@ -122,7 +122,7 @@ const Doctor = () => {
     searchDoctor();
   }
 
-  const _renderTableListPatient = () => {
+  const _renderTableListDoctor = () => {
     return (
       <table className="table table-hover">
         <thead className="table-light">
@@ -153,7 +153,7 @@ const Doctor = () => {
                   <img src={src} alt="image" />
                 </th>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
-                  {item?.practitionerTarget?.nameFirstRep?.nameAsSingleString}
+                  {item?.practitionerTarget?.nameFirstRep?.text}
                 </td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
                   {item?.practitionerTarget?.gender}
@@ -296,7 +296,7 @@ const Doctor = () => {
               </div>
               <div>
                 <div className="container-search">{_renderSearch()}</div>
-                <div>{_renderTableListPatient()}</div>
+                <div>{_renderTableListDoctor()}</div>
                 <PaginationComponent
                   totalItem={totalItem}
                   itemPerPage={itemPerPage}

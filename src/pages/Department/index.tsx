@@ -4,7 +4,6 @@ import { Outlet, useNavigate, useOutlet } from "react-router-dom";
 
 import { ICON_PENCIL, ICON_TRASH } from "../../assets";
 import { DEFAULT_ITEM_PER_PAGE, START_PAGE } from "../../constants";
-import { API_ALL_GET_DEPARTMENT } from "../../constants/api.constant";
 import { defineConfigGet } from "../../Common/utils";
 
 import Layout from "../../components/Layout";
@@ -27,8 +26,8 @@ const Department = () => {
 
   const url_api = process.env.REACT_APP_API_URL;
 
-  useEffect(() => {
-    const url = `${url_api}${API_ALL_GET_DEPARTMENT}`;
+  const getDepartment = () => {
+    const url = `${url_api}`;
 
     axios
       .get(url, defineConfigGet({ page: currentPage, size: itemPerPage }))
@@ -41,6 +40,10 @@ const Department = () => {
       .catch((err: any) => {
         console.log("err:", err);
       });
+  }
+
+  useEffect(() => {
+    getDepartment()
   }, [currentPage, itemPerPage]);
 
   const getCurrentPage = (item: number) => {
@@ -56,7 +59,7 @@ const Department = () => {
     setShowPopUpConfirm(true);
   };
 
-  const handleModify = (item: any) => {};
+  const handleModify = (item: any) => { };
 
   const _renderSearch = () => {
     return (
@@ -98,7 +101,7 @@ const Department = () => {
               <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
                 <th scope="row">{++idx}</th>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
-                 
+
                 </td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
                 </td>

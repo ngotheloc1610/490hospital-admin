@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ICON_PATIENT, LOGO } from "../../assets";
 import { KEY_LOCAL_STORAGE } from "../../constants/general.constant";
 import { useAppDispatch } from "../../redux/hooks";
-import { setLogin } from "../../redux/features/auth/authSlice";
+import { setLogin, setRegister } from "../../redux/features/auth/authSlice";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -19,6 +19,7 @@ const Header = () => {
     localStorage.removeItem(KEY_LOCAL_STORAGE.SUB)
 
     dispatch(setLogin(false));
+    dispatch(setRegister(false));
 
     navigate("/login")
   }

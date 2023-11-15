@@ -1,4 +1,4 @@
-export const API_LOGIN = "/api/v1/practitioner/login";
+export const API_LOGIN = "/practitioner/login";
 export const API_CHANGE_PASSWORD = "/password/changePass/";
 
 export const API_ADMIN_TOTAL = "/admin/total";
@@ -18,15 +18,12 @@ export const API_ALL_GET_STAFF = "/admin/staffs";
 export const API_SEARCH_STAFF = "/admin/searchStaff";
 
 export const API_DETAIL_PRACTITIONER = "/admin/practitionerRole/detail/";
-export const API_UPDATE_PRACTITIONER = "/api/v1/practitioner/update/";
+export const API_UPDATE_PRACTITIONER = "/admin/update/";
 export const API_CREATE_PRACTITIONER = "/admin/practitioner/create"
-export const API_PROFILE_PRACTITIONER = "/api/v1/practitioner/profile"
+export const API_PROFILE_PRACTITIONER = "/practitioner/profile"
 
-// export const API_ALL_GET_DEPARTMENT = "/admin/department";
-export const API_GET_DEPARTMENT = "/department/detail/";
-export const API_ALL_GET_DEPARTMENT = "/homepage/listDepartment";
-
-export const API_ALL_GET_SPECIALTY = "/homepage/listSpecialty";
+export const API_ALL_GET_SPECIALTY = "/admin/specialties";
+export const API_GET_SPECIALTY = "/admin/specialty/";
 
 export const API_ALL_GET_DIAGNOSTIC = "/admin/diagnostic-report";
 export const API_GET_DIAGNOSTIC = "/diagnostic-report/detail/";

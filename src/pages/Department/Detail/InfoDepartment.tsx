@@ -3,7 +3,6 @@ import { USER } from "../../../assets";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { defineConfigGet } from "../../../Common/utils";
-import { API_GET_DEPARTMENT } from "../../../constants/api.constant";
 
 const InfoDepartment = () => {
   const [department, setDepartment] = useState<any>({});
@@ -12,9 +11,9 @@ const InfoDepartment = () => {
   const navigate = useNavigate();
   const url_api = process.env.REACT_APP_API_URL;
 
-  useEffect(() => {
+  const getDepartmentDetail = () => {
     const id = param.departmentId;
-    const url = `${url_api}${API_GET_DEPARTMENT}${id}`;
+    const url = `${url_api}${id}`;
 
     axios
       .get(url, defineConfigGet({}))
@@ -27,6 +26,10 @@ const InfoDepartment = () => {
       .catch((err) => {
         console.log("err:", err);
       });
+  }
+
+  useEffect(() => {
+    getDepartmentDetail()
   }, [param.departmentId]);
 
   const _renderBasicInfo = () => {
@@ -110,13 +113,13 @@ const InfoDepartment = () => {
               </div>
             </div>
             <div className="col-8">
-            <div className="pb-3 mb-3 border-bottom d-flex justify-content-between">
-              <h3 className="fw-bold text-uppercase">aaa</h3>
-              <div>
-                <button className="button button--info button--small me-3" onClick={()=> navigate("/change-password")}>Change Password</button>
-                <button className="button button--primary button--small">Edit</button>
+              <div className="pb-3 mb-3 border-bottom d-flex justify-content-between">
+                <h3 className="fw-bold text-uppercase">aaa</h3>
+                <div>
+                  <button className="button button--info button--small me-3" onClick={() => navigate("/change-password")}>Change Password</button>
+                  <button className="button button--primary button--small">Edit</button>
+                </div>
               </div>
-            </div>
               {_renderBasicInfo()}
             </div>
           </div>

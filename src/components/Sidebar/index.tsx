@@ -102,6 +102,16 @@ const Sidebar = () => {
               <span>Create Practitioner</span>
             </a>
           </li>
+
+          <li className={`${getClass(RouterUrl.CHAT)}`}>
+            <a
+              onClick={() => goToLink(RouterUrl.CHAT)}
+              data-content-id="chat"
+            >
+              <ICON_STAFF />
+              <span>Inbox Message</span>
+            </a>
+          </li>
         </ul>
       </div>
     </nav>

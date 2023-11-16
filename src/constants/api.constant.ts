@@ -45,5 +45,14 @@ export const SCHEDULE_CANCEL = "/schedule/cancer-Schedule/"
 export const API_GET_ROOM = "/admin/rooms";
 export const API_GET_ROOM_BY_SPECIALTY = "/admin/rooms/";
 
+export const API_INBOX_ROOM_LIST = "/api/v1/communication/inbox-room/lists"
+export const API_INBOX_ROOM_DETAIL = "/api/v1/communication/inbox-room"
+export const API_INBOX_ROOM_CREATE = "/api/v1/communication/inbox-room/staff-create"
+
+export const API_INBOX_MESSAGE = "/api/v1/communication/inbox-message/"
+export const API_INBOX_MESSAGE_SEND = "/api/v1/communication/inbox-message/message"
+
+
+
 
 

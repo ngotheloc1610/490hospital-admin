@@ -287,7 +287,7 @@ const CreateEditPatient = () => {
                   <div className="col-4">{_renderImage()}</div>
                   <div className="col-8">
                     <h3 className="fw-bold text-uppercase text-dark">
-                      {patientInfo?.id ? "edit" : "add"} new
+                      edit new
                     </h3>
                     {_renderBasicInfo({ errors, touched })}
                   </div>
@@ -296,17 +296,15 @@ const CreateEditPatient = () => {
             </div>
           </Form>
           <div className="mt-3 d-flex justify-content-end">
-            {patientInfo.id && (
-              <button className="button button--small button--danger me-3" onClick={() => handleDelete()}>
-                Delete
-              </button>
-            )}
-
-            <button
+          <button
               className="button button--small button--danger me-3"
               onClick={() => navigate("/patient")}
             >
-              Cancel
+              Back
+            </button>
+
+            <button className="button button--small button--danger me-3" onClick={() => handleDelete()}>
+              Delete
             </button>
 
             <button

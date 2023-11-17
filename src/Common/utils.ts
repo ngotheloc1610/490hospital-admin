@@ -23,5 +23,5 @@ export const convertToDate = (time: string) => {
 
 export const convertToTime = (time: string) => {
     const date = moment(time, "ddd MMM DD hh:mm:ss Z YYYY");
-    return date.format(FORMAT_TIME);
+    return date.format(`${FORMAT_TIME} LTS`);
 }

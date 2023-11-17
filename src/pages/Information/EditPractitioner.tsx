@@ -75,7 +75,6 @@ const EditPractitioner = () => {
             });
     }
 
-
     const getInformation = (id: any) => {
         const url = `${url_api}${API_DETAIL_PRACTITIONER}${id}`;
 

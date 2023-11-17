@@ -60,21 +60,19 @@ const Information = () => {
                             <th scope="row" style={{ width: "15%" }}>
                                 Starting date
                             </th>
-                            <td>{practitioner.period?.start}</td>
+                            <td>{practitioner.start ? moment(practitioner.start).format(FORMAT_DATE) : "-"}</td>
                         </tr>
                         <tr>
                             <th scope="row">End date</th>
-                            <td>{practitioner.period?.end}</td>
+                            <td>{practitioner.end ? moment(practitioner.end).format(FORMAT_DATE) : "-"}</td>
                         </tr>
                         <tr>
                             <th scope="row">Position</th>
-                            <td>{practitioner?.organization?.display}</td>
+                            <td>{practitioner.desRoom ? practitioner.desRoom : "-"}</td>
                         </tr>
                         <tr>
                             <th scope="row">Specialty</th>
-                            <td>{practitioner.specialty?.length > 0 && practitioner.specialty.map((spec: any) => {
-                                return <span>{spec.coding[0].display}</span>
-                            })}</td>
+                            <td>{practitioner.displaySpecialty ? practitioner.displaySpecialty : "-"}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -178,31 +176,27 @@ const Information = () => {
                                         <tbody>
                                             <tr>
                                                 <th scope="row">Gender</th>
-                                                <td>{practitioner?.gender}</td>
+                                                <td>{practitioner.gender ? practitioner.gender : "-"}</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">Date of birth</th>
-                                                <td>{moment(practitioner?.dateOfBirth, 'ddd MMM DD HH:mm:ss z YYYY').format(FORMAT_DATE)}</td>
+                                                <td>{practitioner.dateOfBirth ? moment(practitioner.dateOfBirth, 'ddd MMM DD HH:mm:ss z YYYY').format(FORMAT_DATE) : "-"}</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">Address</th>
-                                                <td>{practitioner?.address}</td>
+                                                <td>{practitioner.address ? practitioner.address : "-"}</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">Citizen identification</th>
-                                                <td>{practitioner?.city}</td>
+                                                <td>{practitioner.city ? practitioner.city : "-"}</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">Phone number</th>
-                                                <td>{practitioner?.phoneNumber}</td>
+                                                <td>{practitioner.phoneNumber ? practitioner.phoneNumber : "-"}</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">Email</th>
-                                                <td>
-                                                    {
-                                                        practitioner?.email
-                                                    }
-                                                </td>
+                                                <td>{practitioner.email ? practitioner.email: "-"}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -227,10 +221,10 @@ const Information = () => {
                                 </div>
                             </div>
 
-                            {/* {_renderWorkInfo()}
-                            {_renderEducationInfo()}
+                            {_renderWorkInfo()}
+                            {/* {_renderEducationInfo()}
                             {_renderSpecializedActivities()}
-                            {_renderAchievement()} */}
+                            {_renderAchievement()}  */}
 
                         </div>
                     </>

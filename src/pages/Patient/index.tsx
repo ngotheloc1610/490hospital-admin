@@ -126,7 +126,7 @@ const Patient = () => {
           </tr>
         </thead>
         <tbody>
-          {listData?.map((item: any, idx: number) => {
+          {listData ? listData.map((item: any, idx: number) => {
             const email = item.telecom?.find(
               (i: any) => i?.system === "email"
             )?.value;
@@ -162,7 +162,9 @@ const Patient = () => {
                 </td>
               </tr>
             );
-          })}
+          }) : <div>
+              Không có dữ liệu.
+            </div>}
         </tbody>
       </table>
     );

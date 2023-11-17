@@ -8,7 +8,6 @@ import ScheduleStaff from "../pages/Staff/Detail/ScheduleStaff";
 import PreviousAppointment from "../pages/Appointment/PreviousAppointment";
 import UpcomingAppointment from "../pages/Appointment/UpcomingAppointment";
 import InformationPatient from "../pages/Patient/Detail/Infomation";
-import AccountPatient from "../pages/Patient/Detail/Account";
 
 export const RouterUrl = {
   DASHBOARD: "/dashboard",
@@ -54,10 +53,6 @@ export const MenuDataPatient = [
   {
     title: "Information",
     content: InformationPatient,
-  },
-  {
-    title: "Account",
-    content: AccountPatient,
   },
 ];
 
@@ -122,16 +117,12 @@ export const GENDER_ALL = [
 
 export const STATUS = [
   {
-    name: "Fulfilled",
-    code: "fulfilled",
+    name: "Active",
+    code: "active",
   },
   {
-    name: "Canceled",
-    code: "canceled",
-  },
-  {
-    name: "No Show",
-    code: "no show",
+    name: "DeActive",
+    code: "deactive",
   },
   {
     name: "All",
@@ -147,9 +138,5 @@ export const TYPE_PRACTITIONER = [
   {
     name: "Staff",
     code: "Staff",
-  },
-  {
-    name: "Admin",
-    code: "Admin",
   },
 ];

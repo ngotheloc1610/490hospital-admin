@@ -1,9 +1,13 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 
 import { GENDER } from "../../../constants";
 import { USER } from "../../../assets";
+import { API_ALL_GET_SPECIALTY, API_DETAIL_PRACTITIONER, API_PROFILE_PRACTITIONER } from "../../../constants/api.constant";
+import { defineConfigGet, defineConfigPost } from "../../../Common/utils";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Required"),
@@ -27,17 +31,76 @@ const defaultValue = {
   email: "",
   residence: "",
   city: "",
-  department: "",
+  specialty: "",
   startDate: "",
   endDate: ""
 };
 
 const CreateEditStaff = () => {
   const inputRef = useRef<any>(null);
-  const [departmentList, setDepartmentList] = useState([]);
   const [image, setImage] = useState<any>("");
 
+  const params = useParams();
+
+  const [specialtyList, setSpecialtyList] = useState<any>([]);
+
+
   const [staff, setStaff] = useState<any>(defaultValue);
+
+  const url_api = process.env.REACT_APP_API_URL;
+
+  useEffect(() => {
+    getStaffInfo(params.staffId)
+  }, [params.staffId])
+  
+  useEffect(() => {
+    getSpecialty()
+  }, [])
+
+  const getStaffInfo = (id: string | undefined) =>{
+    const url = `${url_api}${API_DETAIL_PRACTITIONER}${id}`;
+
+      axios
+          .get(url, defineConfigPost())
+          .then((resp: any) => {
+              if (resp) {
+                const data = resp.data;
+                console.log("resp:", resp)
+                const doctor: any = {
+                  id: data.id,
+                  name: data.name,
+                  birthday: data.dateOfBirth,
+                  gender: data.gender,
+                  phoneNumber: data.phoneNumber,
+                  email: data.email,
+                  address: data.address,
+                  city: data.city,
+                  specialty: data.displaySpecialty,
+                  startDate: data.start,
+                  endDate: data.end,
+                }
+                setStaff(doctor);
+              }
+          })
+          .catch((err) => {
+              console.log("err:", err);
+          });
+  }
+
+  const getSpecialty = () => {
+    const url = `${url_api}${API_ALL_GET_SPECIALTY}`;
+
+    axios
+      .get(url, defineConfigGet({ page: 0, size: 100 }))
+      .then((resp: any) => {
+        if (resp) {
+          setSpecialtyList(resp.data);
+        }
+      })
+      .catch((err: any) => {
+        console.log("err:", err);
+      });
+  }
 
   const handleChangeImage = (event: any) => {
     const file = event.target.files[0];
@@ -164,18 +227,18 @@ const CreateEditStaff = () => {
         <div className="row">
           <div className="col-12 mb-3">
             <label htmlFor="department">
-              Department <span className="text-danger">*</span>
+              Specialty <span className="text-danger">*</span>
             </label>
             <Field
               as="select"
-              name="department"
-              id="department"
-              className={`form-select ${errors?.department && touched?.department ? "is-invalid" : ""
+              name="specialty"
+              id="specialty"
+              className={`form-select ${errors?.specialty && touched?.specialty ? "is-invalid" : ""
                 }`}
             >
-              {departmentList.length > 0 ? (
-                departmentList.map((item: any) => (
-                  <option value={item.code} key={item.code}>
+              {specialtyList ? (
+                specialtyList.map((item: any) => (
+                  <option value={item.name} key={item.code}>
                     {item.name}
                   </option>
                 ))
@@ -271,7 +334,7 @@ const CreateEditStaff = () => {
                   <div className="col-4">{_renderImage()}</div>
                   <div className="col-8">
                     <h3 className="fw-bold text-uppercase text-dark">
-                      {staff?.id ? "edit" : "add"} new
+                      edit new
                     </h3>
                     {_renderBasicInfo({ errors, touched })}
                   </div>
@@ -281,11 +344,13 @@ const CreateEditStaff = () => {
             </div>
           </Form>
           <div className="mt-3 d-flex justify-content-end">
-            {staff.id && (
-              <button className="button button--small button--danger me-3">
-                Delete
-              </button>
-            )}
+            <button className="button button--small button--danger me-3">
+              Back
+            </button>
+
+            <button className="button button--small button--danger me-3">
+              Delete
+            </button>
 
             <button
               className="button button--small button--primary"

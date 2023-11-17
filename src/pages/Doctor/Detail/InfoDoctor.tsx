@@ -83,11 +83,11 @@ const InfoDoctor = () => {
               <th scope="row" style={{ width: "15%" }}>
                 Starting date
               </th>
-              <td>{moment(doctor.period?.start, 'ddd MMM DD HH:mm:ss z YYYY').format(FORMAT_DATE)}</td>
+              <td>{moment(doctor.period?.start).format(FORMAT_DATE)}</td>
             </tr>
             <tr>
               <th scope="row">End date</th>
-              <td>{moment(doctor.period?.end, 'ddd MMM DD HH:mm:ss z YYYY').format(FORMAT_DATE)}</td>
+              <td>{moment(doctor.period?.end).format(FORMAT_DATE)}</td>
             </tr>
             <tr>
               <th scope="row">Position</th>
@@ -197,9 +197,8 @@ const InfoDoctor = () => {
             </div>
             <div className="col-8">
               <div className="pb-3 mb-3 border-bottom d-flex justify-content-between">
-                <h3 className="fw-bold text-uppercase">{doctor?.practitionerTarget?.name[0]?.text}</h3>
+                <h3 className="fw-bold text-uppercase">{doctor?.practitioner?.display}</h3>
                 <div>
-                  <button className="button button--info button--small me-3" onClick={() => navigate("/doctor/overview/account")}>Change Password</button>
                   <button className="button button--primary button--small" onClick={() => navigate(`/doctor/overview/detail/${doctor?.id}`)}>Edit</button>
                 </div>
               </div>

@@ -13,7 +13,7 @@ import {
 import { ICON_PENCIL, ICON_TRASH } from "../../assets";
 import axios from "axios";
 import { defineConfigGet } from "../../Common/utils";
-import { API_ALL_GET_STAFF, API_SEARCH_STAFF } from "../../constants/api.constant";
+import { API_ALL_GET_SPECIALTY, API_ALL_GET_STAFF, API_SEARCH_STAFF } from "../../constants/api.constant";
 
 const Staff = () => {
   const outlet = useOutlet();
@@ -25,23 +25,30 @@ const Staff = () => {
   const [itemPerPage, setItemPerPage] = useState<number>(DEFAULT_ITEM_PER_PAGE);
   const [totalItem, setTotalItem] = useState<number>(0);
 
-  const [departmentList, setDepartmentList] = useState([]);
+  const [specialtyList, setSpecialtyList] = useState([]);
 
   const [name, setName] = useState<string>("");
   const [gender, setGender] = useState<string>("");
-  const [department, setDepartment] = useState<string>("");
+  const [specialty, setSpecialty] = useState<string>("");
   const [status, setStatus] = useState<string>("");
 
   const url_api = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
+    getStaff()
+  }, [currentPage, itemPerPage]);
+
+  useEffect(() => {
+    getSpecialty()
+  }, []);
+
+  const getStaff = () => {
     const url = `${url_api}${API_ALL_GET_STAFF}`;
 
     axios
       .get(url, defineConfigGet({ page: currentPage, size: itemPerPage }))
       .then((resp: any) => {
         if (resp) {
-          console.log("resp:", resp)
           setListData(resp.data.content);
           setTotalItem(resp.data.totalElements);
         }
@@ -49,7 +56,22 @@ const Staff = () => {
       .catch((err: any) => {
         console.log("err:", err);
       });
-  }, [currentPage, itemPerPage]);
+  }
+
+  const getSpecialty = () => {
+    const url = `${url_api}${API_ALL_GET_SPECIALTY}`;
+
+    axios
+      .get(url, defineConfigGet({ page: 0, size: 100 }))
+      .then((resp: any) => {
+        if (resp) {
+          setSpecialtyList(resp.data);
+        }
+      })
+      .catch((err: any) => {
+        console.log("err:", err);
+      });
+  }
 
   const getCurrentPage = (item: number) => {
     setCurrentPage(item - 1);
@@ -64,13 +86,15 @@ const Staff = () => {
     setShowPopUpConfirm(true);
   };
 
-  const handleModify = (item: any) => { };
+  const handleModify = (id:string) => {
+    navigate(`/staff/overview/detail/${id}`)
+  };
 
   const handleSearch = () => {
-    const url = `${url_api}${API_SEARCH_STAFF}${name}`;
+    const url = `${url_api}${API_SEARCH_STAFF}`;
 
     axios
-      .get(url, defineConfigGet({ page: currentPage, size: itemPerPage }))
+      .get(url, defineConfigGet({ page: currentPage, size: itemPerPage, nameStaff:name, nameSpecialty: specialty, gender: gender, status: status }))
       .then((resp: any) => {
         if (resp) {
           console.log("resp:", resp)
@@ -83,13 +107,13 @@ const Staff = () => {
       });
   }
 
-  const _renderListDepartment = () => {
+  const _renderListSpecialty = () => {
     return (
       <>
-        <option hidden>Department</option>
-        {departmentList.length > 0 ? (
-          departmentList.map((item: any) => (
-            <option value={item.code} key={item.code}>
+        <option hidden>Specialty</option>
+        {specialtyList ? (
+          specialtyList.map((item: any) => (
+            <option value={item.name} key={item.id}>
               {item.name}
             </option>
           ))
@@ -150,9 +174,9 @@ const Staff = () => {
           <div className="col-3">
             <select
               className="form-select"
-              onChange={(e) => setDepartment(e.target.value)}
+              onChange={(e) => setSpecialty(e.target.value)}
             >
-              {_renderListDepartment()}
+              {_renderListSpecialty()}
             </select>
           </div>
           <div className="col-3">
@@ -188,14 +212,14 @@ const Staff = () => {
           </tr>
         </thead>
         <tbody>
-          {listData?.map((item: any, idx: number) => {
+          {listData ? listData.map((item: any, idx: number) => {
             const email = item.practitionerTarget?.telecom?.find(
               (i: any) => i?.system === "email"
             )?.value;
             const phone = item.practitionerTarget?.telecom?.find(
               (i: any) => i?.system === "phone"
             )?.value;
-            const src = `data:${item?.practitionerTarget?.photo[0]?.contentType};base64,${item?.practitionerTarget?.photo[0]?.data}`;
+            const src = `data:${item.practitionerTarget?.photo[0]?.contentType};base64,${item.practitionerTarget?.photo[0]?.data}`;
 
             return (
               <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
@@ -203,7 +227,7 @@ const Staff = () => {
                   <img src={src} alt="image" />
                 </th>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
-                  {item.practitionerTarget.nameFirstRep.nameAsSingleString}
+                  {item.practitioner.display}
                 </td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
                   {item.practitionerTarget.gender}
@@ -227,13 +251,15 @@ const Staff = () => {
                   <span className="cursor-pointer" onClick={handleCancel}>
                     <ICON_TRASH />
                   </span>
-                  <span className="ms-1 cursor-pointer">
+                  <span className="ms-1 cursor-pointer" onClick={() => handleModify(item.id)}>
                     <ICON_PENCIL />
                   </span>
                 </td>
               </tr>
             );
-          })}
+          }) : <div>
+              Không có dữ liệu.
+            </div>}
         </tbody>
       </table>
     );
@@ -246,14 +272,6 @@ const Staff = () => {
       ) : (
         <>
           <TotalView />
-          {/* <div className="d-flex justify-content-end me-4">
-            <button
-              className="button button--small button--primary"
-              onClick={() => navigate("/staff/overview/detail")}
-            >
-              <i className="bi bi-plus"></i> Add
-            </button>
-          </div> */}
           <section className="table-container">
             <div className="table-container-contain">
               <div className="d-flex justify-content-center align-item-center">

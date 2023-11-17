@@ -16,7 +16,6 @@ import { defineConfigGet } from "../../Common/utils";
 import Layout from "../../components/Layout";
 import TotalView from "../../components/common/TotalView";
 import PopUpConfirm from "./PopupConfirm";
-import { spacing } from "@mui/system";
 
 const Doctor = () => {
   const [showPopUpConfirm, setShowPopUpConfirm] = useState<boolean>(false);
@@ -73,7 +72,7 @@ const Doctor = () => {
       .get(url, defineConfigGet({ page: 0, size: 100 }))
       .then((resp: any) => {
         if (resp) {
-          setSpecialtyList(resp.data.content);
+          setSpecialtyList(resp.data);
         }
       })
       .catch((err: any) => {
@@ -86,7 +85,7 @@ const Doctor = () => {
   };
 
   const handleModify = (id: string) => {
-    navigate(`/doctor/information/detail/${id}`);
+    navigate(`/doctor/overview/detail/${id}`);
   };
 
   const getCurrentPage = (item: number) => {
@@ -101,7 +100,7 @@ const Doctor = () => {
   const searchDoctor = () => {
     const url = `${url_api}${API_SEARCH_DOCTOR}`;
 
-    const params = { page: currentPage, size: itemPerPage, specialty: specialty, nameDoctor: name, nameSpecialty: specialty, gender: gender, status: status }
+    const params = { page: currentPage, size: itemPerPage, nameDoctor: name, nameSpecialty: specialty, gender: gender, status: status }
 
     axios
       .get(url, defineConfigGet(params))
@@ -139,27 +138,27 @@ const Doctor = () => {
           </tr>
         </thead>
         <tbody>
-          {listData?.map((item: any, idx: number) => {
-            const email = item?.practitionerTarget?.telecom?.find(
+          {listData ? listData.map((item: any, idx: number) => {
+            const email = item.practitionerTarget?.telecom?.find(
               (i: any) => i?.system === "email"
             )?.value;
-            const phone = item?.practitionerTarget?.telecom?.find(
+            const phone = item.practitionerTarget?.telecom?.find(
               (i: any) => i?.system === "phone"
             )?.value;
-            const src = `data:${item?.practitionerTarget?.photo[0]?.contentType};base64,${item?.practitionerTarget?.photo[0]?.data}`;
+            const src = `data:${item.practitionerTarget?.photo[0]?.contentType};base64,${item?.practitionerTarget?.photo[0]?.data}`;
             return (
               <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
                 <th scope="row">
                   <img src={src} alt="image" />
                 </th>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
-                  {item?.practitionerTarget?.nameFirstRep?.text}
+                  {item.practitioner.display}
                 </td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
-                  {item?.practitionerTarget?.gender}
+                  {item.practitionerTarget.gender}
                 </td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
-                  {item?.practitionerTarget?.birthDate}
+                  {item.practitionerTarget.birthDate}
                 </td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
                   {phone}
@@ -183,7 +182,9 @@ const Doctor = () => {
                 </td>
               </tr>
             );
-          })}
+          }) : <div>
+              Không có dữ liệu.
+            </div>}
         </tbody>
       </table>
     );
@@ -193,9 +194,9 @@ const Doctor = () => {
     return (
       <>
         <option hidden>Specialty</option>
-        {specialtyList.length > 0 ? (
+        {specialtyList ? (
           specialtyList.map((item: any) => (
-            <option value={item.code} key={item.code}>
+            <option value={item.name} key={item.id}>
               {item.name}
             </option>
           ))

@@ -7,7 +7,8 @@ import { ICON_TRASH, USER } from "../../../assets";
 import { IDoctorDetail } from "../../../interface/general.interface";
 import { defineConfigGet } from "../../../Common/utils";
 import axios from "axios";
-import { API_ALL_GET_SPECIALTY } from "../../../constants/api.constant";
+import { API_ALL_GET_SPECIALTY, API_DETAIL_PRACTITIONER } from "../../../constants/api.constant";
+import { useParams } from "react-router-dom";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Required"),
@@ -42,6 +43,8 @@ const defaultValue: IDoctorDetail = {
 const CreateEditDoctor = () => {
   const url_api = process.env.REACT_APP_API_URL;
 
+  const params = useParams();
+
   const inputRef = useRef<any>(null);
   const [specialtyList, setListSpecialty] = useState([]);
   const [image, setImage] = useState<any>("");
@@ -52,6 +55,42 @@ const CreateEditDoctor = () => {
     getSpecialty();
   }, [])
 
+  useEffect(() => {
+    getDoctorInfo(params.doctorId)
+  }, [params.doctorId])
+  
+  const getDoctorInfo = (id: string | undefined) => {
+      const url = `${url_api}${API_DETAIL_PRACTITIONER}${id}`;
+
+      axios
+          .get(url, defineConfigGet({}))
+          .then((resp: any) => {
+              if (resp) {
+                const data = resp.data;
+                console.log("resp:", resp)
+                const doctor: IDoctorDetail = {
+                  id: data.id,
+                  name: data.practitioner.display,
+                  birthday: data.practitionerTarget.birthDay,
+                  gender: data.practitionerTarget.gender,
+                  phoneNumber: data.practitionerTarget.phoneNumber,
+                  email: data.practitionerTarget.email,
+                  address: data.address,
+                  city: data.city,
+                  specialty: data.displaySpecialty,
+                  startDate: data.period.start,
+                  endDate: data.period.end,
+                  education: [{ time: "", content: "" }],
+                  specialize: [{ time: "", content: "" }],
+                  achievement: [{ time: "", content: "" }],
+                }
+                setDoctor(doctor);
+              }
+          })
+          .catch((err) => {
+              console.log("err:", err);
+          });
+  }
 
   const getSpecialty = () => {
     const url = `${url_api}${API_ALL_GET_SPECIALTY}`;
@@ -60,14 +99,13 @@ const CreateEditDoctor = () => {
       .get(url, defineConfigGet({ page: 0, size: 100 }))
       .then((resp: any) => {
         if (resp) {
-          setListSpecialty(resp.data.content);
+          setListSpecialty(resp.data);
         }
       })
       .catch((err: any) => {
         console.log("err:", err);
       });
   }
-
 
   const handleChangeImage = (event: any) => {
     const file = event.target.files[0];
@@ -493,7 +531,7 @@ const CreateEditDoctor = () => {
                   <div className="col-4">{_renderImage()}</div>
                   <div className="col-8">
                     <h3 className="fw-bold text-uppercase text-dark">
-                      {doctor?.id ? "edit" : "add"} new
+                      edit new
                     </h3>
                     {_renderBasicInfo({ errors, touched })}
                   </div>
@@ -506,11 +544,13 @@ const CreateEditDoctor = () => {
             </div>
           </Form>
           <div className="mt-3 d-flex justify-content-end">
-            {doctor.id && (
-              <button className="button button--small button--danger me-3">
-                Delete
-              </button>
-            )}
+            <button className="button button--small button--danger me-3">
+              Back
+            </button>
+
+            <button className="button button--small button--danger me-3">
+              Delete
+            </button>
 
             <button
               className="button button--small button--primary"

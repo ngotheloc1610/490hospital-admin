@@ -50,7 +50,7 @@ const Chat = () => {
                 }
             })
             .catch((err) => {
-                error(err.response.data.errors.message)
+                // error(err.response.data.errors.message)
                 console.log("err:", err);
             });
     }
@@ -225,7 +225,9 @@ const Chat = () => {
                             </div>
                         </div>
                         </> : <>
-                            <h3 className="m-auto">Select a chat to start messaging</h3>
+                            <div className="">
+                                <span className="">Select a chat to start message</span>
+                            </div>
                         </>}
                     </div>
                 </div>

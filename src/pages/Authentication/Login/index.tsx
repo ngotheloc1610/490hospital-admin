@@ -8,7 +8,7 @@ import { API_LOGIN } from "../../../constants/api.constant";
 import { defineConfigPost } from "../../../Common/utils";
 import { KEY_LOCAL_STORAGE } from "../../../constants/general.constant";
 import { useAppDispatch } from "../../../redux/hooks";
-import { setLogin, setRegister } from "../../../redux/features/auth/authSlice";
+import { setLogin } from "../../../redux/features/auth/authSlice";
 import { error } from "../../../Common/notify";
 
 const Login = () => {
@@ -21,7 +21,7 @@ const Login = () => {
 
   const url_api = process.env.REACT_APP_API_URL;
 
-  const handleLogin = () => {
+  const requestLogin = () => {
     const url = `${url_api}${API_LOGIN}`;
 
     const params = {
@@ -51,8 +51,20 @@ const Login = () => {
       });
   }
 
+  const handleLogin = () => {
+    requestLogin()
+  }
+
+  const handleKeyEnter = (event: any) => {
+    if (username !== '' && password !== '') {
+        if (event.key === 'Enter') {
+            requestLogin();
+        }
+    }
+}
+
   return (
-    <div className="contain">
+    <div className="contain" onKeyDown={handleKeyEnter}>
       <div className="login-container">
         <div className="login-container-header">
           <img src={LOGO_HOSPITAL} alt="" />
@@ -92,17 +104,6 @@ const Login = () => {
           <p className="text-end mt-3">
             <Link to="/forgot-password">Forgot Password?</Link>
           </p>
-        </div>
-        <div className="login-container-footer mt-5">
-          <p className="text-center fw-700">
-            ---------------------------------------or----------------------------------------
-          </p>
-          <button
-            className="button w-100 button--large button--outline fw-bold"
-            onClick={() => { dispatch(setRegister(true)); navigate("/register") }}
-          >
-            Create new account
-          </button>
         </div>
       </div>
     </div>

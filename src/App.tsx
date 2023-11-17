@@ -14,7 +14,6 @@ import Schedule from "./pages/Schedule";
 import DiagnosticReport from "./pages/DiagnosticReport";
 import Staff from "./pages/Staff";
 import Login from "./pages/Authentication/Login";
-import Register from "./pages/Authentication/Register";
 
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -52,7 +51,6 @@ import InfoPatient from "./pages/Patient/Detail/Infomation/InfoPatient";
 import CreateEditPatient from "./pages/Patient/Detail/Infomation/CreateEditPatient";
 import Appointment from "./pages/Appointment";
 import ChangePassword from "./pages/Authentication/ChangePassword";
-import AccountPatient from "./pages/Patient/Detail/Account";
 import Practitioner from "./pages/Practitioner";
 import ScheduleDoctor from "./pages/Doctor/Detail/ScheduleDoctor";
 import Information from "./pages/Information";
@@ -74,7 +72,7 @@ const RouterDom = () => (
         <Route path=":doctorId" element={<InfoDoctor />} />
         <Route path="detail/:doctorId" element={<CreateEditDoctor />} />
         {/* <Route path="scheduler" element={<ScheduleDoctor />} /> */}
-        <Route path="account" element={<ScheduleDoctor />} />
+        <Route path="scheduler" element={<ScheduleDoctor />} />
       </Route>
     </Route>
 
@@ -82,7 +80,6 @@ const RouterDom = () => (
       <Route path="information" element={<DetailPatient />}>
         <Route path=":patientId" element={<InfoPatient />} />
         <Route path="detail/:patientId" element={<CreateEditPatient />} />
-        <Route path="account" element={<AccountPatient />} />
       </Route>
     </Route>
 
@@ -114,7 +111,6 @@ const RouterDom = () => (
     </Route>
 
     <Route path={RouterUrl.LOGIN} element={<Login />} />
-    <Route path={RouterUrl.REGISTER} element={<Register />} />
     <Route path={RouterUrl.FORGOT_PASSWORD} element={<ForgotPassword />} />
     <Route path={RouterUrl.CHANGE_PASSWORD} element={<ChangePassword />} />
 
@@ -143,13 +139,12 @@ const App = () => {
   const [isForgotPassword, setIsForgotPassword] = useState<boolean>(false);
   const [isChangePassword, setIsChangePassword] = useState<boolean>(false);
 
-  const { isLogin, isRegister } = useAppSelector((state) => state.authSlice)
+  const { isLogin } = useAppSelector((state) => state.authSlice)
 
   return (
     <BrowserRouter basename={process.env.PUBLIC_URL}>
       {isLogin && _renderMainPage()}
-      {!isLogin && !isRegister && <Login />}
-      {isRegister && <Register />}
+      {!isLogin && <Login />}
       {isForgotPassword && <ForgotPassword />}
       {isChangePassword && <ChangePassword />}
       <ToastContainer theme="colored" />

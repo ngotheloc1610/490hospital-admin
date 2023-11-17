@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { RouterUrl } from "../../constants";
-import { ICON_APPOINTMENT, ICON_DASHBOARD, ICON_DEPARTMENT, ICON_DIAGNOSTIC, ICON_DOCTOR, ICON_PATIENT, ICON_STAFF } from "../../assets";
+import { ICON_APPOINTMENT, ICON_DASHBOARD, ICON_DEPARTMENT, ICON_DIAGNOSTIC, ICON_DOCTOR, ICON_MESSAGE, ICON_PATIENT, ICON_STAFF } from "../../assets";
 
 const Sidebar = () => {
   const location = useLocation();
@@ -99,7 +99,7 @@ const Sidebar = () => {
               data-content-id="practitioner"
             >
               <ICON_STAFF />
-              <span>Create Practitioner</span>
+              <span>Practitioner</span>
             </a>
           </li>
 
@@ -108,7 +108,7 @@ const Sidebar = () => {
               onClick={() => goToLink(RouterUrl.CHAT)}
               data-content-id="chat"
             >
-              <ICON_STAFF />
+              <ICON_MESSAGE />
               <span>Inbox Message</span>
             </a>
           </li>

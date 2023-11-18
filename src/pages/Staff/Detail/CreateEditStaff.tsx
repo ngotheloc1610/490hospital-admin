@@ -7,7 +7,7 @@ import { USER } from "../../../assets";
 import { API_ALL_GET_SPECIALTY, API_DETAIL_PRACTITIONER, API_PROFILE_PRACTITIONER } from "../../../constants/api.constant";
 import { defineConfigGet, defineConfigPost } from "../../../Common/utils";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Required"),
@@ -39,6 +39,8 @@ const defaultValue = {
 const CreateEditStaff = () => {
   const inputRef = useRef<any>(null);
   const [image, setImage] = useState<any>("");
+  const navigate = useNavigate();
+
 
   const params = useParams();
 
@@ -52,39 +54,39 @@ const CreateEditStaff = () => {
   useEffect(() => {
     getStaffInfo(params.staffId)
   }, [params.staffId])
-  
+
   useEffect(() => {
     getSpecialty()
   }, [])
 
-  const getStaffInfo = (id: string | undefined) =>{
+  const getStaffInfo = (id: string | undefined) => {
     const url = `${url_api}${API_DETAIL_PRACTITIONER}${id}`;
 
-      axios
-          .get(url, defineConfigPost())
-          .then((resp: any) => {
-              if (resp) {
-                const data = resp.data;
-                console.log("resp:", resp)
-                const doctor: any = {
-                  id: data.id,
-                  name: data.name,
-                  birthday: data.dateOfBirth,
-                  gender: data.gender,
-                  phoneNumber: data.phoneNumber,
-                  email: data.email,
-                  address: data.address,
-                  city: data.city,
-                  specialty: data.displaySpecialty,
-                  startDate: data.start,
-                  endDate: data.end,
-                }
-                setStaff(doctor);
-              }
-          })
-          .catch((err) => {
-              console.log("err:", err);
-          });
+    axios
+      .get(url, defineConfigPost())
+      .then((resp: any) => {
+        if (resp) {
+          const data = resp.data;
+          console.log("resp:", resp)
+          const doctor: any = {
+            id: data.id,
+            name: data.name,
+            birthday: data.dateOfBirth,
+            gender: data.gender,
+            phoneNumber: data.phoneNumber,
+            email: data.email,
+            address: data.address,
+            city: data.city,
+            specialty: data.displaySpecialty,
+            startDate: data.start,
+            endDate: data.end,
+          }
+          setStaff(doctor);
+        }
+      })
+      .catch((err) => {
+        console.log("err:", err);
+      });
   }
 
   const getSpecialty = () => {
@@ -104,7 +106,15 @@ const CreateEditStaff = () => {
 
   const handleChangeImage = (event: any) => {
     const file = event.target.files[0];
-    setImage(file);
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImage(reader.result);
+      };
+
+      reader.readAsDataURL(file);
+    }
   };
 
   const handlePickImage = () => {
@@ -296,7 +306,7 @@ const CreateEditStaff = () => {
       <div className="h-100 d-flex flex-column" onClick={handlePickImage}>
         <div className="h-100">
           <img
-            src={image ? URL.createObjectURL(image) : USER}
+            src={staff.photo.length > 0 ? `data:${staff.photo[0]?.contentType};base64,${staff.photo[0]?.data}` : image ? image : USER}
             alt=""
             className={`h-100 w-100 d-block m-auto ${image ? "" : "bg-image"}`}
             style={{ objectFit: "cover" }}
@@ -344,7 +354,7 @@ const CreateEditStaff = () => {
             </div>
           </Form>
           <div className="mt-3 d-flex justify-content-end">
-            <button className="button button--small button--danger me-3">
+            <button className="button button--small button--danger me-3" onClick={() => navigate("/staff")}>
               Back
             </button>
 

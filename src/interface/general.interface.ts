@@ -5,21 +5,23 @@ export interface ITotalView {
   doctor: number;
 }
 
-export interface IDoctorDetail {
+export interface IPractitioner {
   id: string;
-  name: string;
+  username: string;
+  fullname: string;
+  password: string;
+  cfPassword: string;
   birthday: string;
   gender: string;
   phoneNumber: string;
-  email: string;
-  address: string;
-  city: string;
+  type: string;
+  room: string;
   specialty: string;
   startDate: string;
   endDate: string;
-  education: [{ time: string; content: string }];
-  specialize: [{ time: string; content: string }];
-  achievement: [{ time: string; content: string }];
+  education: [{ start: string; end: string; content: string }];
+  specialize: [{ start: string; end: string; content: string }];
+  achievement: [{ start: string; end: string; content: string }];
 }
 
 export interface IPropsFormik {

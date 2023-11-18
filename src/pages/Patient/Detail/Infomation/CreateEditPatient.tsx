@@ -90,7 +90,7 @@ const CreateEditPatient = () => {
       id: values.id,
       username: values.name,
       email: values.email,
-      active: true,
+      password: "",
       name: values.name,
       phoneNumber: values.phoneNumber,
       type: "PATIENT",
@@ -125,7 +125,15 @@ const CreateEditPatient = () => {
 
   const handleChangeImage = (event: any) => {
     const file = event.target.files[0];
-    setImage(file);
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImage(reader.result);
+      };
+
+      reader.readAsDataURL(file);
+    }
   };
 
   const handlePickImage = () => {
@@ -248,8 +256,8 @@ const CreateEditPatient = () => {
       <div className="h-100 d-flex flex-column" onClick={handlePickImage}>
         <div className="h-100">
           <img
-            src={patientInfo.photo.length > 0 ? `data:${patientInfo.photo[0]?.contentType};base64,${patientInfo.photo[0]?.data}` : USER}
-            alt="imagee"
+            src={patientInfo.photo.length > 0 ? `data:${patientInfo.photo[0]?.contentType};base64,${patientInfo.photo[0]?.data}` : image ? image : USER}
+            alt="img patient"
             className={`h-100 w-100 d-block m-auto ${image ? "" : "bg-image"}`}
             style={{ objectFit: "cover" }}
           />
@@ -261,7 +269,7 @@ const CreateEditPatient = () => {
           />
         </div>
         <button className="button button--small button--primary w-90 mx-auto mt-3">
-          {image ? "Edit" : "Add"} profile picture
+          {image || patientInfo.photo.length > 0 ? "Edit" : "Add"} profile picture
         </button>
       </div>
     );
@@ -296,7 +304,7 @@ const CreateEditPatient = () => {
             </div>
           </Form>
           <div className="mt-3 d-flex justify-content-end">
-          <button
+            <button
               className="button button--small button--danger me-3"
               onClick={() => navigate("/patient")}
             >

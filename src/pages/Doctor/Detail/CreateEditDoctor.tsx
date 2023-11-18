@@ -4,7 +4,6 @@ import * as Yup from "yup";
 
 import { GENDER } from "../../../constants";
 import { ICON_TRASH, USER } from "../../../assets";
-import { IDoctorDetail } from "../../../interface/general.interface";
 import { defineConfigGet } from "../../../Common/utils";
 import axios from "axios";
 import { API_ALL_GET_SPECIALTY, API_DETAIL_PRACTITIONER } from "../../../constants/api.constant";
@@ -23,7 +22,7 @@ const validationSchema = Yup.object().shape({
   endDate: Yup.string().required("Required"),
 });
 
-const defaultValue: IDoctorDetail = {
+const defaultValue: any = {
   id: "",
   name: "",
   birthday: "",
@@ -49,7 +48,7 @@ const CreateEditDoctor = () => {
   const [specialtyList, setListSpecialty] = useState([]);
   const [image, setImage] = useState<any>("");
 
-  const [doctor, setDoctor] = useState<IDoctorDetail>(defaultValue);
+  const [doctor, setDoctor] = useState<any>(defaultValue);
 
   useEffect(() => {
     getSpecialty();
@@ -58,38 +57,38 @@ const CreateEditDoctor = () => {
   useEffect(() => {
     getDoctorInfo(params.doctorId)
   }, [params.doctorId])
-  
-  const getDoctorInfo = (id: string | undefined) => {
-      const url = `${url_api}${API_DETAIL_PRACTITIONER}${id}`;
 
-      axios
-          .get(url, defineConfigGet({}))
-          .then((resp: any) => {
-              if (resp) {
-                const data = resp.data;
-                console.log("resp:", resp)
-                const doctor: IDoctorDetail = {
-                  id: data.id,
-                  name: data.practitioner.display,
-                  birthday: data.practitionerTarget.birthDay,
-                  gender: data.practitionerTarget.gender,
-                  phoneNumber: data.practitionerTarget.phoneNumber,
-                  email: data.practitionerTarget.email,
-                  address: data.address,
-                  city: data.city,
-                  specialty: data.displaySpecialty,
-                  startDate: data.period.start,
-                  endDate: data.period.end,
-                  education: [{ time: "", content: "" }],
-                  specialize: [{ time: "", content: "" }],
-                  achievement: [{ time: "", content: "" }],
-                }
-                setDoctor(doctor);
-              }
-          })
-          .catch((err) => {
-              console.log("err:", err);
-          });
+  const getDoctorInfo = (id: string | undefined) => {
+    const url = `${url_api}${API_DETAIL_PRACTITIONER}${id}`;
+
+    axios
+      .get(url, defineConfigGet({}))
+      .then((resp: any) => {
+        if (resp) {
+          const data = resp.data;
+          console.log("resp:", resp)
+          const doctor: any = {
+            id: data.id,
+            name: data.practitioner.display,
+            birthday: data.practitionerTarget.birthDay,
+            gender: data.practitionerTarget.gender,
+            phoneNumber: data.practitionerTarget.phoneNumber,
+            email: data.practitionerTarget.email,
+            address: data.address,
+            city: data.city,
+            specialty: data.displaySpecialty,
+            startDate: data.period.start,
+            endDate: data.period.end,
+            education: [{ time: "", content: "" }],
+            specialize: [{ time: "", content: "" }],
+            achievement: [{ time: "", content: "" }],
+          }
+          setDoctor(doctor);
+        }
+      })
+      .catch((err) => {
+        console.log("err:", err);
+      });
   }
 
   const getSpecialty = () => {
@@ -109,7 +108,15 @@ const CreateEditDoctor = () => {
 
   const handleChangeImage = (event: any) => {
     const file = event.target.files[0];
-    setImage(file);
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImage(reader.result);
+      };
+
+      reader.readAsDataURL(file);
+    }
   };
 
   const handlePickImage = () => {
@@ -493,7 +500,7 @@ const CreateEditDoctor = () => {
       <div className="h-100 d-flex flex-column" onClick={handlePickImage}>
         <div className="h-100">
           <img
-            src={image ? URL.createObjectURL(image) : USER}
+            src={doctor.photo.length > 0 ? `data:${doctor.photo[0]?.contentType};base64,${doctor.photo[0]?.data}` : image ? image : USER}
             alt=""
             className={`h-100 w-100 d-block m-auto ${image ? "" : "bg-image"}`}
             style={{ objectFit: "cover" }}

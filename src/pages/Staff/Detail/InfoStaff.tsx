@@ -83,11 +83,11 @@ const InfoStaff = () => {
               <th scope="row" style={{ width: "15%" }}>
                 Starting date
               </th>
-              <td>{moment(staff.period?.start, 'ddd MMM DD HH:mm:ss z YYYY').format(FORMAT_DATE)}</td>
+              <td>{moment(staff.period?.start).format(FORMAT_DATE)}</td>
             </tr>
             <tr>
               <th scope="row">End date</th>
-              <td>{moment(staff.period?.end, 'ddd MMM DD HH:mm:ss z YYYY').format(FORMAT_DATE)}</td>
+              <td>{moment(staff.period?.end).format(FORMAT_DATE)}</td>
             </tr>
             <tr>
               <th scope="row">Position</th>
@@ -122,10 +122,13 @@ const InfoStaff = () => {
               </div>
             </div>
             <div className="col-8">
-              <div className="pb-3 mb-3 border-bottom d-flex justify-content-between">
+              <div className="pb-3 mb-d-flex justify-content-between">
                 <h3 className="fw-bold text-uppercase">{staff.practitioner?.display}</h3>
-                <div>
+                {/* <div>
                   <button className="button button--info button--small me-3" onClick={() => navigate("/change-password")}>Change Password</button>
+                </div> */}
+                <div>
+                  <button className="button button--primary button--small" onClick={() => navigate(`/staff/overview/detail/${staff?.id}`)}>Edit</button>
                 </div>
               </div>
               {_renderBasicInfo()}

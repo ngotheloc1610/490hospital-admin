@@ -1,26 +1,26 @@
 .practitioner {
     width: 100%;
-    height: 100vh;
+    height: 100%;
 
     .input-group {
-        &-text:first-child {
-            background: transparent;
-            border-right: none;
-        }
+        // &-text:first-child {
+        //     background: transparent;
+        //     border-right: none;
+        // }
 
-        &-text:last-child {
-            background: transparent;
-            border-left: none;
-        }
+        // &-text:last-child {
+        //     background: transparent;
+        //     border-left: none;
+        // }
 
-        .form-control {
-            border-left: none;
-            border-right: none;
+        // .form-control {
+        //     border-left: none;
+        //     border-right: none;
 
-            &:focus {
-                box-shadow: none;
-            }
-        }
+        //     &:focus {
+        //         box-shadow: none;
+        //     }
+        // }
     }
 
     .form-control {

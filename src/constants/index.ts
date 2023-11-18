@@ -130,6 +130,22 @@ export const STATUS = [
   },
 ];
 
+export const STATUS_APPOINTMENT = [
+  {
+    name: "Fulfilled",
+    code: "Fulfilled",
+  },
+  {
+    name: "Canceled",
+    code: "Canceled",
+  },
+  {
+    name: "No Show",
+    code: "No Show",
+  },
+];
+
+
 export const TYPE_PRACTITIONER = [
   {
     name: "Doctor",

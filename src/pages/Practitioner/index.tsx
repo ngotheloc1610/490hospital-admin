@@ -1,15 +1,53 @@
 import { useEffect, useState } from "react";
-import { LOGO_HOSPITAL } from "../../assets";
+import { Field, FieldArray, Form, Formik } from "formik";
+import * as Yup from "yup";
+import axios from "axios";
+
 import Layout from "../../components/Layout";
 import { GENDER, TYPE_PRACTITIONER } from "../../constants";
 import {
   API_ALL_GET_SPECIALTY,
   API_CREATE_PRACTITIONER,
-  API_GET_ROOM,
+  API_GET_ROOM_BY_SPECIALTY,
 } from "../../constants/api.constant";
 import { defineConfigGet, defineConfigPost } from "../../Common/utils";
-import axios from "axios";
 import { success, warn } from "../../Common/notify";
+import { ICON_TRASH } from "../../assets";
+import { IPractitioner } from "../../interface/general.interface";
+
+const validationSchema = Yup.object().shape({
+  username: Yup.string().required("Required"),
+  fullname: Yup.string().required("Required"),
+  password: Yup.string().required("Required"),
+  cfPassword: Yup.string().required("Required"),
+  birthday: Yup.string().required("Required"),
+  gender: Yup.string().required("Required"),
+  phoneNumber: Yup.string().required("Required"),
+  type: Yup.string().required("Required"),
+  room: Yup.string().required("Required"),
+  specialty: Yup.string().required("Required"),
+  startDate: Yup.string().required("Required"),
+  endDate: Yup.string().required("Required"),
+});
+
+const defaultValue: IPractitioner = {
+  id: "",
+  username: "",
+  fullname: "",
+  password: "",
+  cfPassword: "",
+  birthday: "",
+  gender: "",
+  phoneNumber: "",
+  type: "",
+  room: "",
+  specialty: "",
+  startDate: "",
+  endDate: "",
+  education: [{ start: "", end: "", content: "" }],
+  specialize: [{ start: "", end: "", content: "" }],
+  achievement: [{ start: "", end: "", content: "" }],
+};
 
 const Practitioner = () => {
   const url_api = process.env.REACT_APP_API_URL;
@@ -20,23 +58,17 @@ const Practitioner = () => {
   const [listSpecialty, setListSpecialty] = useState<any>([]);
   const [listRoom, setListRoom] = useState<any>([]);
 
-  const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [cfPassword, setCfPassword] = useState<string>("");
-  const [name, setName] = useState<string>("");
-  const [birthDay, setBirthDay] = useState<string>("");
-  const [phoneNumber, setPhoneNumber] = useState<string>("");
-  const [gender, setGender] = useState<string>("");
-  const [type, setType] = useState<string>("");
-  const [specialty, setSpecialty] = useState<string>("");
-  const [startDate, setStartDate] = useState<string>("");
-  const [endDate, setEndDate] = useState<string>("");
-  const [room, setRoom] = useState<string>("");
+  const [specialtyId, setSpecialtyId] = useState<string>("");
 
   useEffect(() => {
     getSpecialty();
-    getRoom();
   }, []);
+
+  useEffect(() => {
+    if (specialtyId) {
+      getRoom(specialtyId);
+    }
+  }, [specialtyId])
 
   const getSpecialty = () => {
     const url = `${url_api}${API_ALL_GET_SPECIALTY}`;
@@ -53,8 +85,8 @@ const Practitioner = () => {
       });
   };
 
-  const getRoom = () => {
-    const url = `${url_api}${API_GET_ROOM}`;
+  const getRoom = (specialtyId: string) => {
+    const url = `${url_api}${API_GET_ROOM_BY_SPECIALTY}${specialtyId}`;
 
     axios
       .get(url, defineConfigPost())
@@ -68,50 +100,50 @@ const Practitioner = () => {
       });
   };
 
-  const createPractitioner = () => {
+  const createPractitioner = (values: any, actions: any) => {
     const url = `${url_api}${API_CREATE_PRACTITIONER}`;
 
     const idSpecialty = listSpecialty.filter((item: any) => {
-      return item.id === specialty;
+      return item.id === values.specialty;
     })[0]?.id;
     const displaySpecialty = listSpecialty.filter((item: any) => {
-      return item.id === specialty;
+      return item.id === values.specialty;
     })[0]?.name;
     const codeSpecialty = listSpecialty.filter((item: any) => {
-      return item.id === specialty;
+      return item.id === values.specialty;
     })[0]?.code;
 
     const idRoom = listRoom.filter((item: any) => {
-      return item.id === room;
+      return item.id === values.room;
     })[0]?.id;
     const desRoom = listRoom.filter((item: any) => {
-      return item.id === room;
+      return item.id === values.room;
     })[0]?.describe;
 
     const params = {
-      username: username,
+      username: values.username,
       identifier: "",
-      name: name,
-      phoneNumber: phoneNumber,
+      name: values.fullname,
+      phoneNumber: values.phoneNumber,
       idSpecialty: idSpecialty,
       displaySpecialty: displaySpecialty,
       desRoom: desRoom,
       idRoom: idRoom,
-      password: password,
-      type: type,
-      dateOfBirth: birthDay,
+      password: values.password,
+      type: values.type,
+      dateOfBirth: values.birthday,
       photo: "",
       city: "",
       district: "",
       state: "",
       address: "",
-      gender: gender,
+      gender: values.gender,
       country: "",
       postalCode: "",
       code: codeSpecialty,
       qualitification: "",
-      start: startDate,
-      end: endDate,
+      startWork: values.startDate,
+      endWork: values.endDate,
     };
 
     axios
@@ -119,12 +151,22 @@ const Practitioner = () => {
       .then((resp: any) => {
         if (resp) {
           console.log("resp:", resp);
-          success(`Create practitioner ${type} successfully!`);
+          actions.setSubmitting(false);
+          actions.resetForm();
+          success(`Create practitioner ${values.type} successfully!`);
         }
       })
       .catch((err) => {
         console.log("err:", err);
       });
+  };
+
+  const handleCreatePractitioner = (values: any, actions: any) => {
+    if (values.password !== values.cfPassword) {
+      warn("Mật khẩu không trùng khớp!");
+      return;
+    }
+    createPractitioner(values, actions);
   };
 
   const _renderListType = () => {
@@ -139,7 +181,7 @@ const Practitioner = () => {
       </>
     );
   };
-  
+
   const _renderListGender = () => {
     return (
       <>
@@ -185,224 +227,513 @@ const Practitioner = () => {
     );
   };
 
-  const handleCreatePractitioner = () => {
-    if (password !== cfPassword) {
-      warn("Mật khẩu không trùng khớp!");
-      return;
-    }
-    createPractitioner();
+  const _renderBasicInfo = (props: any) => {
+    const { errors, touched, values, handleChange } = props;
+
+    return (
+      <div>
+        <p className="fw-bold border-top pt-2 text-dark">Basic Information</p>
+        <div className="row">
+          <div className="row mb-3">
+            <div className="col-6">
+              <label htmlFor="username" className="form-label">
+                Username <span className="text-danger">*</span>
+              </label>
+              <div className="input-group">
+                <span className="input-group-text" id="basic-addon1">
+                  <i className="bi bi-person-fill fs-5 icon-gray"></i>
+                </span>
+                <input
+                  id="username"
+                  type="text"
+                  className={`form-control ${errors?.username && touched?.username ? "is-invalid" : ""}`}
+                  placeholder="Username"
+                  value={values.username}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+            <div className="col-6">
+              <label htmlFor="fullname" className="form-label">
+                Fullname <span className="text-danger">*</span>
+              </label>
+              <div className="input-group">
+                <input
+                  id="fullname"
+                  type="text"
+                  className={`form-control ${errors?.fullname && touched?.fullname ? "is-invalid" : ""}`}
+                  placeholder="Full name"
+                  value={values.fullname}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="row mb-3">
+            <div className="col-6">
+              <label htmlFor="password" className="form-label">
+                Password <span className="text-danger">*</span>
+              </label>
+              <div className="input-group">
+                <span className="input-group-text">
+                  <i className="bi bi-lock-fill fs-5 icon-gray"></i>
+                </span>
+                <input
+                  id="password"
+                  type={`${isShowPassword ? "text" : "password"}`}
+                  className={`form-control ${errors?.password && touched?.password ? "is-invalid" : ""}`}
+                  placeholder="Password"
+                  value={values.password}
+                  onChange={handleChange}
+                />
+                <span
+                  className="input-group-text"
+                  onClick={() => setIsShowPassword(!isShowPassword)}
+                >
+                  <i
+                    className={`bi ${isShowPassword ? "bi-eye-slash" : "bi-eye-fill"
+                      } fs-5 icon-gray`}
+                  />
+                </span>
+              </div>
+            </div>
+            <div className="col-6">
+              <label htmlFor="birthday" className="form-label">
+                Date of birth <span className="text-danger">*</span>
+              </label>
+              <div className="input-group">
+                <input
+                  id="birthday"
+                  type="date"
+                  className={`form-control ${errors?.birthday && touched?.birthday ? "is-invalid" : ""}`}
+                  placeholder="Date of birth"
+                  value={values.birthday}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="row mb-3">
+            <div className="col-6">
+              <label htmlFor="cfPassword" className="form-label">
+                Confirm Password <span className="text-danger">*</span>
+              </label>
+              <div className="input-group">
+                <span className="input-group-text">
+                  <i className="bi bi-lock-fill fs-5 icon-gray"></i>
+                </span>
+                <input
+                  id="cfPassword"
+                  type={`${isShowCfPassword ? "text" : "password"}`}
+                  className={`form-control ${errors?.cfPassword && touched?.cfPassword ? "is-invalid" : ""}`}
+                  placeholder="Confirm Password"
+                  value={values.cfPassword}
+                  onChange={handleChange}
+                />
+                <span
+                  className="input-group-text"
+                  onClick={() => setIsShowCfPassword(!isShowCfPassword)}
+                >
+                  <i
+                    className={`bi ${isShowCfPassword ? "bi-eye-slash" : "bi-eye-fill"
+                      } fs-5 icon-gray`}
+                  />
+                </span>
+              </div>
+            </div>
+            <div className="col-6">
+              <label htmlFor="phoneNumber" className="form-label">
+                Phone Number <span className="text-danger">*</span>
+              </label>
+              <div className="input-group">
+                <input
+                  id="phoneNumber"
+                  type="text"
+                  className={`form-control ${errors?.phoneNumber && touched?.phoneNumber ? "is-invalid" : ""}`}
+                  placeholder="Phone number"
+                  value={values.phoneNumber}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="row mb-3 ">
+            <div className="col-6">
+              <label htmlFor="type" className="form-label">
+                Type of Practitioner <span className="text-danger">*</span>
+              </label>
+              <div className="input-group">
+                <select
+                  id="type"
+                  className={`form-select ${errors?.type && touched?.type ? "is-invalid" : ""}`}
+                  onChange={handleChange}
+                >
+                  {_renderListType()}
+                </select>
+              </div>
+            </div>
+            <div className="col-6 justify-content-between ">
+              <label htmlFor="gender" className="form-label">
+                Gender <span className="text-danger">*</span>
+              </label>
+              <div className="input-group">
+                <select
+                  id="gender"
+                  className={`form-select ${errors?.gender && touched?.gender ? "is-invalid" : ""}`}
+                  onChange={handleChange}
+                >
+                  {_renderListGender()}
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const _renderWorkInfo = (props: any) => {
+    const { values, errors, touched, handleChange, setFieldValue } = props;
+
+    return (
+      <div className="mt-5">
+        <p className="fw-bold border-top pt-2 text-dark">Work Information</p>
+        <div className="row mb-3">
+          <div className="col-6">
+            <label htmlFor="startDate" className="form-label">
+              Start Date <span className="text-danger">*</span>
+            </label>
+            <div className="input-group">
+              <input
+                id="startDate"
+                type="date"
+                className={`form-control ${errors?.startDate && touched?.startDate ? "is-invalid" : ""}`}
+                value={values.startDate}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+          <div className="col-6">
+            <label htmlFor="endDate" className="form-label">
+              End Date <span className="text-danger">*</span>
+            </label>
+            <div className="input-group">
+              <input
+                id="endDate"
+                type="date"
+                className={`form-control ${errors?.endDate && touched?.endDate ? "is-invalid" : ""}`}
+                value={values.end}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="row mb-3 ">
+          <div className="col-6">
+            <label htmlFor="specialty" className="form-label">
+              Specialty <span className="text-danger">*</span>
+            </label>
+            <div className="input-group">
+              <select
+                id="specialty"
+                className={`form-select ${errors?.specialty && touched?.specialty ? "is-invalid" : ""}`}
+                onChange={(e: any) => {
+                  setSpecialtyId(e.target.value);
+                  setFieldValue("specialty", e.target.value)
+                }}
+              >
+                {_renderListSpecialty()}
+              </select>
+            </div>
+          </div>
+
+          <div className="col-6">
+            <label htmlFor="room" className="form-label">
+              Room <span className="text-danger">*</span>
+            </label>
+            <div className="input-group">
+              <select
+                id="room"
+                className={`form-select ${errors?.room && touched?.room ? "is-invalid" : ""}`}
+                onChange={handleChange}
+              >
+                {_renderListRoom()}
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const _renderEducationInfo = (props: any) => {
+    const { values, handleChange } = props;
+    return (
+      <div className="mt-3">
+        <p className="fw-bold border-top pt-2 text-dark">Education</p>
+        <table className="table rounded">
+          <thead>
+            <tr>
+              <th style={{ width: "20%" }}>Time</th>
+              <th>Content</th>
+            </tr>
+          </thead>
+          <tbody>
+            <FieldArray
+              name="education"
+              render={(arrayHelpers) => (
+                <>
+                  {values.education.map((item: any, index: number) => (
+                    <tr key={index}>
+                      <td>
+                        <div className="d-flex">
+                          <input
+                            id={`education[${index}].start`}
+                            type="date"
+                            className="form-control"
+                            value={values.education.start}
+                            onChange={handleChange}
+                          />
+                          <input
+                            id={`education[${index}].end`}
+                            type="date"
+                            className="form-control"
+                            value={values.education.end}
+                            onChange={handleChange}
+                          />
+                        </div>
+                      </td>
+                      <td className="d-flex">
+                        <Field
+                          name={`education[${index}].content`}
+                          className="form-control"
+                        />
+                        {values.education.length > 1 && (
+                          <span className="m-auto">
+                            <ICON_TRASH
+                              onClick={() => arrayHelpers.remove(index)}
+                            />
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                  <tr>
+                    <td></td>
+                    <td>
+                      <button
+                        className="button-add"
+                        onClick={() =>
+                          arrayHelpers.push({ time: "", content: "" })
+                        }
+                      >
+                        <i className="bi bi-plus-circle-fill"></i>
+                        <span className="ms-1">Add more</span>
+                      </button>
+                    </td>
+                  </tr>
+                </>
+              )}
+            />
+          </tbody>
+        </table>
+      </div>
+    );
+  };
+
+  const _renderSpecializedActivities = (props: any) => {
+    const { values, handleChange } = props;
+    return (
+      <div className="mt-3">
+        <p className="fw-bold border-top pt-2 text-dark">
+          Specialized activities
+        </p>
+        <table className="table rounded">
+          <thead>
+            <tr>
+              <th style={{ width: "20%" }}>Time</th>
+              <th>Content</th>
+            </tr>
+          </thead>
+          <tbody>
+            <FieldArray
+              name="specialize"
+              render={(arrayHelpers) => (
+                <>
+                  {values.specialize.map((item: any, index: number) => (
+                    <tr key={index}>
+                      <td>
+                        <div className="d-flex">
+                          <input
+                            id={`specialize[${index}].start`}
+                            type="date"
+                            className="form-control"
+                            value={values.specialize.start}
+                            onChange={handleChange}
+                          />
+                          <input
+                            id={`specialize[${index}].end`}
+                            type="date"
+                            className="form-control"
+                            value={values.specialize.end}
+                            onChange={handleChange}
+                          />
+                        </div>
+                      </td>
+                      <td className="d-flex">
+                        <Field
+                          name={`specialize[${index}].content`}
+                          className="form-control"
+                        />
+                        {values.specialize.length > 1 && (
+                          <span className="m-auto">
+                            <ICON_TRASH
+                              onClick={() => arrayHelpers.remove(index)}
+                            />
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                  <tr>
+                    <td></td>
+                    <td>
+                      <button
+                        className="button-add"
+                        onClick={() =>
+                          arrayHelpers.push({ time: "", content: "" })
+                        }
+                      >
+                        <i className="bi bi-plus-circle-fill"></i>
+                        <span className="ms-1">Add more</span>
+                      </button>
+                    </td>
+                  </tr>
+                </>
+              )}
+            />
+          </tbody>
+        </table>
+      </div>
+    );
+  };
+
+  const _renderAchievement = (props: any) => {
+    const { values, handleChange } = props;
+    return (
+      <div className="mt-3">
+        <p className="fw-bold border-top pt-2 text-dark">Achievement</p>
+        <table className="table rounded">
+          <thead>
+            <tr>
+              <th style={{ width: "20%" }}>Time</th>
+              <th>Content</th>
+            </tr>
+          </thead>
+          <tbody>
+            <FieldArray
+              name="achievement"
+              render={(arrayHelpers) => (
+                <>
+                  {values.achievement.map((item: any, index: number) => (
+                    <tr key={index}>
+                      <td>
+                        <div className="d-flex">
+                          <input
+                            id={`achievement[${index}].start`}
+                            type="date"
+                            className="form-control"
+                            value={values.achievement.start}
+                            onChange={handleChange}
+                          />
+                          <input
+                            id={`achievement[${index}].end`}
+                            type="date"
+                            className="form-control"
+                            value={values.achievement.end}
+                            onChange={handleChange}
+                          />
+                        </div>
+                      </td>
+                      <td className="d-flex">
+                        <Field
+                          name={`achievement[${index}].content`}
+                          className="form-control"
+                        />
+                        {values.achievement.length > 1 && (
+                          <span className="m-auto">
+                            <ICON_TRASH
+                              onClick={() => arrayHelpers.remove(index)}
+                            />
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                  <tr>
+                    <td></td>
+                    <td>
+                      <button
+                        className="button-add"
+                        onClick={() =>
+                          arrayHelpers.push({ time: "", content: "" })
+                        }
+                      >
+                        <i className="bi bi-plus-circle-fill"></i>
+                        <span className="ms-1">Add more</span>
+                      </button>
+                    </td>
+                  </tr>
+                </>
+              )}
+            />
+          </tbody>
+        </table>
+      </div>
+    );
   };
 
   return (
     <Layout>
       <section className="practitioner">
-        <div className="practitioner-container">
-          <div className="practitioner-container-body mt-3">
-            <div className="container">
-              <div className="row mb-3">
-                <div className="col-6">
-                <label htmlFor="username">
-              Username <span className="text-danger">*</span>
-            </label>
-                  <div className="input-group">
-                    
-                    <span className="input-group-text" id="basic-addon1">
-                      <i className="bi bi-person-fill fs-5 icon-gray"></i>
-                    </span>
-                    <input
-                    id="username"
-                      type="text"
-                      className="form-control"
-                      placeholder="Username"
-                      value={username}
-                      onChange={(e: any) => setUsername(e.target.value)}
-                    />
-                    <span className="input-group-text"></span>
+        <div className="practitioner-container container">
+          <Formik
+            initialValues={defaultValue}
+            enableReinitialize={true}
+            validationSchema={validationSchema}
+            onSubmit={(values, actions) => {
+              console.log("values:", values)
+              handleCreatePractitioner(values, actions);
+            }}
+          >
+            {({ values, errors, touched, submitForm, handleChange, setFieldValue }) => (
+              <>
+                <Form>
+                  <div className="practitioner-container-body mt-3">
+                    <div>
+                      {_renderBasicInfo({ values, errors, touched, handleChange })}
+                      {_renderWorkInfo({ values, errors, touched, handleChange, setFieldValue })}
+                      {values.type === "Doctor" &&
+                        <>
+                          {_renderEducationInfo({ values, handleChange })}
+                          {_renderSpecializedActivities({ values, handleChange })}
+                          {_renderAchievement({ values, handleChange })}
+                        </>
+                      }
+                    </div>
                   </div>
-                </div>
-                <div className="col-6">
-                <label htmlFor="fullname">
-              Fullname <span className="text-danger">*</span>
-            </label>
-                  <input
-                  id="fullname"
-                    type="text"
-                    className="form-control h-100"
-                    placeholder="Full name"
-                    value={name}
-                    onChange={(e: any) => setName(e.target.value)}
-                  />
-                </div>
-              </div>
-              <div className="row mb-3">
-                <div className="col-6">
-                <label htmlFor="username">
-              Password <span className="text-danger">*</span>
-            </label>
-                  <div className="input-group">
-                    <span className="input-group-text">
-                      <i className="bi bi-lock-fill fs-5 icon-gray"></i>
-                    </span>
-                    <input
-                    id="password"
-                      type={`${isShowPassword ? "text" : "password"}`}
-                      className="form-control"
-                      placeholder="Password"
-                      value={password}
-                      onChange={(e: any) => setPassword(e.target.value)}
-                    />
-                    <span
-                      className="input-group-text"
-                      onClick={() => setIsShowPassword(!isShowPassword)}
-                    >
-                      <i
-                        className={`bi ${
-                          isShowPassword ? "bi-eye-slash" : "bi-eye-fill"
-                        } fs-5 icon-gray`}
-                      />
-                    </span>
-                  </div>
-                </div>
-                <div className="col-6">
-                <label htmlFor="username">
-                Date of birth <span className="text-danger">*</span>
-            </label>
-                  <input
-                    type="date"
-                    className="form-control h-100"
-                    placeholder="Date of birth"
-                    value={birthDay}
-                    onChange={(e: any) => setBirthDay(e.target.value)}
-                  />
-                </div>
-              </div>
-              <div className="row mb-3">
-                <div className="col-6">
-                <label htmlFor="username">
-                Confirm Password <span className="text-danger">*</span>
-            </label>
-                  <div className="input-group">
-                    <span className="input-group-text">
-                      <i className="bi bi-lock-fill fs-5 icon-gray"></i>
-                    </span>
-                    <input
-                      type={`${isShowCfPassword ? "text" : "password"}`}
-                      className="form-control"
-                      placeholder="Confirm Password"
-                      value={cfPassword}
-                      onChange={(e: any) => setCfPassword(e.target.value)}
-                    />
-                    <span
-                      className="input-group-text"
-                      onClick={() => setIsShowCfPassword(!isShowCfPassword)}
-                    >
-                      <i
-                        className={`bi ${
-                          isShowCfPassword ? "bi-eye-slash" : "bi-eye-fill"
-                        } fs-5 icon-gray`}
-                      />
-                    </span>
-                  </div>
-                </div>
-                <div className="col-6">
-                <label htmlFor="username">
-                Phone Number <span className="text-danger">*</span>
-            </label>
-                  <input
-                    type="text"
-                    className="form-control h-100"
-                    placeholder="Phone number"
-                    value={phoneNumber}
-                    onChange={(e: any) => setPhoneNumber(e.target.value)}
-                  />
-                </div>
-              </div>
-              <div className="row mb-3 ">
-                <div className="col-6 d-flex">
-                <label htmlFor="username">
-                Type of Practitioner <span className="text-danger">*</span>
-            </label>
-                  <select
-                    className="form-select"
-                    onChange={(e) => setType(e.target.value)}
+                </Form>
+                <div className="mt-3 d-flex justify-content-end">
+                  <button
+                    className="button button--small button--primary"
+                    onClick={submitForm}
                   >
-                    {_renderListType()}
-                  </select>
+                    Save
+                  </button>
                 </div>
-                <div className="col-6 d-flex justify-content-between ">
-                <label htmlFor="username">
-                Gender <span className="text-danger">*</span>
-            </label>
-                  <select
-                    className="form-select"
-                    onChange={(e) => setGender(e.target.value)}
-                  >
-                    {_renderListGender()}
-                  </select>
-                </div>
-              </div>
-              <div className="row mb-3">
-                <div className="col-6">
-                <label htmlFor="username">
-                Start Date <span className="text-danger">*</span>
-            </label>
-                  <input
-                    type="date"
-                    className="form-control h-100"
-                    placeholder="Start Date"
-                    value={startDate}
-                    onChange={(e: any) => setStartDate(e.target.value)}
-                  />
-                </div>
-                <div className="col-6">
-                <label htmlFor="username">
-               End Date <span className="text-danger">*</span>
-            </label>
-                  <input
-                    type="date"
-                    className="form-control h-100"
-                    placeholder="End Date"
-                    value={endDate}
-                    onChange={(e: any) => setEndDate(e.target.value)}
-                  />
-                </div>
-              </div>
-              <div className="row mb-3 ">
-                <div className="col-6 d-flex">
-                <label htmlFor="username">
-                Specialty <span className="text-danger">*</span>
-            </label>
-                  <select
-                    className="form-select"
-                    onChange={(e) => setSpecialty(e.target.value)}
-                  >
-                    {_renderListSpecialty()}
-                  </select>
-                </div>
-
-                <div className="col-6 d-flex">
-                <label htmlFor="username">
-                Room <span className="text-danger">*</span>
-            </label>
-                  <select
-                    className="form-select"
-                    onChange={(e) => setRoom(e.target.value)}
-                  >
-                    {_renderListRoom()}
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="practitioner-container-footer">
-            <button
-              className="button button--small button--primary"
-              onClick={() => handleCreatePractitioner()}
-            >
-              Create
-            </button>
-          </div>
+              </>
+            )}
+          </Formik>
         </div>
       </section>
     </Layout>

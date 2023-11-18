@@ -61,9 +61,11 @@ const ScheduleDoctor = () => {
         schedules.forEach((item: any) => {
             dataSchedule.push({
                 Id: item.id,
-                Subject: item.comment,
+                Subject: item.actor[0].display,
                 StartTime: new Date(item.planningHorizon.start),
                 EndTime: new Date(item.planningHorizon.end),
+                Status: item.slotStatus,
+                Description: item.comment
             })
         })
     }, [schedules])

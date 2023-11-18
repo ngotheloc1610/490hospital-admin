@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-import { DEFAULT_ITEM_PER_PAGE, START_PAGE, STATUS } from "../../constants";
+import { DEFAULT_ITEM_PER_PAGE, START_PAGE, STATUS_APPOINTMENT } from "../../constants";
 import { convertToDate, convertToTime, defineConfigGet } from "../../Common/utils";
 import { API_ALL_GET_APPOINTMENT_PREVIOUS } from "../../constants/api.constant";
 
@@ -87,7 +87,7 @@ const PreviousAppointment = () => {
                                     <span>{convertToTime(item.appointmentTimeEnd)}</span>
                                 </td>
                                 <td >{item.doctorName}</td>
-                                <td >status</td>
+                                <td >{item.status}</td>
                             </tr>
                         );
                     })}
@@ -100,7 +100,7 @@ const PreviousAppointment = () => {
         return (
             <>
                 <option hidden>Select Status</option>
-                {STATUS.map((item: any) => (
+                {STATUS_APPOINTMENT.map((item: any) => (
                     <option value={item.code} key={item.code}>
                         {item.name}
                     </option>

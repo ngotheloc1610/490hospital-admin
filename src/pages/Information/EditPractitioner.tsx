@@ -36,6 +36,7 @@ const defaultValue = {
     specialty: "",
     startDate: "",
     endDate: "",
+    photo: [],
     education: [{ time: "", content: "" }],
     specialize: [{ time: "", content: "" }],
     achievement: [{ time: "", content: "" }],
@@ -49,7 +50,7 @@ const EditPractitioner = () => {
     const inputRef = useRef<any>(null);
     const [image, setImage] = useState<any>("");
 
-    const [practitionerInfo, setPractitionerInfo] = useState(defaultValue);
+    const [practitionerInfo, setPractitionerInfo] = useState<any>(defaultValue);
     const [specialtyList, setListSpecialty] = useState([]);
 
     useEffect(() => {
@@ -135,7 +136,15 @@ const EditPractitioner = () => {
 
     const handleChangeImage = (event: any) => {
         const file = event.target.files[0];
-        setImage(file);
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImage(reader.result);
+            };
+
+            reader.readAsDataURL(file);
+        }
     };
 
     const handlePickImage = () => {
@@ -267,7 +276,7 @@ const EditPractitioner = () => {
                             className={`form-select ${errors?.specialty && touched?.specialty ? "is-invalid" : ""
                                 }`}
                         >
-                            {specialtyList.length > 0 ? (
+                            {specialtyList ? (
                                 specialtyList.map((item: any) => (
                                     <option value={item.code} key={item.code}>
                                         {item.name}
@@ -520,8 +529,8 @@ const EditPractitioner = () => {
             <div className="h-100 d-flex flex-column" onClick={handlePickImage}>
                 <div className="h-100">
                     <img
-                        src={image ? URL.createObjectURL(image) : USER}
-                        alt=""
+                        src={practitionerInfo.photo.length > 0 ? `data:${practitionerInfo.photo[0]?.contentType};base64,${practitionerInfo.photo[0]?.data}` : image ? image : USER}
+                        alt="img admin"
                         className={`h-100 w-100 d-block m-auto ${image ? "" : "bg-image"}`}
                         style={{ objectFit: "cover" }}
                     />

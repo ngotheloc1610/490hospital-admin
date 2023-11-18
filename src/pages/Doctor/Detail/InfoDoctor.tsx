@@ -196,7 +196,7 @@ const InfoDoctor = () => {
               </div>
             </div>
             <div className="col-8">
-              <div className="pb-3 mb-3 border-bottom d-flex justify-content-between">
+              <div className="pb-3 mb-3 d-flex justify-content-between">
                 <h3 className="fw-bold text-uppercase">{doctor?.practitioner?.display}</h3>
                 <div>
                   <button className="button button--primary button--small" onClick={() => navigate(`/doctor/overview/detail/${doctor?.id}`)}>Edit</button>

@@ -1,32 +1,44 @@
 import { USER } from "../../assets";
 import Layout from "../../components/Layout";
 
+import { useEffect, useRef, useState } from "react";
+import axios from "axios";
+import moment from "moment";
+import SockJS from "sockjs-client";
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import SendIcon from '@mui/icons-material/Send';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import AddCommentOutlinedIcon from '@mui/icons-material/AddCommentOutlined';
-import { useEffect, useRef, useState } from "react";
+
 import { API_INBOX_MESSAGE, API_INBOX_MESSAGE_SEND, API_INBOX_ROOM_LIST } from "../../constants/api.constant";
 import { defineConfigGet, defineConfigPost } from "../../Common/utils";
-import axios from "axios";
 import { error } from "../../Common/notify";
-import moment from "moment";
 import { FORMAT_DATE, FORMAT_DAY, FORMAT_TIME } from "../../constants/general.constant";
 import PopUpCreateRoom from "./PopUpCreateRoom";
 
+var stompClient: any = null;
+
 const Chat = () => {
     const url_api = process.env.REACT_APP_API_URL;
-    
+    const url_ws: any = process.env.REACT_APP_WS_URL;
+
+    const [userData, setUserData] = useState<any>({
+        username: "",
+        receiverName: "",
+        connected: false,
+        message: ""
+    })
+
     const [listRoom, setListRoom] = useState([])
     const [messageRoom, setMessageRoom] = useState([]);
     const [message, setMessage] = useState<string>("");
     const [nameRoom, setNameRoom] = useState<string>("");
     const [idRoom, setIdRoom] = useState<string>("");
-    
+
     const [isShowPopUp, setIsShowPopUp] = useState<boolean>(false);
-    
+
     const fileInputRef = useRef<any>(null);
     const fileImageInputRef = useRef<any>(null);
     const messageRef = useRef<any>(null)
@@ -38,7 +50,51 @@ const Chat = () => {
     useEffect(() => {
         getListInboxRoom()
     }, [])
-    
+
+    useEffect(() => {
+        var sock = new SockJS(url_ws);
+        console.log("sock:", sock)
+        sock.onopen = function () {
+            console.log('open');
+            sock.send('test');
+        };
+
+        sock.onmessage = function (e) {
+            console.log('message', e.data);
+            sock.close();
+        };
+
+        sock.onclose = function () {
+            console.log('close');
+        };
+        // registerUser();
+    }, [])
+
+
+    const registerUser = () => {
+        let sockJS = new SockJS(url_ws)
+        console.log("sockJS:", sockJS)
+        stompClient?.over(sockJS);
+        stompClient?.connect({}, onConnected, onError)
+    }
+
+    const onConnected = () => {
+        // setUserData({ ...userData, "connected": true })
+        stompClient.subscribe("/topic/messages", onPublicMessageReceived)
+        // stompClient.subscribe("/topic/messages", onPublicMessageReceived)
+    }
+
+    const onError = (error: any) => {
+        console.log("error:", error)
+    }
+
+    const onPublicMessageReceived = (payload: any) => {
+        let payloadData = JSON.parse(payload.body)
+        console.log("payloadData:", payloadData)
+
+
+    }
+
     const getListInboxRoom = () => {
         const url = `${url_api}${API_INBOX_ROOM_LIST}`;
 
@@ -55,11 +111,11 @@ const Chat = () => {
             });
     }
 
-    const getMessageByRoom = (roomId : string) => {
+    const getMessageByRoom = (roomId: string) => {
         const url = `${url_api}${API_INBOX_MESSAGE}${roomId}/message`;
 
         axios
-            .get(url, defineConfigGet({ page: 0, size: 100}))
+            .get(url, defineConfigGet({ page: 0, size: 100 }))
             .then((resp: any) => {
                 if (resp) {
                     setMessageRoom(resp.data.content);
@@ -76,21 +132,21 @@ const Chat = () => {
 
         const params = {
             userSenderId: "",
-            roomId :"",
-            message:message,
-            media:{
-                file:"",
-                fileName:"",
-                type:"",
-                url:""
+            roomId: "",
+            message: message,
+            media: {
+                file: "",
+                fileName: "",
+                type: "",
+                url: ""
             }
         }
 
         axios
-            .post(url,params,  defineConfigPost())
+            .post(url, params, defineConfigPost())
             .then((resp: any) => {
                 if (resp) {
-                console.log("resp:", resp)
+                    console.log("resp:", resp)
                 }
             })
             .catch((err) => {
@@ -99,7 +155,7 @@ const Chat = () => {
             });
     }
 
-    const handleGetMessageByRoom = (roomId: string) =>{
+    const handleGetMessageByRoom = (roomId: string) => {
         getMessageByRoom(roomId);
     }
 
@@ -115,25 +171,25 @@ const Chat = () => {
     const handleClickFile = () => {
         // Khi người dùng nhấn vào biểu tượng upload, kích hoạt sự kiện chọn tệp tin
         if (fileInputRef.current) {
-        fileInputRef.current.click();
-    }
+            fileInputRef.current.click();
+        }
     };
 
     const handleFileChange = (event: any) => {
-    const file = event.target.files[0];
-    
+        const file = event.target.files[0];
+
     };
 
     const handleClickFileImage = () => {
-    // Khi người dùng nhấn vào biểu tượng upload, kích hoạt sự kiện chọn tệp tin
-    if (fileInputRef.current) {
-        fileInputRef.current.click();
-    }
+        // Khi người dùng nhấn vào biểu tượng upload, kích hoạt sự kiện chọn tệp tin
+        if (fileInputRef.current) {
+            fileInputRef.current.click();
+        }
     };
 
     const handleFileImageChange = (event: any) => {
-    const file = event.target.files[0];
-    
+        const file = event.target.files[0];
+
     };
 
 
@@ -150,80 +206,80 @@ const Chat = () => {
                                 </span>
                             </div>
                             <div className="input-group">
-                                <input type="text" className="form-control" placeholder="Search by patient name" value={nameRoom} onChange={(e:any) => setNameRoom(e.target.value)}/>
+                                <input type="text" className="form-control" placeholder="Search by patient name" value={nameRoom} onChange={(e: any) => setNameRoom(e.target.value)} />
                                 <span className="input-group-text cursor-pointer" onClick={() => handleSearchRoom()}><i className="bi bi-search" ></i></span>
                             </div>
                         </div>
                         <div className='chat-room-content'>
-                            {listRoom && listRoom.map((item:any) =>{
+                            {listRoom && listRoom.map((item: any) => {
                                 return (
-                                    <div className="chat-room-content-item d-flex justify-content-between" onClick={() =>{ handleGetMessageByRoom(item.id); setIdRoom(item.id)}}>
-                                    <div>
-                                        <img src={USER} alt="" />
+                                    <div className="chat-room-content-item d-flex justify-content-between" onClick={() => { handleGetMessageByRoom(item.id); setIdRoom(item.id) }}>
+                                        <div>
+                                            <img src={USER} alt="" />
+                                        </div>
+                                        <div>
+                                            <p>{item.patient.mail}</p>
+                                            <p>{item.lastMessage.message}</p>
+                                        </div>
+                                        <div>
+                                            <p>{moment(item.lastMessage.updateAt).format(FORMAT_DATE)}</p>
+                                            <p>{moment(item.lastMessage.updateAt).format(FORMAT_TIME)}</p>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <p>{item.patient.mail}</p>
-                                        <p>{item.lastMessage.message}</p>
-                                    </div>
-                                    <div>
-                                        <p>{moment(item.lastMessage.updateAt).format(FORMAT_DATE)}</p>
-                                        <p>{moment(item.lastMessage.updateAt).format(FORMAT_TIME)}</p>
-                                    </div>
-                                </div>
                                 )
                             })}
                         </div>
                     </div>
                     <div className='chat-message'>
                         {idRoom ? <>
-                            {listRoom && listRoom.filter((item:any) => { return item.id === idRoom}).map((item:any) => {
-                            return (
-                                <div className="d-flex chat-message-header">
-                                    <div>
-                                        <img src={USER} alt="" />
-                                        <span className="fw-bold ms-3">{item.patient.mail}</span>
-                                    </div>
-
-                                    <span className="my-auto cursor-pointer">
-                                        <InfoOutlinedIcon />
-                                    </span>
-                                </div>
-                            )
-                        })}
-                        
-                        <div className="chat-message-content">
-                            {messageRoom && messageRoom.map((item:any) => {
+                            {listRoom && listRoom.filter((item: any) => { return item.id === idRoom }).map((item: any) => {
                                 return (
-                                    <div className="chat-message-content-msg">
-                                    <span className='text-message mb-1'>{item.message}</span>
-                                    <span>{moment(item.createdAt).format(FORMAT_DAY)}</span>
-                                    <div ref={messageRef}></div>
-                                </div>
+                                    <div className="d-flex chat-message-header">
+                                        <div>
+                                            <img src={USER} alt="" />
+                                            <span className="fw-bold ms-3">{item.patient.mail}</span>
+                                        </div>
+
+                                        <span className="my-auto cursor-pointer">
+                                            <InfoOutlinedIcon />
+                                        </span>
+                                    </div>
                                 )
                             })}
-                        </div>
 
-                        <div className="chat-message-footer">
-                            <span className="m-auto cursor-pointer" >
-                                <SentimentSatisfiedAltIcon />
-                            </span>
-                            <div className="message-input">
-                                <input type="text" className="form-control" placeholder="Write a message..." value={message} onChange={(e:any) => setMessage(e.target.value)}/>
+                            <div className="chat-message-content">
+                                {messageRoom && messageRoom.map((item: any) => {
+                                    return (
+                                        <div className="chat-message-content-msg">
+                                            <span className='text-message mb-1'>{item.message}</span>
+                                            <span>{moment(item.createdAt).format(FORMAT_DAY)}</span>
+                                            <div ref={messageRef}></div>
+                                        </div>
+                                    )
+                                })}
                             </div>
-                            <div className="m-auto " >
-                                <span className="me-1 cursor-pointer" onClick={handleClickFile}>
-                                    <AttachFileIcon />
-                                </span>
-                                <input type="file" className="d-none" ref={fileInputRef} onChange={handleFileChange} />  
 
-                                <span className="me-1 cursor-pointer" onClick={handleClickFileImage}><AddPhotoAlternateIcon /></span>
-                                <input type="file" className="d-none" ref={fileImageInputRef} onChange={handleFileImageChange} />
-
-                                <span className="send-message cursor-pointer" onClick={() => sendMessage()}>
-                                    <SendIcon />
+                            <div className="chat-message-footer">
+                                <span className="m-auto cursor-pointer" >
+                                    <SentimentSatisfiedAltIcon />
                                 </span>
+                                <div className="message-input">
+                                    <input type="text" className="form-control" placeholder="Write a message..." value={message} onChange={(e: any) => setMessage(e.target.value)} />
+                                </div>
+                                <div className="m-auto " >
+                                    <span className="me-1 cursor-pointer" onClick={handleClickFile}>
+                                        <AttachFileIcon />
+                                    </span>
+                                    <input type="file" className="d-none" ref={fileInputRef} onChange={handleFileChange} />
+
+                                    <span className="me-1 cursor-pointer" onClick={handleClickFileImage}><AddPhotoAlternateIcon /></span>
+                                    <input type="file" className="d-none" ref={fileImageInputRef} onChange={handleFileImageChange} />
+
+                                    <span className="send-message cursor-pointer" onClick={() => sendMessage()}>
+                                        <SendIcon />
+                                    </span>
+                                </div>
                             </div>
-                        </div>
                         </> : <>
                             <div className="">
                                 <span className="">Select a chat to start message</span>
@@ -233,7 +289,7 @@ const Chat = () => {
                 </div>
             </section>
 
-            {isShowPopUp && <PopUpCreateRoom handleShowPopUp={setIsShowPopUp}/>}
+            {isShowPopUp && <PopUpCreateRoom handleShowPopUp={setIsShowPopUp} />}
         </Layout>
     );
 };

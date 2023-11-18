@@ -17,7 +17,7 @@ const InfoPatient = () => {
   const [listAppointment, setListAppointment] = useState<any>([]);
 
   const param = useParams();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const url_api = process.env.REACT_APP_API_URL;
 
   useEffect(() => {

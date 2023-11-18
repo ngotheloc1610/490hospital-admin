@@ -5,11 +5,11 @@ export const API_ADMIN_TOTAL = "/admin/total";
 
 export const API_ALL_GET_PATIENT = "/admin/patients";
 export const API_GET_PATIENT = "/admin/patient/detail/";
-export const API_UPDATE_PATIENT = "/api/v1/patient/update/";
+export const API_UPDATE_PATIENT = "/patient/update/";
 export const API_DELETE_PATIENT = "/admin/patient/delete/";
 export const API_BLOCK_PATIENT = "/admin/blockPatient/";
 export const API_SEARCH_PATIENT = "/admin/searchPatient";
-export const API_GET_LIST_APPOINTMENT_PATIENT = "/api/v1/patient/listAppointment/";
+export const API_GET_LIST_APPOINTMENT_PATIENT = "/patient/listAppointment/";
 
 export const API_ALL_GET_DOCTOR = "/admin/doctors";
 export const API_SEARCH_DOCTOR = "/admin/searchDoctor";
@@ -45,12 +45,12 @@ export const SCHEDULE_CANCEL = "/schedule/cancer-Schedule/"
 export const API_GET_ROOM = "/admin/rooms";
 export const API_GET_ROOM_BY_SPECIALTY = "/admin/rooms/";
 
-export const API_INBOX_ROOM_LIST = "/api/v1/communication/inbox-room/lists"
-export const API_INBOX_ROOM_DETAIL = "/api/v1/communication/inbox-room"
-export const API_INBOX_ROOM_CREATE = "/api/v1/communication/inbox-room/staff-create"
+export const API_INBOX_ROOM_LIST = "/inbox-room/lists"
+export const API_INBOX_ROOM_DETAIL = "/inbox-room"
+export const API_INBOX_ROOM_CREATE = "/inbox-room/staff-create"
 
-export const API_INBOX_MESSAGE = "/api/v1/communication/inbox-message/"
-export const API_INBOX_MESSAGE_SEND = "/api/v1/communication/inbox-message/message"
+export const API_INBOX_MESSAGE = "/inbox-message/"
+export const API_INBOX_MESSAGE_SEND = "/inbox-message/message"
 
 
 

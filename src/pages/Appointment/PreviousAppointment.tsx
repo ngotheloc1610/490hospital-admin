@@ -31,7 +31,7 @@ const PreviousAppointment = () => {
                 }
             })
             .catch((err: any) => {
-                console.log("err:", err);
+                console.log("error get appointment previous:", err);
             });
     }, [currentPage, itemPerPage]);
 

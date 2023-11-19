@@ -9,11 +9,6 @@ export interface IPractitioner {
   id: string;
   username: string;
   fullname: string;
-  password: string;
-  cfPassword: string;
-  birthday: string;
-  gender: string;
-  phoneNumber: string;
   type: string;
   room: string;
   specialty: string;

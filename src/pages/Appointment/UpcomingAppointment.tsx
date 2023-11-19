@@ -31,7 +31,7 @@ const UpcomingAppointment = () => {
                 }
             })
             .catch((err: any) => {
-                console.log("err:", err);
+                console.log("error get appointment upcoming:", err);
             });
     }, [currentPage, itemPerPage]);
 

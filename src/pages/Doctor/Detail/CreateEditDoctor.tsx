@@ -4,9 +4,9 @@ import * as Yup from "yup";
 
 import { GENDER } from "../../../constants";
 import { ICON_TRASH, USER } from "../../../assets";
-import { defineConfigGet } from "../../../Common/utils";
+import { defineConfigGet, defineConfigPost } from "../../../Common/utils";
 import axios from "axios";
-import { API_ALL_GET_SPECIALTY, API_DETAIL_PRACTITIONER } from "../../../constants/api.constant";
+import { API_ALL_GET_SPECIALTY, API_DETAIL_PRACTITIONER, API_UPDATE_PRACTITIONER } from "../../../constants/api.constant";
 import { useParams } from "react-router-dom";
 
 const validationSchema = Yup.object().shape({
@@ -87,7 +87,7 @@ const CreateEditDoctor = () => {
         }
       })
       .catch((err) => {
-        console.log("err:", err);
+        console.log("error get info practitioner(Doctor):", err);
       });
   }
 
@@ -102,7 +102,27 @@ const CreateEditDoctor = () => {
         }
       })
       .catch((err: any) => {
-        console.log("err:", err);
+        console.log("error get API list specialty", err);
+      });
+  }
+
+  const updatePractitioner = (values: any) => {
+    const url = `${url_api}${API_UPDATE_PRACTITIONER}${values.id}`;
+
+    const params = {
+
+    }
+
+    axios
+      .put(url, params, defineConfigPost())
+      .then((resp: any) => {
+        if (resp) {
+          console.log("resp:", resp)
+
+        }
+      })
+      .catch((err) => {
+        console.log("error update practitioner (Doctor):", err);
       });
   }
 
@@ -525,6 +545,8 @@ const CreateEditDoctor = () => {
       enableReinitialize={true}
       validationSchema={validationSchema}
       onSubmit={(values, actions) => {
+        console.log("values:", values)
+        updatePractitioner(values);
         actions.setSubmitting(false);
         actions.resetForm();
       }}

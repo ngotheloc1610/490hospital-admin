@@ -1,19 +1,17 @@
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useOutlet } from "react-router-dom";
+import moment from "moment";
 
 import EditPractitioner from "./EditPractitioner";
-import { defineConfigGet } from "../../Common/utils";
-import Layout from "../../components/Layout";
+import { defineConfigPost } from "../../Common/utils";
 import { API_PROFILE_PRACTITIONER } from "../../constants/api.constant";
 import { USER } from "../../assets";
-import moment from "moment";
 import { FORMAT_DATE } from "../../constants/general.constant";
+import Layout from "../../components/Layout";
 
 const Information = () => {
-    const inputRef = useRef<any>(null);
     const [practitioner, setPractitioner] = useState<any>({});
-    const [image, setImage] = useState<any>("");
 
     const outlet = useOutlet();
     const navigate = useNavigate();
@@ -27,7 +25,7 @@ const Information = () => {
         const url = `${url_api}${API_PROFILE_PRACTITIONER}`;
 
         axios
-            .get(url, defineConfigGet({}))
+            .get(url, defineConfigPost())
             .then((resp: any) => {
                 if (resp) {
                     console.log("resp:", resp)
@@ -38,17 +36,6 @@ const Information = () => {
                 console.log("err:", err);
             });
     }
-
-
-    const handleChangeImage = (event: any) => {
-        const file = event.target.files[0];
-        setImage(file);
-    };
-
-    const handlePickImage = () => {
-        inputRef.current.click();
-    }
-
 
     const _renderWorkInfo = () => {
         return (
@@ -86,14 +73,14 @@ const Information = () => {
                 <p className="fw-bold border-top pt-2 text-dark">Education</p>
                 <table className="table">
                     <tbody>
-                        {practitioner.educations?.length > 0 && practitioner.educations.map((edu: any) => {
+                        {practitioner.educations && practitioner.educations.map((item: any) => {
                             return (
                                 <tr>
                                     <th scope="row" style={{ width: "15%" }}>
-                                        {edu.year}
+                                        {item.year}
                                     </th>
                                     <td>
-                                        {edu.detail}
+                                        {item.detail}
                                     </td>
                                 </tr>
                             )
@@ -112,14 +99,14 @@ const Information = () => {
                 </p>
                 <table className="table">
                     <tbody>
-                        {practitioner.experiences?.length > 0 && practitioner.experiences.map((exper: any) => {
+                        {practitioner.experiences && practitioner.experiences.map((item: any) => {
                             return (
                                 <tr>
                                     <th scope="row" style={{ width: "15%" }}>
-                                        <span>{exper.timeStart} - {exper.timeEnd}</span>
+                                        <span>{item.timeStart} - {item.timeEnd}</span>
                                     </th>
                                     <td>
-                                        {exper.detail}
+                                        {item.detail}
                                     </td>
                                 </tr>
                             )
@@ -136,14 +123,14 @@ const Information = () => {
                 <p className="fw-bold border-top pt-2 text-dark">Achievement</p>
                 <table className="table">
                     <tbody>
-                        {practitioner.achievements?.length > 0 && practitioner.achievements.map((achi: any) => {
+                        {practitioner.achievements && practitioner.achievements.map((item: any) => {
                             return (
                                 <tr>
                                     <th scope="row" style={{ width: "15%" }}>
-                                        {achi.time}
+                                        {item.time}
                                     </th>
                                     <td>
-                                        {achi.detial}
+                                        {item.detial}
                                     </td>
                                 </tr>
                             )
@@ -153,8 +140,6 @@ const Information = () => {
             </div>
         );
     };
-
-
 
     return (
         <Layout>
@@ -196,25 +181,19 @@ const Information = () => {
                                             </tr>
                                             <tr>
                                                 <th scope="row">Email</th>
-                                                <td>{practitioner.email ? practitioner.email: "-"}</td>
+                                                <td>{practitioner.email ? practitioner.email : "-"}</td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                                 <div className="col-4">
-                                    <div className="h-100 d-flex flex-column" onClick={handlePickImage}>
+                                    <div className="h-100 d-flex flex-column">
                                         <div className="h-100">
                                             <img
-                                                src={image ? URL.createObjectURL(image) : USER}
+                                                src={practitioner ? `data:${practitioner.photo[0]?.contentType};base64,${practitioner.photo[0]?.data}` : USER}
                                                 alt=""
-                                                className={`h-100 w-100 d-block m-auto ${image ? "" : "bg-image"}`}
+                                                className={`h-100 w-100 d-block m-auto ${practitioner ? "" : "bg-image"}`}
                                                 style={{ objectFit: "cover" }}
-                                            />
-                                            <input
-                                                type="file"
-                                                className="d-none"
-                                                ref={inputRef}
-                                                onChange={handleChangeImage}
                                             />
                                         </div>
                                     </div>

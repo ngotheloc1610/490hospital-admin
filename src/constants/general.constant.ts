@@ -21,3 +21,5 @@ export const FORMAT_TIME = "HH:mm";
 
 export const FORMAT_DAY = "DD/MM/YYYY HH:mm"
 
+export const TYPE_DOCTOR = "DOCTOR";
+

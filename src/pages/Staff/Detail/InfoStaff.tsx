@@ -117,16 +117,13 @@ const InfoStaff = () => {
             <div className="col-4">
               <div className="h-100 d-flex flex-column">
                 <div className="h-100">
-                  <img src={staff?.practitionerTarget?.photo ? `data:${staff.practitionerTarget.photo[0].contentType};base64,${staff.practitionerTarget.photo[0].data}` : USER} alt="image" className="h-100 d-block m-auto" />
+                  <img src={staff?.practitionerTarget?.photo ? `data:${staff.practitionerTarget.photo[0].contentType};base64,${staff.practitionerTarget.photo[0].data}` : USER} alt="img staff" className="h-100 d-block m-auto" />
                 </div>
               </div>
             </div>
             <div className="col-8">
               <div className="pb-3 mb-d-flex justify-content-between">
                 <h3 className="fw-bold text-uppercase">{staff.practitioner?.display}</h3>
-                {/* <div>
-                  <button className="button button--info button--small me-3" onClick={() => navigate("/change-password")}>Change Password</button>
-                </div> */}
                 <div>
                   <button className="button button--primary button--small" onClick={() => navigate(`/staff/overview/detail/${staff?.id}`)}>Edit</button>
                 </div>

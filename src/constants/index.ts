@@ -103,15 +103,15 @@ export const GENDER = [
 export const GENDER_ALL = [
   {
     name: "Male",
-    code: "male",
+    code: "MALE",
   },
   {
     name: "Female",
-    code: "female",
+    code: "FEMALE",
   },
   {
     name: "Other",
-    code: "other",
+    code: "",
   },
 ];
 
@@ -149,10 +149,10 @@ export const STATUS_APPOINTMENT = [
 export const TYPE_PRACTITIONER = [
   {
     name: "Doctor",
-    code: "Doctor",
+    code: "DOCTOR",
   },
   {
     name: "Staff",
-    code: "Staff",
+    code: "STAFF",
   },
 ];

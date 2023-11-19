@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import axios from "axios";
 
 import Layout from "../../components/Layout";
-import { GENDER, TYPE_PRACTITIONER } from "../../constants";
+import { TYPE_PRACTITIONER } from "../../constants";
 import {
   API_ALL_GET_SPECIALTY,
   API_CREATE_PRACTITIONER,
@@ -14,17 +14,13 @@ import { defineConfigGet, defineConfigPost } from "../../Common/utils";
 import { success, warn } from "../../Common/notify";
 import { ICON_TRASH } from "../../assets";
 import { IPractitioner } from "../../interface/general.interface";
+import { TYPE_DOCTOR } from "../../constants/general.constant";
 
 const validationSchema = Yup.object().shape({
   username: Yup.string().required("Required"),
   fullname: Yup.string().required("Required"),
-  password: Yup.string().required("Required"),
-  cfPassword: Yup.string().required("Required"),
-  birthday: Yup.string().required("Required"),
-  gender: Yup.string().required("Required"),
-  phoneNumber: Yup.string().required("Required"),
   type: Yup.string().required("Required"),
-  room: Yup.string().required("Required"),
+  room: Yup.string().optional(),
   specialty: Yup.string().required("Required"),
   startDate: Yup.string().required("Required"),
   endDate: Yup.string().required("Required"),
@@ -34,11 +30,6 @@ const defaultValue: IPractitioner = {
   id: "",
   username: "",
   fullname: "",
-  password: "",
-  cfPassword: "",
-  birthday: "",
-  gender: "",
-  phoneNumber: "",
   type: "",
   room: "",
   specialty: "",
@@ -51,9 +42,6 @@ const defaultValue: IPractitioner = {
 
 const Practitioner = () => {
   const url_api = process.env.REACT_APP_API_URL;
-
-  const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
-  const [isShowCfPassword, setIsShowCfPassword] = useState<boolean>(false);
 
   const [listSpecialty, setListSpecialty] = useState<any>([]);
   const [listRoom, setListRoom] = useState<any>([]);
@@ -109,9 +97,6 @@ const Practitioner = () => {
     const displaySpecialty = listSpecialty.filter((item: any) => {
       return item.id === values.specialty;
     })[0]?.name;
-    const codeSpecialty = listSpecialty.filter((item: any) => {
-      return item.id === values.specialty;
-    })[0]?.code;
 
     const idRoom = listRoom.filter((item: any) => {
       return item.id === values.room;
@@ -122,26 +107,12 @@ const Practitioner = () => {
 
     const params = {
       username: values.username,
-      identifier: "",
       name: values.fullname,
-      phoneNumber: values.phoneNumber,
       idSpecialty: idSpecialty,
       displaySpecialty: displaySpecialty,
       desRoom: desRoom,
       idRoom: idRoom,
-      password: values.password,
       type: values.type,
-      dateOfBirth: values.birthday,
-      photo: "",
-      city: "",
-      district: "",
-      state: "",
-      address: "",
-      gender: values.gender,
-      country: "",
-      postalCode: "",
-      code: codeSpecialty,
-      qualitification: "",
       startWork: values.startDate,
       endWork: values.endDate,
     };
@@ -182,22 +153,10 @@ const Practitioner = () => {
     );
   };
 
-  const _renderListGender = () => {
-    return (
-      <>
-        <option hidden>Gender</option>
-        {GENDER.map((item: any) => (
-          <option value={item.code} key={item.code}>
-            {item.name}
-          </option>
-        ))}
-      </>
-    );
-  };
-
   const _renderListSpecialty = () => {
     return (
       <>
+        <option hidden>Specialty</option>
         {listSpecialty ? (
           listSpecialty.map((item: any) => (
             <option value={item.id} key={item.id}>
@@ -214,6 +173,7 @@ const Practitioner = () => {
   const _renderListRoom = () => {
     return (
       <>
+        <option hidden>Room</option>
         {listRoom ? (
           listRoom.map((item: any) => (
             <option value={item.id} key={item.code}>
@@ -232,7 +192,7 @@ const Practitioner = () => {
 
     return (
       <div>
-        <p className="fw-bold border-top pt-2 text-dark">Basic Information</p>
+        <p className="fw-bold text-dark">Basic Information</p>
         <div className="row">
           <div className="row mb-3">
             <div className="col-6">
@@ -269,96 +229,8 @@ const Practitioner = () => {
               </div>
             </div>
           </div>
-          <div className="row mb-3">
-            <div className="col-6">
-              <label htmlFor="password" className="form-label">
-                Password <span className="text-danger">*</span>
-              </label>
-              <div className="input-group">
-                <span className="input-group-text">
-                  <i className="bi bi-lock-fill fs-5 icon-gray"></i>
-                </span>
-                <input
-                  id="password"
-                  type={`${isShowPassword ? "text" : "password"}`}
-                  className={`form-control ${errors?.password && touched?.password ? "is-invalid" : ""}`}
-                  placeholder="Password"
-                  value={values.password}
-                  onChange={handleChange}
-                />
-                <span
-                  className="input-group-text"
-                  onClick={() => setIsShowPassword(!isShowPassword)}
-                >
-                  <i
-                    className={`bi ${isShowPassword ? "bi-eye-slash" : "bi-eye-fill"
-                      } fs-5 icon-gray`}
-                  />
-                </span>
-              </div>
-            </div>
-            <div className="col-6">
-              <label htmlFor="birthday" className="form-label">
-                Date of birth <span className="text-danger">*</span>
-              </label>
-              <div className="input-group">
-                <input
-                  id="birthday"
-                  type="date"
-                  className={`form-control ${errors?.birthday && touched?.birthday ? "is-invalid" : ""}`}
-                  placeholder="Date of birth"
-                  value={values.birthday}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-          </div>
-          <div className="row mb-3">
-            <div className="col-6">
-              <label htmlFor="cfPassword" className="form-label">
-                Confirm Password <span className="text-danger">*</span>
-              </label>
-              <div className="input-group">
-                <span className="input-group-text">
-                  <i className="bi bi-lock-fill fs-5 icon-gray"></i>
-                </span>
-                <input
-                  id="cfPassword"
-                  type={`${isShowCfPassword ? "text" : "password"}`}
-                  className={`form-control ${errors?.cfPassword && touched?.cfPassword ? "is-invalid" : ""}`}
-                  placeholder="Confirm Password"
-                  value={values.cfPassword}
-                  onChange={handleChange}
-                />
-                <span
-                  className="input-group-text"
-                  onClick={() => setIsShowCfPassword(!isShowCfPassword)}
-                >
-                  <i
-                    className={`bi ${isShowCfPassword ? "bi-eye-slash" : "bi-eye-fill"
-                      } fs-5 icon-gray`}
-                  />
-                </span>
-              </div>
-            </div>
-            <div className="col-6">
-              <label htmlFor="phoneNumber" className="form-label">
-                Phone Number <span className="text-danger">*</span>
-              </label>
-              <div className="input-group">
-                <input
-                  id="phoneNumber"
-                  type="text"
-                  className={`form-control ${errors?.phoneNumber && touched?.phoneNumber ? "is-invalid" : ""}`}
-                  placeholder="Phone number"
-                  value={values.phoneNumber}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-          </div>
           <div className="row mb-3 ">
-            <div className="col-6">
+            <div className="col-12">
               <label htmlFor="type" className="form-label">
                 Type of Practitioner <span className="text-danger">*</span>
               </label>
@@ -369,20 +241,6 @@ const Practitioner = () => {
                   onChange={handleChange}
                 >
                   {_renderListType()}
-                </select>
-              </div>
-            </div>
-            <div className="col-6 justify-content-between ">
-              <label htmlFor="gender" className="form-label">
-                Gender <span className="text-danger">*</span>
-              </label>
-              <div className="input-group">
-                <select
-                  id="gender"
-                  className={`form-select ${errors?.gender && touched?.gender ? "is-invalid" : ""}`}
-                  onChange={handleChange}
-                >
-                  {_renderListGender()}
                 </select>
               </div>
             </div>
@@ -447,7 +305,7 @@ const Practitioner = () => {
             </div>
           </div>
 
-          <div className="col-6">
+          {values.type === TYPE_DOCTOR && <div className="col-6">
             <label htmlFor="room" className="form-label">
               Room <span className="text-danger">*</span>
             </label>
@@ -460,7 +318,9 @@ const Practitioner = () => {
                 {_renderListRoom()}
               </select>
             </div>
-          </div>
+          </div>}
+
+
         </div>
       </div>
     );
@@ -713,7 +573,7 @@ const Practitioner = () => {
                     <div>
                       {_renderBasicInfo({ values, errors, touched, handleChange })}
                       {_renderWorkInfo({ values, errors, touched, handleChange, setFieldValue })}
-                      {values.type === "Doctor" &&
+                      {values.type === TYPE_DOCTOR &&
                         <>
                           {_renderEducationInfo({ values, handleChange })}
                           {_renderSpecializedActivities({ values, handleChange })}

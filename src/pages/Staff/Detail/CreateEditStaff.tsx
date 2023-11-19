@@ -4,7 +4,7 @@ import * as Yup from "yup";
 
 import { GENDER } from "../../../constants";
 import { USER } from "../../../assets";
-import { API_ALL_GET_SPECIALTY, API_DETAIL_PRACTITIONER, API_PROFILE_PRACTITIONER } from "../../../constants/api.constant";
+import { API_ALL_GET_SPECIALTY, API_DETAIL_PRACTITIONER, API_UPDATE_PRACTITIONER } from "../../../constants/api.constant";
 import { defineConfigGet, defineConfigPost } from "../../../Common/utils";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
@@ -85,7 +85,7 @@ const CreateEditStaff = () => {
         }
       })
       .catch((err) => {
-        console.log("err:", err);
+        console.log("error get info practitioner (Staff):", err);
       });
   }
 
@@ -100,7 +100,27 @@ const CreateEditStaff = () => {
         }
       })
       .catch((err: any) => {
-        console.log("err:", err);
+        console.log("error get specialty:", err);
+      });
+  }
+
+  const updatePractitioner = (values: any) => {
+    const url = `${url_api}${API_UPDATE_PRACTITIONER}${values.id}`;
+
+    const params = {
+
+    }
+
+    axios
+      .put(url, params, defineConfigPost())
+      .then((resp: any) => {
+        if (resp) {
+          console.log("resp:", resp)
+
+        }
+      })
+      .catch((err) => {
+        console.log("error update practitioner (Staff):", err);
       });
   }
 
@@ -331,6 +351,8 @@ const CreateEditStaff = () => {
       enableReinitialize={true}
       validationSchema={validationSchema}
       onSubmit={(values, actions) => {
+        console.log("values:", values)
+        updatePractitioner(values)
         actions.setSubmitting(false);
         actions.resetForm();
       }}

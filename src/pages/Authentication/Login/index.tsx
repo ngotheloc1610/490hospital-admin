@@ -46,8 +46,8 @@ const Login = () => {
         }
       })
       .catch((err: any) => {
+        console.log("error Login:", err);
         error(err.response.data.error.message)
-        console.log("err:", err);
       });
   }
 
@@ -57,11 +57,11 @@ const Login = () => {
 
   const handleKeyEnter = (event: any) => {
     if (username !== '' && password !== '') {
-        if (event.key === 'Enter') {
-            requestLogin();
-        }
+      if (event.key === 'Enter') {
+        requestLogin();
+      }
     }
-}
+  }
 
   return (
     <div className="contain" onKeyDown={handleKeyEnter}>

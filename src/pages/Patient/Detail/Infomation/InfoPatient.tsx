@@ -39,7 +39,7 @@ const InfoPatient = () => {
         }
       })
       .catch((err) => {
-        console.log("err:", err);
+        console.log("error get info patient:", err);
       });
   }
 
@@ -54,7 +54,7 @@ const InfoPatient = () => {
         }
       })
       .catch((err) => {
-        console.log("err:", err);
+        console.log("error get appointment:", err);
       });
   }
 
@@ -119,7 +119,7 @@ const InfoPatient = () => {
               <div className="h-100">
                 <img
                   src={patient.photo?.length > 0 ? `data:${patient.photo[0].contentType};base64,${patient.photo[0].data}` : USER}
-                  alt="image"
+                  alt="img patient"
                   className={`h-100 w-100 d-block m-auto`}
                   style={{ objectFit: "cover" }}
                 />

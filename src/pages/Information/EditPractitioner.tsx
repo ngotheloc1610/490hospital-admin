@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Field, FieldArray, Form, Formik } from "formik";
+import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
@@ -8,8 +8,9 @@ import { API_ALL_GET_SPECIALTY, API_DETAIL_PRACTITIONER, API_UPDATE_PRACTITIONER
 import { defineConfigGet, defineConfigPost } from "../../Common/utils";
 import { error, success } from "../../Common/notify";
 import { GENDER } from "../../constants";
-import { ICON_TRASH, USER } from "../../assets";
-
+import { USER } from "../../assets";
+import { FORMAT_DATE } from "../../constants/general.constant";
+import moment from "moment";
 
 const validationSchema = Yup.object().shape({
     name: Yup.string().required("Required"),
@@ -19,9 +20,6 @@ const validationSchema = Yup.object().shape({
     email: Yup.string().required("Required"),
     address: Yup.string().required("Required"),
     city: Yup.string().required("Required"),
-    specialty: Yup.string().required("Required"),
-    startDate: Yup.string().required("Required"),
-    endDate: Yup.string().required("Required"),
 });
 
 const defaultValue = {
@@ -33,13 +31,7 @@ const defaultValue = {
     email: "",
     address: "",
     city: "",
-    specialty: "",
-    startDate: "",
-    endDate: "",
     photo: [],
-    education: [{ time: "", content: "" }],
-    specialize: [{ time: "", content: "" }],
-    achievement: [{ time: "", content: "" }],
 };
 
 const EditPractitioner = () => {
@@ -113,8 +105,7 @@ const EditPractitioner = () => {
             country: "",
             postalCode: "",
             system: "",
-            start: "",
-            end: ""
+
         }
 
         axios
@@ -258,265 +249,104 @@ const EditPractitioner = () => {
     };
 
 
-    const _renderWorkInfo = (props: any) => {
-        const { errors, touched } = props;
-
+    const _renderWorkInfo = () => {
         return (
             <div className="mt-5">
-                <p className="fw-bold border-top pt-2 text-dark">Work Information</p>
-                <div className="row">
-                    <div className="col-12 mb-3">
-                        <label htmlFor="specialty">
-                            Specialty <span className="text-danger">*</span>
-                        </label>
-                        <Field
-                            as="select"
-                            name="specialty"
-                            id="specialty"
-                            className={`form-select ${errors?.specialty && touched?.specialty ? "is-invalid" : ""
-                                }`}
-                        >
-                            {specialtyList ? (
-                                specialtyList.map((item: any) => (
-                                    <option value={item.code} key={item.code}>
-                                        {item.name}
-                                    </option>
-                                ))
-                            ) : (
-                                <option disabled>No option</option>
-                            )}
-                        </Field>
-                    </div>
-                    <div className="col-6 mb-3">
-                        <label htmlFor="startDate">
-                            Starting date <span className="text-danger">*</span>
-                        </label>
-                        <Field
-                            name="startDate"
-                            id="startDate"
-                            className="form-control is-invalid"
-                            render={({ field }: any) => (
-                                <input
-                                    {...field}
-                                    type="date"
-                                    className={`form-control input-select ${errors?.startDate && touched?.startDate ? "is-invalid" : ""
-                                        }`}
-                                    max="9999-12-31"
-                                />
-                            )}
-                        />
-                    </div>
-
-                    <div className="col-6 mb-3">
-                        <label htmlFor="endDate">
-                            End date <span className="text-danger">*</span>
-                        </label>
-                        <Field
-                            name="endDate"
-                            id="endDate"
-                            className="form-control is-invalid"
-                            render={({ field }: any) => (
-                                <input
-                                    {...field}
-                                    type="date"
-                                    className={`form-control input-select ${errors?.endDate && touched?.endDate ? "is-invalid" : ""
-                                        }`}
-                                    max="9999-12-31"
-                                />
-                            )}
-                        />
-                    </div>
-
-                </div>
-            </div>
-        );
-    };
-
-    const _renderEducationInfo = (props: any) => {
-        const { values } = props;
-        return (
-            <div className="mt-3">
-                <p className="fw-bold border-top pt-2 text-dark">Education</p>
-                <table className="table rounded">
-                    <thead>
-                        <tr>
-                            <th style={{ width: "20%" }}>Time</th>
-                            <th>Content</th>
-                        </tr>
-                    </thead>
+                <p className="fw-bold border-top pt-2 text-dark">Work information</p>
+                <table className="table">
                     <tbody>
-                        <FieldArray
-                            name="education"
-                            render={(arrayHelpers) => (
-                                <>
-                                    {values.education.map((edu: any, index: number) => (
-                                        <tr key={index}>
-                                            <td>
-                                                <Field
-                                                    name={`education[${index}].time`}
-                                                    className="form-control"
-                                                />
-                                            </td>
-                                            <td className="d-flex">
-                                                <Field
-                                                    name={`education[${index}].content`}
-                                                    className="form-control"
-                                                />
-                                                {values.education.length > 1 && (
-                                                    <span className="m-auto">
-                                                        <ICON_TRASH
-                                                            onClick={() => arrayHelpers.remove(index)}
-                                                        />
-                                                    </span>
-                                                )}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                    <tr>
-                                        <td></td>
-                                        <td>
-                                            <button
-                                                className="button-add"
-                                                onClick={() =>
-                                                    arrayHelpers.push({ time: "", content: "" })
-                                                }
-                                            >
-                                                <i className="bi bi-plus-circle-fill"></i>
-                                                <span className="ms-1">Add more</span>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </>
-                            )}
-                        />
+                        <tr>
+                            <th scope="row" style={{ width: "15%" }}>
+                                Starting date
+                            </th>
+                            <td>{practitionerInfo.start ? moment(practitionerInfo.start).format(FORMAT_DATE) : "-"}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">End date</th>
+                            <td>{practitionerInfo.end ? moment(practitionerInfo.end).format(FORMAT_DATE) : "-"}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Specialty</th>
+                            <td>{practitionerInfo.displaySpecialty ? practitionerInfo.displaySpecialty : "-"}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Room</th>
+                            <td>{practitionerInfo.desRoom ? practitionerInfo.desRoom : "-"}</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         );
     };
 
-    const _renderSpecializedActivities = (props: any) => {
-        const { values } = props;
+    const _renderEducationInfo = () => {
+        return (
+            <div className="mt-3">
+                <p className="fw-bold border-top pt-2 text-dark">Education</p>
+                <table className="table">
+                    <tbody>
+                        {practitionerInfo.educations && practitionerInfo.educations.map((item: any) => {
+                            return (
+                                <tr>
+                                    <th scope="row" style={{ width: "15%" }}>
+                                        {item.year}
+                                    </th>
+                                    <td>
+                                        {item.detail}
+                                    </td>
+                                </tr>
+                            )
+                        })}
+                    </tbody>
+                </table>
+            </div>
+        );
+    };
+
+    const _renderSpecializedActivities = () => {
         return (
             <div className="mt-3">
                 <p className="fw-bold border-top pt-2 text-dark">
                     Specialized activities
                 </p>
-                <table className="table rounded">
-                    <thead>
-                        <tr>
-                            <th style={{ width: "20%" }}>Time</th>
-                            <th>Content</th>
-                        </tr>
-                    </thead>
+                <table className="table">
                     <tbody>
-                        <FieldArray
-                            name="specialize"
-                            render={(arrayHelpers) => (
-                                <>
-                                    {values.specialize.map((edu: any, index: number) => (
-                                        <tr key={index}>
-                                            <td>
-                                                <Field
-                                                    name={`specialize[${index}].time`}
-                                                    className="form-control"
-                                                />
-                                            </td>
-                                            <td className="d-flex">
-                                                <Field
-                                                    name={`specialize[${index}].content`}
-                                                    className="form-control"
-                                                />
-                                                {values.specialize.length > 1 && (
-                                                    <span className="m-auto">
-                                                        <ICON_TRASH
-                                                            onClick={() => arrayHelpers.remove(index)}
-                                                        />
-                                                    </span>
-                                                )}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                    <tr>
-                                        <td></td>
-                                        <td>
-                                            <button
-                                                className="button-add"
-                                                onClick={() =>
-                                                    arrayHelpers.push({ time: "", content: "" })
-                                                }
-                                            >
-                                                <i className="bi bi-plus-circle-fill"></i>
-                                                <span className="ms-1">Add more</span>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </>
-                            )}
-                        />
+                        {practitionerInfo.experiences && practitionerInfo.experiences.map((item: any) => {
+                            return (
+                                <tr>
+                                    <th scope="row" style={{ width: "15%" }}>
+                                        <span>{item.timeStart} - {item.timeEnd}</span>
+                                    </th>
+                                    <td>
+                                        {item.detail}
+                                    </td>
+                                </tr>
+                            )
+                        })}
                     </tbody>
                 </table>
             </div>
         );
     };
 
-    const _renderAchievement = (props: any) => {
-        const { values } = props;
+    const _renderAchievement = () => {
         return (
             <div className="mt-3">
                 <p className="fw-bold border-top pt-2 text-dark">Achievement</p>
-                <table className="table rounded">
-                    <thead>
-                        <tr>
-                            <th style={{ width: "20%" }}>Time</th>
-                            <th>Content</th>
-                        </tr>
-                    </thead>
+                <table className="table">
                     <tbody>
-                        <FieldArray
-                            name="achievement"
-                            render={(arrayHelpers) => (
-                                <>
-                                    {values.achievement.map((edu: any, index: number) => (
-                                        <tr key={index}>
-                                            <td>
-                                                <Field
-                                                    name={`achievement[${index}].time`}
-                                                    className="form-control"
-                                                />
-                                            </td>
-                                            <td className="d-flex">
-                                                <Field
-                                                    name={`achievement[${index}].content`}
-                                                    className="form-control"
-                                                />
-                                                {values.achievement.length > 1 && (
-                                                    <span className="m-auto">
-                                                        <ICON_TRASH
-                                                            onClick={() => arrayHelpers.remove(index)}
-                                                        />
-                                                    </span>
-                                                )}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                    <tr>
-                                        <td></td>
-                                        <td>
-                                            <button
-                                                className="button-add"
-                                                onClick={() =>
-                                                    arrayHelpers.push({ time: "", content: "" })
-                                                }
-                                            >
-                                                <i className="bi bi-plus-circle-fill"></i>
-                                                <span className="ms-1">Add more</span>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </>
-                            )}
-                        />
+                        {practitionerInfo.achievements && practitionerInfo.achievements.map((item: any) => {
+                            return (
+                                <tr>
+                                    <th scope="row" style={{ width: "15%" }}>
+                                        {item.time}
+                                    </th>
+                                    <td>
+                                        {item.detial}
+                                    </td>
+                                </tr>
+                            )
+                        })}
                     </tbody>
                 </table>
             </div>
@@ -559,7 +389,7 @@ const EditPractitioner = () => {
                 actions.resetForm();
             }}
         >
-            {({ values, errors, touched, submitForm }) => (
+            {({ errors, touched, submitForm }) => (
                 <div className="mb-5">
                     <Form>
                         <div className="overview-container">
@@ -574,10 +404,10 @@ const EditPractitioner = () => {
                                     </div>
                                 </div>
                             </div>
-                            {_renderWorkInfo({ errors, touched })}
-                            {_renderEducationInfo({ values })}
-                            {_renderSpecializedActivities({ values })}
-                            {_renderAchievement({ values })}
+                            {_renderWorkInfo()}
+                            {_renderEducationInfo()}
+                            {_renderSpecializedActivities()}
+                            {_renderAchievement()}
                         </div>
                     </Form>
                     <div className="mt-3 d-flex justify-content-end">

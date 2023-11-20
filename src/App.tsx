@@ -10,7 +10,6 @@ import Dashboard from "./pages/Dashboard";
 import Doctor from "./pages/Doctor";
 import Patient from "./pages/Patient";
 import Department from "./pages/Department";
-import Schedule from "./pages/Schedule";
 import DiagnosticReport from "./pages/DiagnosticReport";
 import Staff from "./pages/Staff";
 import Login from "./pages/Authentication/Login";
@@ -57,6 +56,8 @@ import Information from "./pages/Information";
 import EditPractitioner from "./pages/Information/EditPractitioner";
 import { useAppSelector } from "./redux/hooks";
 import Chat from "./pages/Chat";
+import PatientMonitor from "./pages/PatientMonitor";
+import BookAppointment from "./pages/BookApointment";
 
 if (typeof window !== "undefined") {
   require("bootstrap/dist/js/bootstrap.bundle.min");
@@ -71,7 +72,6 @@ const RouterDom = () => (
       <Route path="overview" element={<DetailDoctor />}>
         <Route path=":doctorId" element={<InfoDoctor />} />
         <Route path="detail/:doctorId" element={<CreateEditDoctor />} />
-        {/* <Route path="scheduler" element={<ScheduleDoctor />} /> */}
         <Route path="scheduler" element={<ScheduleDoctor />} />
       </Route>
     </Route>
@@ -89,8 +89,6 @@ const RouterDom = () => (
         <Route path="detail" element={<CreateEditDepartment />} />
       </Route>
     </Route>
-
-    <Route path={RouterUrl.SCHEDULE} element={<Schedule />} />
 
     <Route path={RouterUrl.APPOINTMENT} element={<Appointment />} />
 
@@ -119,6 +117,10 @@ const RouterDom = () => (
     </Route>
 
     <Route path={RouterUrl.CHAT} element={<Chat />} />
+
+    <Route path={RouterUrl.PATIENT_MONITOR} element={<PatientMonitor />} />
+
+    <Route path={RouterUrl.BOOK_APPOINTMENT} element={<BookAppointment />} />
 
 
     <Route path="*" element={<Navigate to={RouterUrl.DASHBOARD} />} />

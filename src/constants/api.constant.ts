@@ -34,6 +34,7 @@ export const API_GET_SPECIALTY_APPOINTMENT = "/appointment/specialty";
 export const API_GET_DOCTOR_APPOINTMENT = "/appointment/doctor";
 export const API_SCHEDULE_GET_APPOINTMENT = "/appointment/schedule";
 export const API_CREATE_APPOINTMENT = "/appointment/create";
+export const API_GET_PATIENT_APPOINTMENT = "/appointment/patient";
 
 export const SCHEDULE_ALL = "/schedule/schedule-by-doctorId/"
 export const SCHEDULE_DATE = "/schedule/schedule-by-date/"
@@ -51,6 +52,8 @@ export const API_INBOX_ROOM_CREATE = "/inbox-room/staff-create"
 
 export const API_INBOX_MESSAGE = "/inbox-message/"
 export const API_INBOX_MESSAGE_SEND = "/inbox-message/message"
+
+
 
 
 

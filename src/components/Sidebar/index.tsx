@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { RouterUrl } from "../../constants";
-import { ICON_APPOINTMENT, ICON_DASHBOARD, ICON_DEPARTMENT, ICON_DIAGNOSTIC, ICON_DOCTOR, ICON_MESSAGE, ICON_PATIENT, ICON_STAFF } from "../../assets";
+import { ICON_APPOINTMENT, ICON_BOOK_APPOINTMENT, ICON_DASHBOARD, ICON_DEPARTMENT, ICON_DIAGNOSTIC, ICON_DOCTOR, ICON_MESSAGE, ICON_PATIENT, ICON_SETTING, ICON_STAFF } from "../../assets";
 
 const Sidebar = () => {
   const location = useLocation();
@@ -46,7 +46,17 @@ const Sidebar = () => {
               <span>Patient</span>
             </a>
           </li>
-          <li className={`${getClass(RouterUrl.DEPARTMENT)}`}>
+
+          <li className={`${getClass(RouterUrl.PATIENT_MONITOR)}`}>
+            <a
+              onClick={() => goToLink(RouterUrl.PATIENT_MONITOR)}
+              data-content-id="patient-monitor"
+            >
+              <ICON_PATIENT />
+              <span>Patient Monitor</span>
+            </a>
+          </li>
+          {/* <li className={`${getClass(RouterUrl.DEPARTMENT)}`}>
             <a
               onClick={() => goToLink(RouterUrl.DEPARTMENT)}
               data-content-id="department"
@@ -54,16 +64,17 @@ const Sidebar = () => {
               <ICON_DEPARTMENT />
               <span>Department</span>
             </a>
-          </li>
-          {/* <li className={`${getClass(RouterUrl.SCHEDULE)}`}>
-            <a
-              onClick={() => goToLink(RouterUrl.SCHEDULE)}
-              data-content-id="schedule"
-            >
-              <ICON_APPOINTMENT />
-              <span>Schedule</span>
-            </a>
           </li> */}
+
+          <li className={`${getClass(RouterUrl.BOOK_APPOINTMENT)}`}>
+            <a
+              onClick={() => goToLink(RouterUrl.BOOK_APPOINTMENT)}
+              data-content-id="book-appointment"
+            >
+              <ICON_BOOK_APPOINTMENT />
+              <span>Book Appointment</span>
+            </a>
+          </li>
 
           <li className={`${getClass(RouterUrl.APPOINTMENT)}`}>
             <a
@@ -74,6 +85,8 @@ const Sidebar = () => {
               <span>List Appointment</span>
             </a>
           </li>
+
+
           {/* <li className={`${getClass(RouterUrl.DIAGNOSTIC_REPORT)}`}>
             <a
               onClick={() => goToLink(RouterUrl.DIAGNOSTIC_REPORT)}
@@ -110,6 +123,16 @@ const Sidebar = () => {
             >
               <ICON_MESSAGE />
               <span>Inbox Message</span>
+            </a>
+          </li>
+
+          <li className={`${getClass(RouterUrl.SETTING)}`}>
+            <a
+              onClick={() => goToLink(RouterUrl.SETTING)}
+              data-content-id="setting"
+            >
+              <ICON_SETTING />
+              <span>Setting</span>
             </a>
           </li>
         </ul>

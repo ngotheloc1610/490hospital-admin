@@ -15,6 +15,10 @@ import { ReactComponent as ICON_PENCIL } from "./icons/pencil.svg";
 import { ReactComponent as ICON_PLUS } from "./icons/plus-icon.svg";
 import { ReactComponent as ICON_BLOCK } from "./icons/block.svg";
 import { ReactComponent as ICON_MESSAGE } from "./icons/message.svg";
+import { ReactComponent as ICON_SETTING } from "./icons/setting.svg";
+import { ReactComponent as ICON_BOOK_APPOINTMENT } from "./icons/book_appointment.svg";
+import { ReactComponent as ICON_GRADUATION } from "./icons/graduation.svg";
+import { ReactComponent as ICON_PEOPLE_TEAM } from "./icons/people_team.svg";
 
 export {
   LOGO,
@@ -32,5 +36,9 @@ export {
   ICON_PENCIL,
   ICON_PLUS,
   ICON_BLOCK,
-  ICON_MESSAGE
+  ICON_MESSAGE,
+  ICON_SETTING,
+  ICON_BOOK_APPOINTMENT,
+  ICON_GRADUATION,
+  ICON_PEOPLE_TEAM
 };

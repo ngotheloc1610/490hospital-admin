@@ -18,9 +18,10 @@ export const API_ALL_GET_STAFF = "/admin/staffs";
 export const API_SEARCH_STAFF = "/admin/searchStaff";
 
 export const API_DETAIL_PRACTITIONER = "/admin/practitionerRole/detail/";
-export const API_UPDATE_PRACTITIONER = "/admin/update/";
+export const API_UPDATE_PRACTITIONER = "/admin/practitioner/update/";
 export const API_CREATE_PRACTITIONER = "/admin/practitioner/create"
 export const API_PROFILE_PRACTITIONER = "/practitioner/profile"
+export const API_UPDATE_PROFILE_PRACTITIONER = "/practitioner/update_profile"
 
 export const API_ALL_GET_SPECIALTY = "/admin/specialties";
 export const API_GET_SPECIALTY = "/admin/specialty/";

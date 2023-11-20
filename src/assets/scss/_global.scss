@@ -47,6 +47,18 @@ button {
     }
   }
 
+  &--gray {
+    font-weight: 700;
+    color: $white-color;
+    transition: .2s ease-in all;
+    background: var(--neumorphism-colour, radial-gradient(184.95% 38.56% at 50% 50%, #C4C4C4 0%, rgba(196, 196, 196, 0.62) 63.54%, rgba(196, 196, 196, 0.79) 100%));
+
+    &:hover {
+      background: var(--neumorphism-colour, radial-gradient(184.95% 38.56% at 50% 50%, #C4C4C4 0%, rgba(196, 196, 196, 0.62) 63.54%, rgba(196, 196, 196, 0.79) 100%));
+      transition: .2s ease-in all;
+    }
+  }
+
   &--info {
     background: rgba(14, 165, 233, 0.90);
     color: $white-color;

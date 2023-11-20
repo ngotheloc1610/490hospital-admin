@@ -6,8 +6,9 @@ import { GENDER } from "../../../constants";
 import { ICON_TRASH, USER } from "../../../assets";
 import { defineConfigGet, defineConfigPost } from "../../../Common/utils";
 import axios from "axios";
-import { API_ALL_GET_SPECIALTY, API_DETAIL_PRACTITIONER, API_UPDATE_PRACTITIONER } from "../../../constants/api.constant";
+import { API_ALL_GET_SPECIALTY, API_DETAIL_PRACTITIONER, API_GET_ROOM_BY_SPECIALTY, API_UPDATE_PRACTITIONER } from "../../../constants/api.constant";
 import { useParams } from "react-router-dom";
+import moment from "moment";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Required"),
@@ -18,6 +19,7 @@ const validationSchema = Yup.object().shape({
   address: Yup.string().required("Required"),
   city: Yup.string().required("Required"),
   specialty: Yup.string().required("Required"),
+  room: Yup.string().required("Required"),
   startDate: Yup.string().required("Required"),
   endDate: Yup.string().required("Required"),
 });
@@ -30,13 +32,14 @@ const defaultValue: any = {
   phoneNumber: "",
   email: "",
   address: "",
-  city: "",
+  identifier: "",
   specialty: "",
+  room: "",
   startDate: "",
   endDate: "",
-  education: [{ time: "", content: "" }],
-  specialize: [{ time: "", content: "" }],
-  achievement: [{ time: "", content: "" }],
+  education: [{ start: "", end: "", content: "" }],
+  specialize: [{ start: "", end: "", content: "" }],
+  achievement: [{ start: "", end: "", content: "" }],
 };
 
 const CreateEditDoctor = () => {
@@ -47,12 +50,20 @@ const CreateEditDoctor = () => {
   const inputRef = useRef<any>(null);
   const [specialtyList, setListSpecialty] = useState([]);
   const [image, setImage] = useState<any>("");
+  const [listRoom, setListRoom] = useState<any>([]);
+  const [specialtyId, setSpecialtyId] = useState<string>("");
 
   const [doctor, setDoctor] = useState<any>(defaultValue);
 
   useEffect(() => {
     getSpecialty();
   }, [])
+
+  useEffect(() => {
+    if (specialtyId) {
+      getRoom(specialtyId);
+    }
+  }, [specialtyId])
 
   useEffect(() => {
     getDoctorInfo(params.doctorId)
@@ -62,28 +73,29 @@ const CreateEditDoctor = () => {
     const url = `${url_api}${API_DETAIL_PRACTITIONER}${id}`;
 
     axios
-      .get(url, defineConfigGet({}))
+      .get(url, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
-          const data = resp.data;
           console.log("resp:", resp)
-          const doctor: any = {
+          const data = resp.data;
+          const dataConverted: any = {
             id: data.id,
             name: data.practitioner.display,
-            birthday: data.practitionerTarget.birthDay,
-            gender: data.practitionerTarget.gender,
-            phoneNumber: data.practitionerTarget.phoneNumber,
-            email: data.practitionerTarget.email,
-            address: data.address,
-            city: data.city,
-            specialty: data.displaySpecialty,
-            startDate: data.period.start,
-            endDate: data.period.end,
+            birthday: data.practitionerTarget?.birthDate,
+            gender: data.practitionerTarget?.gender,
+            phoneNumber: data.practitionerTarget?.telecom.filter((item: any) => item.system === "phone").value,
+            email: data.practitionerTarget?.telecom.filter((item: any) => item.system === "email").value,
+            address: data.addressFirstRep?.text,
+            identifier: data.practitionerTarget?.identifierFirstRep.value,
+            specialty: data.specialty[0].coding[0].display,
+            startDate: moment(data.period.start).format("YYYY-MM-DD"),
+            endDate: moment(data.period.end).format("YYYY-MM-DD"),
             education: [{ time: "", content: "" }],
             specialize: [{ time: "", content: "" }],
             achievement: [{ time: "", content: "" }],
           }
-          setDoctor(doctor);
+          console.log("dataConverted:", dataConverted)
+          setDoctor(dataConverted);
         }
       })
       .catch((err) => {
@@ -105,6 +117,38 @@ const CreateEditDoctor = () => {
         console.log("error get API list specialty", err);
       });
   }
+
+  const getRoom = (specialtyId: string) => {
+    const url = `${url_api}${API_GET_ROOM_BY_SPECIALTY}${specialtyId}`;
+
+    axios
+      .get(url, defineConfigPost())
+      .then((resp: any) => {
+        if (resp) {
+          setListRoom(resp.data);
+        }
+      })
+      .catch((err: any) => {
+        console.log("error get rooms:", err);
+      });
+  };
+
+  const _renderListRoom = () => {
+    return (
+      <>
+        <option hidden>Room</option>
+        {listRoom ? (
+          listRoom.map((item: any) => (
+            <option value={item.id} key={item.code}>
+              {item.codeableConcept.coding[0].display}
+            </option>
+          ))
+        ) : (
+          <option disabled>No option</option>
+        )}
+      </>
+    );
+  };
 
   const updatePractitioner = (values: any) => {
     const url = `${url_api}${API_UPDATE_PRACTITIONER}${values.id}`;
@@ -211,14 +255,14 @@ const CreateEditDoctor = () => {
             />
           </div>
           <div className="col-6 mb-3">
-            <label htmlFor="city">
+            <label htmlFor="identifier">
               Citizen identification <span className="text-danger">*</span>
             </label>
             <Field
-              name="city"
+              name="identifier"
               type="text"
-              id="city"
-              className={`form-control ${errors?.city && touched?.city ? "is-invalid" : ""
+              id="identifier"
+              className={`form-control ${errors?.identifier && touched?.identifier ? "is-invalid" : ""
                 }`}
             />
           </div>
@@ -251,13 +295,13 @@ const CreateEditDoctor = () => {
   };
 
   const _renderWorkInfo = (props: any) => {
-    const { errors, touched } = props;
+    const { errors, touched, handleChange, setFieldValue } = props;
 
     return (
       <div className="mt-5">
         <p className="fw-bold border-top pt-2 text-dark">Work Information</p>
         <div className="row">
-          <div className="col-12 mb-3">
+          <div className="col-6 mb-3">
             <label htmlFor="specialty">
               Specialty <span className="text-danger">*</span>
             </label>
@@ -267,10 +311,14 @@ const CreateEditDoctor = () => {
               id="specialty"
               className={`form-select ${errors?.specialty && touched?.specialty ? "is-invalid" : ""
                 }`}
+              onChange={(e: any) => {
+                setSpecialtyId(e.target.value);
+                setFieldValue("specialty", e.target.value)
+              }}
             >
               {specialtyList.length > 0 ? (
                 specialtyList.map((item: any) => (
-                  <option value={item.code} key={item.code}>
+                  <option value={item.id} key={item.id}>
                     {item.name}
                   </option>
                 ))
@@ -278,6 +326,21 @@ const CreateEditDoctor = () => {
                 <option disabled>No option</option>
               )}
             </Field>
+          </div>
+
+          <div className="col-6">
+            <label htmlFor="room" className="form-label">
+              Room <span className="text-danger">*</span>
+            </label>
+            <div className="input-group">
+              <select
+                id="room"
+                className={`form-select ${errors?.room && touched?.room ? "is-invalid" : ""}`}
+                onChange={handleChange}
+              >
+                {_renderListRoom()}
+              </select>
+            </div>
           </div>
           <div className="col-6 mb-3">
             <label htmlFor="startDate">
@@ -325,7 +388,7 @@ const CreateEditDoctor = () => {
   };
 
   const _renderEducationInfo = (props: any) => {
-    const { values } = props;
+    const { values, handleChange } = props;
     return (
       <div className="mt-3">
         <p className="fw-bold border-top pt-2 text-dark">Education</p>
@@ -341,13 +404,25 @@ const CreateEditDoctor = () => {
               name="education"
               render={(arrayHelpers) => (
                 <>
-                  {values.education.map((edu: any, index: number) => (
+                  {values.education.map((item: any, index: number) => (
                     <tr key={index}>
                       <td>
-                        <Field
-                          name={`education[${index}].time`}
-                          className="form-control"
-                        />
+                        <div className="d-flex">
+                          <input
+                            id={`education[${index}].start`}
+                            type="date"
+                            className="form-control"
+                            value={values.education.start}
+                            onChange={handleChange}
+                          />
+                          <input
+                            id={`education[${index}].end`}
+                            type="date"
+                            className="form-control"
+                            value={values.education.end}
+                            onChange={handleChange}
+                          />
+                        </div>
                       </td>
                       <td className="d-flex">
                         <Field
@@ -388,7 +463,7 @@ const CreateEditDoctor = () => {
   };
 
   const _renderSpecializedActivities = (props: any) => {
-    const { values } = props;
+    const { values, handleChange } = props;
     return (
       <div className="mt-3">
         <p className="fw-bold border-top pt-2 text-dark">
@@ -406,13 +481,25 @@ const CreateEditDoctor = () => {
               name="specialize"
               render={(arrayHelpers) => (
                 <>
-                  {values.specialize.map((edu: any, index: number) => (
+                  {values.specialize.map((item: any, index: number) => (
                     <tr key={index}>
                       <td>
-                        <Field
-                          name={`specialize[${index}].time`}
-                          className="form-control"
-                        />
+                        <div className="d-flex">
+                          <input
+                            id={`specialize[${index}].start`}
+                            type="date"
+                            className="form-control"
+                            value={values.specialize.start}
+                            onChange={handleChange}
+                          />
+                          <input
+                            id={`specialize[${index}].end`}
+                            type="date"
+                            className="form-control"
+                            value={values.specialize.end}
+                            onChange={handleChange}
+                          />
+                        </div>
                       </td>
                       <td className="d-flex">
                         <Field
@@ -453,7 +540,7 @@ const CreateEditDoctor = () => {
   };
 
   const _renderAchievement = (props: any) => {
-    const { values } = props;
+    const { values, handleChange } = props;
     return (
       <div className="mt-3">
         <p className="fw-bold border-top pt-2 text-dark">Achievement</p>
@@ -469,13 +556,25 @@ const CreateEditDoctor = () => {
               name="achievement"
               render={(arrayHelpers) => (
                 <>
-                  {values.achievement.map((edu: any, index: number) => (
+                  {values.achievement.map((item: any, index: number) => (
                     <tr key={index}>
                       <td>
-                        <Field
-                          name={`achievement[${index}].time`}
-                          className="form-control"
-                        />
+                        <div className="d-flex">
+                          <input
+                            id={`achievement[${index}].start`}
+                            type="date"
+                            className="form-control"
+                            value={values.achievement.start}
+                            onChange={handleChange}
+                          />
+                          <input
+                            id={`achievement[${index}].end`}
+                            type="date"
+                            className="form-control"
+                            value={values.achievement.end}
+                            onChange={handleChange}
+                          />
+                        </div>
                       </td>
                       <td className="d-flex">
                         <Field
@@ -520,9 +619,9 @@ const CreateEditDoctor = () => {
       <div className="h-100 d-flex flex-column" onClick={handlePickImage}>
         <div className="h-100">
           <img
-            src={doctor.photo.length > 0 ? `data:${doctor.photo[0]?.contentType};base64,${doctor.photo[0]?.data}` : image ? image : USER}
+            src={doctor?.photo?.length > 0 ? `data:${doctor?.photo[0]?.contentType};base64,${doctor?.photo[0]?.data}` : image ? image : USER}
             alt=""
-            className={`h-100 w-100 d-block m-auto ${image ? "" : "bg-image"}`}
+            className={`d-block m-auto ${image ? "" : "bg-image"}`}
             style={{ objectFit: "cover" }}
           />
           <input
@@ -551,7 +650,7 @@ const CreateEditDoctor = () => {
         actions.resetForm();
       }}
     >
-      {({ values, errors, touched, submitForm }) => (
+      {({ values, errors, touched, submitForm, handleChange, setFieldValue }) => (
         <>
           <Form>
             <div className="overview-container">
@@ -566,10 +665,10 @@ const CreateEditDoctor = () => {
                   </div>
                 </div>
               </div>
-              {_renderWorkInfo({ errors, touched })}
-              {_renderEducationInfo({ values })}
-              {_renderSpecializedActivities({ values })}
-              {_renderAchievement({ values })}
+              {_renderWorkInfo({ errors, touched, handleChange, setFieldValue })}
+              {_renderEducationInfo({ values, handleChange })}
+              {_renderSpecializedActivities({ values, handleChange })}
+              {_renderAchievement({ values, handleChange })}
             </div>
           </Form>
           <div className="mt-3 d-flex justify-content-end">

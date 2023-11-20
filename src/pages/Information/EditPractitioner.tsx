@@ -1,25 +1,27 @@
 import { useEffect, useRef, useState } from "react";
 import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import { API_ALL_GET_SPECIALTY, API_DETAIL_PRACTITIONER, API_UPDATE_PRACTITIONER } from "../../constants/api.constant";
-import { defineConfigGet, defineConfigPost } from "../../Common/utils";
+import { API_PROFILE_PRACTITIONER, API_UPDATE_PRACTITIONER, API_UPDATE_PROFILE_PRACTITIONER } from "../../constants/api.constant";
+import { defineConfigPost } from "../../Common/utils";
 import { error, success } from "../../Common/notify";
 import { GENDER } from "../../constants";
 import { USER } from "../../assets";
 import { FORMAT_DATE } from "../../constants/general.constant";
 import moment from "moment";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { setTriggerEdit } from "../../redux/features/practitioner/practitionerSlice";
 
 const validationSchema = Yup.object().shape({
     name: Yup.string().required("Required"),
     birthday: Yup.string().required("Required"),
     gender: Yup.string().required("Required"),
     phoneNumber: Yup.string().required("Required"),
-    email: Yup.string().required("Required"),
+    email: Yup.string().email('Địa chỉ email không hợp lệ').required("Required"),
     address: Yup.string().required("Required"),
-    city: Yup.string().required("Required"),
+    identifier: Yup.string().required("Required"),
 });
 
 const defaultValue = {
@@ -30,98 +32,85 @@ const defaultValue = {
     phoneNumber: "",
     email: "",
     address: "",
-    city: "",
-    photo: [],
+    identifier: "",
 };
 
 const EditPractitioner = () => {
     const url_api = process.env.REACT_APP_API_URL;
 
-    const params = useParams();
+    const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const inputRef = useRef<any>(null);
     const [image, setImage] = useState<any>("");
 
-    const [practitionerInfo, setPractitionerInfo] = useState<any>(defaultValue);
-    const [specialtyList, setListSpecialty] = useState([]);
+    const [practitioner, setPractitioner] = useState<any>(defaultValue);
+
+    const [practitionerInfo, setPractitionerInfo] = useState<any>({});
+
+    const { triggerEdit } = useAppSelector((state) => state.practitionerSlice)
 
     useEffect(() => {
-        getSpecialty();
+        getProfilePractitioner()
     }, [])
 
-    useEffect(() => {
-        getInformation(params.practitionerId)
-    }, [params.practitionerId])
-
-    const getSpecialty = () => {
-        const url = `${url_api}${API_ALL_GET_SPECIALTY}`;
+    const getProfilePractitioner = () => {
+        const url = `${url_api}${API_PROFILE_PRACTITIONER}`;
 
         axios
-            .get(url, defineConfigGet({ page: 0, size: 100 }))
+            .get(url, defineConfigPost())
             .then((resp: any) => {
                 if (resp) {
-                    setListSpecialty(resp.data.content);
+                    const data = resp.data;
+                    const dataConverted = {
+                        id: data.id,
+                        name: data.name,
+                        birthday: data.dateOfBirth,
+                        gender: data.gender,
+                        phoneNumber: data.phoneNumber,
+                        email: data.email,
+                        address: data.address,
+                        identifier: data.identification,
+                    }
+
+                    setPractitionerInfo(data);
+                    setPractitioner(dataConverted);
                 }
             })
             .catch((err: any) => {
-                console.log("err:", err);
+                console.log("error get profile practitioner:", err);
             });
     }
 
-    const getInformation = (id: any) => {
-        const url = `${url_api}${API_DETAIL_PRACTITIONER}${id}`;
-
-        axios
-            .get(url, defineConfigGet({}))
-            .then((resp: any) => {
-                if (resp) {
-                    console.log("resp:", resp)
-
-                }
-            })
-            .catch((err: any) => {
-                console.log("err:", err);
-            });
-    }
-
-    const updatePatient = (values: any) => {
-        const url = `${url_api}${API_UPDATE_PRACTITIONER}${values.id}`;
+    const updatePatient = (values: any, actions: any) => {
+        const url = `${url_api}${API_UPDATE_PROFILE_PRACTITIONER}`;
 
         const param = {
-            username: values.name,
+            username: values.email,
             email: values.email,
-            password: "",
-            identifier: [],
+            password: null,
+            identifier: values.identifier,
             name: values.name,
             phoneNumber: values.phoneNumber,
-            dateOfBirth: values.dateOfBirth,
-            photo: "",
-            city: values.city,
-            district: "",
-            state: "",
-            address: values.address,
-            address2: "",
+            dateOfBirth: values.birthday,
+            photo: null,
             gender: values.gender,
-            country: "",
-            postalCode: "",
-            system: "",
-
+            address: values.address,
         }
 
         axios
             .put(url, param, defineConfigPost())
             .then((resp: any) => {
                 if (resp) {
-                    success("Update Successfully!!!");
+                    actions.setSubmitting(false);
+                    actions.resetForm();
+                    dispatch(setTriggerEdit(!triggerEdit))
+                    success("Update Successfully!");
                     navigate("/information");
-                    console.log("resp:", resp)
                 }
             })
             .catch((err: any) => {
-                if (err.response.data.status === 401) {
-                    error(err.response.data.error)
-                }
-                console.log("err:", err);
+                error(err.response.data.error.message)
+                console.log("error update profile practitioner:", err);
             });
     }
 
@@ -160,18 +149,18 @@ const EditPractitioner = () => {
                         />
                     </div>
                     <div className="col-6 mb-3">
-                        <label htmlFor="dateOfBirth">
+                        <label htmlFor="birthday">
                             Date of birth <span className="text-danger">*</span>
                         </label>
                         <Field
-                            name="dateOfBirth"
-                            id="dateOfBirth"
+                            name="birthday"
+                            id="birthday"
                             className="form-control"
                             render={({ field }: any) => (
                                 <input
                                     {...field}
                                     type="date"
-                                    className={`form-control input-select ${errors?.dateOfBirth && touched?.dateOfBirth ? "is-invalid" : ""
+                                    className={`form-control input-select ${errors?.birthday && touched?.birthday ? "is-invalid" : ""
                                         }`}
                                     max="9999-12-31"
                                 />
@@ -209,14 +198,14 @@ const EditPractitioner = () => {
                         />
                     </div>
                     <div className="col-6 mb-3">
-                        <label htmlFor="city">
+                        <label htmlFor="identifier">
                             Citizen identification <span className="text-danger">*</span>
                         </label>
                         <Field
-                            name="city"
+                            name="identifier"
                             type="text"
-                            id="city"
-                            className={`form-control ${errors?.city && touched?.city ? "is-invalid" : ""
+                            id="identifier"
+                            className={`form-control ${errors?.identifier && touched?.identifier ? "is-invalid" : ""
                                 }`}
                         />
                     </div>
@@ -259,11 +248,11 @@ const EditPractitioner = () => {
                             <th scope="row" style={{ width: "15%" }}>
                                 Starting date
                             </th>
-                            <td>{practitionerInfo.start ? moment(practitionerInfo.start).format(FORMAT_DATE) : "-"}</td>
+                            <td>{practitionerInfo.startWork ? moment(practitionerInfo.startWork).format(FORMAT_DATE) : "-"}</td>
                         </tr>
                         <tr>
                             <th scope="row">End date</th>
-                            <td>{practitionerInfo.end ? moment(practitionerInfo.end).format(FORMAT_DATE) : "-"}</td>
+                            <td>{practitionerInfo.endWork ? moment(practitionerInfo.endWork).format(FORMAT_DATE) : "-"}</td>
                         </tr>
                         <tr>
                             <th scope="row">Specialty</th>
@@ -285,14 +274,14 @@ const EditPractitioner = () => {
                 <p className="fw-bold border-top pt-2 text-dark">Education</p>
                 <table className="table">
                     <tbody>
-                        {practitionerInfo.educations && practitionerInfo.educations.map((item: any) => {
+                        {practitionerInfo.qualificationsEdu && practitionerInfo.qualificationsEdu.map((item: any) => {
                             return (
                                 <tr>
                                     <th scope="row" style={{ width: "15%" }}>
-                                        {item.year}
+                                        {moment(item.qualificationPeriodStart).format(FORMAT_DATE)} - {moment(item.qualificationPeriodEnd).format(FORMAT_DATE)}
                                     </th>
                                     <td>
-                                        {item.detail}
+                                        {item.qualificationText}
                                     </td>
                                 </tr>
                             )
@@ -311,14 +300,14 @@ const EditPractitioner = () => {
                 </p>
                 <table className="table">
                     <tbody>
-                        {practitionerInfo.experiences && practitionerInfo.experiences.map((item: any) => {
+                        {practitionerInfo.qualificationsSpecActivities && practitionerInfo.qualificationsSpecActivities.map((item: any) => {
                             return (
                                 <tr>
                                     <th scope="row" style={{ width: "15%" }}>
-                                        <span>{item.timeStart} - {item.timeEnd}</span>
+                                        {moment(item.qualificationPeriodStart).format(FORMAT_DATE)} - {moment(item.qualificationPeriodEnd).format(FORMAT_DATE)}
                                     </th>
                                     <td>
-                                        {item.detail}
+                                        {item.qualificationText}
                                     </td>
                                 </tr>
                             )
@@ -335,14 +324,14 @@ const EditPractitioner = () => {
                 <p className="fw-bold border-top pt-2 text-dark">Achievement</p>
                 <table className="table">
                     <tbody>
-                        {practitionerInfo.achievements && practitionerInfo.achievements.map((item: any) => {
+                        {practitionerInfo.qualificationsAchive && practitionerInfo.qualificationsAchive.map((item: any) => {
                             return (
                                 <tr>
                                     <th scope="row" style={{ width: "15%" }}>
-                                        {item.time}
+                                        {moment(item.qualificationPeriodStart).format(FORMAT_DATE)} - {moment(item.qualificationPeriodEnd).format(FORMAT_DATE)}
                                     </th>
                                     <td>
-                                        {item.detial}
+                                        {item.qualificationText}
                                     </td>
                                 </tr>
                             )
@@ -359,9 +348,9 @@ const EditPractitioner = () => {
             <div className="h-100 d-flex flex-column" onClick={handlePickImage}>
                 <div className="h-100">
                     <img
-                        src={practitionerInfo.photo.length > 0 ? `data:${practitionerInfo.photo[0]?.contentType};base64,${practitionerInfo.photo[0]?.data}` : image ? image : USER}
+                        src={image ? image : USER}
                         alt="img admin"
-                        className={`h-100 w-100 d-block m-auto ${image ? "" : "bg-image"}`}
+                        className={`d-block m-auto ${image ? "" : "bg-image"}`}
                         style={{ objectFit: "cover" }}
                     />
                     <input
@@ -380,13 +369,13 @@ const EditPractitioner = () => {
 
     return (
         <Formik
-            initialValues={practitionerInfo}
+            initialValues={practitioner}
             enableReinitialize={true}
             validationSchema={validationSchema}
             onSubmit={(values, actions) => {
-                updatePatient(values)
-                actions.setSubmitting(false);
-                actions.resetForm();
+                console.log("values:", values)
+                updatePatient(values, actions)
+
             }}
         >
             {({ errors, touched, submitForm }) => (

@@ -23,3 +23,7 @@ export const FORMAT_DAY = "DD/MM/YYYY HH:mm"
 
 export const TYPE_DOCTOR = "DOCTOR";
 
+export const FORMAT_DATE_TIME = "YYYY-MM-DD HH:mm:ss";
+
+export const TOTAL_STEP = 2;
+

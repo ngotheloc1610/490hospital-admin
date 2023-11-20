@@ -17,13 +17,13 @@ import { IPractitioner } from "../../interface/general.interface";
 import { TYPE_DOCTOR } from "../../constants/general.constant";
 
 const validationSchema = Yup.object().shape({
-  username: Yup.string().required("Required"),
+  username: Yup.string().email('Địa chỉ email không hợp lệ').required("Required"),
   fullname: Yup.string().required("Required"),
   type: Yup.string().required("Required"),
   room: Yup.string().optional(),
   specialty: Yup.string().required("Required"),
-  startDate: Yup.string().required("Required"),
-  endDate: Yup.string().required("Required"),
+  startDate: Yup.date().required("Required").max(Yup.ref('endDate'), 'Ngày bắt đầu phải nhỏ hơn ngày kết thúc'),
+  endDate: Yup.date().required("Required").min(Yup.ref('startDate'), 'Ngày kết thúc phải lớn hơn ngày bắt đầu'),
 });
 
 const defaultValue: IPractitioner = {
@@ -69,7 +69,7 @@ const Practitioner = () => {
         }
       })
       .catch((err: any) => {
-        console.log("err:", err);
+        console.log("error get specialties:", err);
       });
   };
 
@@ -84,7 +84,7 @@ const Practitioner = () => {
         }
       })
       .catch((err: any) => {
-        console.log("err:", err);
+        console.log("error get rooms:", err);
       });
   };
 
@@ -94,6 +94,9 @@ const Practitioner = () => {
     const idSpecialty = listSpecialty.filter((item: any) => {
       return item.id === values.specialty;
     })[0]?.id;
+    console.log(listSpecialty.filter((item: any) => {
+      return item.id === values.specialty;
+    }));
     const displaySpecialty = listSpecialty.filter((item: any) => {
       return item.id === values.specialty;
     })[0]?.name;
@@ -105,6 +108,38 @@ const Practitioner = () => {
       return item.id === values.room;
     })[0]?.describe;
 
+    let educations: any = [];
+    let specializes: any = [];
+    let achievements: any = [];
+
+    values.education.forEach((item: any) => educations.push({
+      qualificationSystem: "http://example.org/qualifications",
+      qualificationCode: "Edu",
+      qualificationDisplay: item.content,
+      qualificationText: item.content,
+      qualificationPeriodStart: new Date(item.start),
+      qualificationPeriodEnd: new Date(item.end)
+    }))
+
+    values.specialize.forEach((item: any) => specializes.push({
+      qualificationSystem: "http://example.org/qualifications",
+      qualificationCode: "SpecActivities",
+      qualificationDisplay: item.content,
+      qualificationText: item.content,
+      qualificationPeriodStart: new Date(item.start),
+      qualificationPeriodEnd: new Date(item.end)
+    }))
+
+    values.achievement.forEach((item: any) => achievements.push({
+      qualificationSystem: "http://example.org/qualifications",
+      qualificationCode: "Achieve",
+      qualificationDisplay: item.content,
+      qualificationText: item.content,
+      qualificationPeriodStart: new Date(item.start),
+      qualificationPeriodEnd: new Date(item.end)
+    }))
+
+
     const params = {
       username: values.username,
       name: values.fullname,
@@ -113,22 +148,24 @@ const Practitioner = () => {
       desRoom: desRoom,
       idRoom: idRoom,
       type: values.type,
-      startWork: values.startDate,
-      endWork: values.endDate,
+      startWork: new Date(values.startDate),
+      endWork: new Date(values.endDate),
+      qualifications: [...educations, ...specializes, ...achievements],
+      photo: null,
+      identifier: null
     };
 
     axios
       .post(url, params, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
-          console.log("resp:", resp);
           actions.setSubmitting(false);
           actions.resetForm();
           success(`Create practitioner ${values.type} successfully!`);
         }
       })
       .catch((err) => {
-        console.log("err:", err);
+        console.log("error create practitioner:", err);
       });
   };
 
@@ -305,20 +342,21 @@ const Practitioner = () => {
             </div>
           </div>
 
-          {values.type === TYPE_DOCTOR && <div className="col-6">
-            <label htmlFor="room" className="form-label">
-              Room <span className="text-danger">*</span>
-            </label>
-            <div className="input-group">
-              <select
-                id="room"
-                className={`form-select ${errors?.room && touched?.room ? "is-invalid" : ""}`}
-                onChange={handleChange}
-              >
-                {_renderListRoom()}
-              </select>
-            </div>
-          </div>}
+          {values.type === TYPE_DOCTOR &&
+            <div className="col-6">
+              <label htmlFor="room" className="form-label">
+                Room <span className="text-danger">*</span>
+              </label>
+              <div className="input-group">
+                <select
+                  id="room"
+                  className={`form-select ${errors?.room && touched?.room ? "is-invalid" : ""}`}
+                  onChange={handleChange}
+                >
+                  {_renderListRoom()}
+                </select>
+              </div>
+            </div>}
 
 
         </div>

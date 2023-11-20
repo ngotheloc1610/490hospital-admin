@@ -30,7 +30,7 @@ const ScheduleDoctor = () => {
     }, [])
 
     useEffect(() => {
-        schedules.forEach((item: any) => {
+        schedules && schedules.forEach((item: any) => {
             dataSchedule.push({
                 Subject: item?.actor[0].display,
                 Location: "",

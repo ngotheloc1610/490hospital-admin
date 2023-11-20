@@ -112,7 +112,7 @@ const Sidebar = () => {
               data-content-id="practitioner"
             >
               <ICON_STAFF />
-              <span>Practitioner</span>
+              <span>Create Practitioner</span>
             </a>
           </li>
 

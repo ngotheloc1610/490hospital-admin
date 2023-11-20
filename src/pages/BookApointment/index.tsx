@@ -53,7 +53,7 @@ const BookAppointment = () => {
   }, [])
 
   useEffect(() => {
-    if(specialty){
+    if (specialty) {
       getDoctor(specialty);
     }
   }, [specialty])
@@ -256,7 +256,7 @@ const BookAppointment = () => {
       <>
         <option hidden>Select Specialty</option>
         {listSpecialty ? (
-          listSpecialty?.map((item: any) => (
+          listSpecialty.map((item: any) => (
             <option value={item.name} key={item.code}>
               {item.name}
             </option>
@@ -305,13 +305,13 @@ const BookAppointment = () => {
         {step === TOTAL_STEP ? (
           <div className="d-flex justify-content-center align-item-center">
             <button
-              className="button button--primary me-3"
+              className="button button--primary button--small me-3"
               onClick={() => handleBook()}
             >
               Book
             </button>
             <button
-              className="button button--gray"
+              className="button button--gray button--small"
               onClick={() => handleCancel()}
             >
               Cancel
@@ -319,7 +319,7 @@ const BookAppointment = () => {
           </div>
         ) : (
           <button
-            className="button button--primary d-block m-auto"
+            className="button button--primary button--small d-block m-auto"
             onClick={() => handleNext()}
           >
             Next
@@ -332,17 +332,17 @@ const BookAppointment = () => {
   const _renderStep1 = () => {
     return (
       <div className="container">
-        <div className="patient-detail border-bottom pb-3">
+        <div className="border-bottom pb-3">
           <h5 className="mb-3 fw-bold">Patient Details</h5>
           <div className="row m-auto" style={{ width: "70%" }}>
-            <div className="col-8 d-flex">
-              <label htmlFor="patient" className="form-label">Select Patient </label>
-              <div className="input-group mb-3">
+            <div className="col-8 d-flex justify-content-between">
+              <label htmlFor="patient">Select Patient </label>
+              <div className="input-group mb-3" style={{ width: "70%" }}>
                 <input type="text" className="form-control" id="patient" placeholder="Enter patient name or patient email" value={namePatient} onChange={(e: any) => setNamePatient(e.target.value)} />
               </div>
             </div>
             <div className="col-4">
-              <button className="button-apply" onClick={() => handleSearchPatient()}>Apply</button>
+              <button className="button button--primary button--small" onClick={() => handleSearchPatient()}>Apply</button>
             </div>
           </div>
 
@@ -367,7 +367,7 @@ const BookAppointment = () => {
                   )?.value;
 
                   return (
-                    <tr className={`${idx % 2 === 1 ? "table-light" : ""} ${patient?.id === item.id ? "table-dark" : ""}`} onClick={()=> {setPatient(item); }}>
+                    <tr className={`${idx % 2 === 1 ? "table-light" : ""} ${patient?.id === item.id ? "table-dark" : ""}`} onClick={() => { setPatient(item); }}>
                       <td >
                         {item.nameFirstRep.nameAsSingleString}
                       </td>
@@ -389,9 +389,10 @@ const BookAppointment = () => {
         <div className="mt-3">
           <h5 className="mb-3 fw-bold">Booking details</h5>
           <div className="m-auto" style={{ width: "70%" }}>
-            <div className="d-flex mb-4">
-              <label htmlFor="typeOfAppointment">Type of appointment</label>
+            <div className="d-flex justify-content-between mb-4">
+              <label htmlFor="typeOfAppointment" className="my-auto">Type of appointment</label>
               <select
+                style={{ width: "75%" }}
                 className="form-select"
                 id="typeOfAppointment"
                 onChange={(e: any) => setTypeOfAppointment(e.target.value)}
@@ -401,11 +402,12 @@ const BookAppointment = () => {
               </select>
             </div>
 
-            <div className="d-flex">
-              <label htmlFor="specialty">Select specialty</label>
+            <div className="d-flex justify-content-between">
+              <label htmlFor="specialty" className="my-auto">Select specialty</label>
               <select
-                id="specialty"
+                style={{ width: "75%" }}
                 className="form-select"
+                id="specialty"
                 onChange={(e: any) => {
                   setSpecialty(e.target.value)
                 }}
@@ -487,7 +489,7 @@ const BookAppointment = () => {
   };
 
   const _renderStep2 = () => {
-    const specialtyCode = listSpecialty.find((item:any) => item.name === specialty)?.code;
+    const specialtyCode = listSpecialty.find((item: any) => item.name === specialty)?.code;
     const specialtyDisplay = listSpecialty.find((item: any) => item.name === specialty)?.name;
 
     return (

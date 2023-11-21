@@ -2,17 +2,18 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
-import { convertToDate, convertToTime, defineConfigGet } from "../../../../Common/utils";
+import { convertToDate, convertToTime, defineConfigGet, defineConfigPost } from "../../../../Common/utils";
 import { API_GET_LIST_APPOINTMENT_PATIENT, API_GET_PATIENT } from "../../../../constants/api.constant";
 import { USER } from "../../../../assets";
 
 import PaginationComponent from "../../../../components/common/Pagination";
+import moment from "moment";
+import { FORMAT_DATE } from "../../../../constants/general.constant";
 
 const InfoPatient = () => {
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [itemPerPage, setItemPerPage] = useState<number>(3);
   const [totalItem, setTotalItem] = useState<number>(0);
-
   const [patient, setPatient] = useState<any>({});
   const [listAppointment, setListAppointment] = useState<any>([]);
 
@@ -32,9 +33,10 @@ const InfoPatient = () => {
     const url = `${url_api}${API_GET_PATIENT}${id}`;
 
     axios
-      .get(url, defineConfigGet({}))
+      .get(url, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
+          console.log("resp:", resp)
           setPatient(resp.data);
         }
       })
@@ -68,7 +70,7 @@ const InfoPatient = () => {
   };
 
   return (
-    <section className="patient-detail container">
+    <section className="container">
       <div>
         <div className="pb-3 mb-3 border-bottom d-flex justify-content-between">
           <h3 className="fw-bold text-uppercase">{patient?.nameFirstRep?.text}</h3>
@@ -87,7 +89,7 @@ const InfoPatient = () => {
                 </tr>
                 <tr>
                   <th scope="row">Date of birth</th>
-                  <td>{patient?.birthDate}</td>
+                  <td>{moment(patient?.birthDate).format(FORMAT_DATE)}</td>
                 </tr>
                 <tr>
                   <th scope="row">Address</th>
@@ -95,20 +97,16 @@ const InfoPatient = () => {
                 </tr>
                 <tr>
                   <th scope="row">Citizen identification</th>
-                  <td>{patient?.addressFirstRep?.city}</td>
+                  <td>{patient?.identifierFirstRep?.value}</td>
                 </tr>
                 <tr>
                   <th scope="row">Phone number</th>
-                  <td>{patient?.telecom?.find((i: any) => i?.system === "phone")
-                    ?.value}</td>
+                  <td>{patient?.telecom?.find((i: any) => i?.system === "phone")?.value}</td>
                 </tr>
                 <tr>
                   <th scope="row">Email</th>
                   <td>
-                    {
-                      patient?.telecom?.find((i: any) => i?.system === "email")
-                        ?.value
-                    }
+                    {patient?.telecom?.find((i: any) => i?.system === "email")?.value}
                   </td>
                 </tr>
               </tbody>
@@ -118,9 +116,9 @@ const InfoPatient = () => {
             <div className="h-100 d-flex flex-column">
               <div className="h-100">
                 <img
-                  src={patient.photo?.length > 0 ? `data:${patient.photo[0].contentType};base64,${patient.photo[0].data}` : USER}
+                  src={patient?.photo?.length > 0 ? `data:${patient.photo[0].contentType};base64,${patient.photo[0].data}` : USER}
                   alt="img patient"
-                  className={`h-100 w-100 d-block m-auto`}
+                  className={`d-block m-auto`}
                   style={{ objectFit: "cover" }}
                 />
               </div>
@@ -146,7 +144,7 @@ const InfoPatient = () => {
             </tr>
           </thead>
           <tbody>
-            {listAppointment?.map((item: any, idx: number) => {
+            {listAppointment && listAppointment.map((item: any, idx: number) => {
               return (
                 <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
                   <td >

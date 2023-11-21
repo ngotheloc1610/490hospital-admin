@@ -17,6 +17,8 @@ export const KEY_LOCAL_STORAGE = {
 
 export const FORMAT_DATE = "DD/MM/YYYY";
 
+export const FORMAT_DATE_DEFAULT = "YYYY-MM-DD";
+
 export const FORMAT_TIME = "HH:mm";
 
 export const FORMAT_DAY = "DD/MM/YYYY HH:mm"

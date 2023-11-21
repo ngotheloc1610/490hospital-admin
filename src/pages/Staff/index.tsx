@@ -10,10 +10,13 @@ import {
   START_PAGE,
   STATUS,
 } from "../../constants";
-import { ICON_PENCIL, ICON_TRASH } from "../../assets";
+import { ICON_BLOCK, ICON_PENCIL, ICON_TRASH } from "../../assets";
 import axios from "axios";
 import { defineConfigGet } from "../../Common/utils";
 import { API_ALL_GET_SPECIALTY, API_ALL_GET_STAFF, API_SEARCH_STAFF } from "../../constants/api.constant";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { setPractitioner, setShowPopUpConfirmBlock } from "../../redux/features/practitioner/practitionerSlice";
+import PopUpConfirmBlock from "../../components/common/PopupConfirmBlock";
 
 const Staff = () => {
   const outlet = useOutlet();
@@ -33,6 +36,8 @@ const Staff = () => {
   const [status, setStatus] = useState<string>("");
 
   const url_api = process.env.REACT_APP_API_URL;
+  const dispatch = useAppDispatch();
+  const { showPopUpBlock } = useAppSelector((state) => state.practitionerSlice)
 
   useEffect(() => {
     getStaff()
@@ -88,6 +93,11 @@ const Staff = () => {
 
   const handleModify = (id:string) => {
     navigate(`/staff/overview/detail/${id}`)
+  };
+
+  const handleBlock = (practitioner: any) => {
+    dispatch(setShowPopUpConfirmBlock(true));
+    dispatch(setPractitioner(practitioner));
   };
 
   const handleSearch = () => {
@@ -254,6 +264,9 @@ const Staff = () => {
                   <span className="ms-1 cursor-pointer" onClick={() => handleModify(item.id)}>
                     <ICON_PENCIL />
                   </span>
+                  <span className="ms-1 cursor-pointer" onClick={() => handleBlock(item)}>
+                    <ICON_BLOCK />
+                  </span>
                 </td>
               </tr>
             );
@@ -293,6 +306,10 @@ const Staff = () => {
           {showPopUpConfirm && (
             <PopUpConfirm handleCloseConfirmPopup={setShowPopUpConfirm} />
           )}
+
+{showPopUpBlock && (
+                  <PopUpConfirmBlock />
+                )}
         </>
       )}
     </Layout>

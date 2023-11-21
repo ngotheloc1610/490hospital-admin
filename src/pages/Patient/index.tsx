@@ -31,7 +31,7 @@ const Patient = () => {
   const [name, setName] = useState<string>("");
   const [gender, setGender] = useState<string>("");
 
-  const { triggerDelete, showPopUpConfirm, showPopUpConfirmBlock, triggerBlock, listBlock, patient } = useAppSelector((state) => state.patientSlice)
+  const { triggerDelete, showPopUpConfirm, showPopUpConfirmBlock, triggerBlock, listBlock } = useAppSelector((state) => state.patientSlice)
   const dispatch = useAppDispatch();
   const outlet = useOutlet();
   const navigate = useNavigate();
@@ -58,7 +58,7 @@ const Patient = () => {
         }
       })
       .catch((err) => {
-        console.log("err:", err);
+        console.log("error get list patient:", err);
       });
   }
 
@@ -74,7 +74,7 @@ const Patient = () => {
         }
       })
       .catch((err) => {
-        console.log("err:", err);
+        console.log("error search patient:", err);
       });
   }
 

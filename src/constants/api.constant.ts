@@ -5,9 +5,10 @@ export const API_ADMIN_TOTAL = "/admin/total";
 
 export const API_ALL_GET_PATIENT = "/admin/patients";
 export const API_GET_PATIENT = "/admin/patient/detail/";
-export const API_UPDATE_PATIENT = "/patient/update/";
+export const API_UPDATE_PATIENT = "/admin/patient/update/";
 export const API_DELETE_PATIENT = "/admin/patient/delete/";
 export const API_BLOCK_PATIENT = "/admin/blockPatient/";
+export const API_BLOCK_PRACTITIONER = "/admin/blockPractitioner/";
 export const API_SEARCH_PATIENT = "/admin/searchPatient";
 export const API_GET_LIST_APPOINTMENT_PATIENT = "/patient/listAppointment/";
 

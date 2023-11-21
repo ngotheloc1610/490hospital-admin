@@ -4,7 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 import Layout from "../../components/Layout";
-import { FORMAT_DATE, FORMAT_DATE_TIME, TOTAL_STEP } from "../../constants/general.constant";
+import { FORMAT_DATE, FORMAT_DATE_DEFAULT, FORMAT_DATE_TIME, TOTAL_STEP } from "../../constants/general.constant";
 import { useAppSelector } from "../../redux/hooks";
 import { defineConfigGet, defineConfigPost } from "../../Common/utils";
 import { warn } from "../../Common/notify";
@@ -30,7 +30,7 @@ const BookAppointment = () => {
 
   const [patient, setPatient] = useState<any>({});
 
-  const [date, setDate] = useState<string>(moment().format(FORMAT_DATE));
+  const [date, setDate] = useState<string>(moment().format(FORMAT_DATE_DEFAULT));
   const [startTime, setStartTime] = useState<string>("")
   const [endTime, setEndTime] = useState<string>("")
 
@@ -156,7 +156,7 @@ const BookAppointment = () => {
             identifier: {
               value: patient?.id
             },
-            display: patient?.name
+            display: patient?.nameFirstRep?.text
           },
           status: "Accepted"
         },
@@ -177,7 +177,6 @@ const BookAppointment = () => {
 
     axios.post(url, params, defineConfigPost()).then((resp: any) => {
       if (resp) {
-        console.log("resp:", resp)
         setIsBooking(true);
       }
     }).catch((err: any) => {
@@ -214,13 +213,14 @@ const BookAppointment = () => {
 
   const disabled = (item: any) => {
     if (timeBusy.length > 0) {
-      timeBusy.find((time: any) => {
-        if (time.start === new Date(Date.parse(item.startTime)) && time.end === new Date(Date.parse(item.endTime))) {
+        const existedBusy = timeBusy.find((time: any) => {
+          return moment(time.start).format("HH:mm:ss") === item.startTime && moment(time.end).format("HH:mm:ss") === item.endTime;
+        })
+
+        if(existedBusy) {
           return true;
-        } else {
-          return false;
         }
-      })
+        return false;
     }
     return false;
   }
@@ -369,7 +369,7 @@ const BookAppointment = () => {
                   return (
                     <tr className={`${idx % 2 === 1 ? "table-light" : ""} ${patient?.id === item.id ? "table-dark" : ""}`} onClick={() => { setPatient(item); }}>
                       <td >
-                        {item.nameFirstRep.nameAsSingleString}
+                        {item.nameFirstRep.text}
                       </td>
                       <td >{item.gender}</td>
                       <td >{item.birthDate}</td>
@@ -465,9 +465,9 @@ const BookAppointment = () => {
                     className="form-control"
                     autoComplete="new-password"
                     value={date}
-                    min={moment().format(FORMAT_DATE)}
-                    max={moment().add(7, 'days').format(FORMAT_DATE)}
-                    onChange={(e: any) => setDate(moment(e.target.value).format(FORMAT_DATE))}
+                    min={moment().format(FORMAT_DATE_DEFAULT)}
+                    max={moment().add(7, 'days').format(FORMAT_DATE_DEFAULT)}
+                    onChange={(e: any) => setDate(moment(e.target.value).format(FORMAT_DATE_DEFAULT))}
                   />
                 </div>
                 <p className="fw-light fst-italic text-center pt-3">See next 7 days</p>
@@ -505,7 +505,7 @@ const BookAppointment = () => {
                 <tbody>
                   <tr>
                     <td>Name</td>
-                    <td>{patient?.name}</td>
+                    <td>{patient?.nameFirstRep.text}</td>
                   </tr>
                   <tr>
                     <td>Gender</td>
@@ -513,23 +513,23 @@ const BookAppointment = () => {
                   </tr>
                   <tr>
                     <td>Date of birth</td>
-                    <td>{moment(patient?.dateOfBirth).format(FORMAT_DATE)}</td>
+                    <td>{moment(patient?.birthDate).format(FORMAT_DATE)}</td>
                   </tr>
                   <tr>
                     <td>Address</td>
-                    <td>{patient?.address}</td>
+                    <td>{patient?.addressFirstRep.text}</td>
                   </tr>
                   <tr>
                     <td>Citizen identification</td>
-                    <td>{patient?.city}</td>
+                    <td>{patient?.identifierFirstRep?.value}</td>
                   </tr>
                   <tr>
                     <td>Phone number</td>
-                    <td>{patient?.phoneNumber}</td>
+                    <td>{patient?.telecom.filter((item:any)=>item.system === "phone")[0].value}</td>
                   </tr>
                   <tr>
                     <td>Email</td>
-                    <td>{patient?.email}</td>
+                    <td>{patient?.telecom.filter((item:any)=>item.system === "email")[0].value}</td>
                   </tr>
                 </tbody>
               </table>
@@ -548,7 +548,7 @@ const BookAppointment = () => {
               <tr>
                 <td>Appointment time</td>
                 <td>
-                  <span>{moment(startDate).format("HH:mm")}</span> - <span>{moment(endDate).format("HH:mm")}</span>
+                  <span>{moment(startDate).format("HH:mm A")}</span> - <span>{moment(endDate).format("HH:mm A")}</span>
                 </td>
               </tr>
               <tr>
@@ -564,6 +564,12 @@ const BookAppointment = () => {
                 <td>
                   {"["}<span className="text-info">{specialtyCode}</span>{"]"} {specialtyDisplay && "- "}
                   {specialtyDisplay}</td>
+              </tr>
+              <tr>
+                <td>Room</td>
+                <td>
+                  {doctor?.location.map((item:any) =>item.display)}
+                </td>
               </tr>
               <tr>
                 <td>Status</td>
@@ -601,8 +607,8 @@ const BookAppointment = () => {
             <span className="d-block mb-1">schedule to keep up with the</span>
             <span className="d-block">appointment time</span>
           </p>
-          <button className="button button--large button--primary d-block m-auto" onClick={() => navigate("/")}>
-            Return to home
+          <button className="button button--large button--primary d-block m-auto" onClick={() => navigate("/appointment")}>
+            Return to list appointment
           </button>
         </div>
       </div>

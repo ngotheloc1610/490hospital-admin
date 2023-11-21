@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { USER } from "../../../assets";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
-import { defineConfigGet } from "../../../Common/utils";
-import { API_DETAIL_PRACTITIONER } from "../../../constants/api.constant";
 import moment from "moment";
+import axios from "axios";
+
+import { USER } from "../../../assets";
+import { defineConfigPost } from "../../../Common/utils";
+import { API_DETAIL_PRACTITIONER } from "../../../constants/api.constant";
 import { FORMAT_DATE } from "../../../constants/general.constant";
 
 const InfoStaff = () => {
@@ -19,14 +20,15 @@ const InfoStaff = () => {
     const url = `${url_api}${API_DETAIL_PRACTITIONER}${id}`;
 
     axios
-      .get(url, defineConfigGet({}))
+      .get(url, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
+          console.log("resp:", resp)
           setStaff(resp.data);
         }
       })
       .catch((err) => {
-        console.log("err:", err);
+        console.log("error get information practitioner (Staff):", err);
       });
   }, [param.staffId]);
 
@@ -57,7 +59,7 @@ const InfoStaff = () => {
             </tr>
             <tr>
               <th scope="row">Citizen identification</th>
-              <td>{staff?.practitionerTarget?.address[0].city}</td>
+              <td>{staff?.practitionerTarget?.identifierFirstRep?.value}</td>
             </tr>
             <tr>
               <th scope="row">Phone number</th>
@@ -88,14 +90,6 @@ const InfoStaff = () => {
             <tr>
               <th scope="row">End date</th>
               <td>{moment(staff.period?.end).format(FORMAT_DATE)}</td>
-            </tr>
-            <tr>
-              <th scope="row">Position</th>
-              <td>{staff.location && staff.location.map((item: any) => {
-                return (
-                  <span>{item.display}</span>
-                )
-              })}</td>
             </tr>
             <tr>
               <th scope="row">Specialty</th>

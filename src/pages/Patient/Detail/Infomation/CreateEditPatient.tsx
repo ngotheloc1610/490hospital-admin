@@ -85,7 +85,7 @@ const CreateEditPatient = () => {
       name: values.name,
       identifier: values.identifier,
       phoneNumber: values.phoneNumber,
-      photo:null,
+      photo: null,
       dateOfBirth: values.dateOfBirth,
       address: values.address,
       gender: values.gender,
@@ -95,7 +95,6 @@ const CreateEditPatient = () => {
       .put(url, param, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
-          console.log("resp:", resp);
           actions.setSubmitting(false);
           actions.resetForm();
           success("Update patient successfully!");

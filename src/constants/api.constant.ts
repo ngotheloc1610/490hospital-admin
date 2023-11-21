@@ -30,6 +30,7 @@ export const API_GET_SPECIALTY = "/admin/specialty/";
 export const API_ALL_GET_DIAGNOSTIC = "/admin/diagnostic-report";
 export const API_GET_DIAGNOSTIC = "/diagnostic-report/detail/";
 
+export const API_SEARCH_APPOINTMENT = "/appointment/searchAppoint";
 export const API_ALL_GET_APPOINTMENT_PREVIOUS = "/appointment/listAppointmentPrevius";
 export const API_ALL_GET_APPOINTMENT_UPCOMING = "/appointment/listAppointmentUpcoming";
 export const API_GET_SPECIALTY_APPOINTMENT = "/appointment/specialty";
@@ -43,7 +44,7 @@ export const SCHEDULE_DATE = "/schedule/schedule-by-date/"
 export const SCHEDULE_WEEK = "/schedule/schedule-by-week/"
 export const SCHEDULE_MONTH = "/schedule/schedule-by-month/"
 export const SCHEDULE_CREATE = "/schedule/create"
-export const SCHEDULE_CANCEL = "/schedule/cancer-Schedule/"
+export const SCHEDULE_CANCEL = "/schedule/cancel-Schedule/"
 
 export const API_GET_ROOM = "/admin/rooms";
 export const API_GET_ROOM_BY_SPECIALTY = "/admin/rooms/";

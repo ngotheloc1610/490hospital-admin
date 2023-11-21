@@ -6,12 +6,15 @@ import { defineConfigPost } from "../../../Common/utils";
 import { API_DETAIL_PRACTITIONER } from "../../../constants/api.constant";
 import moment from "moment";
 import { FORMAT_DATE } from "../../../constants/general.constant";
+import { useAppDispatch } from "../../../redux/hooks";
+import { setPractitioner } from "../../../redux/features/practitioner/practitionerSlice";
 
 const InfoDoctor = () => {
   const [doctor, setDoctor] = useState<any>({});
 
   const param = useParams();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const url_api = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
@@ -22,8 +25,8 @@ const InfoDoctor = () => {
       .get(url, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
-          console.log("resp:", resp)
           setDoctor(resp.data);
+          dispatch(setPractitioner(resp.data))
         }
       })
       .catch((err) => {

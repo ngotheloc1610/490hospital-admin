@@ -17,11 +17,11 @@ export const defineConfigPost = () => {
 }
 
 export const convertToDate = (time: string) => {
-    const date = moment(time);
+    const date = moment(time, 'ddd MMM DD HH:mm:ss z YYYY');
     return date.format(FORMAT_DATE);
 }
 
 export const convertToTime = (time: string) => {
-    const date = moment(time);
+    const date = moment(time, 'ddd MMM DD HH:mm:ss z YYYY');
     return date.format(`${FORMAT_TIME} A`);
 }

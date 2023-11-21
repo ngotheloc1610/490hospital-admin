@@ -162,8 +162,8 @@ export const TYPE_PRACTITIONER = [
 export const LIST_TIME = [
   {
     title: "08:00 AM - 09:00 AM",
-    startTime: "8:00:00",
-    endTime: "9:00:00",
+    startTime: "08:00:00",
+    endTime: "09:00:00",
   },
   {
     title: "09:00 AM - 10:00 AM",

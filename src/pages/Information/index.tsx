@@ -9,15 +9,17 @@ import { API_PROFILE_PRACTITIONER } from "../../constants/api.constant";
 import { USER } from "../../assets";
 import { FORMAT_DATE } from "../../constants/general.constant";
 import Layout from "../../components/Layout";
-import { useAppSelector } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { setPractitioner } from "../../redux/features/practitioner/practitionerSlice";
 
 const Information = () => {
-    const [practitioner, setPractitioner] = useState<any>({});
+    const [practitionerInfo, setPractitionerInfo] = useState<any>({});
 
     const outlet = useOutlet();
     const navigate = useNavigate();
     const url_api = process.env.REACT_APP_API_URL;
     const { triggerEdit } = useAppSelector((state) => state.practitionerSlice)
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         getProfilePractitioner()
@@ -30,7 +32,7 @@ const Information = () => {
             .get(url, defineConfigPost())
             .then((resp: any) => {
                 if (resp) {
-                    setPractitioner(resp.data);
+                    setPractitionerInfo(resp.data);
                 }
             })
             .catch((err) => {
@@ -48,19 +50,19 @@ const Information = () => {
                             <th scope="row" style={{ width: "15%" }}>
                                 Starting date
                             </th>
-                            <td>{practitioner?.startWork ? moment(practitioner.startWork).format(FORMAT_DATE) : "-"}</td>
+                            <td>{practitionerInfo?.startWork ? moment(practitionerInfo.startWork).format(FORMAT_DATE) : "-"}</td>
                         </tr>
                         <tr>
                             <th scope="row">End date</th>
-                            <td>{practitioner?.endWork ? moment(practitioner.endWork).format(FORMAT_DATE) : "-"}</td>
+                            <td>{practitionerInfo?.endWork ? moment(practitionerInfo.endWork).format(FORMAT_DATE) : "-"}</td>
                         </tr>
                         <tr>
                             <th scope="row">Room</th>
-                            <td>{practitioner?.desRoom ? practitioner.desRoom : "-"}</td>
+                            <td>{practitionerInfo?.desRoom ? practitionerInfo.desRoom : "-"}</td>
                         </tr>
                         <tr>
                             <th scope="row">Specialty</th>
-                            <td>{practitioner?.displaySpecialty ? practitioner.displaySpecialty : "-"}</td>
+                            <td>{practitionerInfo?.displaySpecialty ? practitionerInfo.displaySpecialty : "-"}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -74,7 +76,7 @@ const Information = () => {
                 <p className="fw-bold border-top pt-2 text-dark">Education</p>
                 <table className="table">
                     <tbody>
-                        {practitioner.qualificationsEdu && practitioner.qualificationsEdu.map((item: any) => {
+                        {practitionerInfo.qualificationsEdu && practitionerInfo.qualificationsEdu.map((item: any) => {
                             return (
                                 <tr>
                                     <th scope="row" style={{ width: "15%" }}>
@@ -100,7 +102,7 @@ const Information = () => {
                 </p>
                 <table className="table">
                     <tbody>
-                        {practitioner.qualificationsSpecActivities && practitioner.qualificationsSpecActivities.map((item: any) => {
+                        {practitionerInfo.qualificationsSpecActivities && practitionerInfo.qualificationsSpecActivities.map((item: any) => {
                             return (
                                 <tr>
                                     <th scope="row" style={{ width: "15%" }}>
@@ -124,7 +126,7 @@ const Information = () => {
                 <p className="fw-bold border-top pt-2 text-dark">Achievement</p>
                 <table className="table">
                     <tbody>
-                        {practitioner.qualificationsAchive && practitioner.qualificationsAchive.map((item: any) => {
+                        {practitionerInfo.qualificationsAchive && practitionerInfo.qualificationsAchive.map((item: any) => {
                             return (
                                 <tr>
                                     <th scope="row" style={{ width: "15%" }}>
@@ -149,10 +151,10 @@ const Information = () => {
                     <>
                         <div>
                             <div className="pb-3 mb-3 d-flex justify-content-between">
-                                <h3 className="fw-bold text-uppercase">{practitioner?.name}</h3>
+                                <h3 className="fw-bold text-uppercase">{practitionerInfo?.name}</h3>
                                 <div>
-                                    <button className="button button--info button--small me-3" onClick={() => navigate("/change-password")}>Change Password</button>
-                                    <button className="button button--primary button--small" onClick={() => navigate(`/information/${practitioner?.id}`)}>Edit</button>
+                                    <button className="button button--info button--small me-3" onClick={() => {navigate("/change-password"); dispatch(setPractitioner(practitionerInfo))}}>Change Password</button>
+                                    <button className="button button--primary button--small" onClick={() => navigate(`/information/${practitionerInfo?.id}`)}>Edit</button>
                                 </div>
                             </div>
 
@@ -162,27 +164,27 @@ const Information = () => {
                                         <tbody>
                                             <tr>
                                                 <th scope="row">Gender</th>
-                                                <td>{practitioner?.gender ? practitioner.gender : "-"}</td>
+                                                <td>{practitionerInfo?.gender ? practitionerInfo.gender : "-"}</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">Date of birth</th>
-                                                <td>{practitioner?.dateOfBirth ? moment(practitioner.dateOfBirth, 'ddd MMM DD HH:mm:ss z YYYY').format(FORMAT_DATE) : "-"}</td>
+                                                <td>{practitionerInfo?.dateOfBirth ? moment(practitionerInfo.dateOfBirth, 'ddd MMM DD HH:mm:ss z YYYY').format(FORMAT_DATE) : "-"}</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">Address</th>
-                                                <td>{practitioner?.address ? practitioner.address : "-"}</td>
+                                                <td>{practitionerInfo?.address ? practitionerInfo.address : "-"}</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">Citizen identification</th>
-                                                <td>{practitioner?.identification ? practitioner.identification : "-"}</td>
+                                                <td>{practitionerInfo?.identification ? practitionerInfo.identification : "-"}</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">Phone number</th>
-                                                <td>{practitioner?.phoneNumber ? practitioner.phoneNumber : "-"}</td>
+                                                <td>{practitionerInfo?.phoneNumber ? practitionerInfo.phoneNumber : "-"}</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">Email</th>
-                                                <td>{practitioner?.email ? practitioner.email : "-"}</td>
+                                                <td>{practitionerInfo?.email ? practitionerInfo.email : "-"}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -191,9 +193,9 @@ const Information = () => {
                                     <div className="h-100 d-flex flex-column">
                                         <div className="h-100">
                                             <img
-                                                src={practitioner?.photo?.length > 0 ? `data:${practitioner?.photo[0]?.contentType};base64,${practitioner?.photo[0]?.data}` : USER}
+                                                src={practitionerInfo?.photo?.length > 0 ? `data:${practitionerInfo?.photo[0]?.contentType};base64,${practitionerInfo?.photo[0]?.data}` : USER}
                                                 alt="img practitioner"
-                                                className={`d-block m-auto ${practitioner ? "" : "bg-image"}`}
+                                                className={`d-block m-auto ${practitionerInfo ? "" : "bg-image"}`}
                                                 style={{ objectFit: "cover" }}
                                             />
                                         </div>

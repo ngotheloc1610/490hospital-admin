@@ -5,7 +5,7 @@ import { RootState } from "../../store/configureStore";
 
 interface IPatientStatus {
     triggerDelete: boolean,
-    triggerCreate: boolean,
+    triggerUpdate: boolean,
     triggerBlock: boolean,
     showPopUpConfirm: boolean,
     showPopUpConfirmBlock: boolean,
@@ -15,7 +15,7 @@ interface IPatientStatus {
 
 const initialState: IPatientStatus = {
     triggerDelete: false,
-    triggerCreate: false,
+    triggerUpdate: false,
     triggerBlock: false,
     showPopUpConfirm: false,
     showPopUpConfirmBlock: false,
@@ -30,8 +30,8 @@ export const patientSlice = createSlice({
         setTriggerDelete: (state, action: PayloadAction<boolean>) => {
             state.triggerDelete = action.payload;
         },
-        setTriggerCreate: (state, action: PayloadAction<boolean>) => {
-            state.triggerCreate = action.payload;
+        setTriggerUpdate: (state, action: PayloadAction<boolean>) => {
+            state.triggerUpdate = action.payload;
         },
         setTriggerBlock: (state, action: PayloadAction<boolean>) => {
             state.triggerBlock = action.payload;
@@ -51,7 +51,7 @@ export const patientSlice = createSlice({
     },
 });
 
-export const { setTriggerDelete, setTriggerCreate, setTriggerBlock, setShowPopUpConfirm, setShowPopUpConfirmBlock, setPatient, setListBlock } = patientSlice.actions;
+export const { setTriggerDelete, setTriggerUpdate, setTriggerBlock, setShowPopUpConfirm, setShowPopUpConfirmBlock, setPatient, setListBlock } = patientSlice.actions;
 
 export const selectPatient = (state: RootState) => state.patientSlice;
 

@@ -18,13 +18,8 @@ const validationSchema = Yup.object().shape({
   dateOfBirth: Yup.string().required("Required"),
   gender: Yup.string().required("Required"),
   address: Yup.string().required("Required"),
-  city: Yup.string().required("Required"),
-  // phoneNumber: Yup.number()
-  //   .positive("A phone number can't start with a minus")
-  //   .integer("A phone number can't include a decimal point")
-  //   .min(10)
-  //   .max(11)
-  //   .required("Required"),
+  identifier: Yup.string().required("Required"),
+  phoneNumber: Yup.number().required("Required"),
   email: Yup.string().email().required("Required"),
 });
 
@@ -34,10 +29,9 @@ const defaultValue = {
   dateOfBirth: "",
   gender: "",
   address: "",
-  city: "",
+  identifier: "",
   phoneNumber: "",
   email: "",
-  photo: []
 };
 
 const CreateEditPatient = () => {
@@ -45,12 +39,11 @@ const CreateEditPatient = () => {
 
   const params = useParams();
   const navigate = useNavigate();
-  const inputRef = useRef<any>(null);
-  const [image, setImage] = useState<any>("");
-
-  const [patientInfo, setPatientInfo] = useState<any>(defaultValue);
-
   const dispatch = useAppDispatch();
+  const inputRef = useRef<any>(null);
+
+  const [image, setImage] = useState<any>("");
+  const [patientInfo, setPatientInfo] = useState<any>(defaultValue);
 
   useEffect(() => {
     getPatientInfo(params.patientId)
@@ -65,15 +58,14 @@ const CreateEditPatient = () => {
         if (resp) {
           const data = resp.data;
           const patientDetail = {
-            id: data.id,
-            name: data.nameFirstRep.nameAsSingleString,
-            dateOfBirth: data.birthDate,
-            gender: data.gender,
+            id: data?.id,
+            name: data?.nameFirstRep.text,
+            dateOfBirth: data?.birthDate,
+            gender: data?.gender,
             phoneNumber: data?.telecom?.find((i: any) => i?.system === "phone")?.value,
             email: data?.telecom?.find((i: any) => i?.system === "email")?.value,
             address: data?.addressFirstRep?.text,
-            city: data?.addressFirstRep?.city,
-            photo: data?.photo
+            identifier: data?.identifierFirstRep?.value,
           }
           setPatientInfo(patientDetail);
         }
@@ -83,43 +75,36 @@ const CreateEditPatient = () => {
       });
   }
 
-  const updatePatient = (values: any) => {
+  const updatePatient = (values: any, actions: any) => {
     const url = `${url_api}${API_UPDATE_PATIENT}${values.id}`;
 
     const param = {
-      id: values.id,
-      username: values.name,
+      username: values.email,
       email: values.email,
-      password: "",
+      password: null,
       name: values.name,
+      identifier: values.identifier,
       phoneNumber: values.phoneNumber,
-      type: "PATIENT",
+      photo:null,
       dateOfBirth: values.dateOfBirth,
-      city: values.city,
-      district: "",
-      ward: "",
       address: values.address,
-      address2: "",
       gender: values.gender,
-      country: "",
-      postalCode: "",
     }
 
     axios
       .put(url, param, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
-          console.log("resp:", resp)
-          success("Update Successfully!!!");
-          navigate("/patient");
-          console.log("resp:", resp)
+          console.log("resp:", resp);
+          actions.setSubmitting(false);
+          actions.resetForm();
+          success("Update patient successfully!");
+          navigate(`/patient/information/${values.id}`);
         }
       })
       .catch((err: any) => {
-        if (err.response.data.status === 401) {
-          error(err.response.data.error)
-        }
-        console.log("err:", err);
+        error(err.response.data.error.message)
+        console.log("error update patient:", err);
       });
   }
 
@@ -212,14 +197,14 @@ const CreateEditPatient = () => {
             />
           </div>
           <div className="col-6 mb-3">
-            <label htmlFor="city">
+            <label htmlFor="identifier">
               Citizen identification <span className="text-danger">*</span>
             </label>
             <Field
-              name="city"
+              name="identifier"
               type="text"
-              id="city"
-              className={`form-control ${errors?.city && touched?.city ? "is-invalid" : ""
+              id="identifier"
+              className={`form-control ${errors?.identifier && touched?.identifier ? "is-invalid" : ""
                 }`}
             />
           </div>
@@ -256,9 +241,9 @@ const CreateEditPatient = () => {
       <div className="h-100 d-flex flex-column" onClick={handlePickImage}>
         <div className="h-100">
           <img
-            src={patientInfo.photo.length > 0 ? `data:${patientInfo.photo[0]?.contentType};base64,${patientInfo.photo[0]?.data}` : image ? image : USER}
+            src={patientInfo?.photo?.length > 0 ? `data:${patientInfo?.photo[0]?.contentType};base64,${patientInfo?.photo[0]?.data}` : image ? image : USER}
             alt="img patient"
-            className={`h-100 w-100 d-block m-auto ${image ? "" : "bg-image"}`}
+            className={`d-block m-auto ${image ? "" : "bg-image"}`}
             style={{ objectFit: "cover" }}
           />
           <input
@@ -269,7 +254,7 @@ const CreateEditPatient = () => {
           />
         </div>
         <button className="button button--small button--primary w-90 mx-auto mt-3">
-          {image || patientInfo.photo.length > 0 ? "Edit" : "Add"} profile picture
+          {image || patientInfo?.photo?.length > 0 ? "Edit" : "Add"} profile picture
         </button>
       </div>
     );
@@ -281,9 +266,7 @@ const CreateEditPatient = () => {
       enableReinitialize={true}
       validationSchema={validationSchema}
       onSubmit={(values, actions) => {
-        updatePatient(values)
-        actions.setSubmitting(false);
-        actions.resetForm();
+        updatePatient(values, actions)
       }}
     >
       {({ errors, touched, submitForm }) => (
@@ -295,7 +278,7 @@ const CreateEditPatient = () => {
                   <div className="col-4">{_renderImage()}</div>
                   <div className="col-8">
                     <h3 className="fw-bold text-uppercase text-dark">
-                      edit new
+                      edit information
                     </h3>
                     {_renderBasicInfo({ errors, touched })}
                   </div>
@@ -306,14 +289,14 @@ const CreateEditPatient = () => {
           <div className="mt-3 d-flex justify-content-end">
             <button
               className="button button--small button--danger me-3"
-              onClick={() => navigate("/patient")}
+              onClick={() => navigate(`/patient/information/${patientInfo?.id}`)}
             >
               Back
             </button>
 
-            <button className="button button--small button--danger me-3" onClick={() => handleDelete()}>
+            {/* <button className="button button--small button--danger me-3" onClick={() => handleDelete()}>
               Delete
-            </button>
+            </button> */}
 
             <button
               className="button button--small button--primary"

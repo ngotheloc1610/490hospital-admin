@@ -7,8 +7,9 @@ import { ICON_TRASH, USER } from "../../../assets";
 import { defineConfigGet, defineConfigPost } from "../../../Common/utils";
 import axios from "axios";
 import { API_ALL_GET_SPECIALTY, API_DETAIL_PRACTITIONER, API_GET_ROOM_BY_SPECIALTY, API_UPDATE_PRACTITIONER } from "../../../constants/api.constant";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
+import { success } from "../../../Common/notify";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Required"),
@@ -17,7 +18,7 @@ const validationSchema = Yup.object().shape({
   phoneNumber: Yup.string().required("Required"),
   email: Yup.string().required("Required"),
   address: Yup.string().required("Required"),
-  city: Yup.string().required("Required"),
+  identifier: Yup.string().required("Required"),
   specialty: Yup.string().required("Required"),
   room: Yup.string().required("Required"),
   startDate: Yup.string().required("Required"),
@@ -46,13 +47,13 @@ const CreateEditDoctor = () => {
   const url_api = process.env.REACT_APP_API_URL;
 
   const params = useParams();
-
+  const navigate = useNavigate();
   const inputRef = useRef<any>(null);
+
   const [specialtyList, setListSpecialty] = useState([]);
   const [image, setImage] = useState<any>("");
   const [listRoom, setListRoom] = useState<any>([]);
   const [specialtyId, setSpecialtyId] = useState<string>("");
-
   const [doctor, setDoctor] = useState<any>(defaultValue);
 
   useEffect(() => {
@@ -133,24 +134,7 @@ const CreateEditDoctor = () => {
       });
   };
 
-  const _renderListRoom = () => {
-    return (
-      <>
-        <option hidden>Room</option>
-        {listRoom ? (
-          listRoom.map((item: any) => (
-            <option value={item.id} key={item.code}>
-              {item.codeableConcept.coding[0].display}
-            </option>
-          ))
-        ) : (
-          <option disabled>No option</option>
-        )}
-      </>
-    );
-  };
-
-  const updatePractitioner = (values: any) => {
+  const updatePractitioner = (values: any, actions: any) => {
     const url = `${url_api}${API_UPDATE_PRACTITIONER}${values.id}`;
 
     const params = {
@@ -162,7 +146,10 @@ const CreateEditDoctor = () => {
       .then((resp: any) => {
         if (resp) {
           console.log("resp:", resp)
-
+          actions.setSubmitting(false);
+          actions.resetForm();
+          navigate(`/doctor/overview/${values.id}`);
+          success("Update information success!");
         }
       })
       .catch((err) => {
@@ -638,6 +625,23 @@ const CreateEditDoctor = () => {
     );
   };
 
+  const _renderListRoom = () => {
+    return (
+      <>
+        <option hidden>Room</option>
+        {listRoom ? (
+          listRoom.map((item: any) => (
+            <option value={item.id} key={item.code}>
+              {item.codeableConcept.coding[0].display}
+            </option>
+          ))
+        ) : (
+          <option disabled>No option</option>
+        )}
+      </>
+    );
+  };
+
   return (
     <Formik
       initialValues={doctor}
@@ -645,9 +649,7 @@ const CreateEditDoctor = () => {
       validationSchema={validationSchema}
       onSubmit={(values, actions) => {
         console.log("values:", values)
-        updatePractitioner(values);
-        actions.setSubmitting(false);
-        actions.resetForm();
+        updatePractitioner(values, actions);
       }}
     >
       {({ values, errors, touched, submitForm, handleChange, setFieldValue }) => (
@@ -659,7 +661,7 @@ const CreateEditDoctor = () => {
                   <div className="col-4">{_renderImage()}</div>
                   <div className="col-8">
                     <h3 className="fw-bold text-uppercase text-dark">
-                      edit new
+                      edit information
                     </h3>
                     {_renderBasicInfo({ errors, touched })}
                   </div>
@@ -672,13 +674,13 @@ const CreateEditDoctor = () => {
             </div>
           </Form>
           <div className="mt-3 d-flex justify-content-end">
-            <button className="button button--small button--danger me-3">
+            <button className="button button--small button--danger me-3" onClick={()=> navigate(`/doctor/overview/${doctor?.id}`)}>
               Back
             </button>
 
-            <button className="button button--small button--danger me-3">
+            {/* <button className="button button--small button--danger me-3">
               Delete
-            </button>
+            </button> */}
 
             <button
               className="button button--small button--primary"

@@ -1,7 +1,7 @@
 import { memo, useEffect, useState } from "react";
 import axios from "axios";
 import { Outlet, useNavigate, useOutlet } from "react-router-dom";
-import { ICON_PENCIL, ICON_TRASH } from "../../assets";
+import { ICON_BLOCK, ICON_PENCIL, ICON_TRASH } from "../../assets";
 
 import {
   DEFAULT_ITEM_PER_PAGE,
@@ -16,6 +16,9 @@ import { defineConfigGet } from "../../Common/utils";
 import Layout from "../../components/Layout";
 import TotalView from "../../components/common/TotalView";
 import PopUpConfirm from "./PopupConfirm";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { setPractitioner, setShowPopUpConfirmBlock } from "../../redux/features/practitioner/practitionerSlice";
+import PopUpConfirmBlock from "../../components/common/PopupConfirmBlock";
 
 const Doctor = () => {
   const [showPopUpConfirm, setShowPopUpConfirm] = useState<boolean>(false);
@@ -36,6 +39,8 @@ const Doctor = () => {
 
   const outlet = useOutlet();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { showPopUpBlock } = useAppSelector((state) => state.practitionerSlice)
 
   useEffect(() => {
     getSpecialty();
@@ -86,6 +91,11 @@ const Doctor = () => {
 
   const handleModify = (id: string) => {
     navigate(`/doctor/overview/detail/${id}`);
+  };
+
+  const handleBlock = (practitioner: any) => {
+    dispatch(setShowPopUpConfirmBlock(true));
+    dispatch(setPractitioner(practitioner));
   };
 
   const getCurrentPage = (item: number) => {
@@ -178,6 +188,9 @@ const Doctor = () => {
                   </span>
                   <span className="ms-1 cursor-pointer" onClick={() => handleModify(item.id)}>
                     <ICON_PENCIL />
+                  </span>
+                  <span className="ms-1 cursor-pointer" onClick={() => handleBlock(item)}>
+                    <ICON_BLOCK />
                   </span>
                 </td>
               </tr>
@@ -311,6 +324,10 @@ const Doctor = () => {
           {showPopUpConfirm && (
             <PopUpConfirm handleCloseConfirmPopup={setShowPopUpConfirm} />
           )}
+
+          {showPopUpBlock && (
+                  <PopUpConfirmBlock />
+                )}
         </>
       )}
     </Layout>

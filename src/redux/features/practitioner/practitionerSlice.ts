@@ -5,13 +5,19 @@ import { RootState } from "../../store/configureStore";
 
 interface IPractitioner {
     triggerEdit: boolean,
-
+    showPopUpBlock: boolean,
+    practitioner: any,
+    triggerBlock: boolean,
+    listBlock: string[]
 }
 
 const initialState: IPractitioner = {
     triggerEdit: false,
-
-};
+    practitioner: false,
+    showPopUpBlock: false,
+    triggerBlock: false,
+    listBlock: []
+};  
 
 export const practitionerSlice = createSlice({
     name: "patient",
@@ -20,11 +26,22 @@ export const practitionerSlice = createSlice({
         setTriggerEdit: (state, action: PayloadAction<boolean>) => {
             state.triggerEdit = action.payload;
         },
-
+        setPractitioner:  (state, action: PayloadAction<any>) => {
+            state.practitioner = action.payload;
+        },
+        setShowPopUpConfirmBlock: (state, action: PayloadAction<boolean>) => {
+            state.showPopUpBlock = action.payload;
+        },
+        setTriggerBlock: (state, action: PayloadAction<boolean>) => {
+            state.triggerBlock = action.payload;
+        },
+        setListBlock: (state, action: PayloadAction<any>) => {
+            state.listBlock = action.payload;
+        },
     },
 });
 
-export const { setTriggerEdit } = practitionerSlice.actions;
+export const { setTriggerEdit, setPractitioner ,setShowPopUpConfirmBlock, setTriggerBlock, setListBlock} = practitionerSlice.actions;
 
 export const selectPatient = (state: RootState) => state.practitionerSlice;
 

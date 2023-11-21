@@ -42,7 +42,7 @@ const CreateEditStaff = () => {
   const inputRef = useRef<any>(null);
   const navigate = useNavigate();
   const params = useParams();
-  
+
   const [image, setImage] = useState<any>("");
   const [specialtyList, setSpecialtyList] = useState<any>([]);
   const [staff, setStaff] = useState<any>(defaultValue);
@@ -105,15 +105,40 @@ const CreateEditStaff = () => {
   const updatePractitioner = (values: any, actions: any) => {
     const url = `${url_api}${API_UPDATE_PRACTITIONER}${values.id}`;
 
-    const params = {
+    const idSpecialty = specialtyList.filter((item: any) => {
+      return item.id === values.specialty;
+    })[0]?.id;
+    console.log(specialtyList.filter((item: any) => {
+      return item.id === values.specialty;
+    }));
+    const displaySpecialty = specialtyList.filter((item: any) => {
+      return item.id === values.specialty;
+    })[0]?.name;
 
+    const params = {
+      username: values.email,
+      email: values.email,
+      identifier: values.identifier,
+      name: values.name,
+      phoneNumber: values.phoneNumber,
+      dateOfBirth: values.birthday,
+      photo: null,
+      gender: values.gender,
+      address: values.address,
+      idSpecialty: idSpecialty,
+      displaySpecialty: displaySpecialty,
+      desRoom: null,
+      idRoom: null,
+      startWork: new Date(values.startDate),
+      endWork: new Date(values.endDate),
+      type: "Staff",
+      qualifications: [],
     }
 
     axios
       .put(url, params, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
-          console.log("resp:", resp)
           actions.setSubmitting(false);
           actions.resetForm();
           navigate(`/staff/overview/${values.id}`);

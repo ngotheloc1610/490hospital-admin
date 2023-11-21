@@ -50,7 +50,7 @@ const CreateEditDoctor = () => {
   const navigate = useNavigate();
   const inputRef = useRef<any>(null);
 
-  const [specialtyList, setListSpecialty] = useState([]);
+  const [specialtyList, setListSpecialty] = useState<any>([]);
   const [image, setImage] = useState<any>("");
   const [listRoom, setListRoom] = useState<any>([]);
   const [specialtyId, setSpecialtyId] = useState<string>("");
@@ -137,15 +137,78 @@ const CreateEditDoctor = () => {
   const updatePractitioner = (values: any, actions: any) => {
     const url = `${url_api}${API_UPDATE_PRACTITIONER}${values.id}`;
 
-    const params = {
+    const idSpecialty = specialtyList.filter((item: any) => {
+      return item.id === values.specialty;
+    })[0]?.id;
+    console.log(specialtyList.filter((item: any) => {
+      return item.id === values.specialty;
+    }));
+    const displaySpecialty = specialtyList.filter((item: any) => {
+      return item.id === values.specialty;
+    })[0]?.name;
 
+    const idRoom = listRoom.filter((item: any) => {
+      return item.id === values.room;
+    })[0]?.id;
+    const desRoom = listRoom.filter((item: any) => {
+      return item.id === values.room;
+    })[0]?.describe;
+
+    let educations: any = [];
+    let specializes: any = [];
+    let achievements: any = [];
+
+    values.education.forEach((item: any) => educations.push({
+      qualificationSystem: "http://example.org/qualifications",
+      qualificationCode: "Edu",
+      qualificationDisplay: item.content,
+      qualificationText: item.content,
+      qualificationPeriodStart: new Date(item.start),
+      qualificationPeriodEnd: new Date(item.end)
+    }))
+
+    values.specialize.forEach((item: any) => specializes.push({
+      qualificationSystem: "http://example.org/qualifications",
+      qualificationCode: "SpecActivities",
+      qualificationDisplay: item.content,
+      qualificationText: item.content,
+      qualificationPeriodStart: new Date(item.start),
+      qualificationPeriodEnd: new Date(item.end)
+    }))
+
+    values.achievement.forEach((item: any) => achievements.push({
+      qualificationSystem: "http://example.org/qualifications",
+      qualificationCode: "Achieve",
+      qualificationDisplay: item.content,
+      qualificationText: item.content,
+      qualificationPeriodStart: new Date(item.start),
+      qualificationPeriodEnd: new Date(item.end)
+    }))
+
+    const params = {
+      username: values.email,
+      email: values.email,
+      identifier: values.identifier,
+      name: values.name,
+      phoneNumber: values.phoneNumber,
+      dateOfBirth: values.birthday,
+      photo: null,
+      gender: values.gender,
+      address: values.address,
+      idSpecialty: idSpecialty,
+      displaySpecialty: displaySpecialty,
+      desRoom: desRoom,
+      idRoom: idRoom,
+      startWork: new Date(values.startDate),
+      endWork: new Date(values.endDate),
+      type: "Doctor",
+      qualifications: [...educations, ...specializes, ...achievements],
     }
 
     axios
       .put(url, params, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
-          console.log("resp:", resp)
           actions.setSubmitting(false);
           actions.resetForm();
           navigate(`/doctor/overview/${values.id}`);
@@ -674,7 +737,7 @@ const CreateEditDoctor = () => {
             </div>
           </Form>
           <div className="mt-3 d-flex justify-content-end">
-            <button className="button button--small button--danger me-3" onClick={()=> navigate(`/doctor/overview/${doctor?.id}`)}>
+            <button className="button button--small button--danger me-3" onClick={() => navigate(`/doctor/overview/${doctor?.id}`)}>
               Back
             </button>
 

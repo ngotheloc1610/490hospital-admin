@@ -3,15 +3,18 @@ import axios from "axios";
 
 import { DEFAULT_ITEM_PER_PAGE, START_PAGE, STATUS_APPOINTMENT } from "../../constants";
 import { convertToDate, convertToTime, defineConfigGet } from "../../Common/utils";
-import { API_ALL_GET_APPOINTMENT_PREVIOUS } from "../../constants/api.constant";
+import { API_ALL_GET_APPOINTMENT_PREVIOUS, API_SEARCH_APPOINTMENT } from "../../constants/api.constant";
 
 import PaginationComponent from "../../components/common/Pagination";
+import { USER } from "../../assets";
 
 const PreviousAppointment = () => {
     const [listData, setListData] = useState([]);
     const [currentPage, setCurrentPage] = useState<number>(START_PAGE);
     const [itemPerPage, setItemPerPage] = useState<number>(DEFAULT_ITEM_PER_PAGE);
     const [totalItem, setTotalItem] = useState<number>(0);
+
+    const [isSearch, setIsSearch] = useState<boolean>(false);
 
 
     const [name, setName] = useState<string>("");
@@ -20,6 +23,14 @@ const PreviousAppointment = () => {
     const url_api = process.env.REACT_APP_API_URL;
 
     useEffect(() => {
+        if (isSearch) {
+            searchAppointment()
+        } else {
+            getAppointmentPrevious()
+        }
+    }, [currentPage, itemPerPage, isSearch]);
+
+    const getAppointmentPrevious = () => {
         const url = `${url_api}${API_ALL_GET_APPOINTMENT_PREVIOUS}`;
 
         axios
@@ -33,8 +44,30 @@ const PreviousAppointment = () => {
             .catch((err: any) => {
                 console.log("error get appointment previous:", err);
             });
-    }, [currentPage, itemPerPage]);
+    }
 
+    const searchAppointment = () => {
+        const url = `${url_api}${API_SEARCH_APPOINTMENT}`;
+
+        const params = {
+            nameDoctorOrPatient: name,
+            status: status,
+            page: currentPage,
+            size: itemPerPage
+        }
+
+        axios
+            .get(url, defineConfigGet(params))
+            .then((resp: any) => {
+                if (resp) {
+                    setListData(resp.data.content);
+                    setTotalItem(resp.data.totalElements);
+                }
+            })
+            .catch((err: any) => {
+                console.log("error search appointment:", err);
+            });
+    }
 
 
     const getCurrentPage = (item: number) => {
@@ -47,7 +80,8 @@ const PreviousAppointment = () => {
     };
 
     const handleSearch = () => {
-
+        setIsSearch(true);
+        searchAppointment();
     }
 
     const _renderTableListAppointment = () => {
@@ -66,11 +100,11 @@ const PreviousAppointment = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {listData?.map((item: any, idx: number) => {
+                    {listData && listData.map((item: any, idx: number) => {
                         return (
                             <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
                                 <td >
-                                    avatar
+                                    <img src={item.patientPhoto ? item.patientPhoto : USER} alt="img patient" className="image-patient" />
                                 </td>
                                 <td >
                                     {item.patientName}
@@ -83,7 +117,8 @@ const PreviousAppointment = () => {
                                 </td>
                                 <td >{convertToDate(item.appointDate)}</td>
                                 <td >
-                                    <span>{convertToTime(item.appointmentTimeStart)}</span> -
+                                    <span>{convertToTime(item.appointmentTimeStart)}</span>
+                                    <span> - </span>
                                     <span>{convertToTime(item.appointmentTimeEnd)}</span>
                                 </td>
                                 <td >{item.doctorName}</td>
@@ -141,7 +176,7 @@ const PreviousAppointment = () => {
 
 
     return (
-        <section >
+        <section className="appointment-list">
             <div className="container-search">{_renderSearch()}</div>
             <div>{_renderTableListAppointment()}</div>
             <PaginationComponent

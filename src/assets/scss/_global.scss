@@ -25,6 +25,17 @@ button {
   white-space: nowrap;
   font-weight: 700;
 
+  &--accept {
+    border-radius: 5px;
+    border: 1px solid #0ea961;
+    background: #0ea961;
+  }
+
+  &--deny {
+    border-radius: 5px;
+    border: 1px solid #dc3545;
+    background: #dc3545;
+  }
 
   &--small {
     border-radius: 4px;
@@ -50,17 +61,33 @@ button {
   &--gray {
     font-weight: 700;
     color: $white-color;
-    transition: .2s ease-in all;
-    background: var(--neumorphism-colour, radial-gradient(184.95% 38.56% at 50% 50%, #C4C4C4 0%, rgba(196, 196, 196, 0.62) 63.54%, rgba(196, 196, 196, 0.79) 100%));
+    transition: 0.2s ease-in all;
+    background: var(
+      --neumorphism-colour,
+      radial-gradient(
+        184.95% 38.56% at 50% 50%,
+        #c4c4c4 0%,
+        rgba(196, 196, 196, 0.62) 63.54%,
+        rgba(196, 196, 196, 0.79) 100%
+      )
+    );
 
     &:hover {
-      background: var(--neumorphism-colour, radial-gradient(184.95% 38.56% at 50% 50%, #C4C4C4 0%, rgba(196, 196, 196, 0.62) 63.54%, rgba(196, 196, 196, 0.79) 100%));
-      transition: .2s ease-in all;
+      background: var(
+        --neumorphism-colour,
+        radial-gradient(
+          184.95% 38.56% at 50% 50%,
+          #c4c4c4 0%,
+          rgba(196, 196, 196, 0.62) 63.54%,
+          rgba(196, 196, 196, 0.79) 100%
+        )
+      );
+      transition: 0.2s ease-in all;
     }
   }
 
   &--info {
-    background: rgba(14, 165, 233, 0.90);
+    background: rgba(14, 165, 233, 0.9);
     color: $white-color;
   }
 
@@ -150,4 +177,25 @@ button {
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.no-show {
+  border-radius: 6px;
+  background: #b3e5fc;
+  color: #1a8fe3;
+  padding: 5px;
+}
+
+.canceled {
+  border-radius: 6px;
+  background: rgba(255, 59, 59, 0.14);
+  color: #ff3b3b;
+  padding: 5px;
+}
+
+.fulfilled {
+  border-radius: 6px;
+  background: #c8e6c9;
+  color: #0ea961;
+  padding: 5px;
 }

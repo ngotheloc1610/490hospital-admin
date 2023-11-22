@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { RouterUrl } from "../../constants";
 import { ICON_APPOINTMENT, ICON_BOOK_APPOINTMENT, ICON_DASHBOARD, ICON_DEPARTMENT, ICON_DIAGNOSTIC, ICON_DOCTOR, ICON_MESSAGE, ICON_PATIENT, ICON_SETTING, ICON_STAFF } from "../../assets";
@@ -7,13 +7,21 @@ const Sidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const [isDropdown, setIsDropdown] = useState<boolean>(false);
+
   const getClass = (url: string) => {
     return location.pathname.includes(url) ? "active" : "";
+  };
+
+  const getSubClass = (url: string) => {
+    return location.pathname.includes(url) ? "sub-active" : "";
   };
 
   const goToLink = (url: string) => {
     navigate(url);
   };
+
+
 
   return (
     <nav className="main-navbar">
@@ -50,7 +58,7 @@ const Sidebar = () => {
           <li className={`${getClass(RouterUrl.PATIENT_MONITOR)}`}>
             <a
               onClick={() => goToLink(RouterUrl.PATIENT_MONITOR)}
-              data-content-id="patient-monitor"
+              data-content-id="monitor"
             >
               <ICON_PATIENT />
               <span>Patient Monitor</span>
@@ -76,14 +84,41 @@ const Sidebar = () => {
             </a>
           </li>
 
-          <li className={`${getClass(RouterUrl.APPOINTMENT)}`}>
+          <li>
             <a
-              onClick={() => goToLink(RouterUrl.APPOINTMENT)}
+              onClick={() => setIsDropdown(!isDropdown)}
               data-content-id="appointment"
             >
               <ICON_APPOINTMENT />
-              <span>List Appointment</span>
+              <span>Appointment</span>
             </a>
+
+            {isDropdown && <ul>
+              <li className={`${getSubClass(RouterUrl.APPOINTMENT_PENDING)}`}>
+              <a
+              onClick={() => goToLink(RouterUrl.APPOINTMENT_PENDING)}
+              data-content-id="appointment-pending"
+            >
+              <span>Pending</span>
+            </a>
+              </li>
+              <li className={`${getSubClass(RouterUrl.APPOINTMENT_BOOKED)}`}>
+              <a
+              onClick={() => goToLink(RouterUrl.APPOINTMENT_BOOKED)}
+              data-content-id="appointment-booked"
+            >
+              <span>Booked</span>
+            </a>
+              </li>
+              <li className={`${getSubClass(RouterUrl.APPOINTMENT_PROPOSED)}`}>
+              <a
+              onClick={() => goToLink(RouterUrl.APPOINTMENT_PROPOSED)}
+              data-content-id="appointment-proposed"
+            >
+              <span>Proposed</span>
+            </a>
+              </li>
+            </ul>}
           </li>
 
 

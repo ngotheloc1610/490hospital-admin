@@ -48,7 +48,6 @@ import CreateEditDiagnostic from "./pages/DiagnosticReport/Detail/CreateEditDiag
 import ForgotPassword from "./pages/Authentication/ForgotPassword";
 import InfoPatient from "./pages/Patient/Detail/Infomation/InfoPatient";
 import CreateEditPatient from "./pages/Patient/Detail/Infomation/CreateEditPatient";
-import Appointment from "./pages/Appointment";
 import ChangePassword from "./pages/Authentication/ChangePassword";
 import Practitioner from "./pages/Practitioner";
 import ScheduleDoctor from "./pages/Doctor/Detail/ScheduleDoctor";
@@ -58,6 +57,10 @@ import { useAppSelector } from "./redux/hooks";
 import Chat from "./pages/Chat";
 import PatientMonitor from "./pages/PatientMonitor";
 import BookAppointment from "./pages/BookApointment";
+import Setting from "./pages/Setting";
+import AppointmentPending from "./pages/Appointment/Pending";
+import AppointmentBooked from "./pages/Appointment/Booked";
+import AppointmentProposed from "./pages/Appointment/Proposed";
 
 if (typeof window !== "undefined") {
   require("bootstrap/dist/js/bootstrap.bundle.min");
@@ -90,7 +93,9 @@ const RouterDom = () => (
       </Route>
     </Route>
 
-    <Route path={RouterUrl.APPOINTMENT} element={<Appointment />} />
+    <Route path={RouterUrl.APPOINTMENT_PENDING} element={<AppointmentPending />} />
+    <Route path={RouterUrl.APPOINTMENT_BOOKED} element={<AppointmentBooked />} />
+    <Route path={RouterUrl.APPOINTMENT_PROPOSED} element={<AppointmentProposed />} />
 
     <Route path={RouterUrl.PRACTITIONER} element={<Practitioner />} />
 
@@ -121,6 +126,8 @@ const RouterDom = () => (
     <Route path={RouterUrl.PATIENT_MONITOR} element={<PatientMonitor />} />
 
     <Route path={RouterUrl.BOOK_APPOINTMENT} element={<BookAppointment />} />
+
+    <Route path={RouterUrl.SETTING} element={<Setting />} />
 
 
     <Route path="*" element={<Navigate to={RouterUrl.DASHBOARD} />} />

@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-import { DEFAULT_ITEM_PER_PAGE, START_PAGE, STATUS_APPOINTMENT } from "../../constants";
-import { convertToDate, convertToTime, defineConfigGet } from "../../Common/utils";
-import { API_ALL_GET_APPOINTMENT_PREVIOUS, API_SEARCH_APPOINTMENT } from "../../constants/api.constant";
+import { DEFAULT_ITEM_PER_PAGE, START_PAGE, STATUS_APPOINTMENT } from "../../../constants";
+import { convertToDate, convertToTime, defineConfigGet, styleStatus } from "../../../Common/utils";
+import { API_ALL_GET_APPOINTMENT_PREVIOUS, API_SEARCH_APPOINTMENT } from "../../../constants/api.constant";
 
-import PaginationComponent from "../../components/common/Pagination";
-import { USER } from "../../assets";
+import PaginationComponent from "../../../components/common/Pagination";
+import { USER } from "../../../assets";
 
 const PreviousAppointment = () => {
     const [listData, setListData] = useState([]);
@@ -84,6 +84,8 @@ const PreviousAppointment = () => {
         searchAppointment();
     }
 
+  
+
     const _renderTableListAppointment = () => {
         return (
             <table className="table table-hover">
@@ -122,7 +124,8 @@ const PreviousAppointment = () => {
                                     <span>{convertToTime(item.appointmentTimeEnd)}</span>
                                 </td>
                                 <td >{item.doctorName}</td>
-                                <td >{item.status}</td>
+                                <td ><span className={styleStatus(item.status)}>
+                                {item.status}</span></td>
                             </tr>
                         );
                     })}

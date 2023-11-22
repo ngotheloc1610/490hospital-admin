@@ -5,8 +5,8 @@ import OverviewStaff from "../pages/Staff/Detail/OverviewStaff";
 
 import ScheduleDoctor from "../pages/Doctor/Detail/ScheduleDoctor";
 import ScheduleStaff from "../pages/Staff/Detail/ScheduleStaff";
-import PreviousAppointment from "../pages/Appointment/PreviousAppointment";
-import UpcomingAppointment from "../pages/Appointment/UpcomingAppointment";
+import PreviousAppointment from "../pages/Appointment/Booked/PreviousAppointment";
+import UpcomingAppointment from "../pages/Appointment/Booked/UpcomingAppointment";
 import InformationPatient from "../pages/Patient/Detail/Infomation";
 
 export const RouterUrl = {
@@ -14,7 +14,9 @@ export const RouterUrl = {
   DOCTOR: "/doctor",
   PATIENT: "/patient",
   DEPARTMENT: "/department",
-  APPOINTMENT: "/appointment",
+  APPOINTMENT_PENDING: "/appointment-pending",
+  APPOINTMENT_BOOKED: "/appointment-booked",
+  APPOINTMENT_PROPOSED: "/appointment-proposed",
   BOOK_APPOINTMENT: "/book-appointment",
   DIAGNOSTIC_REPORT: "/diagnostic-report",
   STAFF: "/staff",
@@ -25,7 +27,7 @@ export const RouterUrl = {
   CHANGE_PASSWORD: "/change-password",
   INFORMATION: "/information",
   CHAT: "/chat",
-  PATIENT_MONITOR: "/patient-monitor",
+  PATIENT_MONITOR: "/monitor",
   SETTING: "/setting",
 };
 
@@ -147,7 +149,6 @@ export const STATUS_APPOINTMENT = [
   },
 ];
 
-
 export const TYPE_PRACTITIONER = [
   {
     name: "Doctor",
@@ -210,22 +211,60 @@ export const LIST_TIME = [
 export const TYPE_OF_APPOINTMENT = [
   {
     code: "ROUTINE",
-    display: "Routine appointment - default if not value"
+    display: "Routine appointment - default if not value",
   },
   {
     code: "WALKIN",
-    display: "A previously unscheduled walk-in visit"
+    display: "A previously unscheduled walk-in visit",
   },
   {
     code: "CHECKUP",
-    display: "A routine check-up, such as an annual physical"
+    display: "A routine check-up, such as an annual physical",
   },
   {
     code: "FOLLOWUP",
-    display: "A follow up visit from a previous appointment	A"
+    display: "A follow up visit from a previous appointment	A",
   },
   {
     code: "EMERGENCY",
-    display: "Emergency appointment"
+    display: "Emergency appointment",
   },
-]
+];
+
+export const DAYS = [
+  {
+    value: "7",
+    title: "7 days",
+  },
+  {
+    value: "30",
+    title: "30 days",
+  },
+  {
+    value: "",
+    title: "All time",
+  },
+];
+
+export const ALERT_STATUS = [
+  {
+    title: "Asymptomatic",
+    value: "Asymptomatic",
+  },
+  {
+    title: "Catastrophic",
+    value: "Catastrophic",
+  },
+  {
+    title: "Major",
+    value: "Major",
+  },
+  {
+    title: "Moderate",
+    value: "Moderate",
+  },
+  {
+    title: "Minor",
+    value: "Minor",
+  },
+];

@@ -25,3 +25,20 @@ export const convertToTime = (time: string) => {
     const date = moment(time, 'ddd MMM DD HH:mm:ss z YYYY');
     return date.format(`${FORMAT_TIME} A`);
 }
+
+export const styleStatus = (status: string) => {
+    switch (status) {
+        case "No Show":
+            return "no-show";
+            break;
+        case "Canceled":
+            return "canceled";
+            break;
+        case "Fulfilled":
+            return "fulfilled";
+            break;
+
+        default:
+            break;
+    }
+}

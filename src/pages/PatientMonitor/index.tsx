@@ -5,7 +5,11 @@ import axios from "axios";
 import Layout from "../../components/Layout";
 import TotalView from "../../components/common/TotalView";
 import PaginationComponent from "../../components/common/Pagination";
-import { DEFAULT_ITEM_PER_PAGE, START_PAGE } from "../../constants";
+import {
+  ALERT_STATUS,
+  DEFAULT_ITEM_PER_PAGE,
+  START_PAGE,
+} from "../../constants";
 import { ICON_PENCIL } from "../../assets";
 
 const PatientMonitor = () => {
@@ -16,6 +20,9 @@ const PatientMonitor = () => {
   const [currentPage, setCurrentPage] = useState<number>(START_PAGE);
   const [itemPerPage, setItemPerPage] = useState<number>(DEFAULT_ITEM_PER_PAGE);
   const [totalItem, setTotalItem] = useState<number>(0);
+
+  const [name, setName] = useState<string>("");
+  const [alert, setAlert] = useState<string>("");
 
   const url_api = process.env.REACT_APP_API_URL;
 
@@ -28,18 +35,43 @@ const PatientMonitor = () => {
     setCurrentPage(0);
   };
 
+  const _renderListAlert = () => {
+    return (
+      <>
+        <option hidden>Select an alert Status</option>
+        {ALERT_STATUS.map((item: any) => (
+          <option value={item.value} key={item.value}>
+            {item.title}
+          </option>
+        ))}
+      </>
+    );
+  };
+
   const _renderSearch = () => {
     return (
       <div className="row">
-        <div className="col-8 row">
-          <input
-            type="text"
-            placeholder="Name"
-            className="form-control"
-          />
+        <div className="col-6 row">
+          <div className="col-6">
+            <input
+              type="text"
+              placeholder="Search by name"
+              className="form-control"
+              value={name}
+              onChange={(e: any) => setName(e.target.value)}
+            />
+          </div>
+          <div className="col-6">
+            <select
+              className="form-select"
+              onChange={(e) => setAlert(e.target.value)}
+            >
+              {_renderListAlert()}
+            </select>
+          </div>
         </div>
-        <div className="col-4">
-          <button className="button-apply">Apply</button>
+        <div className="col-6">
+          <button className="button-apply">Search</button>
         </div>
       </div>
     );
@@ -50,31 +82,28 @@ const PatientMonitor = () => {
       <table className="table table-hover">
         <thead className="table-light">
           <tr>
-            <th scope="col">No.</th>
-            <th scope="col">Name</th>
-            <th scope="col">Department</th>
-            <th scope="col">Diagnosed by</th>
-            <th scope="col">Date & Time</th>
-            <th scope="col"></th>
+            <th scope="col">Alert</th>
+            <th scope="col">Patient</th>
+            <th scope="col">DOB</th>
+            <th scope="col">Contact Info</th>
+            <th scope="col">Diagnosis</th>
+            <th scope="col">Blood Pressure</th>
+            <th scope="col">Blood Glucose</th>
+            <th scope="col">Heart Rates</th>
           </tr>
         </thead>
         <tbody>
           {listData.map((item: any, idx: number) => {
             return (
               <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
-                <th scope="row">{++idx}</th>
-                <td>
-
-                </td>
-                <td>
-
-                </td>
-                <td>
-
-                </td>
-                <td>
-                    
-                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
                 <td>
                   <span className="ms-1">
                     <ICON_PENCIL />
@@ -120,4 +149,4 @@ const PatientMonitor = () => {
   );
 };
 
-export default PatientMonitor
+export default PatientMonitor;

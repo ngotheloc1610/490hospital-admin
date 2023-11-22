@@ -145,12 +145,12 @@ const Practitioner = () => {
       name: values.fullname,
       idSpecialty: idSpecialty,
       displaySpecialty: displaySpecialty,
-      desRoom: desRoom,
-      idRoom: idRoom,
+      desRoom: values.type === "STAFF" ? null : desRoom,
+      idRoom: values.type === "STAFF" ? null :idRoom,
       type: values.type,
       startWork: new Date(values.startDate),
       endWork: new Date(values.endDate),
-      qualifications: [...educations, ...specializes, ...achievements],
+      qualifications: values.type === "STAFF" ? null : [...educations, ...specializes, ...achievements],
       photo: null,
       identifier: null
     };

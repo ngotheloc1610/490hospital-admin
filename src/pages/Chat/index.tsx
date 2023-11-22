@@ -52,48 +52,48 @@ const Chat = () => {
     }, [])
 
     useEffect(() => {
-        var sock = new SockJS(url_ws);
-        console.log("sock:", sock)
-        sock.onopen = function () {
-            console.log('open');
-            sock.send('test');
-        };
+        // var sock = new SockJS(url_ws);
+        // console.log("sock:", sock)
+        // sock.onopen = function () {
+        //     console.log('open');
+        //     sock.send('test');
+        // };
 
-        sock.onmessage = function (e) {
-            console.log('message', e.data);
-            sock.close();
-        };
+        // sock.onmessage = function (e) {
+        //     console.log('message', e.data);
+        //     sock.close();
+        // };
 
-        sock.onclose = function () {
-            console.log('close');
-        };
+        // sock.onclose = function () {
+        //     console.log('close');
+        // };
         // registerUser();
     }, [])
 
 
-    const registerUser = () => {
-        let sockJS = new SockJS(url_ws)
-        console.log("sockJS:", sockJS)
-        stompClient?.over(sockJS);
-        stompClient?.connect({}, onConnected, onError)
-    }
+    // const registerUser = () => {
+    //     let sockJS = new SockJS(url_ws)
+    //     console.log("sockJS:", sockJS)
+    //     stompClient?.over(sockJS);
+    //     stompClient?.connect({}, onConnected, onError)
+    // }
 
-    const onConnected = () => {
-        // setUserData({ ...userData, "connected": true })
-        stompClient.subscribe("/topic/messages", onPublicMessageReceived)
-        // stompClient.subscribe("/topic/messages", onPublicMessageReceived)
-    }
+    // const onConnected = () => {
+    //     // setUserData({ ...userData, "connected": true })
+    //     stompClient.subscribe("/topic/messages", onPublicMessageReceived)
+    //     // stompClient.subscribe("/topic/messages", onPublicMessageReceived)
+    // }
 
-    const onError = (error: any) => {
-        console.log("error:", error)
-    }
+    // const onError = (error: any) => {
+    //     console.log("error:", error)
+    // }
 
-    const onPublicMessageReceived = (payload: any) => {
-        let payloadData = JSON.parse(payload.body)
-        console.log("payloadData:", payloadData)
+    // const onPublicMessageReceived = (payload: any) => {
+    //     let payloadData = JSON.parse(payload.body)
+    //     console.log("payloadData:", payloadData)
 
 
-    }
+    // }
 
     const getListInboxRoom = () => {
         const url = `${url_api}${API_INBOX_ROOM_LIST}`;
@@ -107,7 +107,7 @@ const Chat = () => {
             })
             .catch((err) => {
                 // error(err.response.data.errors.message)
-                console.log("err:", err);
+                console.log("error get rooms:", err);
             });
     }
 
@@ -123,7 +123,7 @@ const Chat = () => {
             })
             .catch((err) => {
                 error(err.response.data.errors.message)
-                console.log("err:", err);
+                console.log("error get message by room:", err);
             });
     }
 
@@ -151,7 +151,7 @@ const Chat = () => {
             })
             .catch((err) => {
                 error(err.response.data.errors.message)
-                console.log("err:", err);
+                console.log("error send message:", err);
             });
     }
 

@@ -43,7 +43,7 @@ const Dashboard = () => {
   };
 
   const dataNewPatient = {
-    labels: ["Red", "Blue", "Yellow",],
+    labels: ["Red", "Blue", "Yellow"],
     datasets: [
       {
         label: "# of new patient",
@@ -109,7 +109,7 @@ const Dashboard = () => {
       { length: new Date().getFullYear() - 2000 + 1 },
       (_, index) => 2000 + index
     );
-    console.log("years:", years)
+    console.log("years:", years);
 
     return (
       <>
@@ -127,7 +127,8 @@ const Dashboard = () => {
     <Layout>
       <section className="dashboard">
         <TotalView />
-        
+
+        <div></div>
 
         <div className="row">
           <div className="col-6">
@@ -162,6 +163,9 @@ const Dashboard = () => {
                 </p>
               </div>
             </div>
+          </div>
+
+          <div className="col-6">
             <div>
               <div>
                 <p>new patients</p>
@@ -194,6 +198,7 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
+
           <div className="col-6">
             <div>
               <div>
@@ -207,34 +212,17 @@ const Dashboard = () => {
               </div>
 
               <div>
-                <div>
-                  <p>
-                    <i className="bi bi-person"></i>
-                  </p>
-                  <p>
-                    <span>24.4K</span>
-                    <span>New Patient</span>
-                  </p>
-                  <p>
-                    <i className="bi bi-graph-up-arrow"></i>
-                    <span>15%</span>
-                  </p>
-                </div>
-                <div>
-                  <p>
-                    <i className="bi bi-person"></i>
-                  </p>
-                  <p>
-                    <span>24.4K</span>
-                    <span>Old Patient</span>
-                  </p>
-                  <p>
-                    <i className="bi bi-graph-up-arrow"></i>
-                    <span>15%</span>
-                  </p>
-                </div>
+                <Doughnut
+                  height={300}
+                  width={300}
+                  data={dataGender}
+                  options={optionsDoughnut}
+                />
               </div>
             </div>
+          </div>
+
+          <div className="col-6">
             <div>
               <div>
                 <p>Gender</p>

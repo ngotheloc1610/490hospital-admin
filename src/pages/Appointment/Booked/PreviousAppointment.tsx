@@ -3,7 +3,7 @@ import axios from "axios";
 
 import { DEFAULT_ITEM_PER_PAGE, START_PAGE, STATUS_APPOINTMENT } from "../../../constants";
 import { convertToDate, convertToTime, defineConfigGet, styleStatus } from "../../../Common/utils";
-import { API_ALL_GET_APPOINTMENT_PREVIOUS, API_SEARCH_APPOINTMENT } from "../../../constants/api.constant";
+import { API_ALL_GET_APPOINTMENT_PREVIOUS, API_SEARCH_APPOINTMENT_PREVIOUS } from "../../../constants/api.constant";
 
 import PaginationComponent from "../../../components/common/Pagination";
 import { USER } from "../../../assets";
@@ -47,7 +47,7 @@ const PreviousAppointment = () => {
     }
 
     const searchAppointment = () => {
-        const url = `${url_api}${API_SEARCH_APPOINTMENT}`;
+        const url = `${url_api}${API_SEARCH_APPOINTMENT_PREVIOUS}`;
 
         const params = {
             nameDoctorOrPatient: name,

@@ -3,35 +3,38 @@ import axios from "axios";
 
 import { DEFAULT_ITEM_PER_PAGE, START_PAGE } from "../../../constants";
 import { convertToDate, convertToTime, defineConfigGet } from "../../../Common/utils";
-import { API_ALL_GET_APPOINTMENT_PREVIOUS, API_SEARCH_APPOINTMENT } from "../../../constants/api.constant";
+import { API_ALL_GET_APPOINTMENT_PROPOSED, API_SEARCH_APPOINTMENT_PROPOSED } from "../../../constants/api.constant";
 
 import PaginationComponent from "../../../components/common/Pagination";
 import { ICON_TRASH, USER } from "../../../assets";
 import Layout from "../../../components/Layout";
+import PopUpNoShow from "./PopUpNoShow";
+import { useAppSelector } from "../../../redux/hooks";
 
 const AppointmentProposed = () => {
     const [listData, setListData] = useState([]);
     const [currentPage, setCurrentPage] = useState<number>(START_PAGE);
     const [itemPerPage, setItemPerPage] = useState<number>(DEFAULT_ITEM_PER_PAGE);
     const [totalItem, setTotalItem] = useState<number>(0);
-
     const [isSearch, setIsSearch] = useState<boolean>(false);
-
-
     const [name, setName] = useState<string>("");
+    const [isShowPopUpNoShow, setIsShowPopUpNoShow] = useState(false);
+    const [appointmentId, setAppointmentId] = useState<string>("");
 
     const url_api = process.env.REACT_APP_API_URL;
+
+    const {triggerNoShow} = useAppSelector(state => state.appointmentSlice)
 
     useEffect(() => {
         if (isSearch) {
             searchAppointment()
         } else {
-            getAppointmentPrevious()
+            getAppointmentProposed()
         }
-    }, [currentPage, itemPerPage, isSearch]);
+    }, [currentPage, itemPerPage, isSearch, triggerNoShow]);
 
-    const getAppointmentPrevious = () => {
-        const url = `${url_api}${API_ALL_GET_APPOINTMENT_PREVIOUS}`;
+    const getAppointmentProposed = () => {
+        const url = `${url_api}${API_ALL_GET_APPOINTMENT_PROPOSED}`;
 
         axios
             .get(url, defineConfigGet({ page: currentPage, size: itemPerPage }))
@@ -42,12 +45,12 @@ const AppointmentProposed = () => {
                 }
             })
             .catch((err: any) => {
-                console.log("error get appointment previous:", err);
+                console.log("error get appointment proposed:", err);
             });
     }
 
     const searchAppointment = () => {
-        const url = `${url_api}${API_SEARCH_APPOINTMENT}`;
+        const url = `${url_api}${API_SEARCH_APPOINTMENT_PROPOSED}`;
 
         const params = {
             nameDoctorOrPatient: name,
@@ -81,6 +84,11 @@ const AppointmentProposed = () => {
     const handleSearch = () => {
         setIsSearch(true);
         searchAppointment();
+    }
+
+    const handleNoShow = (id:string) => {
+        setIsShowPopUpNoShow(true);
+        setAppointmentId(id);
     }
 
     const _renderTableListAppointment = () => {
@@ -122,7 +130,7 @@ const AppointmentProposed = () => {
                                 </td>
                                 <td >{item.doctorName}</td>
                                 <td >
-                                    <span>
+                                    <span onClick={() => handleNoShow(item.id)}>
                                         <ICON_TRASH/>
                                     </span>
                                 </td>
@@ -167,6 +175,8 @@ const AppointmentProposed = () => {
                     getCurrentPage={getCurrentPage}
                 />
             </section>
+
+            {isShowPopUpNoShow && <PopUpNoShow handleShowPopUp={setIsShowPopUpNoShow} appointmentId={appointmentId}/>}
        </Layout>
 
     );

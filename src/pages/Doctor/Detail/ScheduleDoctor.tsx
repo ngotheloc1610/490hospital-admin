@@ -101,6 +101,7 @@ const ScheduleDoctor = () => {
             .post(url, params, defineConfigPost())
             .then((resp: any) => {
                 if (resp) {
+                    console.log("resp:", resp)
                     setTriggerScheduler(!triggerScheduler);
                     success("Create scheduler successfully!");
                 }

@@ -8,8 +8,8 @@ import { API_ALL_GET_APPOINTMENT_PROPOSED, API_SEARCH_APPOINTMENT_PROPOSED } fro
 import PaginationComponent from "../../../components/common/Pagination";
 import { ICON_TRASH, USER } from "../../../assets";
 import Layout from "../../../components/Layout";
-import PopUpNoShow from "./PopUpNoShow";
 import { useAppSelector } from "../../../redux/hooks";
+import PopUpCancel from "./PopUpCancel";
 
 const AppointmentProposed = () => {
     const [listData, setListData] = useState([]);
@@ -18,12 +18,12 @@ const AppointmentProposed = () => {
     const [totalItem, setTotalItem] = useState<number>(0);
     const [isSearch, setIsSearch] = useState<boolean>(false);
     const [name, setName] = useState<string>("");
-    const [isShowPopUpNoShow, setIsShowPopUpNoShow] = useState(false);
+    const [isShowPopUpCancel, setIsShowPopUpCancel] = useState(false);
     const [appointmentId, setAppointmentId] = useState<string>("");
 
     const url_api = process.env.REACT_APP_API_URL;
 
-    const {triggerNoShow} = useAppSelector(state => state.appointmentSlice)
+    const { triggerNoShow } = useAppSelector(state => state.appointmentSlice)
 
     useEffect(() => {
         if (isSearch) {
@@ -86,8 +86,8 @@ const AppointmentProposed = () => {
         searchAppointment();
     }
 
-    const handleNoShow = (id:string) => {
-        setIsShowPopUpNoShow(true);
+    const handleCancel = (id: string) => {
+        setIsShowPopUpCancel(true);
         setAppointmentId(id);
     }
 
@@ -130,8 +130,8 @@ const AppointmentProposed = () => {
                                 </td>
                                 <td >{item.doctorName}</td>
                                 <td >
-                                    <span onClick={() => handleNoShow(item.id)}>
-                                        <ICON_TRASH/>
+                                    <span onClick={() => handleCancel(item.id)}>
+                                        <ICON_TRASH />
                                     </span>
                                 </td>
                             </tr>
@@ -163,7 +163,7 @@ const AppointmentProposed = () => {
 
 
     return (
-       <Layout>
+        <Layout>
             <section className="appointment-list container  mt-5">
                 <div className="container-search">{_renderSearch()}</div>
                 <div>{_renderTableListAppointment()}</div>
@@ -176,8 +176,8 @@ const AppointmentProposed = () => {
                 />
             </section>
 
-            {isShowPopUpNoShow && <PopUpNoShow handleShowPopUp={setIsShowPopUpNoShow} appointmentId={appointmentId}/>}
-       </Layout>
+            {isShowPopUpCancel && <PopUpCancel handleShowPopUp={setIsShowPopUpCancel} appointmentId={appointmentId} />}
+        </Layout>
 
     );
 };

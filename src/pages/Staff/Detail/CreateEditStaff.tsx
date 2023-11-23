@@ -132,7 +132,7 @@ const CreateEditStaff = () => {
       startWork: new Date(values.startDate),
       endWork: new Date(values.endDate),
       type: "Staff",
-      qualifications: [],
+      qualifications: null,
     }
 
     axios

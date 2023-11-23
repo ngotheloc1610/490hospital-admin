@@ -77,7 +77,6 @@ const CreateEditDoctor = () => {
       .get(url, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
-          console.log("resp:", resp)
           const data = resp.data;
           const dataConverted: any = {
             id: data.id,
@@ -95,7 +94,6 @@ const CreateEditDoctor = () => {
             specialize: [{ time: "", content: "" }],
             achievement: [{ time: "", content: "" }],
           }
-          console.log("dataConverted:", dataConverted)
           setDoctor(dataConverted);
         }
       })

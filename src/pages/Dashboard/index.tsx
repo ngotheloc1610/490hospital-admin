@@ -13,7 +13,8 @@ import {
 
 import Layout from "../../components/Layout";
 import TotalView from "../../components/common/TotalView";
-import { DAYS } from "../../constants";
+import { MONTHS } from "../../constants";
+import { ICON_PATIENT } from "../../assets";
 
 ChartJS.register(
   CategoryScale,
@@ -26,97 +27,135 @@ ChartJS.register(
 );
 
 const Dashboard = () => {
-  const [dayOld, setDayOld] = useState<string>("");
-  const [dayNew, setDayNew] = useState<string>("");
-  const [yearPatient, setYearPatient] = useState<string>("");
-  const [yearGender, setYearGender] = useState<string>("");
+  const [monthPatient, setMonthPatient] = useState<string>("");
+  const [monthGender, setMonthGender] = useState<string>("");
 
-  const dataOldPatient = {
-    labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+  const [monthNewPatient, setMonthNewPatient] = useState<string>("");
+  const [monthOldPatient, setmonthOldPatient] = useState<string>("");
+
+  const dataLinePatient = {
+    labels: ['January', 'February', 'March', 'April', 'May'],
     datasets: [
       {
-        label: "# of old patient",
-        data: [12, 19, 3, 5, 2, 3],
-        borderWidth: 1,
+        label: 'New Patient',
+        borderColor: '#8DE27F',
+        backgroundColor: '#8DE27F',
+        data: [65, 59, 80, 81, 56],
+      },
+      {
+        label: 'Old Patient',
+        borderColor: '#F59898',
+        backgroundColor: '#F59898',
+        data: [28, 48, 40, 19, 86],
       },
     ],
   };
 
-  const dataNewPatient = {
-    labels: ["Red", "Blue", "Yellow"],
+  const dataLineGender = {
+    labels: ['January', 'February', 'March', 'April', 'May'],
     datasets: [
       {
-        label: "# of new patient",
-        data: [12, 19, 3],
-        borderWidth: 1,
+        label: 'Male',
+        borderColor: '#8DE27F',
+        backgroundColor: '#8DE27F',
+        data: [65, 59, 80],
+      },
+      {
+        label: 'Female',
+        borderColor: '#F59898',
+        backgroundColor: '#F59898',
+        data: [28, 48, 40],
+      },
+      {
+        label: 'Other',
+        borderColor: '#D04ED6',
+        backgroundColor: '#D04ED6',
+        data: [22, 67, 70],
       },
     ],
   };
 
-  const dataGender = {
-    labels: ["Male", "Female", "Child"],
+  const dataDoughnutGender = {
+    labels: [''],
     datasets: [
       {
-        label: "# of gender",
-        data: [12, 19, 3],
-        borderWidth: 1,
+        label: 'Male',
+        borderColor: '#8DE27F',
+        backgroundColor: '#8DE27F',
+        data: [65, 59, 80],
+      },
+      {
+        label: 'Female',
+        borderColor: '#F59898',
+        backgroundColor: '#F59898',
+        data: [28, 48, 40],
+      },
+      {
+        label: 'Other',
+        borderColor: '#D04ED6',
+        backgroundColor: '#D04ED6',
+        data: [28, 48, 40],
+      },
+    ],
+  };
+
+  const dataDoughnutPatient = {
+    labels: [''],
+    datasets: [
+      {
+        label: 'New Patient',
+        borderColor: '#8DE27F',
+        backgroundColor: '#8DE27F',
+        data: [65, 59, 80, 81, 56],
+      },
+      {
+        label: 'Old Patient',
+        borderColor: '#F59898',
+        backgroundColor: '#F59898',
+        data: [28, 48, 40, 19, 86],
       },
     ],
   };
 
   const optionsLine = {
-    maintainAspectRatio: false,
+    // maintainAspectRatio: false,
     // scales: {
     //   y: {
     //     beginAtZero: true,
     //   },
     // },
-    legend: {
-      labels: {
-        fontSize: 26,
-      },
-    },
-  };
-  const optionsDoughnut = {
-    maintainAspectRatio: false,
-    // scales: {
-    //   y: {
-    //     beginAtZero: true,
+    // legend: {
+    //   labels: {
+    //     fontSize: 26,
     //   },
     // },
-    legend: {
-      labels: {
-        fontSize: 26,
-      },
-    },
+    // title: {
+    //   display: true,
+    //   text: 'Multi-Line Chart',
+    // },
   };
 
-  const _renderDays = () => {
+  const optionsDoughnut = {
+    // maintainAspectRatio: false,
+    // scales: {
+    //   y: {
+    //     beginAtZero: true,
+    //   },
+    // },
+    // legend: {
+    //   labels: {
+    //     fontSize: 26,
+    //   },
+    // },
+  };
+
+  const _renderMonths = () => {
     return (
       <>
-        <option hidden>Day</option>
-        {DAYS.map((item: any) => (
+        <option hidden>This Month</option>
+        {MONTHS.map((item: any) => (
           <option value={item.value} key={item.value}>
             {item.title}
-          </option>
-        ))}
-      </>
-    );
-  };
-
-  const _renderYears = () => {
-    const years = Array.from(
-      { length: new Date().getFullYear() - 2000 + 1 },
-      (_, index) => 2000 + index
-    );
-    console.log("years:", years);
-
-    return (
-      <>
-        <option hidden>Year</option>
-        {years.map((year: any) => (
-          <option value={year} key={year}>
-            {year}
           </option>
         ))}
       </>
@@ -128,124 +167,208 @@ const Dashboard = () => {
       <section className="dashboard">
         <TotalView />
 
-        <div></div>
-
-        <div className="row">
-          <div className="col-6">
-            <div>
+        <div>
+          <div className="row gy-3">
+            <div className="col-6">
               <div>
-                <p>old patients</p>
-                <select
-                  className="form-select"
-                  onChange={(e) => setDayOld(e.target.value)}
-                >
-                  {_renderDays()}
-                </select>
+                <ICON_PATIENT />
               </div>
-              <Line
-                height={100}
-                width={300}
-                data={dataOldPatient}
-                // options={optionsLine}
-              />
               <div>
-                <p>
-                  <span>All time</span>
-                  <span></span>
-                </p>
-                <p>
-                  <span>30 days</span>
-                  <span></span>
-                </p>
-                <p>
-                  <span>7 days</span>
-                  <span></span>
-                </p>
+                <div>
+                  <p>New Patients</p>
+                  <select
+                    className="form-select"
+                    onChange={(e) => setMonthNewPatient(e.target.value)}
+                  >
+                    {_renderMonths()}
+                  </select>
+                </div>
+                <div>
+                  <p>41 234</p>
+                  <p>15% Increase in  7 days</p>
+                  <div className="progress">
+                    <div className="progress-bar" role="progressbar" style={{ width: "25%" }} aria-valuenow={25} aria-valuemin={0} aria-valuemax={100}></div>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-
-          <div className="col-6">
-            <div>
+            <div className="col-6">
               <div>
-                <p>new patients</p>
-                <select
-                  className="form-select"
-                  onChange={(e) => setDayNew(e.target.value)}
-                >
-                  {_renderDays()}
-                </select>
-              </div>
-              <Line
-                height={100}
-                width={300}
-                data={dataNewPatient}
-                // options={optionsLine}
-              />
-              <div>
-                <p>
-                  <span>All time</span>
-                  <span></span>
-                </p>
-                <p>
-                  <span>30 days</span>
-                  <span></span>
-                </p>
-                <p>
-                  <span>7 days</span>
-                  <span></span>
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="col-6">
-            <div>
-              <div>
-                <p>Patients</p>
-                <select
-                  className="form-select"
-                  onChange={(e) => setYearPatient(e.target.value)}
-                >
-                  {_renderYears()}
-                </select>
-              </div>
-
-              <div>
-                <Doughnut
-                  height={300}
-                  width={300}
-                  data={dataGender}
-                  options={optionsDoughnut}
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="col-6">
-            <div>
-              <div>
-                <p>Gender</p>
-                <select
-                  className="form-select"
-                  onChange={(e) => setYearGender(e.target.value)}
-                >
-                  {_renderYears()}
-                </select>
+                <ICON_PATIENT />
               </div>
               <div>
-                <Doughnut
-                  height={300}
-                  width={300}
-                  data={dataGender}
-                  options={optionsDoughnut}
-                />
+                <div>
+                  <p>Old Patients</p>
+                  <select
+                    className="form-select"
+                    onChange={(e) => setmonthOldPatient(e.target.value)}
+                  >
+                    {_renderMonths()}
+                  </select>
+                </div>
+                <div>
+                  <p>35 234</p>
+                  <p>15% Increase in  7 days</p>
+                  <div className="progress">
+                    <div className="progress-bar" role="progressbar" style={{ width: "75%" }} aria-valuenow={75} aria-valuemin={0} aria-valuemax={100}></div>
+                  </div>
+                </div>
               </div>
-
-              <div></div>
             </div>
           </div>
         </div>
+
+        <div>
+          <div className="row">
+            <div className="col-6">
+              <div>
+                <div>
+                  <p>Line Charts : Number of patients</p>
+                  <select
+                    className="form-select"
+                    onChange={(e) => setMonthPatient(e.target.value)}
+                  >
+                    {_renderMonths()}
+                  </select>
+                </div>
+                <Line
+                  height={100}
+                  width={300}
+                  data={dataLinePatient}
+                  options={optionsLine}
+                />
+                <div>
+                  <p>
+                    <span>New Patient</span>
+                    <span></span>
+                  </p>
+                  <p>
+                    <span>Old Patient</span>
+                    <span></span>
+                  </p>
+
+                </div>
+              </div>
+            </div>
+
+            <div className="col-6">
+              <div>
+                <div>
+                  <p>Line Charts : Gender patient</p>
+                  <select
+                    className="form-select"
+                    onChange={(e) => setMonthGender(e.target.value)}
+                  >
+                    {_renderMonths()}
+                  </select>
+                </div>
+                <Line
+                  height={100}
+                  width={300}
+                  data={dataLineGender}
+                  options={optionsLine}
+                />
+                <div>
+                  <p>
+                    <span>Male</span>
+                    <span></span>
+                  </p>
+                  <p>
+                    <span>Female</span>
+                    <span></span>
+                  </p>
+                  <p>
+                    <span>Other</span>
+                    <span></span>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="col-6">
+              <div>
+                <div>
+                  <p>Number of patients</p>
+                </div>
+
+                <div>
+                  <Doughnut
+                    height={300}
+                    width={300}
+                    data={dataDoughnutPatient}
+                    options={optionsDoughnut}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="col-6">
+              <div>
+                <div>
+                  <p>Gender patient</p>
+                </div>
+                <div>
+                  <Doughnut
+                    height={300}
+                    width={300}
+                    data={dataDoughnutGender}
+                    options={optionsDoughnut}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div className="row">
+            <div className="col-6">
+              <p>Top patient book appointment</p>
+              <table className="table">
+                <tbody>
+                  <tr>
+                    <th scope="row">1</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">2</th>
+                    <td>Jacob</td>
+                    <td>Thornton</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td >Larry the Bird</td>
+                    <td>@twitter</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div className="col-6">
+              <p>Top patient cancel appointment</p>
+              <table className="table">
+                <tbody>
+                  <tr>
+                    <th scope="row">1</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">2</th>
+                    <td>Jacob</td>
+                    <td>Thornton</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td >Larry the Bird</td>
+                    <td>@twitter</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
       </section>
     </Layout>
   );

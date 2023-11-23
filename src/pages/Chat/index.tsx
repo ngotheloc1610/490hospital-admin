@@ -31,7 +31,7 @@ const Chat = () => {
     })
 
     const [listRoom, setListRoom] = useState([])
-    const [messageRoom, setMessageRoom] = useState([]);
+    const [messageRoom, setMessageRoom] = useState<any>([]);
     const [message, setMessage] = useState<string>("");
     const [nameRoom, setNameRoom] = useState<string>("");
     const [idRoom, setIdRoom] = useState<string>("");
@@ -51,21 +51,21 @@ const Chat = () => {
     }, [])
 
     useEffect(() => {
-        // var sock = new SockJS(url_ws);
-        // console.log("sock:", sock)
-        // sock.onopen = function () {
-        //     console.log('open');
-        //     sock.send('test');
-        // };
+        var sock = new SockJS(url_ws);
+        console.log("sock:", sock)
+        sock.onopen = function () {
+            console.log('open');
+            sock.send('test');
+        };
 
-        // sock.onmessage = function (e) {
-        //     console.log('message', e.data);
-        //     sock.close();
-        // };
+        sock.onmessage = function (e) {
+            console.log('message', e.data);
+            sock.close();
+        };
 
-        // sock.onclose = function () {
-        //     console.log('close');
-        // };
+        sock.onclose = function () {
+            console.log('close');
+        };
         // registerUser();
     }, [])
 
@@ -101,7 +101,7 @@ const Chat = () => {
             .get(url, defineConfigPost())
             .then((resp: any) => {
                 if (resp) {
-                    setListRoom(resp.data.inboxRooms);
+                    setListRoom(resp.data);
                 }
             })
             .catch((err) => {
@@ -117,7 +117,11 @@ const Chat = () => {
             .get(url, defineConfigGet({ page: 0, size: 100 }))
             .then((resp: any) => {
                 if (resp) {
-                    setMessageRoom(resp.data.content);
+                    const data = resp.data
+                    const sortedData: any = [...data].sort(
+                        (a, b) => a.created_at - b.created_at
+                    );
+                    setMessageRoom(sortedData);
                 }
             })
             .catch((err) => {
@@ -212,17 +216,17 @@ const Chat = () => {
                         <div className='chat-room-content'>
                             {listRoom && listRoom.map((item: any) => {
                                 return (
-                                    <div className="chat-room-content-item d-flex justify-content-between" onClick={() => { handleGetMessageByRoom(item.id); setIdRoom(item.id) }}>
-                                        <div>
+                                    <div className={`chat-room-content-item d-flex justify-content-between ${idRoom === item.id ? "active" : ""}`} onClick={() => { handleGetMessageByRoom(item.id); setIdRoom(item.id) }}>
+                                        <div className="me-2 my-auto">
                                             <img src={USER} alt="" />
                                         </div>
-                                        <div>
-                                            <p>{item.patient.mail}</p>
-                                            <p>{item.lastMessage.message}</p>
+                                        <div className="w-50 text-break me-2 d-flex flex-column justify-content-between">
+                                            <p className="text-break" style={{ textOverflow: "ellipsis" }}>{item.patient.mail}</p>
+                                            <p className="mb-0">{item.last_message.message}</p>
                                         </div>
-                                        <div>
-                                            <p>{moment(item.lastMessage.updateAt).format(FORMAT_DATE)}</p>
-                                            <p>{moment(item.lastMessage.updateAt).format(FORMAT_TIME)}</p>
+                                        <div className="d-flex flex-column justify-content-between">
+                                            <p>{moment(item.last_message.updated_at.date).format(FORMAT_DATE)}</p>
+                                            <p className="mb-0 text-end">{moment(item.last_message.updated_at.date).format(FORMAT_TIME)}</p>
                                         </div>
                                     </div>
                                 )
@@ -249,9 +253,9 @@ const Chat = () => {
                             <div className="chat-message-content">
                                 {messageRoom && messageRoom.map((item: any) => {
                                     return (
-                                        <div className="chat-message-content-msg">
+                                        <div className="chat-message-content-msg mt-3">
                                             <span className='text-message mb-1'>{item.message}</span>
-                                            <span>{moment(item.createdAt).format(FORMAT_DAY)}</span>
+                                            <span className="mt-1">{moment(item.created_at).format(FORMAT_DAY)}</span>
                                             <div ref={messageRef}></div>
                                         </div>
                                     )

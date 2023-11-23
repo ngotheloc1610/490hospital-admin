@@ -1,7 +1,7 @@
 import { Button, Modal } from "react-bootstrap";
 import axios from "axios";
 
-import { API_NO_SHOW_APPOINTMENT } from "../../../constants/api.constant";
+import { API_CANCEL_APPOINTMENT } from "../../../constants/api.constant";
 import { defineConfigPost } from "../../../Common/utils";
 import { success } from "../../../Common/notify";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
@@ -12,22 +12,22 @@ interface IProps {
   appointmentId: string;
 }
 
-const PopUpNoShow = (props: IProps) => {
+const PopUpCancel = (props: IProps) => {
   const { handleShowPopUp, appointmentId } = props;
 
   const url_api = process.env.REACT_APP_API_URL;
 
   const dispatch = useAppDispatch();
-  const {triggerNoShow} = useAppSelector(state => state.appointmentSlice)
+  const { triggerNoShow } = useAppSelector(state => state.appointmentSlice)
 
-  const noShowAppointment = () => {
-    const url = `${url_api}${API_NO_SHOW_APPOINTMENT}${appointmentId}`;
+  const cancelAppointment = () => {
+    const url = `${url_api}${API_CANCEL_APPOINTMENT}${appointmentId}`;
     axios
       .post(url, defineConfigPost())
       .then((resp) => {
         if (resp) {
           dispatch(setTriggerNoShow(!triggerNoShow))
-          success("No Show Successfully");
+          success("Canceled Successfully");
           handleShowPopUp(false);
         }
       })
@@ -36,8 +36,8 @@ const PopUpNoShow = (props: IProps) => {
       });
   };
 
-  const handleNoShow = () => {
-    noShowAppointment();
+  const handleCancel = () => {
+    cancelAppointment();
   };
 
   return (
@@ -68,7 +68,7 @@ const PopUpNoShow = (props: IProps) => {
           </Button>
           <Button
             className="button button--small button--primary"
-            onClick={() => handleNoShow()}
+            onClick={() => handleCancel()}
           >
             Yes
           </Button>
@@ -77,4 +77,4 @@ const PopUpNoShow = (props: IProps) => {
     </>
   );
 };
-export default PopUpNoShow;
+export default PopUpCancel;

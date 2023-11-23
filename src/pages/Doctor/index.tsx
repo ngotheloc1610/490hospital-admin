@@ -162,13 +162,13 @@ const Doctor = () => {
                   <img src={src} alt="image" />
                 </th>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
-                  {item.practitioner.display}
+                  {item.practitioner?.display}
                 </td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
-                  {item.practitionerTarget.gender}
+                  {item.practitionerTarget?.gender}
                 </td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
-                  {item.practitionerTarget.birthDate}
+                  {item.practitionerTarget?.birthDate}
                 </td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
                   {phone}
@@ -196,8 +196,8 @@ const Doctor = () => {
               </tr>
             );
           }) : <div>
-              Không có dữ liệu.
-            </div>}
+            Không có dữ liệu.
+          </div>}
         </tbody>
       </table>
     );
@@ -326,8 +326,8 @@ const Doctor = () => {
           )}
 
           {showPopUpBlock && (
-                  <PopUpConfirmBlock />
-                )}
+            <PopUpConfirmBlock />
+          )}
         </>
       )}
     </Layout>

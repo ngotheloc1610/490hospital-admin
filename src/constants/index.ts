@@ -242,18 +242,54 @@ export const TYPE_OF_APPOINTMENT = [
   },
 ];
 
-export const DAYS = [
+export const MONTHS = [
+  {
+    value: "1",
+    title: "January",
+  },
+  {
+    value: "2",
+    title: "February",
+  },
+  {
+    value: "3",
+    title: "Marche",
+  },
+  {
+    value: "4",
+    title: "April",
+  },
+  {
+    value: "5",
+    title: "May",
+  },
+  {
+    value: "6",
+    title: "June",
+  },
   {
     value: "7",
-    title: "7 days",
+    title: "July",
   },
   {
-    value: "30",
-    title: "30 days",
+    value: "8",
+    title: "August",
   },
   {
-    value: "",
-    title: "All time",
+    value: "9",
+    title: "September",
+  },
+  {
+    value: "10",
+    title: "October",
+  },
+  {
+    value: "11",
+    title: "November",
+  },
+  {
+    value: "12",
+    title: "December",
   },
 ];
 

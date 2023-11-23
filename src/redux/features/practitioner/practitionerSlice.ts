@@ -20,7 +20,7 @@ const initialState: IPractitioner = {
 };  
 
 export const practitionerSlice = createSlice({
-    name: "patient",
+    name: "appointment",
     initialState,
     reducers: {
         setTriggerEdit: (state, action: PayloadAction<boolean>) => {
@@ -43,6 +43,6 @@ export const practitionerSlice = createSlice({
 
 export const { setTriggerEdit, setPractitioner ,setShowPopUpConfirmBlock, setTriggerBlock, setListBlock} = practitionerSlice.actions;
 
-export const selectPatient = (state: RootState) => state.practitionerSlice;
+export const selectPractitioner = (state: RootState) => state.practitionerSlice;
 
 export default practitionerSlice.reducer;

@@ -1,36 +1,42 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-import { DEFAULT_ITEM_PER_PAGE, START_PAGE, STATUS_APPOINTMENT } from "../../../constants";
+import { DEFAULT_ITEM_PER_PAGE, START_PAGE } from "../../../constants";
 import { convertToDate, convertToTime, defineConfigGet } from "../../../Common/utils";
-import { API_ALL_GET_APPOINTMENT_PREVIOUS, API_SEARCH_APPOINTMENT } from "../../../constants/api.constant";
+import { API_ALL_GET_APPOINTMENT_PENDING, API_SEARCH_APPOINTMENT_PENDING } from "../../../constants/api.constant";
 
 import PaginationComponent from "../../../components/common/Pagination";
 import { USER } from "../../../assets";
 import Layout from "../../../components/Layout";
+import PopUpAccept from "./PopUpAccept";
+import PopUpDeny from "./PopUpDeny";
+import { useAppSelector } from "../../../redux/hooks";
 
 const AppointmentPending = () => {
     const [listData, setListData] = useState([]);
     const [currentPage, setCurrentPage] = useState<number>(START_PAGE);
     const [itemPerPage, setItemPerPage] = useState<number>(DEFAULT_ITEM_PER_PAGE);
     const [totalItem, setTotalItem] = useState<number>(0);
-
     const [isSearch, setIsSearch] = useState<boolean>(false);
-
+    const [isShowPopUpAccept, setIsShowPopUpAccept] = useState<boolean>(false);
+    const [isShowPopUpDeny, setIsShowPopUpDeny] = useState<boolean>(false);
+    const [appointmentId, setAppointmentId] = useState<string>("");
     const [name, setName] = useState<string>("");
 
     const url_api = process.env.REACT_APP_API_URL;
+
+    const {triggerAccept,triggerDeny} = useAppSelector(state => state.appointmentSlice)
 
     useEffect(() => {
         if (isSearch) {
             searchAppointment()
         } else {
-            getAppointmentPrevious()
+            getAppointmentPending()
         }
-    }, [currentPage, itemPerPage, isSearch]);
+    }, [currentPage, itemPerPage, isSearch, triggerAccept, triggerDeny]);
 
-    const getAppointmentPrevious = () => {
-        const url = `${url_api}${API_ALL_GET_APPOINTMENT_PREVIOUS}`;
+    const getAppointmentPending = () => {
+        const url = `${url_api}${API_ALL_GET_APPOINTMENT_PENDING}`;
 
         axios
             .get(url, defineConfigGet({ page: currentPage, size: itemPerPage }))
@@ -41,12 +47,12 @@ const AppointmentPending = () => {
                 }
             })
             .catch((err: any) => {
-                console.log("error get appointment previous:", err);
+                console.log("error get appointment pending:", err);
             });
     }
 
     const searchAppointment = () => {
-        const url = `${url_api}${API_SEARCH_APPOINTMENT}`;
+        const url = `${url_api}${API_SEARCH_APPOINTMENT_PENDING}`;
 
         const params = {
             nameDoctorOrPatient: name,
@@ -67,7 +73,6 @@ const AppointmentPending = () => {
             });
     }
 
-
     const getCurrentPage = (item: number) => {
         setCurrentPage(item - 1);
     };
@@ -80,6 +85,16 @@ const AppointmentPending = () => {
     const handleSearch = () => {
         setIsSearch(true);
         searchAppointment();
+    }
+
+    const handleAccept = (id: string) => {
+        setAppointmentId(id);
+        setIsShowPopUpAccept(true);
+    }
+
+    const handleDeny = (id: string) => {
+        setAppointmentId(id);
+        setIsShowPopUpDeny(true);
     }
 
     const _renderTableListAppointment = () => {
@@ -121,8 +136,8 @@ const AppointmentPending = () => {
                                 </td>
                                 <td >{item.doctorName}</td>
                                 <td >
-                                    <button className="button button--small button--accept me-2">Accept</button>
-                                    <button className="button button--small button--deny">Deny</button>
+                                    <button className="button button--small button--accept me-2" onClick={() => handleAccept(item.id)}>Accept</button>
+                                    <button className="button button--small button--deny" onClick={() => handleDeny(item.id)}>Deny</button>
                                 </td>
                             </tr>
                         );
@@ -165,9 +180,10 @@ const AppointmentPending = () => {
                     getCurrentPage={getCurrentPage}
                 />
             </section>
+
+            {isShowPopUpAccept && <PopUpAccept handleShowPopUp={setIsShowPopUpAccept} appointmentId={appointmentId}/>}
+            {isShowPopUpDeny && <PopUpDeny handleShowPopUp={setIsShowPopUpDeny} appointmentId={appointmentId}/>}
         </Layout>
-
-
     );
 };
 

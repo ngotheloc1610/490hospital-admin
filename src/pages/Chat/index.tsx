@@ -1,6 +1,3 @@
-import { USER } from "../../assets";
-import Layout from "../../components/Layout";
-
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import moment from "moment";
@@ -12,10 +9,12 @@ import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import AddCommentOutlinedIcon from '@mui/icons-material/AddCommentOutlined';
 
+import { USER } from "../../assets";
 import { API_INBOX_MESSAGE, API_INBOX_MESSAGE_SEND, API_INBOX_ROOM_LIST } from "../../constants/api.constant";
 import { defineConfigGet, defineConfigPost } from "../../Common/utils";
 import { error } from "../../Common/notify";
 import { FORMAT_DATE, FORMAT_DAY, FORMAT_TIME } from "../../constants/general.constant";
+import Layout from "../../components/Layout";
 import PopUpCreateRoom from "./PopUpCreateRoom";
 
 var stompClient: any = null;

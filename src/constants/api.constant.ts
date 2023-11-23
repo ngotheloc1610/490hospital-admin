@@ -30,14 +30,24 @@ export const API_GET_SPECIALTY = "/admin/specialty/";
 export const API_ALL_GET_DIAGNOSTIC = "/admin/diagnostic-report";
 export const API_GET_DIAGNOSTIC = "/diagnostic-report/detail/";
 
-export const API_SEARCH_APPOINTMENT = "/appointment/searchAppoint";
+export const API_SEARCH_APPOINTMENT_PREVIOUS = "/appointment/searchAppointPre";
+export const API_SEARCH_APPOINTMENT_UPCOMING = "/appointment/searchAppointUpcoming";
+export const API_SEARCH_APPOINTMENT_PROPOSED = "/appointment/searchAppointProposed";
+export const API_SEARCH_APPOINTMENT_PENDING = "/appointment/searchAppointPending";
 export const API_ALL_GET_APPOINTMENT_PREVIOUS = "/appointment/listAppointmentPrevius";
 export const API_ALL_GET_APPOINTMENT_UPCOMING = "/appointment/listAppointmentUpcoming";
+export const API_ALL_GET_APPOINTMENT_PENDING = "/appointment/listAppointmentPending";
+export const API_ALL_GET_APPOINTMENT_PROPOSED = "/appointment/listAppointmentProposed";
+export const API_ACCEPT_APPOINTMENT = "/appointment/acceptAppointment/";
+export const API_DENY_APPOINTMENT = "/appointment/unAcceptAppoint/";
+export const API_NO_SHOW_APPOINTMENT = "/appointment/noShowAppoint/";
+
 export const API_GET_SPECIALTY_APPOINTMENT = "/appointment/specialty";
 export const API_GET_DOCTOR_APPOINTMENT = "/appointment/doctor";
 export const API_SCHEDULE_GET_APPOINTMENT = "/appointment/schedule";
 export const API_CREATE_APPOINTMENT = "/appointment/create";
 export const API_GET_PATIENT_APPOINTMENT = "/appointment/patient";
+export const API_CREATE_APPOINTMENT_NEW = "/appointment/ChangeAppoint/patient/";
 
 export const SCHEDULE_ALL = "/schedule/schedule-by-doctorId/"
 export const SCHEDULE_DATE = "/schedule/schedule-by-date/"

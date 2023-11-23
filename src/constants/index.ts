@@ -149,6 +149,17 @@ export const STATUS_APPOINTMENT = [
   },
 ];
 
+export const STATUS_APPOINTMENT_UPCOMING = [
+  {
+    name: "Canceled",
+    code: "Canceled",
+  },
+  {
+    name: "No Show",
+    code: "No Show",
+  },
+];
+
 export const TYPE_PRACTITIONER = [
   {
     name: "Doctor",

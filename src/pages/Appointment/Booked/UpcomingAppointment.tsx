@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-import { DEFAULT_ITEM_PER_PAGE, START_PAGE, STATUS_APPOINTMENT } from "../../../constants";
+import { DEFAULT_ITEM_PER_PAGE, START_PAGE, STATUS_APPOINTMENT_UPCOMING } from "../../../constants";
 import { convertToDate, convertToTime, defineConfigGet, styleStatus } from "../../../Common/utils";
-import { API_ALL_GET_APPOINTMENT_UPCOMING, API_SEARCH_APPOINTMENT } from "../../../constants/api.constant";
+import { API_ALL_GET_APPOINTMENT_UPCOMING, API_SEARCH_APPOINTMENT_UPCOMING } from "../../../constants/api.constant";
 
 import PaginationComponent from "../../../components/common/Pagination";
 import { USER } from "../../../assets";
@@ -46,7 +46,7 @@ const UpcomingAppointment = () => {
     }
 
     const searchAppointment = () => {
-        const url = `${url_api}${API_SEARCH_APPOINTMENT}`;
+        const url = `${url_api}${API_SEARCH_APPOINTMENT_UPCOMING}`;
 
         const params = {
             nameDoctorOrPatient: name,
@@ -136,7 +136,7 @@ const UpcomingAppointment = () => {
         return (
             <>
                 <option hidden>Select Status</option>
-                {STATUS_APPOINTMENT.map((item: any) => (
+                {STATUS_APPOINTMENT_UPCOMING.map((item: any) => (
                     <option value={item.code} key={item.code}>
                         {item.name}
                     </option>

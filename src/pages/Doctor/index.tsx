@@ -11,7 +11,7 @@ import {
 } from "../../constants";
 import PaginationComponent from "../../components/common/Pagination";
 import { API_ALL_GET_DOCTOR, API_ALL_GET_SPECIALTY, API_SEARCH_DOCTOR } from "../../constants/api.constant";
-import { defineConfigGet } from "../../Common/utils";
+import { defineConfigGet, styleStatusPractitioner } from "../../Common/utils";
 
 import Layout from "../../components/Layout";
 import TotalView from "../../components/common/TotalView";
@@ -181,7 +181,9 @@ const Doctor = () => {
                     )
                   })
                 }</td>
-                <td onClick={() => navigate(`overview/${item.id}`)}>{item.active ? "Active" : "Deactive"}</td>
+                <td onClick={() => navigate(`overview/${item.id}`)}>
+                  <span className={styleStatusPractitioner(item.active)}>{item.active ? "Active" : "Inactive"}</span>
+                </td>
                 <td>
                   <span className="cursor-pointer" onClick={handleCancel}>
                     <ICON_TRASH />

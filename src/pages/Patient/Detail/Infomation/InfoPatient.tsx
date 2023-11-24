@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
-import { convertToDate, convertToTime, defineConfigGet, defineConfigPost } from "../../../../Common/utils";
+import { convertToDate, convertToTime, defineConfigGet, defineConfigPost, styleStatus } from "../../../../Common/utils";
 import { API_GET_LIST_APPOINTMENT_PATIENT, API_GET_PATIENT } from "../../../../constants/api.constant";
 import { USER } from "../../../../assets";
 
@@ -153,11 +153,14 @@ const InfoPatient = () => {
 
                   <td >{convertToDate(item.appointDate)}</td>
                   <td >
-                    <span>{convertToTime(item.appointmentTimeStart)} </span> -
+                    <span>{convertToTime(item.appointmentTimeStart)} </span>
+                    <span> - </span>
                     <span>{convertToTime(item.appointmentTimeEnd)}</span>
                   </td>
                   <td >{item.doctorName}</td>
-                  <td >{item.status}</td>
+                  <td>
+                    <span className={styleStatus(item.status)}>{item.status}</span>
+                  </td>
                 </tr>
               );
             })}

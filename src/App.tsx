@@ -61,6 +61,8 @@ import Setting from "./pages/Setting";
 import AppointmentPending from "./pages/Appointment/Pending";
 import AppointmentBooked from "./pages/Appointment/Booked";
 import AppointmentProposed from "./pages/Appointment/Proposed";
+import PatientDashboard from "./pages/Dashboard/Patient";
+import AppointmentDashboard from "./pages/Dashboard/Appointment";
 
 if (typeof window !== "undefined") {
   require("bootstrap/dist/js/bootstrap.bundle.min");
@@ -69,7 +71,10 @@ if (typeof window !== "undefined") {
 const RouterDom = () => (
   <Routes>
     <Route path="/" element={<Dashboard />} />
-    <Route path={RouterUrl.DASHBOARD} element={<Dashboard />} />
+    <Route path={RouterUrl.DASHBOARD} element={<Dashboard />}>
+      <Route path="patient" element={<PatientDashboard />} />
+      <Route path="appointment" element={<AppointmentDashboard />} />
+    </Route>
 
     <Route path={RouterUrl.DOCTOR} element={<Doctor />}>
       <Route path="overview" element={<DetailDoctor />}>
@@ -93,9 +98,18 @@ const RouterDom = () => (
       </Route>
     </Route>
 
-    <Route path={RouterUrl.APPOINTMENT_PENDING} element={<AppointmentPending />} />
-    <Route path={RouterUrl.APPOINTMENT_BOOKED} element={<AppointmentBooked />} />
-    <Route path={RouterUrl.APPOINTMENT_PROPOSED} element={<AppointmentProposed />} />
+    <Route
+      path={RouterUrl.APPOINTMENT_PENDING}
+      element={<AppointmentPending />}
+    />
+    <Route
+      path={RouterUrl.APPOINTMENT_BOOKED}
+      element={<AppointmentBooked />}
+    />
+    <Route
+      path={RouterUrl.APPOINTMENT_PROPOSED}
+      element={<AppointmentProposed />}
+    />
 
     <Route path={RouterUrl.PRACTITIONER} element={<Practitioner />} />
 
@@ -117,7 +131,7 @@ const RouterDom = () => (
     <Route path={RouterUrl.FORGOT_PASSWORD} element={<ForgotPassword />} />
     <Route path={RouterUrl.CHANGE_PASSWORD} element={<ChangePassword />} />
 
-    <Route path={RouterUrl.INFORMATION} element={<Information />} >
+    <Route path={RouterUrl.INFORMATION} element={<Information />}>
       <Route path=":practitionerId" element={<EditPractitioner />} />
     </Route>
 
@@ -128,7 +142,6 @@ const RouterDom = () => (
     <Route path={RouterUrl.BOOK_APPOINTMENT} element={<BookAppointment />} />
 
     <Route path={RouterUrl.SETTING} element={<Setting />} />
-
 
     <Route path="*" element={<Navigate to={RouterUrl.DASHBOARD} />} />
   </Routes>
@@ -148,7 +161,7 @@ const App = () => {
   const [isForgotPassword, setIsForgotPassword] = useState<boolean>(false);
   const [isChangePassword, setIsChangePassword] = useState<boolean>(false);
 
-  const { isLogin } = useAppSelector((state) => state.authSlice)
+  const { isLogin } = useAppSelector((state) => state.authSlice);
 
   return (
     <BrowserRouter basename={process.env.PUBLIC_URL}>

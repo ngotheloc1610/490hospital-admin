@@ -51,7 +51,7 @@ const PopUpCreateRoom = (props: IProps) => {
         <Modal.Header  onClick={() => {
                 handleShowPopUp(false)
         }}>
-          <Modal.Title>Modal title</Modal.Title>
+          <Modal.Title>Create Room</Modal.Title>
         </Modal.Header>
         <Modal.Body className="mt-2 mb-2">
          

@@ -23,7 +23,6 @@ const InfoStaff = () => {
       .get(url, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
-          console.log("resp:", resp)
           setStaff(resp.data);
         }
       })

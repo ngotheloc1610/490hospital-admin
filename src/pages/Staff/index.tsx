@@ -12,7 +12,7 @@ import {
 } from "../../constants";
 import { ICON_BLOCK, ICON_PENCIL, ICON_TRASH } from "../../assets";
 import axios from "axios";
-import { defineConfigGet } from "../../Common/utils";
+import { defineConfigGet, styleStatusPractitioner } from "../../Common/utils";
 import { API_ALL_GET_SPECIALTY, API_ALL_GET_STAFF, API_SEARCH_STAFF } from "../../constants/api.constant";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setPractitioner, setShowPopUpConfirmBlock } from "../../redux/features/practitioner/practitionerSlice";
@@ -255,7 +255,7 @@ const Staff = () => {
                   )
                 })}</td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
-                  {item.active ? "Active" : "Deactive"}
+                  <span className={styleStatusPractitioner(item.active)}>{item.active ? "Active" : "Inactive"}</span>
                 </td>
                 <td>
                   <span className="cursor-pointer" onClick={handleCancel}>

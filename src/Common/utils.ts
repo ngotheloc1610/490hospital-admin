@@ -30,15 +30,23 @@ export const styleStatus = (status: string) => {
     switch (status) {
         case "No Show":
             return "no-show";
-            break;
         case "Canceled":
             return "canceled";
-            break;
         case "Fulfilled":
             return "fulfilled";
-            break;
 
         default:
-            break;
+            return;
+    }
+}
+
+export const styleStatusPractitioner = (status: boolean) => {
+    switch (status) {
+        case true:
+            return "practitioner-active";
+        case false:
+            return "practitioner-inactive";
+        default:
+            return;
     }
 }

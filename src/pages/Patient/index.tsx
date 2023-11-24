@@ -138,10 +138,10 @@ const Patient = () => {
             return (
               <tr className={`${idx % 2 === 1 ? "table-light" : ""} ${checkBlock(item.id) ? "text-decoration-line-through" : ""}`}>
                 <th scope="row">
-                  <img src={src} alt="image" />
+                  <img src={src} alt="img patient" />
                 </th>
                 <td onClick={() => navigate(`information/${item.id}`)}>
-                  {item.nameFirstRep.nameAsSingleString}
+                  {item.nameFirstRep.text}
                 </td>
                 <td onClick={() => navigate(`information/${item.id}`)}>{item.gender}</td>
                 <td onClick={() => navigate(`information/${item.id}`)}>{item.birthDate}</td>
@@ -219,14 +219,6 @@ const Patient = () => {
       ) : (
         <>
           <TotalView />
-          {/* <div className="d-flex justify-content-end me-4">
-            <button
-              className="button button--small button--primary"
-              onClick={() => navigate("/patient/information/detail/create")}
-            >
-              <i className="bi bi-plus"></i> Add
-            </button>
-          </div> */}
           <section className="table-container">
             <div className="table-container-contain">
               <div className="d-flex justify-content-center align-item-center">

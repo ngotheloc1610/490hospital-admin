@@ -199,3 +199,17 @@ button {
   color: #0ea961;
   padding: 5px;
 }
+
+.practitioner-active{
+  border-radius: 6px;
+  background: var(--e-3-ebff, #E3EBFF);
+  color: #0FB800;
+  padding: 5px;
+}
+
+.practitioner-inactive{
+  border-radius: 6px;
+  background: var(--e-3-ebff, #E3EBFF);
+  color: #FFC83B;
+  padding: 5px;
+}

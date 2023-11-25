@@ -3,7 +3,7 @@ import axios from "axios";
 
 import { API_DENY_APPOINTMENT } from "../../../constants/api.constant";
 import { defineConfigGet } from "../../../Common/utils";
-import { success } from "../../../Common/notify";
+import { error, success } from "../../../Common/notify";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setTriggerDeny } from "../../../redux/features/appointment/appointmentSlice";
 
@@ -39,6 +39,8 @@ const PopUpDeny = (props: IProps) => {
       })
       .catch((err: any) => {
         console.log("err:", err);
+        error(err.response.data.error);
+
       });
   };
 

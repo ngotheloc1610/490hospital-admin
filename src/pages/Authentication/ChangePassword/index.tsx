@@ -8,7 +8,7 @@ import { error, warn } from "../../../Common/notify";
 
 const ChangePassword = () => {
 
-    const [isShowOldPassword, setIsShowOldPassword] = useState<boolean>(false);
+  const [isShowOldPassword, setIsShowOldPassword] = useState<boolean>(false);
   const [isShowNewPassword, setIsShowNewPassword] = useState<boolean>(false);
   const [isShowCfNewPassword, setIsShowCfNewPassword] = useState<boolean>(false);
 
@@ -36,25 +36,25 @@ const ChangePassword = () => {
           console.log("resp:", resp);
           if (resp) {
             setIsSuccess(true);
-        }
+          }
         }
       })
       .catch((err: any) => {
-        error(err.response.data.error.message)
+        error(err.response.data.error)
         console.log("error update patient:", err);
       });
   }
 
   const handleChangePassword = () => {
-    if(oldPassword){
+    if (oldPassword) {
       warn("Nhập mật khẩu cũ!");
       return;
     }
-    if(oldPassword === newPassword){
+    if (oldPassword === newPassword) {
       warn("Trùng với mật khẩu cũ ! Vui lòng nhập lại.");
       return;
     }
-    if(newPassword === cfNewPassword){
+    if (newPassword === cfNewPassword) {
       warn("Mật khẩu không trùng khớp!");
       return;
     }
@@ -77,16 +77,15 @@ const ChangePassword = () => {
               className="form-control"
               placeholder="Enter Your Old Password"
               value={oldPassword}
-              onChange={(e:any) => setOldPassword(e.target.value)}
+              onChange={(e: any) => setOldPassword(e.target.value)}
             />
             <span
               className="input-group-text"
               onClick={() => setIsShowOldPassword(!isShowOldPassword)}
             >
               <i
-                className={`bi ${
-                    isShowOldPassword ? "bi-eye-slash" : "bi-eye-fill"
-                } fs-5 icon-gray`}
+                className={`bi ${isShowOldPassword ? "bi-eye-slash" : "bi-eye-fill"
+                  } fs-5 icon-gray`}
               />
             </span>
           </div>
@@ -100,16 +99,15 @@ const ChangePassword = () => {
               className="form-control"
               placeholder="Enter Your New Password"
               value={newPassword}
-              onChange={(e:any) => setNewPassword(e.target.value)}
+              onChange={(e: any) => setNewPassword(e.target.value)}
             />
             <span
               className="input-group-text"
               onClick={() => setIsShowNewPassword(!isShowNewPassword)}
             >
               <i
-                className={`bi ${
-                    isShowNewPassword ? "bi-eye-slash" : "bi-eye-fill"
-                } fs-5 icon-gray`}
+                className={`bi ${isShowNewPassword ? "bi-eye-slash" : "bi-eye-fill"
+                  } fs-5 icon-gray`}
               />
             </span>
           </div>
@@ -123,22 +121,21 @@ const ChangePassword = () => {
               className="form-control"
               placeholder="Confirm New Password"
               value={cfNewPassword}
-              onChange={(e:any) => setCfNewPassword(e.target.value)}
+              onChange={(e: any) => setCfNewPassword(e.target.value)}
             />
             <span
               className="input-group-text"
               onClick={() => setIsShowCfNewPassword(!isShowCfNewPassword)}
             >
               <i
-                className={`bi ${
-                    isShowCfNewPassword ? "bi-eye-slash" : "bi-eye-fill"
-                } fs-5 icon-gray`}
+                className={`bi ${isShowCfNewPassword ? "bi-eye-slash" : "bi-eye-fill"
+                  } fs-5 icon-gray`}
               />
             </span>
           </div>
 
           <button className="button button--large button--primary w-100" onClick={handleChangePassword}>
-          Change  Password
+            Change  Password
           </button>
         </div>
       </div>
@@ -147,21 +144,21 @@ const ChangePassword = () => {
 
   const _renderSuccess = () => {
     return (
-        <div className="forgot">
-            <div className="forgot-container">
-                <p className="icon-success mb-4">
-                    <i className="bi bi-check-lg fs-1"></i>
-                </p>
-                <h3 className="text-center mb-3">Success</h3>
-                <p className="text-center mb-5">
-                    You have successfully change your
-                    <span className="text-center d-block mt-2">password.</span>
-                </p>
-                <p className="text-center">Re-directing to your dashboard...</p>
-            </div>
+      <div className="forgot">
+        <div className="forgot-container">
+          <p className="icon-success mb-4">
+            <i className="bi bi-check-lg fs-1"></i>
+          </p>
+          <h3 className="text-center mb-3">Success</h3>
+          <p className="text-center mb-5">
+            You have successfully change your
+            <span className="text-center d-block mt-2">password.</span>
+          </p>
+          <p className="text-center">Re-directing to your dashboard...</p>
         </div>
+      </div>
     );
-};
+  };
 
   return (
     <Layout>

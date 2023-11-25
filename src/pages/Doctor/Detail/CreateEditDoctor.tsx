@@ -9,7 +9,7 @@ import axios from "axios";
 import { API_ALL_GET_SPECIALTY, API_DETAIL_PRACTITIONER, API_GET_ROOM_BY_SPECIALTY, API_UPDATE_PRACTITIONER } from "../../../constants/api.constant";
 import { useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
-import { success } from "../../../Common/notify";
+import { error, success } from "../../../Common/notify";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Required"),
@@ -127,6 +127,7 @@ const CreateEditDoctor = () => {
       })
       .catch((err) => {
         console.log("error get info practitioner(Doctor):", err);
+        error(err.response.data.error);
       });
   }
 

@@ -78,6 +78,7 @@ const EditPractitioner = () => {
             })
             .catch((err: any) => {
                 console.log("error get profile practitioner:", err);
+                error(err.response.data.error);
             });
     }
 

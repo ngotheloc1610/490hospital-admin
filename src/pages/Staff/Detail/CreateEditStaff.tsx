@@ -9,7 +9,7 @@ import { defineConfigGet, defineConfigPost } from "../../../Common/utils";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
-import { success } from "../../../Common/notify";
+import { error, success } from "../../../Common/notify";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Required"),
@@ -146,6 +146,7 @@ const CreateEditStaff = () => {
       })
       .catch((err) => {
         console.log("error update practitioner (Staff):", err);
+        error(err.response.data.error);
       });
   }
 

@@ -62,26 +62,18 @@ button {
     font-weight: 700;
     color: $white-color;
     transition: 0.2s ease-in all;
-    background: var(
-      --neumorphism-colour,
-      radial-gradient(
-        184.95% 38.56% at 50% 50%,
-        #c4c4c4 0%,
-        rgba(196, 196, 196, 0.62) 63.54%,
-        rgba(196, 196, 196, 0.79) 100%
-      )
-    );
-
-    &:hover {
-      background: var(
-        --neumorphism-colour,
-        radial-gradient(
-          184.95% 38.56% at 50% 50%,
+    background: var(--neumorphism-colour,
+        radial-gradient(184.95% 38.56% at 50% 50%,
           #c4c4c4 0%,
           rgba(196, 196, 196, 0.62) 63.54%,
-          rgba(196, 196, 196, 0.79) 100%
-        )
-      );
+          rgba(196, 196, 196, 0.79) 100%));
+
+    &:hover {
+      background: var(--neumorphism-colour,
+          radial-gradient(184.95% 38.56% at 50% 50%,
+            #c4c4c4 0%,
+            rgba(196, 196, 196, 0.62) 63.54%,
+            rgba(196, 196, 196, 0.79) 100%));
       transition: 0.2s ease-in all;
     }
   }
@@ -200,16 +192,23 @@ button {
   padding: 5px;
 }
 
-.practitioner-active{
+.practitioner-active {
   border-radius: 6px;
   background: var(--e-3-ebff, #E3EBFF);
   color: #0FB800;
   padding: 5px;
 }
 
-.practitioner-inactive{
+.practitioner-inactive {
   border-radius: 6px;
   background: var(--e-3-ebff, #E3EBFF);
   color: #FFC83B;
   padding: 5px;
+}
+
+.box {
+  border-radius: 20px;
+  border: 2px solid #ECEEF6;
+  background: #FFF;
+  box-shadow: 0px 4px 20px 5px rgba(220, 224, 249, 0.20);
 }

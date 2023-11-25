@@ -18,7 +18,7 @@ export const API_SEARCH_DOCTOR = "/admin/searchDoctor";
 export const API_ALL_GET_STAFF = "/admin/staffs";
 export const API_SEARCH_STAFF = "/admin/searchStaff";
 
-export const API_DETAIL_PRACTITIONER = "/admin/practitionerRole/detail/";
+export const API_DETAIL_PRACTITIONER = "/admin/practitioner/detail/";
 export const API_UPDATE_PRACTITIONER = "/admin/practitioner/update/";
 export const API_CREATE_PRACTITIONER = "/admin/practitioner/create"
 export const API_PROFILE_PRACTITIONER = "/practitioner/profile"
@@ -46,7 +46,7 @@ export const API_CHANGE_APPOINTMENT_PATIENT = "/appointment/ChangeAppoint/patien
 export const API_GET_SPECIALTY_APPOINTMENT = "/appointment/specialty";
 export const API_GET_DOCTOR_APPOINTMENT = "/appointment/doctor";
 export const API_SCHEDULE_GET_APPOINTMENT = "/appointment/schedule";
-export const API_CREATE_APPOINTMENT = "/appointment/create";
+export const API_CREATE_APPOINTMENT = "/appointment/practitioner/create";
 export const API_GET_PATIENT_APPOINTMENT = "/appointment/patient";
 export const API_CREATE_APPOINTMENT_NEW = "/appointment/ChangeAppoint/patient/";
 

@@ -150,9 +150,9 @@ const Patient = () => {
                 </td>
                 <td onClick={() => navigate(`information/${item.id}`)}>{email}</td>
                 <td>
-                  <span className="cursor-pointer" onClick={() => handleDelete(item)}>
+                  {/* <span className="cursor-pointer" onClick={() => handleDelete(item)}>
                     <ICON_TRASH />
-                  </span>
+                  </span> */}
                   <span className="ms-1 cursor-pointer" onClick={() => handleModify(item.id)}>
                     <ICON_PENCIL />
                   </span>
@@ -163,8 +163,8 @@ const Patient = () => {
               </tr>
             );
           }) : <div>
-              Không có dữ liệu.
-            </div>}
+            Không có dữ liệu.
+          </div>}
         </tbody>
       </table>
     );

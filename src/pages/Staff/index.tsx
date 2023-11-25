@@ -91,7 +91,7 @@ const Staff = () => {
     setShowPopUpConfirm(true);
   };
 
-  const handleModify = (id:string) => {
+  const handleModify = (id: string) => {
     navigate(`/staff/overview/detail/${id}`)
   };
 
@@ -104,7 +104,7 @@ const Staff = () => {
     const url = `${url_api}${API_SEARCH_STAFF}`;
 
     axios
-      .get(url, defineConfigGet({ page: currentPage, size: itemPerPage, nameStaff:name, nameSpecialty: specialty, gender: gender, status: status }))
+      .get(url, defineConfigGet({ page: currentPage, size: itemPerPage, nameStaff: name, nameSpecialty: specialty, gender: gender, status: status }))
       .then((resp: any) => {
         if (resp) {
           console.log("resp:", resp)
@@ -237,13 +237,13 @@ const Staff = () => {
                   <img src={src} alt="image" />
                 </th>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
-                  {item.practitioner.display}
+                  {item.practitioner?.display}
                 </td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
-                  {item.practitionerTarget.gender}
+                  {item.practitionerTarget?.gender}
                 </td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
-                  {item.practitionerTarget.birthDate}
+                  {item.practitionerTarget?.birthDate}
                 </td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
                   {phone}
@@ -258,9 +258,9 @@ const Staff = () => {
                   <span className={styleStatusPractitioner(item.active)}>{item.active ? "Active" : "Inactive"}</span>
                 </td>
                 <td>
-                  <span className="cursor-pointer" onClick={handleCancel}>
+                  {/* <span className="cursor-pointer" onClick={handleCancel}>
                     <ICON_TRASH />
-                  </span>
+                  </span> */}
                   <span className="ms-1 cursor-pointer" onClick={() => handleModify(item.id)}>
                     <ICON_PENCIL />
                   </span>
@@ -271,8 +271,8 @@ const Staff = () => {
               </tr>
             );
           }) : <div>
-              Không có dữ liệu.
-            </div>}
+            Không có dữ liệu.
+          </div>}
         </tbody>
       </table>
     );
@@ -307,9 +307,9 @@ const Staff = () => {
             <PopUpConfirm handleCloseConfirmPopup={setShowPopUpConfirm} />
           )}
 
-{showPopUpBlock && (
-                  <PopUpConfirmBlock />
-                )}
+          {showPopUpBlock && (
+            <PopUpConfirmBlock />
+          )}
         </>
       )}
     </Layout>

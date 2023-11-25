@@ -78,23 +78,51 @@ const CreateEditDoctor = () => {
       .then((resp: any) => {
         if (resp) {
           const data = resp.data;
+
+          let educations: any = [];
+          let specialize: any = [];
+          let achievement: any = [];
+
+          data?.qualificationsEdu.map((item: any) =>
+            educations.push({
+              start: moment(item?.qualificationPeriodStart).format("YYYY-MM-DD"),
+              end: moment(item?.qualificationPeriodEnd).format("YYYY-MM-DD"),
+              content: item?.qualificationText
+            })
+          )
+          data?.qualificationsSpecActivities.map((item: any) =>
+            specialize.push({
+              start: moment(item?.qualificationPeriodStart).format("YYYY-MM-DD"),
+              end: moment(item?.qualificationPeriodEnd).format("YYYY-MM-DD"),
+              content: item?.qualificationText
+            })
+          )
+          data?.qualificationsAchive.map((item: any) =>
+            achievement.push({
+              start: moment(item?.qualificationPeriodStart).format("YYYY-MM-DD"),
+              end: moment(item?.qualificationPeriodEnd).format("YYYY-MM-DD"),
+              content: item?.qualificationText
+            })
+          )
+
           const dataConverted: any = {
             id: data.id,
-            name: data.practitioner.display,
-            birthday: data.practitionerTarget?.birthDate,
-            gender: data.practitionerTarget?.gender,
-            phoneNumber: data.practitionerTarget?.telecom.filter((item: any) => item.system === "phone").value,
-            email: data.practitionerTarget?.telecom.filter((item: any) => item.system === "email").value,
-            address: data.addressFirstRep?.text,
-            identifier: data.practitionerTarget?.identifierFirstRep.value,
-            specialty: data.specialty[0].coding[0].display,
-            startDate: moment(data.period.start).format("YYYY-MM-DD"),
-            endDate: moment(data.period.end).format("YYYY-MM-DD"),
-            education: [{ time: "", content: "" }],
-            specialize: [{ time: "", content: "" }],
-            achievement: [{ time: "", content: "" }],
+            name: data?.name,
+            birthday: data?.dateOfBirth,
+            gender: data?.gender,
+            phoneNumber: data?.phoneNumber,
+            email: data?.email,
+            address: data?.address,
+            identifier: data?.identification,
+            specialty: data?.displaySpecialty,
+            startDate: moment(data?.startWork).format("YYYY-MM-DD"),
+            endDate: moment(data?.endWork).format("YYYY-MM-DD"),
+            education: educations,
+            specialize: specialize,
+            achievement: achievement,
           }
           setDoctor(dataConverted);
+          setSpecialtyId(data?.idSpecialty)
         }
       })
       .catch((err) => {
@@ -493,7 +521,7 @@ const CreateEditDoctor = () => {
                       <button
                         className="button-add"
                         onClick={() =>
-                          arrayHelpers.push({ time: "", content: "" })
+                          arrayHelpers.push({ start: "", end: "", content: "" })
                         }
                       >
                         <i className="bi bi-plus-circle-fill"></i>
@@ -570,7 +598,7 @@ const CreateEditDoctor = () => {
                       <button
                         className="button-add"
                         onClick={() =>
-                          arrayHelpers.push({ time: "", content: "" })
+                          arrayHelpers.push({ start: "", end: "", content: "" })
                         }
                       >
                         <i className="bi bi-plus-circle-fill"></i>
@@ -645,7 +673,7 @@ const CreateEditDoctor = () => {
                       <button
                         className="button-add"
                         onClick={() =>
-                          arrayHelpers.push({ time: "", content: "" })
+                          arrayHelpers.push({ start: "", end: "", content: "" })
                         }
                       >
                         <i className="bi bi-plus-circle-fill"></i>

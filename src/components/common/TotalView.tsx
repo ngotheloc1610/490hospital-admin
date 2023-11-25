@@ -41,10 +41,14 @@ function TotalView() {
 
   return (
     <section className="totalview">
-      <div className="container">
+      <div>
         <div className="row">
           <div className="col-3">
-            <div className="d-flex totalview-box p-3">
+            <div className="totalview-box totalview-box-doctor">
+              <p className="fw-bold fs-5">Total Doctors</p>
+              <p className="fs-4 mb-0">{total.doctor}</p>
+            </div>
+            {/* <div className="d-flex totalview-box p-3">
               <p className="w-50 d-flex justify-content-center align-item-center m-auto">
                 <ICON_DOCTOR style={{ width: "50px", height: "50px" }} />
               </p>
@@ -54,10 +58,14 @@ function TotalView() {
                 </p>
                 <p>{total.doctor}</p>
               </div>
-            </div>
+            </div> */}
           </div>
           <div className="col-3">
-            <div className="d-flex totalview-box p-3">
+            <div className="totalview-box totalview-box-staff">
+              <p className="fw-bold fs-5">Total Staff</p>
+              <p className="fs-4 mb-0">{total.staff}</p>
+            </div>
+            {/* <div className="d-flex totalview-box p-3">
               <p className="w-50 d-flex justify-content-center align-item-center m-auto">
                 <ICON_STAFF style={{ width: "50px", height: "50px" }} />
               </p>
@@ -67,10 +75,14 @@ function TotalView() {
                 </p>
                 <p>{total.staff}</p>
               </div>
-            </div>
+            </div> */}
           </div>
           <div className="col-3">
-            <div className="d-flex totalview-box p-3">
+            <div className="totalview-box totalview-box-specialty">
+              <p className="fw-bold fs-5">Total Specialty</p>
+              <p className="fs-4 mb-0">{total.department}</p>
+            </div>
+            {/* <div className="d-flex totalview-box p-3">
               <p className="w-50 d-flex justify-content-center align-item-center m-auto">
                 <ICON_DEPARTMENT style={{ width: "50px", height: "50px" }} />
               </p>
@@ -80,10 +92,14 @@ function TotalView() {
                 </p>
                 <p>{total.department}</p>
               </div>
-            </div>
+            </div> */}
           </div>
           <div className="col-3 ">
-            <div className="d-flex totalview-box p-3">
+            <div className="totalview-box totalview-box-patient">
+              <p className="fw-bold fs-5">Total Patient</p>
+              <p className="fs-4 mb-0">{total.patient}</p>
+            </div>
+            {/* <div className="d-flex totalview-box p-3">
               <p className="w-50 d-flex justify-content-center align-item-center m-auto">
                 <ICON_PATIENT style={{ width: "50px", height: "50px" }} />
               </p>
@@ -93,7 +109,7 @@ function TotalView() {
                 </p>
                 <p>{total.patient}</p>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

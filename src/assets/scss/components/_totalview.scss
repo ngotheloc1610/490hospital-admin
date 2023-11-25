@@ -1,16 +1,41 @@
-.totalview{
-    padding: 40px 70px;
+.totalview {
+    // p {
+    //     font-size: 18px;
+    //     font-style: normal;
+    //     font-weight: 600;
+    //     line-height: normal;
+    // }
 
-    p{
-        font-size: 18px;
-font-style: normal;
-font-weight: 600;
-line-height: normal;
+    // &-box {
+    //     border-radius: 15px;
+    //     border: 1px solid #979797;
+    //     background: #FFF;
+    // }
+
+    margin: 30px 0;
+
+    p {
+        color: $white-color;
     }
 
-    &-box{
-        border-radius: 15px;
-border: 1px solid #979797;
-background: #FFF;
+    &-box {
+        border-radius: 12px;
+        padding: 15px 30px;
+    }
+
+    &-box-doctor {
+        background: linear-gradient(90deg, rgba(16, 60, 231, 0.71) 10.42%, #3E9CF4 38.02%, #64E9FF 84.9%);
+    }
+
+    &-box-staff {
+        background: linear-gradient(90deg, rgba(1, 175, 91, 1) 10.42%, rgba(117, 255, 190, 1) 84.9%);
+    }
+
+    &-box-specialty {
+        background: linear-gradient(90deg, rgba(254, 66, 66, 1) 10.42%, rgba(254, 209, 66, 1) 84.9%);
+    }
+
+    &-box-patient {
+        background: linear-gradient(90deg, rgba(255, 64, 64, 1) 10.42%, rgba(255, 106, 160, 1) 84.9%);
     }
 }

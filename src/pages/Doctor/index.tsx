@@ -185,9 +185,9 @@ const Doctor = () => {
                   <span className={styleStatusPractitioner(item.active)}>{item.active ? "Active" : "Inactive"}</span>
                 </td>
                 <td>
-                  <span className="cursor-pointer" onClick={handleCancel}>
+                  {/* <span className="cursor-pointer" onClick={handleCancel}>
                     <ICON_TRASH />
-                  </span>
+                  </span> */}
                   <span className="ms-1 cursor-pointer" onClick={() => handleModify(item.id)}>
                     <ICON_PENCIL />
                   </span>

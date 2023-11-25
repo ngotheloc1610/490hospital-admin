@@ -1,0 +1,65 @@
+.dashboard {
+    .title {
+        color: #9083D5;
+        font-size: 22px;
+        font-style: normal;
+        font-weight: bold;
+        line-height: normal;
+        margin: auto 0;
+    }
+
+    .input-select {
+        border-radius: 12px;
+        background: rgba(144, 131, 213, 0.25);
+        box-shadow: 5px 5px 10px 0px rgba(0, 0, 0, 0.05);
+        border: none;
+        color: #8575D2;
+        padding: 0 5px;
+
+        &-w15 {
+            width: 15%;
+        }
+
+        &-w25 {
+            width: 25%;
+        }
+
+        &:focus {
+            border: none;
+            outline: none;
+        }
+    }
+
+    .line {
+        width: 120.319px;
+        height: 2.716px;
+        flex-shrink: 0;
+
+        &-green {
+            background: linear-gradient(0deg, #8DE27F 0%, #8DE27F 100%);
+        }
+
+        &-red {
+            background: linear-gradient(0deg, #F59898 0%, #F59898 100%);
+        }
+
+        &-blue {
+            background: linear-gradient(0deg, #59C3CF 0%, #59C3CF 100%);
+        }
+    }
+
+    .image-patient {
+        svg {
+            width: 45.97px;
+            height: 49.811px;
+            flex-shrink: 0;
+        }
+    }
+
+    .image-appointment {
+        width: 40px;
+        height: 40px;
+        border-radius: 100rem;
+    }
+
+}

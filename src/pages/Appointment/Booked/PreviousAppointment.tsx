@@ -84,7 +84,7 @@ const PreviousAppointment = () => {
         searchAppointment();
     }
 
-  
+
 
     const _renderTableListAppointment = () => {
         return (
@@ -125,7 +125,7 @@ const PreviousAppointment = () => {
                                 </td>
                                 <td >{item.doctorName}</td>
                                 <td ><span className={styleStatus(item.status)}>
-                                {item.status}</span></td>
+                                    {item.status}</span></td>
                             </tr>
                         );
                     })}

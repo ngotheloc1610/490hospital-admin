@@ -30,11 +30,10 @@ export const styleStatus = (status: string) => {
     switch (status) {
         case "No Show":
             return "no-show";
-        case "Canceled":
+        case "Cancel":
             return "canceled";
         case "Fulfilled":
             return "fulfilled";
-
         default:
             return;
     }

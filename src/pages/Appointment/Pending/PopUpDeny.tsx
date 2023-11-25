@@ -2,7 +2,7 @@ import { Button, Modal } from "react-bootstrap";
 import axios from "axios";
 
 import { API_DENY_APPOINTMENT } from "../../../constants/api.constant";
-import { defineConfigPost } from "../../../Common/utils";
+import { defineConfigGet } from "../../../Common/utils";
 import { success } from "../../../Common/notify";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setTriggerDeny } from "../../../redux/features/appointment/appointmentSlice";
@@ -18,12 +18,18 @@ const PopUpDeny = (props: IProps) => {
   const url_api = process.env.REACT_APP_API_URL;
 
   const dispatch = useAppDispatch();
-  const {triggerDeny} = useAppSelector(state => state.appointmentSlice)
+  const { triggerDeny } = useAppSelector(state => state.appointmentSlice)
 
   const denyAppointment = () => {
     const url = `${url_api}${API_DENY_APPOINTMENT}${appointmentId}`;
+
+    const params = {
+      idPractitioner: "",
+      namePractitioner: ""
+    }
+
     axios
-      .post(url, defineConfigPost())
+      .post(url, defineConfigGet(params))
       .then((resp) => {
         if (resp) {
           dispatch(setTriggerDeny(!triggerDeny))

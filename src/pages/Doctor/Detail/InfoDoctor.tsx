@@ -35,13 +35,6 @@ const InfoDoctor = () => {
   }, [param.doctorId]);
 
   const _renderBasicInfo = () => {
-    const email = doctor?.practitionerTarget?.telecom?.find(
-      (i: any) => i?.system === "email"
-    )?.value;
-    const phone = doctor?.practitionerTarget?.telecom?.find(
-      (i: any) => i?.system === "phone"
-    )?.value;
-
     return (
       <div>
         <p className="fw-bold border-top pt-2 text-dark">Basic Information</p>
@@ -49,27 +42,27 @@ const InfoDoctor = () => {
           <tbody>
             <tr>
               <th scope="row" style={{ width: "35%" }}>Gender</th>
-              <td>{doctor?.practitionerTarget?.gender}</td>
+              <td>{doctor?.gender}</td>
             </tr>
             <tr>
               <th scope="row">Date of birth</th>
-              <td>{doctor?.practitionerTarget?.birthDate}</td>
+              <td>{doctor?.dateOfBirth}</td>
             </tr>
             <tr>
               <th scope="row">Address</th>
-              <td>{doctor?.practitionerTarget?.addressFirstRep?.text}</td>
+              <td>{doctor?.address}</td>
             </tr>
             <tr>
               <th scope="row">Citizen identification</th>
-              <td>{doctor?.practitionerTarget?.identifierFirstRep?.value}</td>
+              <td>{doctor?.identification}</td>
             </tr>
             <tr>
               <th scope="row">Phone number</th>
-              <td>{phone}</td>
+              <td>{doctor?.phoneNumber}</td>
             </tr>
             <tr>
               <th scope="row">Email</th>
-              <td>{email}</td>
+              <td>{doctor?.email}</td>
             </tr>
           </tbody>
         </table>
@@ -87,25 +80,19 @@ const InfoDoctor = () => {
               <th scope="row" style={{ width: "15%" }}>
                 Starting date
               </th>
-              <td>{moment(doctor?.period?.start).format(FORMAT_DATE)}</td>
+              <td>{moment(doctor?.startWork).format(FORMAT_DATE)}</td>
             </tr>
             <tr>
               <th scope="row">End date</th>
-              <td>{moment(doctor?.period?.end).format(FORMAT_DATE)}</td>
+              <td>{moment(doctor?.endWork).format(FORMAT_DATE)}</td>
             </tr>
             <tr>
               <th scope="row">Room</th>
-              <td>{doctor.location && doctor.location.map((item: any) => {
-                return (
-                  <span>{item.display}</span>
-                )
-              })}</td>
+              <td>{doctor?.desRoom}</td>
             </tr>
             <tr>
               <th scope="row">Specialty</th>
-              <td>{doctor.specialty && doctor.specialty.map((spec: any) => {
-                return <span>{spec.coding[0].display}</span>
-              })}</td>
+              <td>{doctor?.displaySpecialty}</td>
             </tr>
           </tbody>
         </table>
@@ -113,79 +100,79 @@ const InfoDoctor = () => {
     );
   };
 
-  // const _renderEducationInfo = () => {
-  //   return (
-  //     <div className="mt-3">
-  //       <p className="fw-bold border-top pt-2 text-dark">Education</p>
-  //       <table className="table">
-  //         <tbody>
-  //           {doctor.educations && doctor.educations.map((edu: any) => {
-  //             return (
-  //               <tr>
-  //                 <th scope="row" style={{ width: "15%" }}>
-  //                   {moment(edu.year).format("YYYY")}
-  //                 </th>
-  //                 <td>
-  //                   {edu.detail}
-  //                 </td>
-  //               </tr>
-  //             )
-  //           })}
-  //         </tbody>
-  //       </table>
-  //     </div>
-  //   );
-  // };
+  const _renderEducationInfo = () => {
+    return (
+      <div className="mt-3">
+        <p className="fw-bold border-top pt-2 text-dark">Education</p>
+        <table className="table">
+          <tbody>
+            {doctor.qualificationsEdu && doctor.qualificationsEdu.map((item: any) => {
+              return (
+                <tr>
+                  <th scope="row" style={{ width: "15%" }}>
+                    {moment(item.qualificationPeriodStart).format(FORMAT_DATE)} - {moment(item.qualificationPeriodEnd).format(FORMAT_DATE)}
+                  </th>
+                  <td>
+                    {item.qualificationText}
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
 
-  // const _renderSpecializedActivities = () => {
-  //   return (
-  //     <div className="mt-3">
-  //       <p className="fw-bold border-top pt-2 text-dark">
-  //         Specialized activities
-  //       </p>
-  //       <table className="table">
-  //         <tbody>
-  //           {doctor.experiences && doctor.experiences.map((exper: any) => {
-  //             return (
-  //               <tr>
-  //                 <th scope="row" style={{ width: "15%" }}>
-  //                   <span>{moment(exper.timeStart).format("YYYY")} - {moment(exper.timeEnd).format("YYYY")}</span>
-  //                 </th>
-  //                 <td>
-  //                   {exper.detail}
-  //                 </td>
-  //               </tr>
-  //             )
-  //           })}
-  //         </tbody>
-  //       </table>
-  //     </div>
-  //   );
-  // };
+  const _renderSpecializedActivities = () => {
+    return (
+      <div className="mt-3">
+        <p className="fw-bold border-top pt-2 text-dark">
+          Specialized activities
+        </p>
+        <table className="table">
+          <tbody>
+            {doctor.qualificationsSpecActivities && doctor.qualificationsSpecActivities.map((item: any) => {
+              return (
+                <tr>
+                  <th scope="row" style={{ width: "15%" }}>
+                    {moment(item.qualificationPeriodStart).format(FORMAT_DATE)} - {moment(item.qualificationPeriodEnd).format(FORMAT_DATE)}
+                  </th>
+                  <td>
+                    {item.qualificationText}
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
 
-  // const _renderAchievement = () => {
-  //   return (
-  //     <div className="mt-3">
-  //       <p className="fw-bold border-top pt-2 text-dark">Achievement</p>
-  //       <table className="table">
-  //         <tbody>
-  //           {doctor.achievements && doctor.achievements.map((achi: any) => {
-  //             return (
-  //               <tr>
-  //                 <th scope="row" style={{ width: "15%" }}>
-  //                   {moment(achi.time).format("YYYY")}
-  //                 </th>
-  //                 <td>
-  //                   {achi.detail}
-  //                 </td>
-  //               </tr>
-  //             )
-  //           })}
-  //         </tbody>
-  //       </table>
-  //     </div>
-  //   );
-  // };
+  const _renderAchievement = () => {
+    return (
+      <div className="mt-3">
+        <p className="fw-bold border-top pt-2 text-dark">Achievement</p>
+        <table className="table">
+          <tbody>
+            {doctor.qualificationsAchive && doctor.qualificationsAchive.map((item: any) => {
+              return (
+                <tr>
+                  <th scope="row" style={{ width: "15%" }}>
+                    {moment(item.qualificationPeriodStart).format(FORMAT_DATE)} - {moment(item.qualificationPeriodEnd).format(FORMAT_DATE)}
+                  </th>
+                  <td>
+                    {item.qualificationText}
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
 
   return (
     <div>
@@ -211,9 +198,9 @@ const InfoDoctor = () => {
           </div>
         </div>
         {_renderWorkInfo()}
-        {/* {_renderEducationInfo()}
+        {_renderEducationInfo()}
         {_renderSpecializedActivities()}
-        {_renderAchievement()} */}
+        {_renderAchievement()}
       </div>
 
       <div className="mt-3">

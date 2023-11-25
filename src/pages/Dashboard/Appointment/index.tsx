@@ -11,10 +11,8 @@ import {
   Tooltip,
 } from "chart.js";
 
-import Layout from "../../../components/Layout";
-import TotalView from "../../../components/common/TotalView";
 import { MONTHS } from "../../../constants";
-import { ICON_PATIENT, USER } from "../../../assets";
+import { USER } from "../../../assets";
 
 ChartJS.register(
   CategoryScale,
@@ -31,7 +29,7 @@ const AppointmentDashboard = () => {
   const [monthAppointmentBook, setMonthAppointmentBook] = useState<string>("");
 
   const dataLineAppointment = {
-    labels: ["January", "February", "March", "April", "May"],
+    labels: ["Booked", "Pending", "Proposed"],
     datasets: [
       {
         label: "Booked",
@@ -55,7 +53,7 @@ const AppointmentDashboard = () => {
   };
 
   const dataLineAppointmentBook = {
-    labels: ["January", "February", "March", "April", "May"],
+    labels: ["Fulfilled", "No Show", "Canceled"],
     datasets: [
       {
         label: "Fulfilled",
@@ -79,7 +77,7 @@ const AppointmentDashboard = () => {
   };
 
   const dataDoughnutAppointment = {
-    labels: [""],
+    labels: ["Booked", "Pending", "Proposed"],
     datasets: [
       {
         label: "Booked",
@@ -103,7 +101,7 @@ const AppointmentDashboard = () => {
   };
 
   const dataDoughnutAppointmentBook = {
-    labels: [""],
+    labels: ["Fulfilled", "No Show", "Canceled"],
     datasets: [
       {
         label: "Fulfilled",
@@ -158,6 +156,48 @@ const AppointmentDashboard = () => {
     // },
   };
 
+  const doughnutLabel = {
+    id: "doughnutLabel",
+    afterDatasetsDraw(chart: any, args: any, plugins: any) {
+      const { ctx, data } = chart;
+
+      console.log(chart.getDatasetMeta(0).data);
+
+
+      const centerX = chart.getDatasetMeta(0).data[0].x;
+      const centerY = chart.getDatasetMeta(0).data[0].y;
+
+      ctx.save();
+      ctx.font = "bold 30px sans-serif";
+      ctx.fillStyle = "#9083D5";
+      ctx.textAlign = "center";
+      ctx.textBaseLine = "middle";
+      ctx.fillText("2000", centerX, centerY)
+      ctx.fillText("Total", centerX, 245)
+    }
+  }
+
+  const doughnutLabelBooked = {
+    id: "doughnutLabel",
+    afterDatasetsDraw(chart: any, args: any, plugins: any) {
+      const { ctx, data } = chart;
+
+      console.log(chart.getDatasetMeta(0).data);
+
+
+      const centerX = chart.getDatasetMeta(0).data[0].x;
+      const centerY = chart.getDatasetMeta(0).data[0].y;
+
+      ctx.save();
+      ctx.font = "bold 30px sans-serif";
+      ctx.fillStyle = "#9083D5";
+      ctx.textAlign = "center";
+      ctx.textBaseLine = "middle";
+      ctx.fillText("2000", centerX, centerY)
+      ctx.fillText("Total", centerX, 245)
+    }
+  }
+
   const _renderMonths = () => {
     return (
       <>
@@ -173,113 +213,116 @@ const AppointmentDashboard = () => {
 
   return (
     <>
-      <div>
+      <div className="m-3">
         <div className="row">
           <div className="col-6">
-            <p>Today Appointment</p>
-            <table className="table">
-              <tbody>
-                <tr>
-                  <td>
-                    <div>
-                      <img src={USER} alt="" />
-                      <div>
-                        <p>Thornton</p>
-                        <span>Scaling</span>
+            <div className="box p-3 h-100">
+              <p className="title">Today Appointment</p>
+              <table className="table m-2">
+                <tbody>
+                  <tr>
+                    <td>
+                      <div className="d-flex">
+                        <img src={USER} alt="" className="image-appointment my-auto" />
+                        <div className="ms-3">
+                          <p className="fw-bold">Thornton</p>
+                          <span>Scaling</span>
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                  <td>
-                    <span>On Going</span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                    </td>
+                    <td>
+                      <span className="fw-bold d-flex justify-content-end">On Going</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
           <div className="col-6">
-            <p>Top Book specialty</p>
-            <table className="table">
-              <tbody>
-                <tr>
-                  <th scope="row">1</th>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                </tr>
-                <tr>
-                  <th scope="row">2</th>
-                  <td>Jacob</td>
-                  <td>Thornton</td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td>Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-              </tbody>
-            </table>
+            <div className="box p-3">
+              <p className="title">Top Book specialty</p>
+              <table className="table m-3">
+                <tbody>
+                  <tr>
+                    <th scope="row">1</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">2</th>
+                    <td>Jacob</td>
+                    <td>Thornton</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>Larry the Bird</td>
+                    <td>@twitter</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
 
-      <div>
-        <div>
-          <p>Total appointment</p>
-          <select
-            className="form-select"
-            onChange={(e) => setMonthAppointment(e.target.value)}
-          >
-            {_renderMonths()}
-          </select>
-        </div>
-        <div className="row">
-          <div className="col-8">
-            <Line
-              height={100}
-              width={300}
-              data={dataLineAppointment}
-              options={optionsLine}
-            />
+      <div className="m-3">
+        <div className="box ">
+          <div className="border-bottom d-flex justify-content-between p-3">
+            <p className="title">Total appointment</p>
+            <select
+              className="input-select input-select-w15"
+              onChange={(e) => setMonthAppointment(e.target.value)}
+            >
+              {_renderMonths()}
+            </select>
           </div>
+          <div className="row m-3">
+            <div className="col-8">
+              <Line
 
-          <div className="col-4">
-            <Doughnut
-              height={300}
-              width={300}
-              data={dataDoughnutAppointment}
-              options={optionsDoughnut}
-            />
+                data={dataLineAppointment}
+                options={optionsLine}
+              />
+            </div>
+
+            <div className="col-4">
+              <Doughnut
+                data={dataDoughnutAppointment}
+                options={optionsDoughnut}
+                plugins={[doughnutLabel]}
+              />
+            </div>
           </div>
         </div>
       </div>
 
-      <div>
-        <div>
-          <p>Booked appointment</p>
-          <select
-            className="form-select"
-            onChange={(e) => setMonthAppointmentBook(e.target.value)}
-          >
-            {_renderMonths()}
-          </select>
-        </div>
-
-        <div className="row">
-          <div className="col-8">
-            <Line
-              height={100}
-              width={300}
-              data={dataLineAppointmentBook}
-              options={optionsLine}
-            />
+      <div className="m-3">
+        <div className="box">
+          <div className="p-3 border-bottom d-flex justify-content-between">
+            <p className="title">Booked appointment</p>
+            <select
+              className="input-select input-select-w15"
+              onChange={(e) => setMonthAppointmentBook(e.target.value)}
+            >
+              {_renderMonths()}
+            </select>
           </div>
 
-          <div className="col-4">
-            <Doughnut
-              height={300}
-              width={300}
-              data={dataDoughnutAppointmentBook}
-              options={optionsDoughnut}
-            />
+          <div className="row m-3">
+            <div className="col-8">
+              <Line
+                data={dataLineAppointmentBook}
+                options={optionsLine}
+              />
+            </div>
+
+            <div className="col-4">
+              <Doughnut
+                data={dataDoughnutAppointmentBook}
+                options={optionsDoughnut}
+                plugins={[doughnutLabelBooked]}
+              />
+            </div>
           </div>
         </div>
       </div>

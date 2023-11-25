@@ -11,7 +11,7 @@ import {
   API_GET_ROOM_BY_SPECIALTY,
 } from "../../constants/api.constant";
 import { defineConfigGet, defineConfigPost } from "../../Common/utils";
-import { success, warn } from "../../Common/notify";
+import { error, success, warn } from "../../Common/notify";
 import { ICON_TRASH } from "../../assets";
 import { IPractitioner } from "../../interface/general.interface";
 import { TYPE_DOCTOR } from "../../constants/general.constant";
@@ -166,6 +166,7 @@ const Practitioner = () => {
       })
       .catch((err) => {
         console.log("error create practitioner:", err);
+        error(err.response.data.error);
       });
   };
 

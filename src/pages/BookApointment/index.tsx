@@ -7,7 +7,7 @@ import Layout from "../../components/Layout";
 import { FORMAT_DATE, FORMAT_DATE_DEFAULT, FORMAT_DATE_TIME, TOTAL_STEP } from "../../constants/general.constant";
 import { useAppSelector } from "../../redux/hooks";
 import { defineConfigGet, defineConfigPost } from "../../Common/utils";
-import { warn } from "../../Common/notify";
+import { error, warn } from "../../Common/notify";
 import { API_CREATE_APPOINTMENT, API_GET_DOCTOR_APPOINTMENT, API_GET_PATIENT_APPOINTMENT, API_GET_SPECIALTY_APPOINTMENT, API_SCHEDULE_GET_APPOINTMENT } from "../../constants/api.constant";
 import { LIST_TIME, TYPE_OF_APPOINTMENT } from "../../constants";
 import { ICON_GRADUATION, ICON_PEOPLE_TEAM, USER } from "../../assets";
@@ -181,6 +181,7 @@ const BookAppointment = () => {
       }
     }).catch((err: any) => {
       setIsBooking(false);
+      error(err.response.data.error);
       console.log("error book appointment:", err)
     })
   }

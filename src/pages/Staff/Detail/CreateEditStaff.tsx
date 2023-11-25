@@ -65,19 +65,18 @@ const CreateEditStaff = () => {
       .then((resp: any) => {
         if (resp) {
           const data = resp.data;
-          console.log("resp:", resp)
           const dataConverted: any = {
-            id: data.id,
-            name: data.practitioner.display,
-            birthday: data.practitionerTarget?.birthDate,
-            gender: data.practitionerTarget?.gender,
-            phoneNumber: data.practitionerTarget?.telecom.filter((item: any) => item.system === "phone").value,
-            email: data.practitionerTarget?.telecom.filter((item: any) => item.system === "email").value,
-            address: data.addressFirstRep?.text,
-            identifier: data.practitionerTarget?.identifierFirstRep.value,
-            specialty: data.specialty[0].coding[0].display,
-            startDate: moment(data.period.start).format("YYYY-MM-DD"),
-            endDate: moment(data.period.end).format("YYYY-MM-DD"),
+            id: data?.id,
+            name: data?.name,
+            birthday: data?.dateOfBirth,
+            gender: data?.gender,
+            phoneNumber: data?.phoneNumber,
+            email: data?.email,
+            address: data?.address,
+            identifier: data?.identification,
+            specialty: data?.displaySpecialty,
+            startDate: moment(data?.startWork).format("YYYY-MM-DD"),
+            endDate: moment(data?.endWork).format("YYYY-MM-DD"),
           }
           setStaff(dataConverted);
         }

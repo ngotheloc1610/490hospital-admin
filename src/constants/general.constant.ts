@@ -13,6 +13,7 @@ export const KEY_LOCAL_STORAGE = {
   EXP: "exp",
   IAT: "iat",
   SUB: "sub",
+  TYPE: "type",
 };
 
 export const FORMAT_DATE = "DD/MM/YYYY";

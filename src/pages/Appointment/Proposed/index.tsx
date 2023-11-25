@@ -6,10 +6,9 @@ import { convertToDate, convertToTime, defineConfigGet } from "../../../Common/u
 import { API_ALL_GET_APPOINTMENT_PROPOSED, API_SEARCH_APPOINTMENT_PROPOSED } from "../../../constants/api.constant";
 
 import PaginationComponent from "../../../components/common/Pagination";
-import { ICON_TRASH, USER } from "../../../assets";
+import { USER } from "../../../assets";
 import Layout from "../../../components/Layout";
 import { useAppSelector } from "../../../redux/hooks";
-import PopUpCancel from "./PopUpCancel";
 
 const AppointmentProposed = () => {
     const [listData, setListData] = useState([]);
@@ -18,8 +17,6 @@ const AppointmentProposed = () => {
     const [totalItem, setTotalItem] = useState<number>(0);
     const [isSearch, setIsSearch] = useState<boolean>(false);
     const [name, setName] = useState<string>("");
-    const [isShowPopUpCancel, setIsShowPopUpCancel] = useState(false);
-    const [appointmentId, setAppointmentId] = useState<string>("");
 
     const url_api = process.env.REACT_APP_API_URL;
 
@@ -86,11 +83,6 @@ const AppointmentProposed = () => {
         searchAppointment();
     }
 
-    const handleCancel = (id: string) => {
-        setIsShowPopUpCancel(true);
-        setAppointmentId(id);
-    }
-
     const _renderTableListAppointment = () => {
         return (
             <table className="table table-hover">
@@ -103,7 +95,6 @@ const AppointmentProposed = () => {
                         <th scope="col">Appointment Date</th>
                         <th scope="col">Appointment Time</th>
                         <th scope="col">Doctor</th>
-                        <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -129,11 +120,6 @@ const AppointmentProposed = () => {
                                     <span>{convertToTime(item.appointmentTimeEnd)}</span>
                                 </td>
                                 <td >{item.doctorName}</td>
-                                <td >
-                                    <span onClick={() => handleCancel(item.id)}>
-                                        <ICON_TRASH />
-                                    </span>
-                                </td>
                             </tr>
                         );
                     })}
@@ -175,8 +161,6 @@ const AppointmentProposed = () => {
                     getCurrentPage={getCurrentPage}
                 />
             </section>
-
-            {isShowPopUpCancel && <PopUpCancel handleShowPopUp={setIsShowPopUpCancel} appointmentId={appointmentId} />}
         </Layout>
 
     );

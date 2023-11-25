@@ -33,16 +33,15 @@ const Login = () => {
       .post(url, params, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
-          console.log("resp:", resp)
           const accessToken = resp.data.accessToken;
 
           localStorage.setItem(KEY_LOCAL_STORAGE.AUTHEN, accessToken);
 
           const decoded: any = jwtDecode<JwtPayload>(accessToken);
-          console.log("decoded:", decoded)
           localStorage.setItem(KEY_LOCAL_STORAGE.EXP, decoded.exp);
           localStorage.setItem(KEY_LOCAL_STORAGE.IAT, decoded.iat);
           localStorage.setItem(KEY_LOCAL_STORAGE.SUB, decoded.sub);
+          localStorage.setItem(KEY_LOCAL_STORAGE.TYPE, decoded?.aud);
           dispatch(setLogin(true));
           navigate("/admin")
         }

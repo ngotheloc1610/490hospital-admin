@@ -102,7 +102,7 @@ const CreateEditPatient = () => {
         }
       })
       .catch((err: any) => {
-        error(err.response.data.error.message)
+        error(err.response.data.error)
         console.log("error update patient:", err);
       });
   }

@@ -213,14 +213,14 @@ const BookAppointment = () => {
 
   const disabled = (item: any) => {
     if (timeBusy.length > 0) {
-        const existedBusy = timeBusy.find((time: any) => {
-          return moment(time.start).format("HH:mm:ss") === item.startTime && moment(time.end).format("HH:mm:ss") === item.endTime;
-        })
+      const existedBusy = timeBusy.find((time: any) => {
+        return moment(time.start).format("HH:mm:ss") === item.startTime && moment(time.end).format("HH:mm:ss") === item.endTime;
+      })
 
-        if(existedBusy) {
-          return true;
-        }
-        return false;
+      if (existedBusy) {
+        return true;
+      }
+      return false;
     }
     return false;
   }
@@ -422,9 +422,9 @@ const BookAppointment = () => {
             <h5 className="fw-bold mb-3">Select Doctor</h5>
             <div className="row">
               {listDoctor && listDoctor.map((item: any, idx: number) => {
-                const name = item?.practitionerTarget?.nameFirstRep.text;
-                const photo = item?.practitionerTarget.photo[0];
-                const src = `data:${photo.contentType};base64,${photo.data}`;
+                const name = item?.practitioner?.display;
+                const photo = item?.practitionerTarget?.photo[0];
+                const src = `data:${photo?.contentType};base64,${photo?.data}`;
 
                 return (
                   <div className={`col-6 row mb-3 ${item.id === doctor?.id ? "doctor-selected" : ""}`} onClick={() => setDoctor(item)}>
@@ -505,7 +505,7 @@ const BookAppointment = () => {
                 <tbody>
                   <tr>
                     <td>Name</td>
-                    <td>{patient?.nameFirstRep.text}</td>
+                    <td>{patient?.nameFirstRep?.text}</td>
                   </tr>
                   <tr>
                     <td>Gender</td>
@@ -517,7 +517,7 @@ const BookAppointment = () => {
                   </tr>
                   <tr>
                     <td>Address</td>
-                    <td>{patient?.addressFirstRep.text}</td>
+                    <td>{patient?.addressFirstRep?.text}</td>
                   </tr>
                   <tr>
                     <td>Citizen identification</td>
@@ -525,11 +525,11 @@ const BookAppointment = () => {
                   </tr>
                   <tr>
                     <td>Phone number</td>
-                    <td>{patient?.telecom.filter((item:any)=>item.system === "phone")[0].value}</td>
+                    <td>{patient?.telecom.filter((item: any) => item.system === "phone")[0]?.value}</td>
                   </tr>
                   <tr>
                     <td>Email</td>
-                    <td>{patient?.telecom.filter((item:any)=>item.system === "email")[0].value}</td>
+                    <td>{patient?.telecom.filter((item: any) => item.system === "email")[0]?.value}</td>
                   </tr>
                 </tbody>
               </table>
@@ -553,7 +553,7 @@ const BookAppointment = () => {
               </tr>
               <tr>
                 <td>Doctor</td>
-                <td>{doctor?.practitionerTarget?.nameFirstRep?.text}</td>
+                <td>{doctor?.practitioner?.display}</td>
               </tr>
               <tr>
                 <td>Type of appointment</td>
@@ -568,7 +568,7 @@ const BookAppointment = () => {
               <tr>
                 <td>Room</td>
                 <td>
-                  {doctor?.location.map((item:any) =>item.display)}
+                  {doctor?.location.map((item: any) => item.display)}
                 </td>
               </tr>
               <tr>

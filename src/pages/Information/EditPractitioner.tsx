@@ -95,6 +95,14 @@ const EditPractitioner = () => {
             photo: null,
             gender: values.gender,
             address: values.address,
+            idSpecialty: null,
+            displaySpecialty: null,
+            desRoom: null,
+            idRoom: null,
+            startWork: null,
+            endWork: null,
+            type: null,
+            qualifications: null
         }
 
         axios

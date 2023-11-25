@@ -146,7 +146,7 @@ const Practitioner = () => {
       idSpecialty: idSpecialty,
       displaySpecialty: displaySpecialty,
       desRoom: values.type === "STAFF" ? null : desRoom,
-      idRoom: values.type === "STAFF" ? null :idRoom,
+      idRoom: values.type === "STAFF" ? null : idRoom,
       type: values.type,
       startWork: new Date(values.startDate),
       endWork: new Date(values.endDate),
@@ -574,7 +574,7 @@ const Practitioner = () => {
                       <button
                         className="button-add"
                         onClick={() =>
-                          arrayHelpers.push({ time: "", content: "" })
+                          arrayHelpers.push({ start: "", end: "", content: "" })
                         }
                       >
                         <i className="bi bi-plus-circle-fill"></i>

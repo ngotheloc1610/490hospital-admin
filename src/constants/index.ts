@@ -122,11 +122,11 @@ export const GENDER_ALL = [
 export const STATUS = [
   {
     name: "Active",
-    code: "active",
+    code: "Active",
   },
   {
-    name: "DeActive",
-    code: "deactive",
+    name: "Inactive",
+    code: "Inactive",
   },
   {
     name: "All",

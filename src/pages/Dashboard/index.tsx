@@ -6,10 +6,10 @@ import { Outlet } from 'react-router-dom'
 const Dashboard = () => {
   return (
     <Layout>
-        <section className='dashboard'>
-            <TotalView/>
-            <Outlet/>
-        </section>
+      <section className='dashboard container'>
+        <TotalView />
+        <Outlet />
+      </section>
     </Layout>
   )
 }

@@ -153,7 +153,7 @@ const Information = () => {
                             <div className="pb-3 mb-3 d-flex justify-content-between">
                                 <h3 className="fw-bold text-uppercase">{practitionerInfo?.name}</h3>
                                 <div>
-                                    <button className="button button--info button--small me-3" onClick={() => {navigate("/change-password"); dispatch(setPractitioner(practitionerInfo))}}>Change Password</button>
+                                    <button className="button button--info button--small me-3" onClick={() => { navigate("/change-password"); dispatch(setPractitioner(practitionerInfo)) }}>Change Password</button>
                                     <button className="button button--primary button--small" onClick={() => navigate(`/information/${practitionerInfo?.id}`)}>Edit</button>
                                 </div>
                             </div>

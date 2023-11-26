@@ -9,6 +9,7 @@ import { USER } from "../../../../assets";
 import PaginationComponent from "../../../../components/common/Pagination";
 import moment from "moment";
 import { FORMAT_DATE } from "../../../../constants/general.constant";
+import { useAppSelector } from "../../../../redux/hooks";
 
 const InfoPatient = () => {
   const [currentPage, setCurrentPage] = useState<number>(0);
@@ -20,10 +21,11 @@ const InfoPatient = () => {
   const param = useParams();
   const navigate = useNavigate();
   const url_api = process.env.REACT_APP_API_URL;
+  const { triggerUpdate } = useAppSelector(state => state.patientSlice);
 
   useEffect(() => {
     getPatientDetail(param.patientId)
-  }, [param.patientId]);
+  }, [param.patientId, triggerUpdate]);
 
   useEffect(() => {
     getListAppointment(param.patientId)

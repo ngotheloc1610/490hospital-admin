@@ -9,11 +9,11 @@ import { setTriggerAccept } from "../../../redux/features/appointment/appointmen
 
 interface IProps {
   handleShowPopUp: any;
-  appointmentId: string;
+  appointment: any;
 }
 
 const PopUpAccept = (props: IProps) => {
-  const { handleShowPopUp, appointmentId } = props;
+  const { handleShowPopUp, appointment } = props;
 
   const url_api = process.env.REACT_APP_API_URL;
 
@@ -21,11 +21,11 @@ const PopUpAccept = (props: IProps) => {
   const { triggerAccept } = useAppSelector(state => state.appointmentSlice)
 
   const acceptAppointment = () => {
-    const url = `${url_api}${API_ACCEPT_APPOINTMENT}${appointmentId}`;
+    const url = `${url_api}${API_ACCEPT_APPOINTMENT}${appointment.idPatient}`;
 
     const params = {
-      idPractitioner: "",
-      namePractitioner: ""
+      idPractitioner: appointment?.idPatient,
+      namePractitioner: appointment?.patientName
     }
 
     axios
@@ -38,8 +38,8 @@ const PopUpAccept = (props: IProps) => {
         }
       })
       .catch((err: any) => {
-        console.log("err:", err);
-        error(err.response.data.error);
+        console.log("error accept appointment:", err);
+        error(err.response.data.error || err.response.data.error.message);
 
       });
   };

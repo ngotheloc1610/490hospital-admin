@@ -10,6 +10,8 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
 import { error, success } from "../../../Common/notify";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { setTriggerEdit } from "../../../redux/features/practitioner/practitionerSlice";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Required"),
@@ -48,6 +50,9 @@ const CreateEditStaff = () => {
   const [staff, setStaff] = useState<any>(defaultValue);
 
   const url_api = process.env.REACT_APP_API_URL;
+
+  const dispatch = useAppDispatch();
+  const { triggerEdit } = useAppSelector((state) => state.practitionerSlice)
 
   useEffect(() => {
     getStaffInfo(params.staffId)
@@ -140,13 +145,14 @@ const CreateEditStaff = () => {
         if (resp) {
           actions.setSubmitting(false);
           actions.resetForm();
+          dispatch(setTriggerEdit(!triggerEdit))
           navigate(`/staff/overview/${values.id}`);
           success("Update information success!");
         }
       })
       .catch((err) => {
         console.log("error update practitioner (Staff):", err);
-        error(err.response.data.error);
+        error(err.response.data.error || err.response.data.error.message);
       });
   }
 

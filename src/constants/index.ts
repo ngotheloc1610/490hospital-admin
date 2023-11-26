@@ -4,7 +4,6 @@ import OverviewDoctor from "../pages/Doctor/Detail/OverviewDoctor";
 import OverviewStaff from "../pages/Staff/Detail/OverviewStaff";
 
 import ScheduleDoctor from "../pages/Doctor/Detail/ScheduleDoctor";
-import ScheduleStaff from "../pages/Staff/Detail/ScheduleStaff";
 import PreviousAppointment from "../pages/Appointment/Booked/PreviousAppointment";
 import UpcomingAppointment from "../pages/Appointment/Booked/UpcomingAppointment";
 import InformationPatient from "../pages/Patient/Detail/Infomation";
@@ -64,10 +63,6 @@ export const MenuDataStaff = [
   {
     title: "Overview",
     content: OverviewStaff,
-  },
-  {
-    title: "Schedule",
-    content: ScheduleStaff,
   },
 ];
 

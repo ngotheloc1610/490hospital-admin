@@ -12,71 +12,68 @@ const defaultValue = {
     {
       alertName: "",
       alertSeverity: "",
-      // rule: [
-      //   {
-      //     ruleName: "",
-      //     threshold: "",
-      //     timeRange: "",
-      //   }
-      // ]
-    }
-  ],
-  bloodGlucose: [{
-    alertName: "",
-    alertSeverity: "",
-    rule: [
-      {
-        ruleName: "",
-        threshold: "",
-        timeRange: "",
-      }
-    ]
-  }],
-  heartRate: [{
-    alertName: "",
-    alertSeverity: "",
-    rule: [
-      {
-        ruleName: "",
-        threshold: "",
-        timeRange: "",
-      }
-    ]
-  }],
-  BMI: [
-    {
-      alertName: "",
-      alertSeverity: "",
       rule: [
         {
           ruleName: "",
           threshold: "",
-          timeRange: "",
         }
       ]
     }
   ],
-  temperature: [{
-    alertName: "",
-    alertSeverity: "",
-    rule: [
-      {
-        ruleName: "",
-        threshold: "",
-        timeRange: "",
-      }
-    ]
-  }]
+  // bloodGlucose: [{
+  //   alertName: "",
+  //   alertSeverity: "",
+  //   rule: [
+  //     {
+  //       ruleName: "",
+  //       threshold: "",
+  //     }
+  //   ]
+  // }],
+  // heartRate: [{
+  //   alertName: "",
+  //   alertSeverity: "",
+  //   rule: [
+  //     {
+  //       ruleName: "",
+  //       threshold: "",
+  //     }
+  //   ]
+  // }],
+  // BMI: [
+  //   {
+  //     alertName: "",
+  //     alertSeverity: "",
+  //     rule: [
+  //       {
+  //         ruleName: "",
+  //         threshold: "",
+  //       }
+  //     ]
+  //   }
+  // ],
+  // temperature: [{
+  //   alertName: "",
+  //   alertSeverity: "",
+  //   rule: [
+  //     {
+  //       ruleName: "",
+  //       threshold: "",
+  //     }
+  //   ]
+  // }]
 };
 
 const Setting = () => {
   const [listSeverity, setListSeverity] = useState<any>([]);
-  const [listRule, setListRule] = useState<any>([])
+  const [listRule, setListRule] = useState<any>([]);
+
+  const [setting, setSetting] = useState<any>(defaultValue)
 
   return (
     <Layout>
       <Formik
-        initialValues={defaultValue}
+        initialValues={setting}
         enableReinitialize={true}
         validationSchema={validationSchema}
         onSubmit={(values, actions) => {
@@ -104,138 +101,82 @@ const Setting = () => {
                               <th>ID</th>
                               <th>Alert Name</th>
                               <th>Alert Severity</th>
-                              <th>Rule</th>
-                              <th>Threshold</th>
-                              <th>Time range</th>
+                              <th>Rules</th>
+
                             </tr>
                           </thead>
                           <tbody>
-                            <FieldArray
-                              name="bloodPressure"
-                              render={(arrayHelpers) => (
+                            <FieldArray name="bloodPressure">
+                              {({ push, remove }) => (
                                 <>
-                                  {values.bloodPressure.map((blood: any, index: number) => (
+                                  {values.bloodPressure.map((bp: any, index: number) => (
                                     <tr key={index}>
-                                      <td>
-                                        {++index}
-                                      </td>
+                                      <td>{++index}</td>
                                       <td>
                                         <Field
-                                          name={`bloodPressure[${index}].alertName`}
-                                          className="form-control"
+                                          type="text"
+                                          name={`bloodPressure.${index}.alertName`}
+                                          value={bp.alertName}
+                                        // onChange={handleChange}
                                         />
                                       </td>
                                       <td>
                                         <Field
-                                          as="select"
-                                          name={`bloodPressure[${index}].alertSeverity`}
-                                        >
-                                          {listSeverity.length > 0 ? (
-                                            listSeverity.map((item: any) => (
-                                              <option value={item.id} key={item.id}>
-                                                {item.name}
-                                              </option>
-                                            ))
-                                          ) : (
-                                            <option disabled>No option</option>
-                                          )}
-                                        </Field>
+                                          type="text"
+                                          name={`bloodPressure.${index}.alertSeverity`}
+                                          value={bp.alertSeverity}
+                                        // onChange={handleChange}
+                                        />
                                       </td>
-                                      {/* <FieldArray
-                                        name={`bloodPressure[${index}].rule`}
-                                        render={(arrayHelpersRule) => (
-                                          <>
-                                            {blood?.rule?.map((item: any, indexRule: number) => (
-                                              <>
-                                                <>
+                                      <td>
+                                        <FieldArray name={`bloodPressure.${index}.rule`}>
+                                          {({ push: pushRule, remove: removeRule }) => (
+                                            <>
+                                              {bp.rule.map((rule: any, ruleIndex: number) => (
+                                                <tr key={ruleIndex}>
                                                   <td>
                                                     <Field
-                                                      as="select"
-                                                      name={`rule[${indexRule}].ruleName`}
-                                                    >
-                                                      {listRule.length > 0 ? (
-                                                        listRule.map((item: any) => (
-                                                          <option value={item.id} key={item.id}>
-                                                            {item.name}
-                                                          </option>
-                                                        ))
-                                                      ) : (
-                                                        <option disabled>No option</option>
-                                                      )}
-                                                    </Field>
-
-                                                  </td>
-                                                  <td>
-                                                    <Field
-                                                      name={`rule[${indexRule}].threshold`}
-                                                      className="form-control"
+                                                      type="text"
+                                                      name={`bloodPressure.${index}.rule.${ruleIndex}.ruleName`}
+                                                      value={rule.ruleName}
+                                                    // onChange={handleChange}
                                                     />
                                                   </td>
                                                   <td>
                                                     <Field
-                                                      name={`rule[${indexRule}].timeRange`}
-                                                      className="form-control"
+                                                      type="text"
+                                                      name={`bloodPressure.${index}.rule.${ruleIndex}.threshold`}
+                                                      value={rule.threshold}
+                                                    // onChange={handleChange}
                                                     />
-
                                                   </td>
-                                                  <td> <button
-                                                    className="button-add"
-                                                  // onClick={() => {
-                                                  //   arrayHelpersRule.push({ ruleName: "", threshold: "", timeRange: "" })
-                                                  // }
-                                                  // }
-                                                  >
-                                                    <i className="bi bi-plus-circle-fill"></i>
-                                                    <span className="ms-1">Add new rule</span>
-                                                  </button></td>
-                                                </>
-                                              </>
-                                            ))}
-                                          </>
-                                        )}
-                                      /> */}
+                                                  <td>
+                                                    <button type="button" onClick={() => removeRule(ruleIndex)}>
+                                                      Remove Rule
+                                                    </button>
+                                                  </td>
+                                                </tr>
+                                              ))}
+                                              <button type="button" onClick={() => pushRule({ ruleName: '', threshold: '' })}>
+                                                Add Rule
+                                              </button>
+                                            </>
+                                          )}
+                                        </FieldArray>
+                                      </td>
+                                      <td>
+                                        <button type="button" onClick={() => remove(index)}>
+                                          Remove Alert
+                                        </button>
+                                      </td>
                                     </tr>
                                   ))}
-                                  <tr>
-                                    <td>
-                                      <button
-                                        className="button-add"
-                                      // onClick={() => {
-                                      //   arrayHelpers.push({
-                                      //     alertName: "", alertSeverity: "", rule: [{
-                                      //       ruleName: "",
-                                      //       threshold: "",
-                                      //       timeRange: "",
-                                      //     }]
-                                      //   })
-                                      // }
-                                      // }
-                                      >
-                                        <i className="bi bi-plus-circle-fill"></i>
-                                        <span className="ms-1">Add new alert</span>
-                                      </button>
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                      <button
-                                        className="button button--primary button--small me-1"
-                                        onClick={submitForm}
-                                      >
-                                        Apply for all patient
-                                      </button>
-                                      <button
-                                        className="button button--danger button--small"
-                                      >
-                                        Delete alert
-                                      </button>
-                                    </td>
-                                  </tr>
+                                  <button type="button" onClick={() => push({ alertName: '', alertSeverity: '', rule: [{ ruleName: '', threshold: '' }] })}>
+                                    Add Alert
+                                  </button>
                                 </>
                               )}
-                            />
+                            </FieldArray>
                           </tbody>
                         </table>
                       </div>

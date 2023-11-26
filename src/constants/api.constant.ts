@@ -67,6 +67,11 @@ export const API_INBOX_ROOM_CREATE = "/inbox-room/staff-create"
 export const API_INBOX_MESSAGE = "/inbox-message/"
 export const API_INBOX_MESSAGE_SEND = "/inbox-message/message"
 
+export const API_DASHBOARD_DOCTORS = "/dashboard/numberDoctors"
+export const API_DASHBOARD_PATIENTS = "/dashboard/numberPatients"
+export const API_DASHBOARD_STAFFS = "/dashboard/numberStaffs"
+export const API_DASHBOARD_SPECIALTY = "/dashboard/numberSpecialties"
+
 
 
 

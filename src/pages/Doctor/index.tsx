@@ -304,7 +304,7 @@ const Doctor = () => {
         <Outlet />
       ) : (
         <>
-          <TotalView />
+          {/* <TotalView /> */}
           <section className="table-container">
             <div className="table-container-contain">
               <div className="d-flex justify-content-center align-item-center">

@@ -20,12 +20,12 @@ const AppointmentPending = () => {
     const [isSearch, setIsSearch] = useState<boolean>(false);
     const [isShowPopUpAccept, setIsShowPopUpAccept] = useState<boolean>(false);
     const [isShowPopUpDeny, setIsShowPopUpDeny] = useState<boolean>(false);
-    const [appointmentId, setAppointmentId] = useState<string>("");
+    const [appointment, setAppointment] = useState<any>({});
     const [name, setName] = useState<string>("");
 
     const url_api = process.env.REACT_APP_API_URL;
 
-    const {triggerAccept,triggerDeny} = useAppSelector(state => state.appointmentSlice)
+    const { triggerAccept, triggerDeny } = useAppSelector(state => state.appointmentSlice)
 
     useEffect(() => {
         if (isSearch) {
@@ -87,13 +87,13 @@ const AppointmentPending = () => {
         searchAppointment();
     }
 
-    const handleAccept = (id: string) => {
-        setAppointmentId(id);
+    const handleAccept = (item: any) => {
+        setAppointment(item);
         setIsShowPopUpAccept(true);
     }
 
-    const handleDeny = (id: string) => {
-        setAppointmentId(id);
+    const handleDeny = (item: any) => {
+        setAppointment(item);
         setIsShowPopUpDeny(true);
     }
 
@@ -136,8 +136,8 @@ const AppointmentPending = () => {
                                 </td>
                                 <td >{item.doctorName}</td>
                                 <td >
-                                    <button className="button button--small button--accept me-2" onClick={() => handleAccept(item.id)}>Accept</button>
-                                    <button className="button button--small button--deny" onClick={() => handleDeny(item.id)}>Deny</button>
+                                    <button className="button button--small button--accept me-2" onClick={() => handleAccept(item)}>Accept</button>
+                                    <button className="button button--small button--deny" onClick={() => handleDeny(item)}>Deny</button>
                                 </td>
                             </tr>
                         );
@@ -181,8 +181,8 @@ const AppointmentPending = () => {
                 />
             </section>
 
-            {isShowPopUpAccept && <PopUpAccept handleShowPopUp={setIsShowPopUpAccept} appointmentId={appointmentId}/>}
-            {isShowPopUpDeny && <PopUpDeny handleShowPopUp={setIsShowPopUpDeny} appointmentId={appointmentId}/>}
+            {isShowPopUpAccept && <PopUpAccept handleShowPopUp={setIsShowPopUpAccept} appointment={appointment} />}
+            {isShowPopUpDeny && <PopUpDeny handleShowPopUp={setIsShowPopUpDeny} appointment={appointment} />}
         </Layout>
     );
 };

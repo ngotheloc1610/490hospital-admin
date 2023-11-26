@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Doughnut, Line } from "react-chartjs-2";
 import {
   ArcElement,
@@ -14,6 +14,9 @@ import {
 
 import { MONTHS } from "../../../constants";
 import { ICON_PATIENT } from "../../../assets";
+import { API_DASHBOARD_PATIENTS, API_DASHBOARD_SPECIALTY } from "../../../constants/api.constant";
+import { defineConfigPost } from "../../../Common/utils";
+import axios from "axios";
 
 ChartJS.register(
   CategoryScale,
@@ -27,9 +30,31 @@ ChartJS.register(
 );
 
 const PatientDashboard = () => {
+  const url_api = process.env.REACT_APP_API_URL;
+
   const [monthPatient, setMonthPatient] = useState<string>("");
   const [monthNewPatient, setMonthNewPatient] = useState<string>("");
   const [monthOldPatient, setmonthOldPatient] = useState<string>("");
+
+  useEffect(() => {
+    getNumberPatients()
+  }, [])
+
+  const getNumberPatients = () => {
+    const url = `${url_api}${API_DASHBOARD_SPECIALTY}`;
+
+    axios
+      .get(url, defineConfigPost())
+      .then((resp: any) => {
+        if (resp) {
+          console.log("resp:", resp)
+        }
+      })
+      .catch((err: any) => {
+        console.log("error get numberPatients:", err);
+      });
+  }
+
 
   const dataLinePatient = {
     labels: ["New Patient", "Old Patient"],

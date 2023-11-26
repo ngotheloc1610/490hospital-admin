@@ -9,11 +9,11 @@ import { setTriggerDeny } from "../../../redux/features/appointment/appointmentS
 
 interface IProps {
   handleShowPopUp: any;
-  appointmentId: string;
+  appointment: any;
 }
 
 const PopUpDeny = (props: IProps) => {
-  const { handleShowPopUp, appointmentId } = props;
+  const { handleShowPopUp, appointment } = props;
 
   const url_api = process.env.REACT_APP_API_URL;
 
@@ -21,11 +21,11 @@ const PopUpDeny = (props: IProps) => {
   const { triggerDeny } = useAppSelector(state => state.appointmentSlice)
 
   const denyAppointment = () => {
-    const url = `${url_api}${API_DENY_APPOINTMENT}${appointmentId}`;
+    const url = `${url_api}${API_DENY_APPOINTMENT}${appointment?.idPatient}`;
 
     const params = {
-      idPractitioner: "",
-      namePractitioner: ""
+      idPractitioner: appointment?.idPatient,
+      namePractitioner: appointment?.patientName
     }
 
     axios

@@ -166,7 +166,7 @@ const Practitioner = () => {
       })
       .catch((err) => {
         console.log("error create practitioner:", err);
-        error(err.response.data.error);
+        error(err.response.data.error || err.response.data.error.message);
       });
   };
 

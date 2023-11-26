@@ -10,6 +10,8 @@ import { API_ALL_GET_SPECIALTY, API_DETAIL_PRACTITIONER, API_GET_ROOM_BY_SPECIAL
 import { useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
 import { error, success } from "../../../Common/notify";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { setTriggerEdit } from "../../../redux/features/practitioner/practitionerSlice";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Required"),
@@ -55,6 +57,9 @@ const CreateEditDoctor = () => {
   const [listRoom, setListRoom] = useState<any>([]);
   const [specialtyId, setSpecialtyId] = useState<string>("");
   const [doctor, setDoctor] = useState<any>(defaultValue);
+
+  const dispatch = useAppDispatch();
+  const { triggerEdit } = useAppSelector((state) => state.practitionerSlice)
 
   useEffect(() => {
     getSpecialty();
@@ -127,7 +132,7 @@ const CreateEditDoctor = () => {
       })
       .catch((err) => {
         console.log("error get info practitioner(Doctor):", err);
-        error(err.response.data.error);
+        error(err.response.data.error || err.response.data.error.message);
       });
   }
 
@@ -238,6 +243,7 @@ const CreateEditDoctor = () => {
         if (resp) {
           actions.setSubmitting(false);
           actions.resetForm();
+          dispatch(setTriggerEdit(!triggerEdit))
           navigate(`/doctor/overview/${values.id}`);
           success("Update information success!");
         }
@@ -738,7 +744,6 @@ const CreateEditDoctor = () => {
       enableReinitialize={true}
       validationSchema={validationSchema}
       onSubmit={(values, actions) => {
-        console.log("values:", values)
         updatePractitioner(values, actions);
       }}
     >

@@ -7,6 +7,7 @@ import { USER } from "../../../assets";
 import { defineConfigPost } from "../../../Common/utils";
 import { API_DETAIL_PRACTITIONER } from "../../../constants/api.constant";
 import { FORMAT_DATE } from "../../../constants/general.constant";
+import { useAppSelector } from "../../../redux/hooks";
 
 const InfoStaff = () => {
   const [staff, setStaff] = useState<any>({});
@@ -14,6 +15,7 @@ const InfoStaff = () => {
   const param = useParams();
   const navigate = useNavigate();
   const url_api = process.env.REACT_APP_API_URL;
+  const { triggerEdit } = useAppSelector((state) => state.practitionerSlice)
 
   useEffect(() => {
     const id = param.staffId;
@@ -29,7 +31,7 @@ const InfoStaff = () => {
       .catch((err) => {
         console.log("error get information practitioner (Staff):", err);
       });
-  }, [param.staffId]);
+  }, [param.staffId, triggerEdit]);
 
   const _renderBasicInfo = () => {
     const email = staff.practitionerTarget?.telecom?.find(
@@ -84,11 +86,11 @@ const InfoStaff = () => {
               <th scope="row" style={{ width: "15%" }}>
                 Starting date
               </th>
-              <td>{moment(staff.period?.start).format(FORMAT_DATE)}</td>
+              <td>{staff.period?.start ? moment(staff.period?.start).format(FORMAT_DATE) : ""}</td>
             </tr>
             <tr>
               <th scope="row">End date</th>
-              <td>{moment(staff.period?.end).format(FORMAT_DATE)}</td>
+              <td>{staff.period?.end ? moment(staff.period?.end).format(FORMAT_DATE) : ""}</td>
             </tr>
             <tr>
               <th scope="row">Specialty</th>

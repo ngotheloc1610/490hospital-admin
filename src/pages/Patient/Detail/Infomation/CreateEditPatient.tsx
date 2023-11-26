@@ -4,13 +4,13 @@ import * as Yup from "yup";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
-import { useAppDispatch } from "../../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 
 import { GENDER } from "../../../../constants";
 import { USER } from "../../../../assets";
 import { API_GET_PATIENT, API_UPDATE_PATIENT } from "../../../../constants/api.constant";
 import { defineConfigGet, defineConfigPost } from "../../../../Common/utils";
-import { setPatient, setShowPopUpConfirm } from "../../../../redux/features/patient/patientSlice";
+import { setPatient, setShowPopUpConfirm, setTriggerUpdate } from "../../../../redux/features/patient/patientSlice";
 import { error, success } from "../../../../Common/notify";
 
 const validationSchema = Yup.object().shape({
@@ -44,6 +44,7 @@ const CreateEditPatient = () => {
 
   const [image, setImage] = useState<any>("");
   const [patientInfo, setPatientInfo] = useState<any>(defaultValue);
+  const { triggerUpdate } = useAppSelector(state => state.patientSlice);
 
   useEffect(() => {
     getPatientInfo(params.patientId)
@@ -97,12 +98,13 @@ const CreateEditPatient = () => {
         if (resp) {
           actions.setSubmitting(false);
           actions.resetForm();
+          dispatch(setTriggerUpdate(!triggerUpdate));
           success("Update patient successfully!");
           navigate(`/patient/information/${values.id}`);
         }
       })
       .catch((err: any) => {
-        error(err.response.data.error)
+        error(err.response.data.error || err.response.data.error.message)
         console.log("error update patient:", err);
       });
   }

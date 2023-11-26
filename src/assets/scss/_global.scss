@@ -29,12 +29,14 @@ button {
     border-radius: 5px;
     border: 1px solid #0ea961;
     background: #0ea961;
+    color: $white-color;
   }
 
   &--deny {
     border-radius: 5px;
     border: 1px solid #dc3545;
     background: #dc3545;
+    color: $white-color;
   }
 
   &--small {

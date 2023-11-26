@@ -60,12 +60,12 @@ const Header = () => {
                 aria-labelledby="dropdownprofile"
               >
                 <li>
-                  <Link className="dropdown-item" to="/information">
+                  <span className="p-2 dropdown-item" onClick={() => navigate("/information")}>
                     Information
-                  </Link>
+                  </span>
                 </li>
                 <li onClick={() => handleLogout()}>
-                  <span className="dropdown-item" >Log out</span>
+                  <span className="dropdown-item p-2" >Log out</span>
                 </li>
               </ul>
             </li>

@@ -38,7 +38,6 @@ const defaultValue = {
 const EditPractitioner = () => {
     const url_api = process.env.REACT_APP_API_URL;
 
-    const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const inputRef = useRef<any>(null);
     const [image, setImage] = useState<any>("");
@@ -47,6 +46,7 @@ const EditPractitioner = () => {
 
     const [practitionerInfo, setPractitionerInfo] = useState<any>({});
 
+    const dispatch = useAppDispatch();
     const { triggerEdit } = useAppSelector((state) => state.practitionerSlice)
 
     useEffect(() => {
@@ -118,7 +118,7 @@ const EditPractitioner = () => {
                 }
             })
             .catch((err: any) => {
-                error(err.response.data.error.message)
+                error(err.response.data.error.message || err.response.data.error)
                 console.log("error update profile practitioner:", err);
             });
     }

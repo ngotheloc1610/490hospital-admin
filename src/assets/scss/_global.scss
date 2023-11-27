@@ -37,6 +37,12 @@ button {
     border: 1px solid #dc3545;
     background: #dc3545;
     color: $white-color;
+    transition: 0.2s ease-in all;
+
+    &:hover {
+      background: #d42b3c;
+      transition: 0.2s ease-in all;
+    }
   }
 
   &--small {

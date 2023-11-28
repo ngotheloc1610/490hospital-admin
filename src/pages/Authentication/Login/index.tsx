@@ -41,7 +41,7 @@ const Login = () => {
           localStorage.setItem(KEY_LOCAL_STORAGE.EXP, decoded.exp);
           localStorage.setItem(KEY_LOCAL_STORAGE.IAT, decoded.iat);
           localStorage.setItem(KEY_LOCAL_STORAGE.SUB, decoded.sub);
-          localStorage.setItem(KEY_LOCAL_STORAGE.TYPE, decoded?.aud);
+          localStorage.setItem(KEY_LOCAL_STORAGE.TYPE, decoded.aud);
           dispatch(setLogin(true));
           navigate("/admin")
         }

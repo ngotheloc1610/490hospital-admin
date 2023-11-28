@@ -76,6 +76,27 @@ const PatientMonitorDetail = () => {
         <p>Upcoming Appointment</p>
       </div>
       </div>
+
+      <div className="row">
+        <div className="col-8">
+          <div>
+            <p>Vital Signs</p>
+          </div>
+          <div>
+            <div className="row">
+              <div className="col-2">
+                <div>
+                  <p></p>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="col-4">
+          <p>Encounter History</p>
+        </div>
+      </div>
     </section>
   );
 };

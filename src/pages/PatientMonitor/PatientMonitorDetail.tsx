@@ -4,6 +4,7 @@ const PatientMonitorDetail = () => {
   return (
     <section>
       <div className="row">
+      <div className="row col-8">
         <div className="col-3">
           <p>
             <span>Patient Profile</span>
@@ -69,6 +70,11 @@ const PatientMonitorDetail = () => {
             <span></span>
           </div>
         </div>
+      </div>
+
+      <div className="col-4">
+        <p>Upcoming Appointment</p>
+      </div>
       </div>
     </section>
   );

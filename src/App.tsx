@@ -63,6 +63,7 @@ import AppointmentBooked from "./pages/Appointment/Booked";
 import AppointmentProposed from "./pages/Appointment/Proposed";
 import PatientDashboard from "./pages/Dashboard/Patient";
 import AppointmentDashboard from "./pages/Dashboard/Appointment";
+import PatientMonitorDetail from "./pages/PatientMonitor/PatientMonitorDetail";
 
 if (typeof window !== "undefined") {
   require("bootstrap/dist/js/bootstrap.bundle.min");
@@ -137,7 +138,9 @@ const RouterDom = () => (
 
     <Route path={RouterUrl.CHAT} element={<Chat />} />
 
-    <Route path={RouterUrl.PATIENT_MONITOR} element={<PatientMonitor />} />
+    <Route path={RouterUrl.PATIENT_MONITOR} element={<PatientMonitor />} >
+      <Route path=":monitorId" element={<PatientMonitorDetail />} />
+    </Route>
 
     <Route path={RouterUrl.BOOK_APPOINTMENT} element={<BookAppointment />} />
 

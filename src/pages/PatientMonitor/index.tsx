@@ -123,7 +123,7 @@ const PatientMonitor = () => {
         <Outlet />
       ) : (
         <>
-          <section className="table-container">
+          <section className="table-container ">
             <div className="table-container-contain">
               <div className="d-flex justify-content-center align-item-center">
                 <h6 className="mb-0 text-center fw-bold p-3">

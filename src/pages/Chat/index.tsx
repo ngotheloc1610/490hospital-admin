@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import moment from "moment";
-import SockJS from "sockjs-client";
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import SendIcon from '@mui/icons-material/Send';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import AddCommentOutlinedIcon from '@mui/icons-material/AddCommentOutlined';
+import { initializeApp } from 'firebase/app';
+import { getFirestore } from 'firebase/firestore/lite';
 
 import { USER } from "../../assets";
 import { API_INBOX_MESSAGE, API_INBOX_MESSAGE_SEND, API_INBOX_ROOM_LIST } from "../../constants/api.constant";
@@ -17,7 +18,11 @@ import { FORMAT_DATE, FORMAT_DAY, FORMAT_TIME } from "../../constants/general.co
 import Layout from "../../components/Layout";
 import PopUpCreateRoom from "./PopUpCreateRoom";
 
-var stompClient: any = null;
+const firebaseConfig = {
+    //...
+};
+
+const app = initializeApp(firebaseConfig);
 
 const Chat = () => {
     const url_api = process.env.REACT_APP_API_URL;
@@ -42,6 +47,8 @@ const Chat = () => {
     const fileImageInputRef = useRef<any>(null);
     const messageRef = useRef<any>(null)
 
+    const db = getFirestore(app);
+
     useEffect(() => {
         messageRef?.current?.scrollIntoView({ behavior: 'smooth' })
     }, [])
@@ -49,50 +56,6 @@ const Chat = () => {
     useEffect(() => {
         getListInboxRoom()
     }, [])
-
-    useEffect(() => {
-        var sock = new SockJS(url_ws);
-        console.log("sock:", sock)
-        sock.onopen = function () {
-            console.log('open');
-            sock.send('test');
-        };
-
-        sock.onmessage = function (e) {
-            console.log('message', e.data);
-            sock.close();
-        };
-
-        sock.onclose = function () {
-            console.log('close');
-        };
-        // registerUser();
-    }, [])
-
-
-    // const registerUser = () => {
-    //     let sockJS = new SockJS(url_ws)
-    //     console.log("sockJS:", sockJS)
-    //     stompClient?.over(sockJS);
-    //     stompClient?.connect({}, onConnected, onError)
-    // }
-
-    // const onConnected = () => {
-    //     // setUserData({ ...userData, "connected": true })
-    //     stompClient.subscribe("/topic/messages", onPublicMessageReceived)
-    //     // stompClient.subscribe("/topic/messages", onPublicMessageReceived)
-    // }
-
-    // const onError = (error: any) => {
-    //     console.log("error:", error)
-    // }
-
-    // const onPublicMessageReceived = (payload: any) => {
-    //     let payloadData = JSON.parse(payload.body)
-    //     console.log("payloadData:", payloadData)
-
-
-    // }
 
     const getListInboxRoom = () => {
         const url = `${url_api}${API_INBOX_ROOM_LIST}`;

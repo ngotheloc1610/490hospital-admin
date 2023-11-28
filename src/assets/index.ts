@@ -19,6 +19,11 @@ import { ReactComponent as ICON_SETTING } from "./icons/setting.svg";
 import { ReactComponent as ICON_BOOK_APPOINTMENT } from "./icons/book_appointment.svg";
 import { ReactComponent as ICON_GRADUATION } from "./icons/graduation.svg";
 import { ReactComponent as ICON_PEOPLE_TEAM } from "./icons/people_team.svg";
+import { ReactComponent as ICON_HEART } from "./icons/heart.svg";
+import { ReactComponent as ICON_TEMPERATURE } from "./icons/temperature.svg";
+import { ReactComponent as ICON_WATER } from "./icons/water.svg";
+import { ReactComponent as ICON_BMI } from "./icons/bmi.svg";
+import { ReactComponent as ICON_BLOOD_GLUCOSE } from "./icons/bloodGluco.svg";
 
 export {
   LOGO,
@@ -40,5 +45,10 @@ export {
   ICON_SETTING,
   ICON_BOOK_APPOINTMENT,
   ICON_GRADUATION,
-  ICON_PEOPLE_TEAM
+  ICON_PEOPLE_TEAM,
+  ICON_HEART,
+  ICON_TEMPERATURE,
+  ICON_WATER,
+  ICON_BMI,
+  ICON_BLOOD_GLUCOSE
 };

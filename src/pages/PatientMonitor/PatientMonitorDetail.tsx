@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ICON_BLOOD_GLUCOSE, ICON_BMI, ICON_HEART, ICON_TEMPERATURE, ICON_WATER, USER } from "../../assets";
+import { ICON_PENCIL, ICON_TRASH, USER } from "../../assets";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -9,7 +9,8 @@ import {
   Title,
   Tooltip,
   Legend,
-} from 'chart.js';
+} from "chart.js";
+import PopUpCreate from "./PopUpCreate";
 
 ChartJS.register(
   CategoryScale,
@@ -21,17 +22,19 @@ ChartJS.register(
 );
 
 const PatientMonitorDetail = () => {
-  const [isHeartRate, setIsHeartRate] = useState<boolean>(true)
-  const [isBloodPressure, setIsBloodPressure] = useState<boolean>(false)
-  const [isBloodGlucose, setIsBloodGlucose] = useState<boolean>(false)
-  const [isTemperature, setIsTemperature] = useState<boolean>(false)
-  const [isBMI, setIsBMI] = useState<boolean>(false)
+  const [isHeartRate, setIsHeartRate] = useState<boolean>(true);
+  const [isBloodPressure, setIsBloodPressure] = useState<boolean>(false);
+  const [isBloodGlucose, setIsBloodGlucose] = useState<boolean>(false);
+  const [isTemperature, setIsTemperature] = useState<boolean>(false);
+  const [isBMI, setIsBMI] = useState<boolean>(false);
+
+  const [isShowPopUp, setIsShowPopUp] = useState<boolean>(false);
 
   const options = {
     plugins: {
       title: {
         display: true,
-        text: 'Chart.js Bar Chart - Stacked',
+        text: "Chart.js Bar Chart - Stacked",
       },
     },
     responsive: true,
@@ -45,7 +48,15 @@ const PatientMonitorDetail = () => {
     },
   };
 
-  const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+  const labels = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+  ];
 
   const data = {
     labels,
@@ -74,7 +85,7 @@ const PatientMonitorDetail = () => {
     setIsBloodGlucose(false);
     setIsTemperature(false);
     setIsBMI(false);
-  }
+  };
 
   const handleClickBloodPressure = () => {
     setIsHeartRate(false);
@@ -82,7 +93,7 @@ const PatientMonitorDetail = () => {
     setIsBloodGlucose(false);
     setIsTemperature(false);
     setIsBMI(false);
-  }
+  };
 
   const handleClickBloodGlucose = () => {
     setIsHeartRate(false);
@@ -90,7 +101,7 @@ const PatientMonitorDetail = () => {
     setIsBloodGlucose(true);
     setIsTemperature(false);
     setIsBMI(false);
-  }
+  };
 
   const handleClickTemperature = () => {
     setIsHeartRate(false);
@@ -98,7 +109,7 @@ const PatientMonitorDetail = () => {
     setIsBloodGlucose(false);
     setIsTemperature(true);
     setIsBMI(false);
-  }
+  };
 
   const handleClickBMI = () => {
     setIsHeartRate(false);
@@ -106,7 +117,7 @@ const PatientMonitorDetail = () => {
     setIsBloodGlucose(false);
     setIsTemperature(false);
     setIsBMI(true);
-  }
+  };
 
   const _renderHeartRate = () => {
     return (
@@ -121,211 +132,125 @@ const PatientMonitorDetail = () => {
           </div>
         </div>
       </div>
-    )
-  }
+    );
+  };
 
   const _renderBloodPressure = () => {
     return (
-      <div className="row">
-        <div className="col-9 box">
-          <div className="p-3">
-            <div>
-              <span className="fw-bold">Blood pressure</span>
-            </div>
-
-            <div>
-              <Bar options={options} data={data} />
-            </div>
-          </div>
-        </div>
-        <div className="col-3 box">
-          <div >
-            <div className="p-3 d-flex justify-content-between">
-              <span className="fw-bold my-auto">History</span>
-              <button className="button button--primary button--small">SORT</button>
-            </div>
-            <div>
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th scope="col">Date</th>
-                    <th scope="col">Time</th>
-                    <th scope="col">Data</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                  </tr>
-                  <tr>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                  </tr>
-
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  const _renderBloodGlocose = () => {
-    return (
-      <div className="row">
-        <div className="col-9 box">
-          <div className="p-3">
-            <div>
-              <span className="fw-bold">Blood glucose</span>
-            </div>
-
-            <div>
-              <Bar options={options} data={data} />
-            </div>
-          </div>
-        </div>
-        <div className="col-3 box">
+      <div className="box">
+        <div className="p-3">
           <div>
-            <div className="p-3 d-flex justify-content-between">
-              <span className="fw-bold my-auto">History</span>
-              <button className="button button--primary button--small">SORT</button>
-            </div>
-            <div>
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th scope="col">Date</th>
-                    <th scope="col">Time</th>
-                    <th scope="col">Data</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                  </tr>
-                  <tr>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                  </tr>
+            <span className="fw-bold">Blood pressure</span>
+          </div>
 
-                </tbody>
-              </table>
-            </div>
+          <div>
+            <Bar options={options} data={data} />
           </div>
         </div>
       </div>
-    )
-  }
+    );
+  };
+
+  const _renderBloodGlucose = () => {
+    return (
+      <div className="box">
+        <div className="p-3">
+          <div>
+            <span className="fw-bold">Blood glucose</span>
+          </div>
+
+          <div>
+            <Bar options={options} data={data} />
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   const _renderTemperature = () => {
     return (
-      <div className="row">
-        <div className="col-9 box">
-          <div className="p-3">
-            <div>
-              <span className="fw-bold">Temperature</span>
-            </div>
-
-            <div>
-              <Bar options={options} data={data} />
-            </div>
+      <div className="box">
+        <div className="p-3">
+          <div>
+            <span className="fw-bold">Temperature</span>
           </div>
-        </div>
-        <div className="col-3 box">
-          <div >
-            <div className="p-3 d-flex justify-content-between">
-              <span className="fw-bold my-auto">History</span>
-              <button className="button button--primary button--small">SORT</button>
-            </div>
-            <div>
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th scope="col">Date</th>
-                    <th scope="col">Time</th>
-                    <th scope="col">Data</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                  </tr>
-                  <tr>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                  </tr>
 
-                </tbody>
-              </table>
-            </div>
+          <div>
+            <Bar options={options} data={data} />
           </div>
         </div>
       </div>
-    )
-  }
+    );
+  };
 
   const _renderBMI = () => {
     return (
-      <div className="row ">
-        <div className="col-9 box">
-          <div className="p-3">
-            <div>
-              <span className="fw-bold">BMI</span>
-            </div>
-
-            <div>
-              <Bar options={options} data={data} />
-            </div>
+      <div className="box">
+        <div className="p-3">
+          <div>
+            <span className="fw-bold">BMI</span>
           </div>
-        </div>
-        <div className="col-3 box">
-          <div >
-            <div className="p-3 d-flex justify-content-between">
-              <span className="fw-bold my-auto">History</span>
-              <button className="button button--primary button--small">SORT</button>
-            </div>
-            <div>
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th scope="col">Date</th>
-                    <th scope="col">Time</th>
-                    <th scope="col">
-                      <span>W{"(kg)"} -</span>
-                      <span>H{"(cm)"} </span>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                  </tr>
-                  <tr>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                  </tr>
 
-                </tbody>
-              </table>
-            </div>
+          <div>
+            <Bar options={options} data={data} />
           </div>
         </div>
       </div>
-    )
-  }
+    );
+  };
+
+  const _renderReportedConditions = () => {
+    return (
+      <div className="box p-3 mt-3">
+        <div className="d-flex justify-content-between">
+          <p className="fw-bold">
+            Reported conditions (Problem list and Previous Encounter)
+          </p>
+          <button
+            className="button button--small button--primary"
+            onClick={() => setIsShowPopUp(true)}
+          >
+            Add a previous problem
+          </button>
+        </div>
+        <table className="table">
+          <thead>
+            <tr>
+              <th scope="col">Condition Name</th>
+              <th scope="col">Body site</th>
+              <th scope="col">Severity</th>
+              <th scope="col">Clinical Status</th>
+              <th scope="col">Onset</th>
+              <th scope="col">Recorded date</th>
+              <th scope="col">Note</th>
+              <th scope="col">Encounter</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Mark</td>
+              <td>Otto</td>
+              <td>@mdo</td>
+              <td>@mdo</td>
+              <td>@mdo</td>
+              <td>@mdo</td>
+              <td>@mdo</td>
+              <td>@mdo</td>
+              <td>
+                <span className="ms-1 cursor-pointer">
+                  <ICON_PENCIL />
+                </span>
+                <span className="ms-1 cursor-pointer">
+                  <ICON_TRASH />
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    );
+  };
 
   return (
     <section className="container patient-monitor">
@@ -340,7 +265,11 @@ const PatientMonitorDetail = () => {
                 </span>
               </p>
               <p className="text-center">
-                <img src={USER} alt="img patient" style={{ height: "60px", width: "60px" }} />
+                <img
+                  src={USER}
+                  alt="img patient"
+                  style={{ height: "60px", width: "60px" }}
+                />
               </p>
               <p className="text-center">
                 <span className="fw-bold">name</span> <span>Status</span>
@@ -400,7 +329,6 @@ const PatientMonitorDetail = () => {
               </div>
             </div>
           </div>
-
         </div>
 
         <div className="col-3">
@@ -425,7 +353,6 @@ const PatientMonitorDetail = () => {
                   <td>Thornton</td>
                   <td>@fat</td>
                 </tr>
-
               </tbody>
             </table>
           </div>
@@ -438,37 +365,71 @@ const PatientMonitorDetail = () => {
             </div>
             <div>
               <div className="d-flex mb-3">
-                <div className="box box-item p-3 text-center" onClick={handleClickHeartRate}>
+                <div
+                  className="box box-item p-3 text-center"
+                  onClick={handleClickHeartRate}
+                >
                   <h6 className="fw-bold">Heart rate</h6>
-                  <p><i className="bi bi-heart-pulse-fill fs-1" style={{ color: "#FF0000" }}></i></p>
+                  <p>
+                    <i
+                      className="bi bi-heart-pulse-fill fs-1"
+                      style={{ color: "#FF0000" }}
+                    ></i>
+                  </p>
                   <p className="fw-bold mb-1">N/A</p>
                   <p className="mb-1">BPM</p>
                   <p className="mb-0">N/A</p>
                 </div>
-                <div className="box box-item p-3 text-center" onClick={handleClickBloodPressure}>
+                <div
+                  className="box box-item p-3 text-center"
+                  onClick={handleClickBloodPressure}
+                >
                   <h6 className="fw-bold">Blood pressure</h6>
-                  <p><i className="bi bi-droplet-fill fs-1" style={{ color: "#FF0000" }}></i></p>
+                  <p>
+                    <i
+                      className="bi bi-droplet-fill fs-1"
+                      style={{ color: "#FF0000" }}
+                    ></i>
+                  </p>
                   <p className="fw-bold mb-1">N/A</p>
                   <p className="mb-1">mmHg</p>
                   <p className="mb-0">N/A</p>
                 </div>
-                <div className="box box-item p-3 text-center" onClick={handleClickBloodGlucose}>
+                <div
+                  className="box box-item p-3 text-center"
+                  onClick={handleClickBloodGlucose}
+                >
                   <h6 className="fw-bold">Blood glucose</h6>
-                  <p><i className="bi bi-capsule fs-1" style={{ color: "#FF0000" }}></i></p>
+                  <p>
+                    <i
+                      className="bi bi-capsule fs-1"
+                      style={{ color: "#FF0000" }}
+                    ></i>
+                  </p>
                   <p className="fw-bold mb-1">N/A</p>
                   <p className="mb-1">mmol/L</p>
                   <p className="mb-0">N/A</p>
                 </div>
-                <div className="box box-item p-3 text-center" onClick={handleClickTemperature}>
+                <div
+                  className="box box-item p-3 text-center"
+                  onClick={handleClickTemperature}
+                >
                   <h6 className="fw-bold">Temperature</h6>
-                  <p><i className="bi bi-thermometer-high fs-1"></i></p>
+                  <p>
+                    <i className="bi bi-thermometer-high fs-1"></i>
+                  </p>
                   <p className="fw-bold mb-1">N/A</p>
                   <p className="mb-1">&deg;C</p>
                   <p className="mb-0">N/A</p>
                 </div>
-                <div className="box box-item p-3 text-center" onClick={handleClickBMI}>
+                <div
+                  className="box box-item p-3 text-center"
+                  onClick={handleClickBMI}
+                >
                   <h6 className="fw-bold">BMI</h6>
-                  <p><i className="bi bi-person-fill fs-1"></i></p>
+                  <p>
+                    <i className="bi bi-person-fill fs-1"></i>
+                  </p>
                   <p className="fw-bold mb-1">N/A</p>
                   <p className="mb-1">N/A</p>
                   <p className="mb-0">N/A</p>
@@ -477,60 +438,11 @@ const PatientMonitorDetail = () => {
 
               {isHeartRate && _renderHeartRate()}
               {isBloodPressure && _renderBloodPressure()}
-              {isBloodGlucose && _renderBloodGlocose()}
+              {isBloodGlucose && _renderBloodGlucose()}
               {isTemperature && _renderTemperature()}
               {isBMI && _renderBMI()}
-
-              <div className="box p-3 mt-3">
-                <p className="fw-bold">Reported conditions (Problem list and Previous Encounter)</p>
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th scope="col">Condition Name</th>
-                      <th scope="col">Body site</th>
-                      <th scope="col">Severity</th>
-                      <th scope="col">Clinical Status</th>
-                      <th scope="col">Onset</th>
-                      <th scope="col">Recorded date</th>
-                      <th scope="col">Note</th>
-                      <th scope="col">Encounter</th>
-                      <th scope="col"></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Mark</td>
-                      <td>Otto</td>
-                      <td>@mdo</td>
-                      <td>@mdo</td>
-                      <td>@mdo</td>
-                      <td>@mdo</td>
-                      <td>@mdo</td>
-                      <td>@mdo</td>
-                      <td>
-
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Mark</td>
-                      <td>Otto</td>
-                      <td>@mdo</td>
-                      <td>@mdo</td>
-                      <td>@mdo</td>
-                      <td>@mdo</td>
-                      <td>@mdo</td>
-                      <td>@mdo</td>
-                      <td>
-
-                      </td>
-                    </tr>
-
-                  </tbody>
-                </table>
-              </div>
             </div>
           </div>
-
         </div>
 
         <div className="col-3">
@@ -555,12 +467,15 @@ const PatientMonitorDetail = () => {
                   <td>Thornton</td>
                   <td>@fat</td>
                 </tr>
-
               </tbody>
             </table>
           </div>
         </div>
       </div>
+
+      {_renderReportedConditions()}
+
+      {isShowPopUp && <PopUpCreate setIsShowPopUp={setIsShowPopUp} />}
     </section>
   );
 };

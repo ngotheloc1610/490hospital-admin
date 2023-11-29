@@ -19,7 +19,7 @@ import Layout from "../../components/Layout";
 import PopUpCreateRoom from "./PopUpCreateRoom";
 
 const firebaseConfig = {
-    //...
+    
 };
 
 const app = initializeApp(firebaseConfig);

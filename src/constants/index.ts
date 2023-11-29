@@ -1,5 +1,4 @@
 import OverviewDepartment from "../pages/Department/Detail/OverviewDepartment";
-import OverviewDiagnostic from "../pages/DiagnosticReport/Detail/OverviewDiagnostic";
 import OverviewDoctor from "../pages/Doctor/Detail/OverviewDoctor";
 import OverviewStaff from "../pages/Staff/Detail/OverviewStaff";
 
@@ -63,13 +62,6 @@ export const MenuDataStaff = [
   {
     title: "Overview",
     content: OverviewStaff,
-  },
-];
-
-export const MenuDataDiagnostic = [
-  {
-    title: "Overview",
-    content: OverviewDiagnostic,
   },
 ];
 

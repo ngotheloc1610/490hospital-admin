@@ -105,6 +105,21 @@ button {
     }
   }
 
+  &--danger--outline {
+    background: #f42323;
+    color: $white-color;
+    border: 2px solid #f42323;
+    border-radius: 8px;
+    transition: 0.2s ease-in all;
+
+    &:hover {
+      background: #f42323;
+      transition: 0.2s ease-in all;
+      color: $white-color;
+    }
+  }
+
+
   &--outline {
     background-color: transparent;
     color: $primary-color;

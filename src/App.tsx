@@ -35,7 +35,6 @@ import "../node_modules/@syncfusion/ej2-react-schedule/styles/material.css";
 import DetailDoctor from "./pages/Doctor/Detail";
 import DetailStaff from "./pages/Staff/Detail";
 import DetailDepartment from "./pages/Department/Detail";
-import DetailDiagnostic from "./pages/DiagnosticReport/Detail";
 import DetailPatient from "./pages/Patient/Detail";
 import InfoDoctor from "./pages/Doctor/Detail/InfoDoctor";
 import CreateEditDoctor from "./pages/Doctor/Detail/CreateEditDoctor";
@@ -43,8 +42,6 @@ import InfoDepartment from "./pages/Department/Detail/InfoDepartment";
 import CreateEditDepartment from "./pages/Department/Detail/CreateEditDepartment";
 import InfoStaff from "./pages/Staff/Detail/InfoStaff";
 import CreateEditStaff from "./pages/Staff/Detail/CreateEditStaff";
-import InfoDiagnostic from "./pages/DiagnosticReport/Detail/InfoDiagnostic";
-import CreateEditDiagnostic from "./pages/DiagnosticReport/Detail/CreateEditDiagnostic";
 import ForgotPassword from "./pages/Authentication/ForgotPassword";
 import InfoPatient from "./pages/Patient/Detail/Infomation/InfoPatient";
 import CreateEditPatient from "./pages/Patient/Detail/Infomation/CreateEditPatient";
@@ -114,12 +111,7 @@ const RouterDom = () => (
 
     <Route path={RouterUrl.PRACTITIONER} element={<Practitioner />} />
 
-    <Route path={RouterUrl.DIAGNOSTIC_REPORT} element={<DiagnosticReport />}>
-      <Route path="overview" element={<DetailDiagnostic />}>
-        <Route path=":diagnosticId" element={<InfoDiagnostic />} />
-        <Route path="detail" element={<CreateEditDiagnostic />} />
-      </Route>
-    </Route>
+    <Route path={RouterUrl.DIAGNOSTIC_REPORT} element={<DiagnosticReport />}/>
 
     <Route path={RouterUrl.STAFF} element={<Staff />}>
       <Route path="overview" element={<DetailStaff />}>

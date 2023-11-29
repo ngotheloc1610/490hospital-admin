@@ -153,7 +153,7 @@ const Sidebar = () => {
             )}
           </li>
 
-          {/* <li className={`${getClass(RouterUrl.DIAGNOSTIC_REPORT)}`}>
+          <li className={`${getClass(RouterUrl.DIAGNOSTIC_REPORT)}`}>
             <a
               onClick={() => goToLink(RouterUrl.DIAGNOSTIC_REPORT)}
               data-content-id="diagnostic-report"
@@ -161,7 +161,7 @@ const Sidebar = () => {
               <ICON_DIAGNOSTIC />
               <span>Diagnostic Report</span>
             </a>
-          </li> */}
+          </li>
           <li className={`${getClass(RouterUrl.STAFF)}`}>
             <a
               onClick={() => goToLink(RouterUrl.STAFF)}

@@ -1,0 +1,23 @@
+.diagnostic-report {
+    .appointment-container {
+        &-header {
+            border-bottom: 2px solid #d9d9d9;
+            padding: 20px 35px;
+
+            .appointment-step {
+                color: #4680ff;
+                font-weight: bold;
+            }
+
+            p {
+                margin-bottom: 0;
+            }
+        }
+
+        &-footer {
+            border-top: 2px solid #d9d9d9;
+            padding: 20px 35px;
+        }
+
+    }
+}

@@ -128,6 +128,7 @@ const ScheduleDoctor = () => {
     }
 
     const onActionBegin = (args: any) => {
+        console.log("args:", args.requestType)
         if (args.requestType === 'eventCreate') {
             createScheduler(args.data[0])
         } else if (args.requestType === 'eventRemove') {

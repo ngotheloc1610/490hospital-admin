@@ -231,51 +231,51 @@ export const TYPE_OF_APPOINTMENT = [
 
 export const MONTHS = [
   {
-    value: "1",
+    value: "0",
     title: "January",
   },
   {
-    value: "2",
+    value: "1",
     title: "February",
   },
   {
-    value: "3",
+    value: "2",
     title: "Marche",
   },
   {
-    value: "4",
+    value: "3",
     title: "April",
   },
   {
-    value: "5",
+    value: "4",
     title: "May",
   },
   {
-    value: "6",
+    value: "5",
     title: "June",
   },
   {
-    value: "7",
+    value: "6",
     title: "July",
   },
   {
-    value: "8",
+    value: "7",
     title: "August",
   },
   {
-    value: "9",
+    value: "8",
     title: "September",
   },
   {
-    value: "10",
+    value: "9",
     title: "October",
   },
   {
-    value: "11",
+    value: "10",
     title: "November",
   },
   {
-    value: "12",
+    value: "11",
     title: "December",
   },
 ];

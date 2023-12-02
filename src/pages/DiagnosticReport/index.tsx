@@ -1,8 +1,11 @@
 import { memo, useEffect, useState } from "react";
 import Layout from "../../components/Layout";
-import { USER } from "../../assets";
+import { ICON_PENCIL, ICON_TRASH, USER } from "../../assets";
 import { Link } from "react-router-dom";
 import { TOTAL_STEP } from "../../constants/general.constant";
+import { API_FULFILLED_ENCOUNTER } from "../../constants/api.constant";
+import { defineConfigPost } from "../../Common/utils";
+import axios from "axios";
 
 const DiagnosticReport = () => {
 
@@ -30,17 +33,40 @@ const DiagnosticReport = () => {
   const [temperature, setTemperature] = useState<string>("");
   const [note, setNote] = useState<string>("");
 
-  const [condition, setCondition] = useState<string>("");
-  const [bodySite, setBodySite] = useState<string>("");
-  const [severity, setSeverity] = useState<string>("");
-  const [recordedDate, setRecordedDate] = useState<string>("");
-
   const [finalDiagnosis, setFinalDiagnosis] = useState<string>("");
-  const [cateogry, setCateogry] = useState<string>("");
+  const [category, setCategory] = useState<string>("");
   const [noteDiagnosis, setNoteDiagnosis] = useState<string>("");
 
+  const [listCurrentCondition, setListCurrentCondition] = useState<any>([{
+    condition: "",
+    bodySite: "",
+    severity: "",
+    recordedDate: "",
+    note: "",
+  }])
 
+  const [listExtraCondition, setListExtraCondition] = useState([{
+    condition: "",
+    bodySite: "",
+    severity: "",
+    recordedDate: "",
+    note: "",
+  }])
 
+  const getEncounterByAppointment = (appointmentId: string) => {
+    const url = `${url_api}${API_FULFILLED_ENCOUNTER}${appointmentId}`;
+
+    axios
+      .get(url, defineConfigPost())
+      .then((resp: any) => {
+        if (resp) {
+          console.log("resp:", resp)
+        }
+      })
+      .catch((err: any) => {
+        console.log("error get encounter by appointment:", err);
+      });
+  }
 
   const _renderListBloodGlucose = () => {
     return (
@@ -143,6 +169,7 @@ const DiagnosticReport = () => {
       </>
     );
   };
+
   const _renderListSeverity = () => {
     return (
       <>
@@ -239,11 +266,6 @@ const DiagnosticReport = () => {
               Back
             </button>
             <button
-              className="button button--outline button--small me-3"
-            >
-              Save Draft
-            </button>
-            <button
               className="button button--primary button--small"
             >
               Submit & Fulfilled
@@ -261,197 +283,117 @@ const DiagnosticReport = () => {
     );
   };
 
-  const _renderStep1 = (
-
-  ) => {
+  const _renderStep1 = () => {
     return (
-      <div className="row g-3">
-        <div className="col-6">
-          <div className="d-flex">
-            <label htmlFor="bloodPressure" className="my-auto">
-              Blood Pressure:
-            </label>
-            <div>
-              <input type="text" />
-              <span> / </span>
-              <input type="text" />
-              <span>mmHg</span>
+      <div>
+        <div className="row g-3 box mt-1">
+          <div className="col-6">
+            <div className="d-flex">
+              <label htmlFor="bloodPressure" className="my-auto fw-bold">
+                Blood Pressure:
+              </label>
+              <div className="ms-2">
+                <input type="text" className="input-small" />
+                <span> / </span>
+                <input type="text" className="input-small" />
+                <span>mmHg</span>
+              </div>
             </div>
-          </div>
-          <select
-            className="form-select"
-            id="bloodPressure"
-            onChange={(e: any) => setBloodPressure(e.target.value)}
-            value={bloodPressure}
-          >
-            {_renderListBloodPressure()}
-          </select>
-        </div>
-        <div className="col-6">
-          <div className="d-flex">
-            <label htmlFor="temperature" className="my-auto">
-              Temperature:
-            </label>
-            <div>
-              <input type="text" />
-              <span>&deg;C</span>
-
-            </div>
-          </div>
-          <select
-            className="form-select"
-            id="temperature"
-            onChange={(e: any) => setTemperature(e.target.value)}
-            value={temperature}
-          >
-            {_renderListTemperature()}
-          </select>
-        </div>
-        <div className="col-6">
-          <div className="d-flex">
-            <label htmlFor="bloodGlucose" className="my-auto">
-              Blood Glucose:
-            </label>
-            <div>
-              <input type="text" />
-              <span>mmol/L:</span>
-            </div>
-          </div>
-          <select
-            className="form-select"
-            id="bloodGlucose"
-            onChange={(e: any) => setBloodGlucose(e.target.value)}
-            value={bloodGlucose}
-          >
-            {_renderListBloodGlucose()}
-          </select>
-        </div>
-        <div className="col-6">
-          <div className="d-flex">
-            <label htmlFor="bloodGlucose" className="my-auto">
-              Body Mass Index (BMI)
-            </label>
-            <div>
-              <input type="text" disabled />
-
-              <span>Weight</span>
-              <input type="text" />
-              <span>kg</span>
-
-              <span>Height</span>
-              <input type="text" />
-              <span>cm</span>
-            </div>
-          </div>
-          <select
-            className="form-select"
-            id="bloodGlucose"
-            onChange={(e: any) => setBMI(e.target.value)}
-            value={bmi}
-          >
-            {_renderListBMI()}
-          </select>
-        </div>
-        <div className="col-6">
-          <div className="d-flex">
-            <label htmlFor="heartRate" className="my-auto">
-              Heart Rate
-            </label>
-            <div>
-              <input type="text" disabled />
-              <span>bpm</span>
-            </div>
-          </div>
-          <select
-            className="form-select"
-            id="heartRate"
-            onChange={(e: any) => setHeartRate(e.target.value)}
-            value={heartRate}
-          >
-            {_renderListHeartRate()}
-          </select>
-        </div>
-        <div className="col-6">
-          <label htmlFor="note" className="d-block">Note</label>
-          <textarea
-            className="p-3 rounded w-100"
-            cols={5}
-            rows={5}
-            placeholder="Add notes here"
-            id="note"
-            value={note}
-            onChange={(e: any) => setNote(e.target.value)}
-          ></textarea>
-        </div>
-      </div>
-    )
-  }
-
-  const _renderStep2 = () => {
-    return (
-      <div className="row g-3">
-        <div className="col-6">
-          <div className="d-flex justify-content-between">
-            <label htmlFor="condition" className="my-auto">
-              Condition
-            </label>
             <select
               className="form-select"
-              id="condition"
-              onChange={(e: any) => setCondition(e.target.value)}
-              value={condition}
+              id="bloodPressure"
+              onChange={(e: any) => setBloodPressure(e.target.value)}
+              value={bloodPressure}
             >
-              {_renderListCondition()}
+              {_renderListBloodPressure()}
             </select>
           </div>
-        </div>
-        <div className="col-6">
-          <div className="d-flex justify-content-between">
-            <label htmlFor="bodySite" className="my-auto">
-              Body Site
-            </label>
+          <div className="col-6">
+            <div className="d-flex">
+              <label htmlFor="temperature" className="my-auto fw-bold">
+                Temperature:
+              </label>
+              <div className="ms-2">
+                <input type="text" className="input-small" />
+                <span>&deg;C</span>
+
+              </div>
+            </div>
             <select
               className="form-select"
-              id="bodySite"
-              onChange={(e: any) => setBodySite(e.target.value)}
-              value={bodySite}
+              id="temperature"
+              onChange={(e: any) => setTemperature(e.target.value)}
+              value={temperature}
             >
-              {_renderListBodySite()}
+              {_renderListTemperature()}
             </select>
           </div>
-        </div>
-        <div className="col-6">
-          <div className="d-flex justify-content-between">
-            <label htmlFor="severity" className="my-auto">
-              Severity
-            </label>
+          <div className="col-6">
+            <div className="d-flex">
+              <label htmlFor="bloodGlucose" className="my-auto fw-bold">
+                Blood Glucose:
+              </label>
+              <div className="ms-2">
+                <input type="text" className="input-small" />
+                <span>mmol/L</span>
+              </div>
+            </div>
             <select
               className="form-select"
-              id="severity"
-              onChange={(e: any) => setSeverity(e.target.value)}
-              value={severity}
+              id="bloodGlucose"
+              onChange={(e: any) => setBloodGlucose(e.target.value)}
+              value={bloodGlucose}
             >
-              {_renderListSeverity()}
+              {_renderListBloodGlucose()}
             </select>
           </div>
-        </div>
-        <div className="col-6">
-          <div className="d-flex justify-content-between">
-            <label htmlFor="recordedDate" className="my-auto">
-              Recorded Date
-            </label>
-            <input
-              id="recordedDate"
-              type="date"
-              className={`form-control`}
-              value={recordedDate}
-              onChange={(e: any) => setRecordedDate(e.target.value)}
-            />
+          <div className="col-6">
+            <div className="">
+              <label htmlFor="bmi" className="my-auto fw-bold">
+                Body Mass Index (BMI):
+              </label>
+              <div className="text-end d-inline ms-3">
+                <input type="text" disabled className="input-small" />
+
+                <span>Weight</span>
+                <input type="text" className="input-small" />
+                <span>kg</span>
+
+                <span>Height</span>
+                <input type="text" className="input-small" />
+                <span>cm</span>
+              </div>
+            </div>
+            <select
+              className="form-select"
+              id="bmi"
+              onChange={(e: any) => setBMI(e.target.value)}
+              value={bmi}
+            >
+              {_renderListBMI()}
+            </select>
           </div>
-        </div>
-        <div className="col-12">
-          <div className="d-flex justify-content-between">
-            <label htmlFor="note">Note</label>
+          <div className="col-6">
+            <div className="d-flex">
+              <label htmlFor="heartRate" className="my-auto fw-bold">
+                Heart Rate:
+              </label>
+              <div className="ms-2">
+                <input type="text" className="input-small" />
+                <span>bpm</span>
+              </div>
+            </div>
+            <select
+              className="form-select"
+              id="heartRate"
+              onChange={(e: any) => setHeartRate(e.target.value)}
+              value={heartRate}
+            >
+              {_renderListHeartRate()}
+            </select>
+          </div>
+          <div className="col-6">
+            <label htmlFor="note" className="d-block fw-bold ">Note:</label>
             <textarea
               className="p-3 rounded w-100"
               cols={5}
@@ -464,55 +406,354 @@ const DiagnosticReport = () => {
           </div>
         </div>
 
-        <div className="col-6">
+        <div className="mt-3 box p-3">
           <div className="d-flex justify-content-between">
-            <label htmlFor="diagnosis" className="my-auto">
-              Final Diagnosis<span className="text-danger">*</span>
-            </label>
-            <select
-              className="form-select"
-              id="diagnosis"
-              onChange={(e: any) => setFinalDiagnosis(e.target.value)}
-              value={finalDiagnosis}
+            <p className="fw-bold my-auto">
+              Reported conditions (Problem list and Previous Encounter)
+            </p>
+            <button
+              className="button button--small button--primary"
+            // onClick={() => setIsShowPopUp(true)}
             >
-              {_renderListDiagnosis()}
-            </select>
+              Add a previous problem
+            </button>
           </div>
-        </div>
-        <div className="col-6">
-          <div className="d-flex justify-content-between">
-            <label htmlFor="category" className="my-auto">
-              Category<span className="text-danger">*</span>
-            </label>
-            <select
-              className="form-select"
-              id="category"
-              onChange={(e: any) => setCateogry(e.target.value)}
-              value={cateogry}
-            >
-              {_renderListCategory()}
-            </select>
-          </div>
-        </div>
-        <div className="col-12">
-          <div className="d-flex justify-content-between">
-            <label htmlFor="noteDiagnosis" className="my-auto">
-              Final Diagnosis Note:
-            </label>
-            <textarea
-              className="p-3 rounded w-100"
-              cols={5}
-              rows={5}
-              placeholder="Add notes here"
-              id="noteDiagnosis"
-              value={noteDiagnosis}
-              onChange={(e: any) => setNoteDiagnosis(e.target.value)}
-            ></textarea>
-          </div>
+          <table className="table">
+            <thead>
+              <tr>
+                <th scope="col">Condition Name</th>
+                <th scope="col">Body site</th>
+                <th scope="col">Severity</th>
+                <th scope="col">Clinical Status</th>
+                <th scope="col">Onset</th>
+                <th scope="col">Recorded date</th>
+                <th scope="col">Note</th>
+                <th scope="col">Encounter</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+                <td>@mdo</td>
+                <td>@mdo</td>
+                <td>@mdo</td>
+                <td>@mdo</td>
+                <td>@mdo</td>
+                <td>
+                  <span className="ms-1 cursor-pointer">
+                    <ICON_PENCIL />
+                  </span>
+                  <span className="ms-1 cursor-pointer">
+                    <ICON_TRASH />
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
+    )
+  }
 
+  const _renderStep2 = () => {
+    return (
+      <div>
+        <div className="box mb-3">
+          <h6 className="fw-bold p-3">Current Condition</h6>
+          {listCurrentCondition.map((item: any, idx: number) => {
+            return (
+              <div className="row g-3 px-3 mb-3">
+                <div className="col-6">
+                  <div className="d-flex justify-content-between">
+                    <label htmlFor={`condition${idx}`} className="my-auto fw-bold">
+                      Condition
+                    </label>
+                    <select
+                      className="form-select"
+                      id={`condition${idx}`}
+                      onChange={(e: any) => {
+                        const updatedList = [...listCurrentCondition];
+                        updatedList[idx].condition = e.target.value;
+                        setListCurrentCondition(updatedList);
+                      }}
+                      value={item.condition}
+                    >
+                      {_renderListCondition()}
+                    </select>
+                  </div>
+                </div>
+                <div className="col-6">
+                  <div className="d-flex justify-content-between">
+                    <label htmlFor={`bodySite${idx}`} className="my-auto fw-bold">
+                      Body Site
+                    </label>
+                    <select
+                      className="form-select"
+                      id={`bodySite${idx}`}
+                      onChange={(e: any) => {
+                        const updatedList = [...listCurrentCondition];
+                        updatedList[idx].bodySite = e.target.value;
+                        setListCurrentCondition(updatedList);
+                      }}
+                      value={item.bodySite}
+                    >
+                      {_renderListBodySite()}
+                    </select>
+                  </div>
+                </div>
+                <div className="col-6">
+                  <div className="d-flex justify-content-between">
+                    <label htmlFor={`severity${idx}`} className="my-auto fw-bold">
+                      Severity
+                    </label>
+                    <select
+                      className="form-select"
+                      id={`severity${idx}`}
+                      onChange={(e: any) => {
+                        const updatedList = [...listCurrentCondition];
+                        updatedList[idx].severity = e.target.value;
+                        setListCurrentCondition(updatedList);
+                      }}
+                      value={item.severity}
+                    >
+                      {_renderListSeverity()}
+                    </select>
+                  </div>
+                </div>
+                <div className="col-6">
+                  <div className="d-flex justify-content-between">
+                    <label htmlFor={`recordedDate${idx}`} className="my-auto fw-bold">
+                      Recorded Date
+                    </label>
+                    <input
+                      id={`recordedDate${idx}`}
+                      type="date"
+                      className={`form-control`}
+                      value={item.recordedDate}
+                      onChange={(e: any) => {
+                        const updatedList = [...listCurrentCondition];
+                        updatedList[idx].recordedDate = e.target.value;
+                        setListCurrentCondition(updatedList);
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="col-12">
+                  <div className="d-flex justify-content-between">
+                    <label htmlFor={`note${idx}`} className="fw-bold">Note</label>
+                    <textarea
+                      className="p-3 rounded w-100"
+                      cols={5}
+                      rows={5}
+                      placeholder="Add notes here"
+                      id={`note${idx}`}
+                      value={item.note}
+                      onChange={(e: any) => {
+                        const updatedList = [...listCurrentCondition];
+                        updatedList[idx].note = e.target.value;
+                        setListCurrentCondition(updatedList);
+                      }}
+                    ></textarea>
+                  </div>
+                </div>
+                <div className="col-12">
+                  <button className="button button--small button--primary" onClick={() => {
+                    const updatedList = [...listCurrentCondition];
+                    updatedList.splice(idx, 1);
+                    setListCurrentCondition(updatedList);
+                  }}><ICON_TRASH /> Remove condition</button>
+                </div>
+              </div>
+            )
+          })}
 
+          <div className="p-3">
+            <button className="button button--outline button--small" onClick={() => setListCurrentCondition([...listCurrentCondition, {
+              condition: "",
+              bodySite: "",
+              severity: "",
+              recordedDate: "",
+              note: "",
+            }])}><i className="bi bi-plus-circle me-2"></i> Add new condition</button>
+          </div>
+        </div>
+
+        <div className="box mb-3">
+          <h6 className="fw-bold p-3">Extra Condition</h6>
+          {listExtraCondition.map((item: any, idx: number) => {
+            return (
+              <div className="row g-3 px-3 mb-3">
+                <div className="col-6">
+                  <div className="d-flex justify-content-between">
+                    <label htmlFor={`condition${idx}`} className="my-auto fw-bold">
+                      Condition
+                    </label>
+                    <select
+                      className="form-select"
+                      id={`condition${idx}`}
+                      onChange={(e: any) => {
+                        const updatedList = [...listExtraCondition];
+                        updatedList[idx].condition = e.target.value;
+                        setListExtraCondition(updatedList);
+                      }}
+                      value={item.condition}
+                    >
+                      {_renderListCondition()}
+                    </select>
+                  </div>
+                </div>
+                <div className="col-6">
+                  <div className="d-flex justify-content-between">
+                    <label htmlFor={`bodySite${idx}`} className="my-auto fw-bold">
+                      Body Site
+                    </label>
+                    <select
+                      className="form-select"
+                      id={`bodySite${idx}`}
+                      onChange={(e: any) => {
+                        const updatedList = [...listExtraCondition];
+                        updatedList[idx].bodySite = e.target.value;
+                        setListExtraCondition(updatedList);
+                      }}
+                      value={item.bodySite}
+                    >
+                      {_renderListBodySite()}
+                    </select>
+                  </div>
+                </div>
+                <div className="col-6">
+                  <div className="d-flex justify-content-between">
+                    <label htmlFor={`severity${idx}`} className="my-auto fw-bold">
+                      Severity
+                    </label>
+                    <select
+                      className="form-select"
+                      id={`severity${idx}`}
+                      onChange={(e: any) => {
+                        const updatedList = [...listExtraCondition];
+                        updatedList[idx].severity = e.target.value;
+                        setListExtraCondition(updatedList);
+                      }}
+                      value={item.severity}
+                    >
+                      {_renderListSeverity()}
+                    </select>
+                  </div>
+                </div>
+                <div className="col-6">
+                  <div className="d-flex justify-content-between">
+                    <label htmlFor={`recordedDate${idx}`} className="my-auto fw-bold">
+                      Recorded Date
+                    </label>
+                    <input
+                      id={`recordedDate${idx}`}
+                      type="date"
+                      className={`form-control`}
+                      value={item.recordedDate}
+                      onChange={(e: any) => {
+                        const updatedList = [...listExtraCondition];
+                        updatedList[idx].recordedDate = e.target.value;
+                        setListExtraCondition(updatedList);
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="col-12">
+                  <div className="d-flex justify-content-between">
+                    <label htmlFor={`note${idx}`} className="fw-bold">Note</label>
+                    <textarea
+                      className="p-3 rounded w-100"
+                      cols={5}
+                      rows={5}
+                      placeholder="Add notes here"
+                      id={`note${idx}`}
+                      value={item.note}
+                      onChange={(e: any) => {
+                        const updatedList = [...listExtraCondition];
+                        updatedList[idx].note = e.target.value;
+                        setListExtraCondition(updatedList);
+                      }}
+                    ></textarea>
+                  </div>
+                </div>
+
+                <div className="col-12">
+                  <button className="button button--small button--primary" onClick={() => {
+                    const updatedList = [...listExtraCondition];
+                    updatedList.splice(idx, 1);
+                    setListExtraCondition(updatedList);
+                  }}><ICON_TRASH /> Remove condition</button>
+                </div>
+              </div>
+            )
+          })}
+
+          <div className="p-3">
+            <button className="button button--outline button--small" onClick={() => setListExtraCondition([...listExtraCondition, {
+              condition: "",
+              bodySite: "",
+              severity: "",
+              recordedDate: "",
+              note: "",
+            }])}><i className="bi bi-plus-circle me-2"></i> Add new condition</button>
+          </div>
+        </div>
+
+        <div className="box">
+          <div className="row g-3 p-3">
+            <div className="col-6">
+              <div className="d-flex justify-content-between">
+                <label htmlFor="diagnosis" className="my-auto fw-bold">
+                  Final Diagnosis<span className="text-danger">*</span>
+                </label>
+                <select
+                  className="form-select"
+                  id="diagnosis"
+                  onChange={(e: any) => setFinalDiagnosis(e.target.value)}
+                  value={finalDiagnosis}
+                >
+                  {_renderListDiagnosis()}
+                </select>
+              </div>
+            </div>
+            <div className="col-6">
+              <div className="d-flex justify-content-between">
+                <label htmlFor="category" className="my-auto fw-bold">
+                  Category<span className="text-danger">*</span>
+                </label>
+                <select
+                  className="form-select"
+                  id="category"
+                  onChange={(e: any) => setCategory(e.target.value)}
+                  value={category}
+                >
+                  {_renderListCategory()}
+                </select>
+              </div>
+            </div>
+            <div className="col-12">
+              <div className="d-flex justify-content-between">
+                <label htmlFor="noteDiagnosis" className="my-auto fw-bold ">
+                  Final Diagnosis Note:
+                </label>
+                <textarea
+                  className="p-3 rounded w-100"
+                  cols={5}
+                  rows={5}
+                  placeholder="Add notes here"
+                  id="noteDiagnosis"
+                  value={noteDiagnosis}
+                  onChange={(e: any) => setNoteDiagnosis(e.target.value)}
+                ></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
     )
   }
 

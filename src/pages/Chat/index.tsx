@@ -1,14 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import moment from "moment";
-import AttachFileIcon from '@mui/icons-material/AttachFile';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import SendIcon from '@mui/icons-material/Send';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import AddCommentOutlinedIcon from '@mui/icons-material/AddCommentOutlined';
-import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore/lite';
 
 import { USER } from "../../assets";
 import { API_INBOX_MESSAGE, API_INBOX_MESSAGE_SEND, API_INBOX_ROOM_LIST } from "../../constants/api.constant";
@@ -18,22 +15,8 @@ import { FORMAT_DATE, FORMAT_DAY, FORMAT_TIME } from "../../constants/general.co
 import Layout from "../../components/Layout";
 import PopUpCreateRoom from "./PopUpCreateRoom";
 
-const firebaseConfig = {
-    
-};
-
-const app = initializeApp(firebaseConfig);
-
 const Chat = () => {
     const url_api = process.env.REACT_APP_API_URL;
-    const url_ws: any = process.env.REACT_APP_WS_URL;
-
-    const [userData, setUserData] = useState<any>({
-        username: "",
-        receiverName: "",
-        connected: false,
-        message: ""
-    })
 
     const [listRoom, setListRoom] = useState([])
     const [messageRoom, setMessageRoom] = useState<any>([]);
@@ -43,19 +26,26 @@ const Chat = () => {
 
     const [isShowPopUp, setIsShowPopUp] = useState<boolean>(false);
 
-    const fileInputRef = useRef<any>(null);
     const fileImageInputRef = useRef<any>(null);
     const messageRef = useRef<any>(null)
 
-    const db = getFirestore(app);
+    const [image, setImage] = useState<any>(null);
+
+    const [triggerSendMessage, setTriggerSendMessage] = useState(false);
 
     useEffect(() => {
         messageRef?.current?.scrollIntoView({ behavior: 'smooth' })
-    }, [])
+    }, [triggerSendMessage])
 
     useEffect(() => {
         getListInboxRoom()
     }, [])
+
+    useEffect(() => {
+        if (idRoom) {
+            getMessageByRoom(idRoom);
+        }
+    }, [triggerSendMessage])
 
     const getListInboxRoom = () => {
         const url = `${url_api}${API_INBOX_ROOM_LIST}`;
@@ -68,7 +58,6 @@ const Chat = () => {
                 }
             })
             .catch((err) => {
-                // error(err.response.data.errors.message)
                 console.log("error get rooms:", err);
             });
     }
@@ -88,7 +77,6 @@ const Chat = () => {
                 }
             })
             .catch((err) => {
-                error(err.response.data.errors.message)
                 console.log("error get message by room:", err);
             });
     }
@@ -97,26 +85,24 @@ const Chat = () => {
         const url = `${url_api}${API_INBOX_MESSAGE_SEND}`;
 
         const params = {
-            userSenderId: "",
-            roomId: "",
+            userSenderId: "858492094553",
+            roomId: idRoom,
             message: message,
-            media: {
-                file: "",
-                fileName: "",
-                type: "",
-                url: ""
-            }
+            mediaFileName: image ? image.name : "",
+            mediaFilePath: image ? image : ""
         }
 
         axios
             .post(url, params, defineConfigPost())
             .then((resp: any) => {
                 if (resp) {
-                    console.log("resp:", resp)
+                    setMessage("")
+                    setImage(null);
+                    setTriggerSendMessage(!triggerSendMessage);
                 }
             })
             .catch((err) => {
-                error(err.response.data.errors.message)
+                error(err.response.data.errors.message || err.response.data.errors)
                 console.log("error send message:", err);
             });
     }
@@ -133,29 +119,24 @@ const Chat = () => {
 
     }
 
-
-    const handleClickFile = () => {
-        // Khi người dùng nhấn vào biểu tượng upload, kích hoạt sự kiện chọn tệp tin
-        if (fileInputRef.current) {
-            fileInputRef.current.click();
-        }
-    };
-
-    const handleFileChange = (event: any) => {
-        const file = event.target.files[0];
-
-    };
-
     const handleClickFileImage = () => {
-        // Khi người dùng nhấn vào biểu tượng upload, kích hoạt sự kiện chọn tệp tin
-        if (fileInputRef.current) {
-            fileInputRef.current.click();
+        if (fileImageInputRef.current) {
+            fileImageInputRef.current.click();
         }
     };
 
     const handleFileImageChange = (event: any) => {
         const file = event.target.files[0];
 
+        if (file) {
+            const reader: any = new FileReader();
+
+            reader.onloadend = () => {
+                setImage(reader.result);
+            };
+
+            reader.readAsDataURL(file);
+        }
     };
 
 
@@ -217,12 +198,13 @@ const Chat = () => {
                                 {messageRoom && messageRoom.map((item: any) => {
                                     return (
                                         <div className="chat-message-content-msg mt-3">
-                                            <span className='text-message mb-1'>{item.message}</span>
+                                            {item.inboxMessageMedia?.local_path && <img src={item.inboxMessageMedia.local_path} alt="" className="image-message" />}
+                                            <span className="text-message" >{item.message}</span>
                                             <span className="mt-1">{moment(item.created_at).format(FORMAT_DAY)}</span>
-                                            <div ref={messageRef}></div>
                                         </div>
                                     )
                                 })}
+                                <div ref={messageRef} className="mt-3"></div>
                             </div>
 
                             <div className="chat-message-footer">
@@ -230,14 +212,10 @@ const Chat = () => {
                                     <SentimentSatisfiedAltIcon />
                                 </span>
                                 <div className="message-input">
-                                    <input type="text" className="form-control" placeholder="Write a message..." value={message} onChange={(e: any) => setMessage(e.target.value)} />
+                                    {image && <p className="text-end"><img src={image} alt="" className="image-message" /></p>}
+                                    <textarea className="form-control" placeholder="Write a message..." value={message} onChange={(e: any) => setMessage(e.target.value)} />
                                 </div>
                                 <div className="m-auto " >
-                                    <span className="me-1 cursor-pointer" onClick={handleClickFile}>
-                                        <AttachFileIcon />
-                                    </span>
-                                    <input type="file" className="d-none" ref={fileInputRef} onChange={handleFileChange} />
-
                                     <span className="me-1 cursor-pointer" onClick={handleClickFileImage}><AddPhotoAlternateIcon /></span>
                                     <input type="file" className="d-none" ref={fileImageInputRef} onChange={handleFileImageChange} />
 

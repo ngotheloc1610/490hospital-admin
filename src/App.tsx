@@ -62,6 +62,8 @@ import PatientDashboard from "./pages/Dashboard/Patient";
 import AppointmentDashboard from "./pages/Dashboard/Appointment";
 import PatientMonitorDetail from "./pages/PatientMonitor/PatientMonitorDetail";
 
+import "./firebase"
+
 if (typeof window !== "undefined") {
   require("bootstrap/dist/js/bootstrap.bundle.min");
 }
@@ -111,7 +113,7 @@ const RouterDom = () => (
 
     <Route path={RouterUrl.PRACTITIONER} element={<Practitioner />} />
 
-    <Route path={RouterUrl.DIAGNOSTIC_REPORT} element={<DiagnosticReport />}/>
+    <Route path={RouterUrl.DIAGNOSTIC_REPORT} element={<DiagnosticReport />} />
 
     <Route path={RouterUrl.STAFF} element={<Staff />}>
       <Route path="overview" element={<DetailStaff />}>

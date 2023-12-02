@@ -3,7 +3,6 @@ import { Outlet, useNavigate, useOutlet } from "react-router-dom";
 import axios from "axios";
 
 import Layout from "../../components/Layout";
-import TotalView from "../../components/common/TotalView";
 import PaginationComponent from "../../components/common/Pagination";
 import {
   ALERT_STATUS,
@@ -11,12 +10,14 @@ import {
   START_PAGE,
 } from "../../constants";
 import { ICON_PENCIL } from "../../assets";
+import { API_MONITOR_ALL } from "../../constants/api.constant";
+import { defineConfigPost } from "../../Common/utils";
 
 const PatientMonitor = () => {
   const outlet = useOutlet();
   const navigate = useNavigate();
 
-  const [listData, setListData] = useState([]);
+  const [listData, setListData] = useState<any>([]);
   const [currentPage, setCurrentPage] = useState<number>(START_PAGE);
   const [itemPerPage, setItemPerPage] = useState<number>(DEFAULT_ITEM_PER_PAGE);
   const [totalItem, setTotalItem] = useState<number>(0);
@@ -25,6 +26,26 @@ const PatientMonitor = () => {
   const [alert, setAlert] = useState<string>("");
 
   const url_api = process.env.REACT_APP_API_URL;
+
+  useEffect(() => {
+    getPatientMonitor()
+  }, [])
+
+  const getPatientMonitor = () => {
+    const url = `${url_api}${API_MONITOR_ALL}`;
+
+    axios
+      .get(url, defineConfigPost())
+      .then((resp: any) => {
+        if (resp) {
+          console.log("resp:", resp)
+          setListData(resp.content.data);
+        }
+      })
+      .catch((err: any) => {
+        console.log("error get patient monitors:", err);
+      });
+  }
 
   const getCurrentPage = (item: number) => {
     setCurrentPage(item - 1);
@@ -82,7 +103,6 @@ const PatientMonitor = () => {
       <table className="table table-hover">
         <thead className="table-light">
           <tr>
-            <th scope="col">Alert</th>
             <th scope="col">Patient</th>
             <th scope="col">DOB</th>
             <th scope="col">Contact Info</th>
@@ -93,14 +113,16 @@ const PatientMonitor = () => {
           </tr>
         </thead>
         <tbody>
-          {listData.map((item: any, idx: number) => {
+          {listData && listData.map((item: any, idx: number) => {
             return (
               <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>{item.patientName}</td>
+                <td>{item.DOB}</td>
+                <td>
+                  <p>{item.email}</p>
+                  <p>{item.phone}</p>
+                </td>
+                <td>{item.diagnosis}</td>
                 <td></td>
                 <td></td>
                 <td></td>

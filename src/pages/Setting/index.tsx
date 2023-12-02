@@ -5,6 +5,7 @@ import { useState } from "react";
 import { ICON_TRASH } from "../../assets";
 import { defineConfigPost } from "../../Common/utils";
 import axios from "axios";
+import { API_ALERT_BLOOD_PRESSURE } from "../../constants/api.constant";
 
 const validationSchema = Yup.object().shape({
 
@@ -73,24 +74,23 @@ const Setting = () => {
 
   const [setting, setSetting] = useState<any>(defaultValue)
 
-  const [id, setId] = useState<number>(1);
-
   const url_api = process.env.REACT_APP_API_URL;
 
-  // const getSeverity = () => {
-  //   const url = `${url_api}${}`;
+  const createAlertBloodPressure = () => {
+    const url = `${url_api}${API_ALERT_BLOOD_PRESSURE}`;
 
-  //   axios
-  //     .get(url, defineConfigPost()
-  //     .then((resp: any) => {
-  //       if (resp) {
-  //         setListRule(resp.data);
-  //       }
-  //     })
-  //     .catch((err: any) => {
-  //       console.log("error get API list specialty", err);
-  //     });
-  // }
+    axios
+      .post(url, defineConfigPost())
+      .then((resp: any) => {
+        if (resp) {
+          setListRule(resp.data);
+        }
+      })
+      .catch((err: any) => {
+        console.log("error create alert blood pressure", err);
+      });
+  }
+
 
   return (
     <Layout>

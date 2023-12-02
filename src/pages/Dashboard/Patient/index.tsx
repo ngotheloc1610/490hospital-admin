@@ -14,9 +14,11 @@ import {
 
 import { MONTHS } from "../../../constants";
 import { ICON_PATIENT } from "../../../assets";
-import { API_DASHBOARD_PATIENTS, API_DASHBOARD_SPECIALTY } from "../../../constants/api.constant";
-import { defineConfigPost } from "../../../Common/utils";
+import { API_DASHBOARD_ALL_PATIENT_GENDER, API_DASHBOARD_NEW_PATIENT, API_DASHBOARD_OLD_PATIENT, API_DASHBOARD_PATIENT_PER_DAY } from "../../../constants/api.constant";
+import { defineConfigGet, defineConfigPost } from "../../../Common/utils";
 import axios from "axios";
+import { startOfMonth, endOfMonth, format } from 'date-fns';
+
 
 ChartJS.register(
   CategoryScale,
@@ -36,15 +38,73 @@ const PatientDashboard = () => {
   const [monthNewPatient, setMonthNewPatient] = useState<string>("");
   const [monthOldPatient, setmonthOldPatient] = useState<string>("");
 
+  const [dateOfMonthPatient, setDateOfMonthPatient] = useState<any>(new Date());
+  const [dateOfMonthNewPatient, setDateOfMonthNewPatient] = useState<any>(new Date());
+  const [dateOfMonthOldPatient, setDateOfMonthOldPatient] = useState<any>(new Date());
+
   useEffect(() => {
-    getNumberPatients()
+    const newDate = new Date(dateOfMonthPatient);
+    const month = parseInt(monthPatient, 10);
+
+    if (!isNaN(month)) {
+      newDate.setMonth(month);
+      setDateOfMonthPatient(newDate);
+    }
+  }, [monthPatient])
+
+  useEffect(() => {
+    const newDate = new Date(dateOfMonthNewPatient);
+    const month = parseInt(monthPatient, 10);
+
+    if (!isNaN(month)) {
+      newDate.setMonth(month);
+      setDateOfMonthNewPatient(newDate);
+    }
+  }, [monthNewPatient])
+
+  useEffect(() => {
+    const newDate = new Date(dateOfMonthOldPatient);
+    const month = parseInt(monthPatient, 10);
+
+    if (!isNaN(month)) {
+      newDate.setMonth(month);
+      setDateOfMonthOldPatient(newDate);
+    }
+  }, [monthOldPatient])
+
+  useEffect(() => {
+    getNumberPatients();
+    getNumberGender();
+    getNewPatient();
+    getOldPatient();
   }, [])
 
+  useEffect(() => {
+    getNumberPatients()
+  }, [dateOfMonthPatient])
+
+  useEffect(() => {
+    getNewPatient()
+  }, [dateOfMonthNewPatient])
+
+  useEffect(() => {
+    getOldPatient()
+  }, [dateOfMonthOldPatient])
+
+
   const getNumberPatients = () => {
-    const url = `${url_api}${API_DASHBOARD_SPECIALTY}`;
+    const url = `${url_api}${API_DASHBOARD_PATIENT_PER_DAY}`;
+
+    const startDate = startOfMonth(dateOfMonthPatient);
+    const endDate = endOfMonth(dateOfMonthPatient);
+
+    const params = {
+      startDate: format(startDate, "yyyy-MM-dd"),
+      endDate: format(endDate, "yyyy-MM-dd")
+    }
 
     axios
-      .get(url, defineConfigPost())
+      .get(url, defineConfigGet(params))
       .then((resp: any) => {
         if (resp) {
           console.log("resp:", resp)
@@ -55,6 +115,66 @@ const PatientDashboard = () => {
       });
   }
 
+  const getNumberGender = () => {
+    const url = `${url_api}${API_DASHBOARD_ALL_PATIENT_GENDER}`;
+
+    axios
+      .get(url, defineConfigPost())
+      .then((resp: any) => {
+        if (resp) {
+          console.log("resp:", resp)
+        }
+      })
+      .catch((err: any) => {
+        console.log("error get numberGender:", err);
+      });
+  }
+
+  const getNewPatient = () => {
+    const url = `${url_api}${API_DASHBOARD_NEW_PATIENT}`;
+
+    const startDate = startOfMonth(dateOfMonthNewPatient);
+    const endDate = endOfMonth(dateOfMonthNewPatient);
+
+    const params = {
+      startDate: format(startDate, "yyyy-MM-dd"),
+      endDate: format(endDate, "yyyy-MM-dd")
+    }
+
+    axios
+      .get(url, defineConfigGet(params))
+      .then((resp: any) => {
+        if (resp) {
+          console.log("resp:", resp)
+        }
+      })
+      .catch((err: any) => {
+        console.log("error get new patients:", err);
+      });
+  }
+
+  const getOldPatient = () => {
+    const url = `${url_api}${API_DASHBOARD_OLD_PATIENT}`;
+
+    const startDate = startOfMonth(dateOfMonthOldPatient);
+    const endDate = endOfMonth(dateOfMonthOldPatient);
+
+    const params = {
+      startDate: format(startDate, "yyyy-MM-dd"),
+      endDate: format(endDate, "yyyy-MM-dd")
+    }
+
+    axios
+      .get(url, defineConfigGet(params))
+      .then((resp: any) => {
+        if (resp) {
+          console.log("resp:", resp)
+        }
+      })
+      .catch((err: any) => {
+        console.log("error get old patients:", err);
+      });
+  }
 
   const dataLinePatient = {
     labels: ["New Patient", "Old Patient"],

@@ -67,10 +67,29 @@ export const API_INBOX_ROOM_CREATE = "/inbox-room/staff-create"
 export const API_INBOX_MESSAGE = "/inbox-message/"
 export const API_INBOX_MESSAGE_SEND = "/inbox-message/message"
 
-export const API_DASHBOARD_DOCTORS = "/dashboard/numberDoctors"
-export const API_DASHBOARD_PATIENTS = "/dashboard/numberPatients"
-export const API_DASHBOARD_STAFFS = "/dashboard/numberStaffs"
-export const API_DASHBOARD_SPECIALTY = "/dashboard/numberSpecialties"
+export const API_DASHBOARD_TOTAL = "/dashboard/totalUserByType"
+export const API_DASHBOARD_PATIENT_PER_DAY = "/dashboard/returning-patients-per-day"
+export const API_DASHBOARD_GENDER_PER_DAY = "/dashboard/returning-gender-per-day"
+export const API_DASHBOARD_NEW_PATIENT = "/dashboard/returning-newPatients-in-range"
+export const API_DASHBOARD_OLD_PATIENT = "/dashboard/returning-oldPatients-in-range"
+export const API_DASHBOARD_ALL_PATIENT = "/dashboard/returning-all-patients"
+export const API_DASHBOARD_ALL_PATIENT_GENDER = "/dashboard/returning-all-patients-gender"
+export const API_DASHBOARD_PATIENT_FULFILLED = "/dashboard/returning-list-patient-fullfiled"
+
+export const API_MONITOR_ALL = "/monitor"
+
+export const API_FULFILLED_ENCOUNTER = "/appoint-fulfilled/encounter/";
+export const API_FULFILLED_DIAGNOSTIC = "/appoint-fulfilled/diagnostic/"
+export const API_FULFILLED_DIAGNOSTIC_OBSERVATION = "/appoint-fulfilled/diagnostic/observation/"
+export const API_FULFILLED_CREATE_ENCOUNTER = "/appoint-fulfilled/create_encounter/"
+export const API_FULFILLED_CREATE_DIAGNOSTIC = "/appoint-fulfilled/createDisgnostic"
+export const API_FULFILLED_CONDITION_BY_PATIENT = "/appoint-fulfilled/getAllConditionByPatientId"
+
+export const API_ALERT_BLOOD_PRESSURE = "/alert//createAlertSettting/BloodPressure "
+export const API_ALERT_BLOOD_GLUCOSE = "/alert//createAlertSettting/BloodGlucose "
+export const API_ALERT_HEART_RATE = "/alert//createAlertSettting/HeartRate "
+export const API_ALERT_TEMPERATURE = "/alert//createAlertSettting/Temperature "
+export const API_ALERT_BMI = "/alert//createAlertSettting/BodyMassIndex(BMI) "
 
 
 

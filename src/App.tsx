@@ -70,7 +70,7 @@ if (typeof window !== "undefined") {
 
 const RouterDom = () => (
   <Routes>
-    <Route path="/" element={<Dashboard />} />
+    <Route path="/" element={<PatientDashboard />} />
     <Route path={RouterUrl.DASHBOARD} element={<Dashboard />}>
       <Route path="patient" element={<PatientDashboard />} />
       <Route path="appointment" element={<AppointmentDashboard />} />
@@ -155,17 +155,14 @@ const _renderMainPage = () => {
 };
 
 const App = () => {
-  const [isForgotPassword, setIsForgotPassword] = useState<boolean>(false);
-  const [isChangePassword, setIsChangePassword] = useState<boolean>(false);
 
-  const { isLogin } = useAppSelector((state) => state.authSlice);
+  const { isLogin, isForgotPassword } = useAppSelector((state) => state.authSlice);
 
   return (
     <BrowserRouter basename={process.env.PUBLIC_URL}>
       {isLogin && _renderMainPage()}
       {!isLogin && <Login />}
-      {isForgotPassword && <ForgotPassword />}
-      {isChangePassword && <ChangePassword />}
+      {!isLogin && isForgotPassword && <ForgotPassword />}
       <ToastContainer theme="colored" />
     </BrowserRouter>
   );

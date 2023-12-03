@@ -1,15 +1,17 @@
 import { memo, useEffect, useState } from "react";
 import Layout from "../../components/Layout";
 import { ICON_PENCIL, ICON_TRASH, USER } from "../../assets";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { TOTAL_STEP } from "../../constants/general.constant";
-import { API_FULFILLED_ENCOUNTER } from "../../constants/api.constant";
 import { defineConfigPost } from "../../Common/utils";
 import axios from "axios";
+import { API_DIAGNOSTIC_CONDITIONS, API_DIAGNOSTIC_OBSERVATION } from "../../constants/api.constant";
 
 const DiagnosticReport = () => {
 
   const url_api = process.env.REACT_APP_API_URL;
+
+  const params = useParams();
 
   const [step, setStep] = useState<number>(1);
 
@@ -53,8 +55,23 @@ const DiagnosticReport = () => {
     note: "",
   }])
 
-  const getEncounterByAppointment = (appointmentId: string) => {
-    const url = `${url_api}${API_FULFILLED_ENCOUNTER}${appointmentId}`;
+  const getObservations = (encounterId: string) => {
+    const url = `${url_api}${API_DIAGNOSTIC_OBSERVATION}${encounterId}`;
+
+    axios
+      .get(url, defineConfigPost())
+      .then((resp: any) => {
+        if (resp) {
+          console.log("resp:", resp)
+        }
+      })
+      .catch((err: any) => {
+        console.log("error get encounter by appointment:", err);
+      });
+  }
+
+  const getConditons = (encounterId: string) => {
+    const url = `${url_api}${API_DIAGNOSTIC_CONDITIONS}${encounterId}`;
 
     axios
       .get(url, defineConfigPost())
@@ -411,12 +428,6 @@ const DiagnosticReport = () => {
             <p className="fw-bold my-auto">
               Reported conditions (Problem list and Previous Encounter)
             </p>
-            <button
-              className="button button--small button--primary"
-            // onClick={() => setIsShowPopUp(true)}
-            >
-              Add a previous problem
-            </button>
           </div>
           <table className="table">
             <thead>

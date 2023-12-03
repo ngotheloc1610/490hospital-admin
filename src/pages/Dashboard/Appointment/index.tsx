@@ -13,6 +13,7 @@ import {
 
 import { MONTHS } from "../../../constants";
 import { USER } from "../../../assets";
+import TotalView from "../../../components/common/TotalView";
 
 ChartJS.register(
   CategoryScale,
@@ -213,6 +214,7 @@ const AppointmentDashboard = () => {
 
   return (
     <>
+      <TotalView />
       <div className="m-3">
         <div className="row">
           <div className="col-6">

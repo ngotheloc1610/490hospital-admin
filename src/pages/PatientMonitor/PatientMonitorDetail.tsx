@@ -10,7 +10,6 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import PopUpCreate from "./PopUpCreate";
 
 ChartJS.register(
   CategoryScale,
@@ -27,8 +26,6 @@ const PatientMonitorDetail = () => {
   const [isBloodGlucose, setIsBloodGlucose] = useState<boolean>(false);
   const [isTemperature, setIsTemperature] = useState<boolean>(false);
   const [isBMI, setIsBMI] = useState<boolean>(false);
-
-  const [isShowPopUp, setIsShowPopUp] = useState<boolean>(false);
 
   const options = {
     plugins: {
@@ -206,12 +203,6 @@ const PatientMonitorDetail = () => {
           <p className="fw-bold">
             Reported conditions (Problem list and Previous Encounter)
           </p>
-          <button
-            className="button button--small button--primary"
-            onClick={() => setIsShowPopUp(true)}
-          >
-            Add a previous problem
-          </button>
         </div>
         <table className="table">
           <thead>
@@ -256,79 +247,48 @@ const PatientMonitorDetail = () => {
     <section className="container patient-monitor">
       <div className="row g-3">
         <div className="col-9 ">
-          <div className="box d-flex p-3">
-            <div className="w-40 me-3">
-              <p className="d-flex justify-content-between">
-                <span className="fw-bold">Patient Profile</span>
-                <span>
-                  <i className="bi bi-pencil-fill"></i>
-                </span>
-              </p>
-              <p className="text-center">
-                <img
-                  src={USER}
-                  alt="img patient"
-                  style={{ height: "60px", width: "60px" }}
-                />
-              </p>
-              <p className="text-center">
-                <span className="fw-bold">name</span> <span>Status</span>
-              </p>
-              <p className="text-center">
-                Age: <span>23</span>
-              </p>
-            </div>
-            <div className="row">
-              <div className="col-3">
-                <p>Gender:</p>
-                <span></span>
-              </div>
-              <div className="col-3">
-                <p>Phone number:</p>
-                <span></span>
-              </div>
-              <div className="col-3">
-                <p>Personal ID No:</p>
-                <span></span>
-              </div>
-              <div className="col-3">
-                <p>D.O.B: </p>
-                <span></span>
-              </div>
-              <div className="col-3">
-                <p>Email:</p>
-                <span></span>
-              </div>
-              <div className="col-3">
-                <p>Address:</p>
-                <span></span>
-              </div>
-              <div className="col-3">
-                <p>Created Date: </p>
-                <span></span>
-              </div>
-              <div className="col-3">
-                <p>Enrolled Date:</p>
-                <span></span>
-              </div>
-              <div className="col-3">
-                <p>Clinic:</p>
-                <span></span>
-              </div>
-              <div className="col-3">
-                <p>Registration Status:</p>
-                <span></span>
-              </div>
-              <div className="col-3">
-                <p>Patient Source:</p>
-                <span></span>
-              </div>
-              <div className="col-3">
-                <p>External Organization:</p>
-                <span></span>
+          <div className="row g-3">
+            <div className="col-6 g-3">
+              <div className="box p-3">
+                <div className="d-flex justify-content-between">
+                  <h5 className="fw-bold">Patient details</h5>
+                  {/* <Link className="text-uppercase" to="">view full medial record</Link> */}
+                </div>
+                <div className="d-flex g-3">
+                  <div>
+                    <img src={USER} alt="" />
+                  </div>
+                  <div>
+                    <p><span className="fw-bold">Name: </span></p>
+                    <p><span className="fw-bold">Gender: </span></p>
+                    <p><span className="fw-bold">Date of birth: </span></p>
+                    <p><span className="fw-bold">Address: </span></p>
+                    <p><span className="fw-bold">Citizen identification: </span></p>
+                    <p><span className="fw-bold">Phone number: </span></p>
+                    <p><span className="fw-bold">Email: </span></p>
+                  </div>
+                </div>
               </div>
             </div>
+            <div className="col-6">
+              <div className="box p-3">
+                <div>
+                  <h5 className="fw-bold">Booking details</h5>
+                </div>
+                <div>
+                  <p><span className="fw-bold">Location: </span></p>
+                  <p><span className="fw-bold">Appointment Date: </span></p>
+                  <p><span className="fw-bold">Appointment Time: </span></p>
+                  <p><span className="fw-bold">Doctor: </span></p>
+                  <p><span className="fw-bold">Specialty: </span></p>
+                  <p><span className="fw-bold">Appointment Type: </span></p>
+                  <p><span className="fw-bold">Appointment Status: </span></p>
+                </div>
+              </div>
+            </div>
+
           </div>
+
         </div>
 
         <div className="col-3">
@@ -448,34 +408,26 @@ const PatientMonitorDetail = () => {
         <div className="col-3">
           <div className="box h-100 p-3">
             <p className="fw-bold">Encounter History</p>
-            <table className="table">
-              <thead>
-                <tr>
-                  <th scope="col">Date</th>
-                  <th scope="col">Time</th>
-                  <th scope="col">Data</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
-                </tr>
-                <tr>
-                  <td>Jacob</td>
-                  <td>Thornton</td>
-                  <td>@fat</td>
-                </tr>
-              </tbody>
-            </table>
+            <div>
+              <div className="border-bottom">
+                <div className="d-flex">
+                  <div className="me-3">
+                    <img src={USER} alt="" style={{ height: "40px", width: "40px", borderRadius: "100rem" }} />
+                  </div>
+                  <div>
+                    <p className="fw-bold">title</p>
+                    <span>desc</span>
+                  </div>
+                </div>
+                <p className="mt-2"><span className="fw-bold color-primary">Final diagnosis: </span> aaadasdasdasdasd</p>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
 
       {_renderReportedConditions()}
-
-      {isShowPopUp && <PopUpCreate setIsShowPopUp={setIsShowPopUp} />}
     </section>
   );
 };

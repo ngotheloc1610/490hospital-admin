@@ -34,21 +34,23 @@ export const API_SEARCH_APPOINTMENT_PREVIOUS = "/appointment/searchAppointPre";
 export const API_SEARCH_APPOINTMENT_UPCOMING = "/appointment/searchAppointUpcoming";
 export const API_SEARCH_APPOINTMENT_PROPOSED = "/appointment/searchAppointProposed";
 export const API_SEARCH_APPOINTMENT_PENDING = "/appointment/searchAppointPending";
-export const API_ALL_GET_APPOINTMENT_PREVIOUS = "/appointment/listAppointmentPrevious";
-export const API_ALL_GET_APPOINTMENT_UPCOMING = "/appointment/listAppointmentUpcoming";
+export const API_ALL_GET_APPOINTMENT_PREVIOUS = "/appointment/booked_success/listAppointmentPrevious";
+export const API_ALL_GET_APPOINTMENT_UPCOMING = "/appointment/booked_success/listAppointmentUpcoming";
 export const API_ALL_GET_APPOINTMENT_PENDING = "/appointment/listAppointmentPending";
 export const API_ALL_GET_APPOINTMENT_PROPOSED = "/appointment/listAppointmentProposed";
 export const API_ACCEPT_APPOINTMENT = "/appointment/acceptAppointment/";
 export const API_DENY_APPOINTMENT = "/appointment/unAcceptAppoint/";
-export const API_CANCEL_APPOINTMENT = "/appointment/cancelAppointment/";
+export const API_NO_SHOW_APPOINTMENT = "/appointment/noShowAppoint/";
+export const API_ARRIVED_APPOINTMENT = "/appointment/arrivedAppoint/";
+export const API_PRACTITIONER_CANCEL_APPOINTMENT = "/appointment/practitionerCancelAppoint/";
+export const API_DETAIL_APPOINTMENT = "/appointment/detail/";
 export const API_CHANGE_APPOINTMENT_PATIENT = "/appointment/ChangeAppoint/patient/";
-
+export const API_CHANGE_APPOINTMENT_DOCTOR = "/appointment/ChangeAppoint/listDoctor/";
 export const API_GET_SPECIALTY_APPOINTMENT = "/appointment/specialty";
 export const API_GET_DOCTOR_APPOINTMENT = "/appointment/doctor";
 export const API_SCHEDULE_GET_APPOINTMENT = "/appointment/schedule";
 export const API_CREATE_APPOINTMENT = "/appointment/practitioner/create";
 export const API_GET_PATIENT_APPOINTMENT = "/appointment/patient";
-export const API_CREATE_APPOINTMENT_NEW = "/appointment/ChangeAppoint/patient/";
 
 export const SCHEDULE_ALL = "/schedule/schedule-by-doctorId/"
 export const SCHEDULE_DATE = "/schedule/schedule-by-date/"
@@ -76,20 +78,23 @@ export const API_DASHBOARD_ALL_PATIENT = "/dashboard/returning-all-patients"
 export const API_DASHBOARD_ALL_PATIENT_GENDER = "/dashboard/returning-all-patients-gender"
 export const API_DASHBOARD_PATIENT_FULFILLED = "/dashboard/returning-list-patient-fullfiled"
 
-export const API_MONITOR_ALL = "/monitor"
+export const API_MONITOR_ALL = "/monitor/getAll"
 
-export const API_FULFILLED_ENCOUNTER = "/appoint-fulfilled/encounter/";
-export const API_FULFILLED_DIAGNOSTIC = "/appoint-fulfilled/diagnostic/"
-export const API_FULFILLED_DIAGNOSTIC_OBSERVATION = "/appoint-fulfilled/diagnostic/observation/"
-export const API_FULFILLED_CREATE_ENCOUNTER = "/appoint-fulfilled/create_encounter/"
-export const API_FULFILLED_CREATE_DIAGNOSTIC = "/appoint-fulfilled/createDisgnostic"
-export const API_FULFILLED_CONDITION_BY_PATIENT = "/appoint-fulfilled/getAllConditionByPatientId"
+export const API_DIAGNOSTIC_UPCOMING = "/diagnostic/upcomingAppointment/";
+export const API_DIAGNOSTIC_ENCOUNTER_HISTORY = "/diagnostic/encounterHistory/";
+export const API_DIAGNOSTIC_PATIENT_PROFILE = "/diagnostic/patientProfile/";
+export const API_DIAGNOSTIC_BOOK_DETAIL = "/diagnostic/appointmentBookDetail/";
+export const API_DIAGNOSTIC_CONDITIONS = "/diagnostic/condition/"
+export const API_DIAGNOSTIC_OBSERVATION = "/diagnostic/observations/"
+export const API_DIAGNOSTIC_CREATE_ENCOUNTER = "/diagnostic/create_encounter/"
+export const API_DIAGNOSTIC_CREATE_DIAGNOSTIC = "/diagnostic/createDisgnostic"
+export const API_DIAGNOSTIC_CONDITION_BY_PATIENT = "/diagnostic/getAllConditionByPatientId"
 
-export const API_ALERT_BLOOD_PRESSURE = "/alert//createAlertSettting/BloodPressure "
-export const API_ALERT_BLOOD_GLUCOSE = "/alert//createAlertSettting/BloodGlucose "
-export const API_ALERT_HEART_RATE = "/alert//createAlertSettting/HeartRate "
-export const API_ALERT_TEMPERATURE = "/alert//createAlertSettting/Temperature "
-export const API_ALERT_BMI = "/alert//createAlertSettting/BodyMassIndex(BMI) "
+export const API_ALERT_BLOOD_PRESSURE = "/alert/createAlertSettting/BloodPressure"
+export const API_ALERT_BLOOD_GLUCOSE = "/alert/createAlertSettting/BloodGlucose"
+export const API_ALERT_HEART_RATE = "/alert/createAlertSettting/HeartRate"
+export const API_ALERT_TEMPERATURE = "/alert/createAlertSettting/Temperature"
+export const API_ALERT_BMI = "/alert/createAlertSettting/BodyMassIndex(BMI)"
 
 
 

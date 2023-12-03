@@ -16,6 +16,8 @@ export const KEY_LOCAL_STORAGE = {
   TYPE: "type",
 };
 
+export const TYPE_ADMIN = "ADMIN";
+
 export const FORMAT_DATE = "DD/MM/YYYY";
 
 export const FORMAT_DATE_DEFAULT = "YYYY-MM-DD";

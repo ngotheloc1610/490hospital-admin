@@ -43,12 +43,12 @@ const Login = () => {
           localStorage.setItem(KEY_LOCAL_STORAGE.SUB, decoded.sub);
           localStorage.setItem(KEY_LOCAL_STORAGE.TYPE, decoded.aud);
           dispatch(setLogin(true));
-          navigate("/admin")
+          navigate("/admin/patient")
         }
       })
       .catch((err: any) => {
         console.log("error Login:", err);
-        error(err.response.data.error.message || err.response.data.error)
+        error(err.message || err.response.data.error || err.response.data.error.message)
       });
   }
 

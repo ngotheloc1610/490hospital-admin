@@ -13,6 +13,7 @@ import {
   ICON_SETTING,
   ICON_STAFF,
 } from "../../assets";
+import { KEY_LOCAL_STORAGE, TYPE_ADMIN } from "../../constants/general.constant";
 
 const Sidebar = () => {
   const location = useLocation();
@@ -20,6 +21,8 @@ const Sidebar = () => {
 
   const [isDropdown, setIsDropdown] = useState<boolean>(false);
   const [isDropdownDashboard, setIsDropdownDashboard] = useState<boolean>(false);
+
+  const type = localStorage.getItem(KEY_LOCAL_STORAGE.TYPE);
 
   const getClass = (url: string) => {
     return location.pathname.includes(url) ? "active" : "";
@@ -64,24 +67,46 @@ const Sidebar = () => {
               </ul>
             )}
           </li>
-          <li className={`${getClass(RouterUrl.DOCTOR)}`}>
-            <a
-              onClick={() => goToLink(RouterUrl.DOCTOR)}
-              data-content-id="doctor"
-            >
-              <ICON_DOCTOR />
-              <span>Doctor</span>
-            </a>
-          </li>
-          <li className={`${getClass(RouterUrl.PATIENT)}`}>
-            <a
-              onClick={() => goToLink(RouterUrl.PATIENT)}
-              data-content-id="patient"
-            >
-              <ICON_PATIENT />
-              <span>Patient</span>
-            </a>
-          </li>
+          {type === TYPE_ADMIN && <>
+            <li className={`${getClass(RouterUrl.DOCTOR)}`}>
+              <a
+                onClick={() => goToLink(RouterUrl.DOCTOR)}
+                data-content-id="doctor"
+              >
+                <ICON_DOCTOR />
+                <span>Doctor</span>
+              </a>
+            </li>
+            <li className={`${getClass(RouterUrl.PATIENT)}`}>
+              <a
+                onClick={() => goToLink(RouterUrl.PATIENT)}
+                data-content-id="patient"
+              >
+                <ICON_PATIENT />
+                <span>Patient</span>
+              </a>
+            </li>
+            <li className={`${getClass(RouterUrl.STAFF)}`}>
+              <a
+                onClick={() => goToLink(RouterUrl.STAFF)}
+                data-content-id="staff"
+              >
+                <ICON_STAFF />
+                <span>Staff</span>
+              </a>
+            </li>
+
+            <li className={`${getClass(RouterUrl.PRACTITIONER)}`}>
+              <a
+                onClick={() => goToLink(RouterUrl.PRACTITIONER)}
+                data-content-id="practitioner"
+              >
+                <ICON_STAFF />
+                <span>Create Practitioner</span>
+              </a>
+            </li>
+          </>}
+
 
           <li className={`${getClass(RouterUrl.PATIENT_MONITOR)}`}>
             <a
@@ -162,25 +187,7 @@ const Sidebar = () => {
               <span>Diagnostic Report</span>
             </a>
           </li>
-          <li className={`${getClass(RouterUrl.STAFF)}`}>
-            <a
-              onClick={() => goToLink(RouterUrl.STAFF)}
-              data-content-id="staff"
-            >
-              <ICON_STAFF />
-              <span>Staff</span>
-            </a>
-          </li>
 
-          <li className={`${getClass(RouterUrl.PRACTITIONER)}`}>
-            <a
-              onClick={() => goToLink(RouterUrl.PRACTITIONER)}
-              data-content-id="practitioner"
-            >
-              <ICON_STAFF />
-              <span>Create Practitioner</span>
-            </a>
-          </li>
 
           <li className={`${getClass(RouterUrl.CHAT)}`}>
             <a onClick={() => goToLink(RouterUrl.CHAT)} data-content-id="chat">
@@ -189,7 +196,7 @@ const Sidebar = () => {
             </a>
           </li>
 
-          <li className={`${getClass(RouterUrl.SETTING)}`}>
+          {type === TYPE_ADMIN && <li className={`${getClass(RouterUrl.SETTING)}`}>
             <a
               onClick={() => goToLink(RouterUrl.SETTING)}
               data-content-id="setting"
@@ -197,7 +204,8 @@ const Sidebar = () => {
               <ICON_SETTING />
               <span>Setting</span>
             </a>
-          </li>
+          </li>}
+
         </ul>
       </div>
     </nav>

@@ -18,6 +18,7 @@ import { API_DASHBOARD_ALL_PATIENT_GENDER, API_DASHBOARD_NEW_PATIENT, API_DASHBO
 import { defineConfigGet, defineConfigPost } from "../../../Common/utils";
 import axios from "axios";
 import { startOfMonth, endOfMonth, format } from 'date-fns';
+import TotalView from "../../../components/common/TotalView";
 
 
 ChartJS.register(
@@ -107,6 +108,9 @@ const PatientDashboard = () => {
       .get(url, defineConfigGet(params))
       .then((resp: any) => {
         if (resp) {
+          const mapPatientNew = new Map(resp.data.newPatient);
+          const newPatient = Array.from(mapPatientNew)
+          console.log("newPatient:", newPatient)
           console.log("resp:", resp)
         }
       })
@@ -289,6 +293,7 @@ const PatientDashboard = () => {
 
   return (
     <>
+      <TotalView />
       <div className="m-3">
         <div className="row gy-5">
           <div className="col-8 ">

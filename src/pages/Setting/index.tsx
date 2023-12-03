@@ -6,6 +6,7 @@ import { ICON_TRASH } from "../../assets";
 import { defineConfigPost } from "../../Common/utils";
 import axios from "axios";
 import { API_ALERT_BLOOD_PRESSURE } from "../../constants/api.constant";
+import { tr } from "date-fns/locale";
 
 const validationSchema = Yup.object().shape({
 
@@ -76,6 +77,17 @@ const Setting = () => {
 
   const url_api = process.env.REACT_APP_API_URL;
 
+  const [listBloodPressure, setListBloodPressure] = useState<any>([{
+    alertName: "",
+    alertSeverity: "",
+    rule: [
+      {
+        ruleName: "",
+        threshold: "",
+      }
+    ]
+  }])
+
   const createAlertBloodPressure = () => {
     const url = `${url_api}${API_ALERT_BLOOD_PRESSURE}`;
 
@@ -124,12 +136,11 @@ const Setting = () => {
                               <th>Alert Name</th>
                               <th>Alert Severity</th>
                               <th>Rules</th>
-                              {/* <th>Threshold</th> */}
-
+                              <th>Threshold</th>
                             </tr>
                           </thead>
                           <tbody>
-                            <FieldArray name="bloodPressure">
+                            {/* <FieldArray name="bloodPressure">
                               {({ push, remove }) => (
                                 <>
                                   {values.bloodPressure.map((bp: any, index: number) => (
@@ -141,7 +152,6 @@ const Setting = () => {
                                           name={`bloodPressure.${index}.alertName`}
                                           className="form-control"
                                           value={bp.alertName}
-                                        // onChange={handleChange}
                                         />
                                       </td>
                                       <td>
@@ -149,7 +159,6 @@ const Setting = () => {
                                           as="select"
                                           name={`bloodPressure.${index}.alertSeverity`}
                                           className={`form-select`}
-                                        // onChange={handleChange}
                                         >
                                           {listSeverity.length > 0 ? (
                                             listSeverity.map((item: any) => (
@@ -173,7 +182,6 @@ const Setting = () => {
                                                       as="select"
                                                       name={`bloodPressure.${index}.rule.${ruleIndex}.ruleName`}
                                                       className={`form-select`}
-                                                    // onChange={handleChange}
                                                     >
                                                       {listRule.length > 0 ? (
                                                         listRule.map((item: any) => (
@@ -192,12 +200,10 @@ const Setting = () => {
                                                       name={`bloodPressure.${index}.rule.${ruleIndex}.threshold`}
                                                       className="form-control"
                                                       value={rule.threshold}
-                                                    // onChange={handleChange}
                                                     />
                                                   </td>
                                                   <td>
                                                     <button type="button" style={{ background: "transparent" }} className="mt-1" onClick={() => removeRule(ruleIndex)}>
-                                                      {/* <i className="bi bi-trash3"></i> */}
                                                       <ICON_TRASH />
                                                     </button>
                                                   </td>
@@ -231,7 +237,29 @@ const Setting = () => {
                                   </button>
                                 </>
                               )}
-                            </FieldArray>
+                            </FieldArray> */}
+
+                            {listBloodPressure.map((item: any, idx: number) => (
+                              <>
+                                {item.rule && item.rule.length > 0 ? item.rule.map((itemRule: any, idxRule: number) => {
+                                  return (
+                                    <tr>
+                                      <td rowSpan={item.rule.length}>{++idx}</td>
+                                      <td rowSpan={item.rule.length}>{item.alertName}</td>
+                                      <td rowSpan={item.rule.length}>{item.alert.severity}</td>
+                                      <td>{itemRule.ruleName}</td>
+                                      <td>{itemRule.threshold}</td>
+                                    </tr>
+                                  )
+                                }) : <tr>
+                                  <td>{++idx}</td>
+                                  <td>{item.alertName}</td>
+                                  <td>{item.alert.severity}</td>
+                                  <td></td>
+                                  <td></td>
+                                </tr>}
+                              </>
+                            ))}
                           </tbody>
                         </table>
                       </div>
@@ -252,8 +280,7 @@ const Setting = () => {
                               <th>Alert Name</th>
                               <th>Alert Severity</th>
                               <th>Rules</th>
-                              {/* <th>Threshold</th> */}
-
+                              <th>Threshold</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -269,7 +296,6 @@ const Setting = () => {
                                           name={`bloodGlucose.${index}.alertName`}
                                           className="form-control"
                                           value={bg.alertName}
-                                        // onChange={handleChange}
                                         />
                                       </td>
                                       <td>
@@ -277,7 +303,6 @@ const Setting = () => {
                                           as="select"
                                           name={`bloodGlucose.${index}.alertSeverity`}
                                           className={`form-select`}
-                                        // onChange={handleChange}
                                         >
                                           {listSeverity.length > 0 ? (
                                             listSeverity.map((item: any) => (
@@ -301,7 +326,6 @@ const Setting = () => {
                                                       as="select"
                                                       name={`bloodGlucose.${index}.rule.${ruleIndex}.ruleName`}
                                                       className={`form-select`}
-                                                    // onChange={handleChange}
                                                     >
                                                       {listRule.length > 0 ? (
                                                         listRule.map((item: any) => (
@@ -320,12 +344,10 @@ const Setting = () => {
                                                       name={`bloodGlucose.${index}.rule.${ruleIndex}.threshold`}
                                                       className="form-control"
                                                       value={rule.threshold}
-                                                    // onChange={handleChange}
                                                     />
                                                   </td>
                                                   <td>
                                                     <button type="button" style={{ background: "transparent" }} className="mt-1" onClick={() => removeRule(ruleIndex)}>
-                                                      {/* <i className="bi bi-trash3"></i> */}
                                                       <ICON_TRASH />
                                                     </button>
                                                   </td>
@@ -380,8 +402,7 @@ const Setting = () => {
                               <th>Alert Name</th>
                               <th>Alert Severity</th>
                               <th>Rules</th>
-                              {/* <th>Threshold</th> */}
-
+                              <th>Threshold</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -397,7 +418,6 @@ const Setting = () => {
                                           name={`heartRate.${index}.alertName`}
                                           className="form-control"
                                           value={hr.alertName}
-                                        // onChange={handleChange}
                                         />
                                       </td>
                                       <td>
@@ -405,7 +425,6 @@ const Setting = () => {
                                           as="select"
                                           name={`heartRate.${index}.alertSeverity`}
                                           className={`form-select`}
-                                        // onChange={handleChange}
                                         >
                                           {listSeverity.length > 0 ? (
                                             listSeverity.map((item: any) => (
@@ -429,7 +448,6 @@ const Setting = () => {
                                                       as="select"
                                                       name={`heartRate.${index}.rule.${ruleIndex}.ruleName`}
                                                       className={`form-select`}
-                                                    // onChange={handleChange}
                                                     >
                                                       {listRule.length > 0 ? (
                                                         listRule.map((item: any) => (
@@ -448,12 +466,10 @@ const Setting = () => {
                                                       name={`heartRate.${index}.rule.${ruleIndex}.threshold`}
                                                       className="form-control"
                                                       value={rule.threshold}
-                                                    // onChange={handleChange}
                                                     />
                                                   </td>
                                                   <td>
                                                     <button type="button" style={{ background: "transparent" }} className="mt-1" onClick={() => removeRule(ruleIndex)}>
-                                                      {/* <i className="bi bi-trash3"></i> */}
                                                       <ICON_TRASH />
                                                     </button>
                                                   </td>
@@ -508,8 +524,7 @@ const Setting = () => {
                               <th>Alert Name</th>
                               <th>Alert Severity</th>
                               <th>Rules</th>
-                              {/* <th>Threshold</th> */}
-
+                              <th>Threshold</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -525,7 +540,6 @@ const Setting = () => {
                                           name={`BMI.${index}.alertName`}
                                           className="form-control"
                                           value={item.alertName}
-                                        // onChange={handleChange}
                                         />
                                       </td>
                                       <td>
@@ -533,7 +547,6 @@ const Setting = () => {
                                           as="select"
                                           name={`BMI.${index}.alertSeverity`}
                                           className={`form-select`}
-                                        // onChange={handleChange}
                                         >
                                           {listSeverity.length > 0 ? (
                                             listSeverity.map((item: any) => (
@@ -557,7 +570,6 @@ const Setting = () => {
                                                       as="select"
                                                       name={`BMI.${index}.rule.${ruleIndex}.ruleName`}
                                                       className={`form-select`}
-                                                    // onChange={handleChange}
                                                     >
                                                       {listRule.length > 0 ? (
                                                         listRule.map((item: any) => (
@@ -576,12 +588,10 @@ const Setting = () => {
                                                       name={`BMI.${index}.rule.${ruleIndex}.threshold`}
                                                       className="form-control"
                                                       value={rule.threshold}
-                                                    // onChange={handleChange}
                                                     />
                                                   </td>
                                                   <td>
                                                     <button type="button" style={{ background: "transparent" }} className="mt-1" onClick={() => removeRule(ruleIndex)}>
-                                                      {/* <i className="bi bi-trash3"></i> */}
                                                       <ICON_TRASH />
                                                     </button>
                                                   </td>
@@ -636,8 +646,7 @@ const Setting = () => {
                               <th>Alert Name</th>
                               <th>Alert Severity</th>
                               <th>Rules</th>
-                              {/* <th>Threshold</th> */}
-
+                              <th>Threshold</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -653,7 +662,6 @@ const Setting = () => {
                                           name={`temperature.${index}.alertName`}
                                           className="form-control"
                                           value={tp.alertName}
-                                        // onChange={handleChange}
                                         />
                                       </td>
                                       <td>
@@ -661,7 +669,6 @@ const Setting = () => {
                                           as="select"
                                           name={`temperature.${index}.alertSeverity`}
                                           className={`form-select`}
-                                        // onChange={handleChange}
                                         >
                                           {listSeverity.length > 0 ? (
                                             listSeverity.map((item: any) => (
@@ -685,7 +692,6 @@ const Setting = () => {
                                                       as="select"
                                                       name={`temperature.${index}.rule.${ruleIndex}.ruleName`}
                                                       className={`form-select`}
-                                                    // onChange={handleChange}
                                                     >
                                                       {listRule.length > 0 ? (
                                                         listRule.map((item: any) => (
@@ -704,12 +710,10 @@ const Setting = () => {
                                                       name={`temperature.${index}.rule.${ruleIndex}.threshold`}
                                                       className="form-control"
                                                       value={rule.threshold}
-                                                    // onChange={handleChange}
                                                     />
                                                   </td>
                                                   <td>
                                                     <button type="button" style={{ background: "transparent" }} className="mt-1" onClick={() => removeRule(ruleIndex)}>
-                                                      {/* <i className="bi bi-trash3"></i> */}
                                                       <ICON_TRASH />
                                                     </button>
                                                   </td>

@@ -14,9 +14,11 @@ import { error } from "../../Common/notify";
 import { FORMAT_DATE, FORMAT_DAY, FORMAT_TIME } from "../../constants/general.constant";
 import Layout from "../../components/Layout";
 import PopUpCreateRoom from "./PopUpCreateRoom";
+import SockJS from "sockjs-client";
 
 const Chat = () => {
     const url_api = process.env.REACT_APP_API_URL;
+    const url_ws: any = process.env.REACT_APP_WS_URL;
 
     const [listRoom, setListRoom] = useState([])
     const [messageRoom, setMessageRoom] = useState<any>([]);
@@ -34,12 +36,37 @@ const Chat = () => {
     const [triggerSendMessage, setTriggerSendMessage] = useState(false);
 
     useEffect(() => {
+        const socket = new SockJS(url_ws);
+
+        socket.onopen = () => {
+            console.log('WebSocket connection opened.');
+        };
+
+        socket.onmessage = (event) => {
+            console.log('Received message:', event.data);
+            // Handle the incoming message
+        };
+
+        socket.onclose = (event) => {
+            console.log('WebSocket connection closed:', event);
+        };
+
+        // Cleanup the WebSocket connection when the component unmounts
+        return () => {
+            socket.close();
+        };
+    }, []); // Ensure this effect runs only once when the component mounts
+
+
+    useEffect(() => {
         messageRef?.current?.scrollIntoView({ behavior: 'smooth' })
     }, [triggerSendMessage])
 
     useEffect(() => {
         getListInboxRoom()
     }, [])
+
+
 
     useEffect(() => {
         if (idRoom) {

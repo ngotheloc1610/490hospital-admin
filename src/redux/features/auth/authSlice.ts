@@ -5,10 +5,12 @@ import { RootState } from "../../store/configureStore";
 
 interface IAuthState {
   isLogin: boolean,
+  isForgotPassword: boolean,
 }
 
 const initialState: IAuthState = {
   isLogin: false,
+  isForgotPassword: false,
 };
 
 export const authSlice = createSlice({
@@ -18,10 +20,13 @@ export const authSlice = createSlice({
     setLogin: (state, action: PayloadAction<boolean>) => {
       state.isLogin = action.payload;
     },
+    setForgotPassword: (state, action: PayloadAction<boolean>) => {
+      state.isForgotPassword = action.payload;
+    },
   },
 });
 
-export const { setLogin } = authSlice.actions;
+export const { setLogin, setForgotPassword } = authSlice.actions;
 
 export const selectAuth = (state: RootState) => state.authSlice;
 

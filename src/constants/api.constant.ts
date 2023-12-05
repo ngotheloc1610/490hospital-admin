@@ -77,6 +77,7 @@ export const API_DASHBOARD_OLD_PATIENT = "/dashboard/returning-oldPatients-in-ra
 export const API_DASHBOARD_ALL_PATIENT = "/dashboard/returning-all-patients"
 export const API_DASHBOARD_ALL_PATIENT_GENDER = "/dashboard/returning-all-patients-gender"
 export const API_DASHBOARD_PATIENT_FULFILLED = "/dashboard/returning-list-patient-fullfiled"
+export const API_DASHBOARD_PATIENT_CANCELED = "/dashboard/returning-list-patient-cancelled"
 
 export const API_MONITOR_ALL = "/monitor/getAll"
 
@@ -88,7 +89,8 @@ export const API_DIAGNOSTIC_CONDITIONS = "/diagnostic/condition/"
 export const API_DIAGNOSTIC_OBSERVATION = "/diagnostic/observations/"
 export const API_DIAGNOSTIC_CREATE_ENCOUNTER = "/diagnostic/create_encounter/"
 export const API_DIAGNOSTIC_CREATE_DIAGNOSTIC = "/diagnostic/createDisgnostic"
-export const API_DIAGNOSTIC_CONDITION_BY_PATIENT = "/diagnostic/getAllConditionByPatientId"
+export const API_DIAGNOSTIC_CONDITION_BY_PATIENT = "/diagnostic/getAllCondition/"
+export const API_DIAGNOSTIC_BMI = "/diagnostic/BMI"
 
 export const API_ALERT_BLOOD_PRESSURE = "/alert/createAlertSettting/BloodPressure"
 export const API_ALERT_BLOOD_GLUCOSE = "/alert/createAlertSettting/BloodGlucose"

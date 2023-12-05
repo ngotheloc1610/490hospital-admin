@@ -2,10 +2,11 @@ import { memo, useEffect, useState } from "react";
 import Layout from "../../components/Layout";
 import { ICON_PENCIL, ICON_TRASH, USER } from "../../assets";
 import { Link, useParams } from "react-router-dom";
-import { TOTAL_STEP } from "../../constants/general.constant";
+import { FORMAT_DATE, TOTAL_STEP } from "../../constants/general.constant";
 import { defineConfigPost } from "../../Common/utils";
 import axios from "axios";
-import { API_DIAGNOSTIC_CONDITIONS, API_DIAGNOSTIC_OBSERVATION } from "../../constants/api.constant";
+import { API_DIAGNOSTIC_BOOK_DETAIL, API_DIAGNOSTIC_CONDITIONS, API_DIAGNOSTIC_CONDITION_BY_PATIENT, API_DIAGNOSTIC_OBSERVATION, API_DIAGNOSTIC_PATIENT_PROFILE } from "../../constants/api.constant";
+import moment from "moment";
 
 const DiagnosticReport = () => {
 
@@ -55,6 +56,26 @@ const DiagnosticReport = () => {
     note: "",
   }])
 
+  const [bookingDetail, setBookingDetail] = useState<any>({
+    appointmentDate: "",
+    time: "",
+    typeOfAppointment: "",
+    nameDoctor: "",
+    specialty: "",
+    room: "",
+    appointmentStatus: ""
+  })
+  const [patientDetail, setPatientDetail] = useState<any>(null);
+  const [observations, setObservations] = useState<any>([]);
+  const [listPreviousEncounter, setListPreviousEncounter] = useState<any>([]);
+
+  useEffect(() => {
+    getObservations("651b8db3d10aa661ad1b70e9")
+    getProfilePatient("651b8db3d10aa661ad1b70e9")
+    getBookingDetail("651b8db3d10aa661ad1b70e9")
+    getPreviousEncounter("651b8db3d10aa661ad1b70e9")
+  }, [])
+
   const getObservations = (encounterId: string) => {
     const url = `${url_api}${API_DIAGNOSTIC_OBSERVATION}${encounterId}`;
 
@@ -62,7 +83,7 @@ const DiagnosticReport = () => {
       .get(url, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
-          console.log("resp:", resp)
+          setObservations(resp.data);
         }
       })
       .catch((err: any) => {
@@ -70,14 +91,44 @@ const DiagnosticReport = () => {
       });
   }
 
-  const getConditons = (encounterId: string) => {
-    const url = `${url_api}${API_DIAGNOSTIC_CONDITIONS}${encounterId}`;
+  const getProfilePatient = (encounterId: string) => {
+    const url = `${url_api}${API_DIAGNOSTIC_PATIENT_PROFILE}${encounterId}`;
 
     axios
       .get(url, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
-          console.log("resp:", resp)
+          setPatientDetail(resp.data);
+        }
+      })
+      .catch((err: any) => {
+        console.log("error get encounter by appointment:", err);
+      });
+  }
+
+  const getBookingDetail = (encounterId: string) => {
+    const url = `${url_api}${API_DIAGNOSTIC_BOOK_DETAIL}${encounterId}`;
+
+    axios
+      .get(url, defineConfigPost())
+      .then((resp: any) => {
+        if (resp) {
+          setBookingDetail(resp.data);
+        }
+      })
+      .catch((err: any) => {
+        console.log("error get encounter by appointment:", err);
+      });
+  }
+
+  const getPreviousEncounter = (encounterId: string) => {
+    const url = `${url_api}${API_DIAGNOSTIC_CONDITION_BY_PATIENT}${encounterId}`;
+
+    axios
+      .get(url, defineConfigPost())
+      .then((resp: any) => {
+        if (resp) {
+          setListPreviousEncounter(resp.data);
         }
       })
       .catch((err: any) => {
@@ -444,24 +495,28 @@ const DiagnosticReport = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>
-                  <span className="ms-1 cursor-pointer">
-                    <ICON_PENCIL />
-                  </span>
-                  <span className="ms-1 cursor-pointer">
-                    <ICON_TRASH />
-                  </span>
-                </td>
-              </tr>
+              {listPreviousEncounter && listPreviousEncounter.map((item: any, idx: number) => {
+                return (
+                  <tr>
+                    <td>{item?.conditionName}</td>
+                    <td>{item?.bodySite}</td>
+                    <td>{item?.severity}</td>
+                    <td>{item?.clinicalStatus}</td>
+                    <td>{item?.onset}</td>
+                    <td>{item.recordedDate ? moment(item.recordedDate).format(FORMAT_DATE) : ""}</td>
+                    <td>{item?.note}</td>
+                    <td>{item.encounterDate ? moment(item.encounterDate).format(FORMAT_DATE) : ""}</td>
+                    <td>
+                      <span className="ms-1 cursor-pointer">
+                        <ICON_PENCIL />
+                      </span>
+                      <span className="ms-1 cursor-pointer">
+                        <ICON_TRASH />
+                      </span>
+                    </td>
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
         </div>
@@ -793,13 +848,13 @@ const DiagnosticReport = () => {
                     <img src={USER} alt="" />
                   </div>
                   <div>
-                    <p><span className="fw-bold">Name: </span></p>
-                    <p><span className="fw-bold">Gender: </span></p>
-                    <p><span className="fw-bold">Date of birth: </span></p>
-                    <p><span className="fw-bold">Address: </span></p>
-                    <p><span className="fw-bold">Citizen identification: </span></p>
-                    <p><span className="fw-bold">Phone number: </span></p>
-                    <p><span className="fw-bold">Email: </span></p>
+                    <p><span className="fw-bold">Name: </span><span>{patientDetail && patientDetail?.nameFirstRep?.text}</span></p>
+                    <p><span className="fw-bold">Gender: </span><span>{patientDetail && patientDetail?.gender}</span></p>
+                    <p><span className="fw-bold">Date of birth: </span><span>{patientDetail && moment(patientDetail?.birthDate).format(FORMAT_DATE)}</span></p>
+                    <p><span className="fw-bold">Address: </span><span>{patientDetail && patientDetail?.addressFirstRep?.text}</span></p>
+                    <p><span className="fw-bold">Citizen identification: </span><span>{patientDetail && patientDetail?.identifierFirstRep?.value}</span></p>
+                    <p><span className="fw-bold">Phone number: </span><span>{patientDetail && patientDetail?.telecom.filter((item: any) => item.system === "phone")?.value}</span></p>
+                    <p><span className="fw-bold">Email: </span><span>{patientDetail && patientDetail?.telecom.filter((item: any) => item.system === "email")?.value}</span></p>
                   </div>
                 </div>
               </div>
@@ -810,13 +865,13 @@ const DiagnosticReport = () => {
                   <h5 className="fw-bold">Booking details</h5>
                 </div>
                 <div>
-                  <p><span className="fw-bold">Location: </span></p>
-                  <p><span className="fw-bold">Appointment Date: </span></p>
-                  <p><span className="fw-bold">Appointment Time: </span></p>
-                  <p><span className="fw-bold">Doctor: </span></p>
-                  <p><span className="fw-bold">Specialty: </span></p>
-                  <p><span className="fw-bold">Appointment Type: </span></p>
-                  <p><span className="fw-bold">Appointment Status: </span></p>
+                  <p><span className="fw-bold">Appointment Date: </span><span>{bookingDetail.appointmentDate}</span></p>
+                  <p><span className="fw-bold">Appointment Time: </span><span>{bookingDetail.time}</span></p>
+                  <p><span className="fw-bold">Doctor: </span><span>{bookingDetail.nameDoctor}</span></p>
+                  <p><span className="fw-bold">Specialty: </span><span>{bookingDetail.specialty}</span></p>
+                  <p><span className="fw-bold">Location: </span><span>{bookingDetail.room}</span></p>
+                  <p><span className="fw-bold">Appointment Type: </span><span>{bookingDetail.typeOfAppointment}</span></p>
+                  <p><span className="fw-bold">Appointment Status: </span><span>{bookingDetail.appointmentStatus}</span></p>
                 </div>
               </div>
             </div>

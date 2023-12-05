@@ -14,11 +14,13 @@ import {
 
 import { MONTHS } from "../../../constants";
 import { ICON_PATIENT } from "../../../assets";
-import { API_DASHBOARD_ALL_PATIENT_GENDER, API_DASHBOARD_NEW_PATIENT, API_DASHBOARD_OLD_PATIENT, API_DASHBOARD_PATIENT_PER_DAY } from "../../../constants/api.constant";
+import { API_DASHBOARD_ALL_PATIENT_GENDER, API_DASHBOARD_NEW_PATIENT, API_DASHBOARD_OLD_PATIENT, API_DASHBOARD_PATIENT_CANCELED, API_DASHBOARD_PATIENT_FULFILLED, API_DASHBOARD_PATIENT_PER_DAY } from "../../../constants/api.constant";
 import { defineConfigGet, defineConfigPost } from "../../../Common/utils";
 import axios from "axios";
 import { startOfMonth, endOfMonth, format } from 'date-fns';
 import TotalView from "../../../components/common/TotalView";
+import moment from "moment";
+import { FORMAT_DATE } from "../../../constants/general.constant";
 
 
 ChartJS.register(
@@ -40,8 +42,16 @@ const PatientDashboard = () => {
   const [monthOldPatient, setmonthOldPatient] = useState<string>("");
 
   const [dateOfMonthPatient, setDateOfMonthPatient] = useState<any>(new Date());
-  const [dateOfMonthNewPatient, setDateOfMonthNewPatient] = useState<any>(new Date());
-  const [dateOfMonthOldPatient, setDateOfMonthOldPatient] = useState<any>(new Date());
+  const [dateOfMonthNewPatient, setDateOfMonthNewPatient] = useState<any>(new Date("2024-01-01"));
+  const [dateOfMonthOldPatient, setDateOfMonthOldPatient] = useState<any>(new Date("2024-01-01"));
+
+  const [patient, setPatient] = useState<any>(null);
+  const [genderPatient, setGenderPatient] = useState<any>(null);
+  const [appointmentFulfilled, setAppointmentFulfilled] = useState<any>(null);
+  const [appointmentCanceled, setAppointmentCanceled] = useState<any>(null);
+  const [newPatient, setNewPatient] = useState<any>(null);
+  const [oldPatient, setOldPatient] = useState<any>(null);
+
 
   useEffect(() => {
     const newDate = new Date(dateOfMonthPatient);
@@ -78,6 +88,8 @@ const PatientDashboard = () => {
     getNumberGender();
     getNewPatient();
     getOldPatient();
+    getAppointmentFulfilled();
+    getAppointmentCanceled();
   }, [])
 
   useEffect(() => {
@@ -108,10 +120,19 @@ const PatientDashboard = () => {
       .get(url, defineConfigGet(params))
       .then((resp: any) => {
         if (resp) {
-          const mapPatientNew = new Map(resp.data.newPatient);
-          const newPatient = Array.from(mapPatientNew)
-          console.log("newPatient:", newPatient)
-          console.log("resp:", resp)
+          const newPatient = Object.entries(resp.data.newPatient).map(([date, number]) => ({ date, number }));
+          const sortedNewPatient = newPatient.sort((a: any, b: any) => {
+            const dateA = a.date.getTime();
+            const dateB = b.date.getTime();
+            return dateA - dateB;
+          });
+          const oldPatient = Object.entries(resp.data.oldPatient).map(([date, number]) => ({ date, number }));
+          const sortedOldPatient = oldPatient.sort((a: any, b: any) => {
+            const dateA = a.date.getTime();
+            const dateB = b.date.getTime();
+            return dateA - dateB;
+          });
+          setPatient({ newPatient: sortedNewPatient, oldPatient: sortedOldPatient })
         }
       })
       .catch((err: any) => {
@@ -126,7 +147,8 @@ const PatientDashboard = () => {
       .get(url, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
-          console.log("resp:", resp)
+          const gender = Object.entries(resp.data).map(([title, number]) => ({ title, number }));
+          setGenderPatient(gender);
         }
       })
       .catch((err: any) => {
@@ -149,7 +171,7 @@ const PatientDashboard = () => {
       .get(url, defineConfigGet(params))
       .then((resp: any) => {
         if (resp) {
-          console.log("resp:", resp)
+          setNewPatient(resp.data);
         }
       })
       .catch((err: any) => {
@@ -172,7 +194,41 @@ const PatientDashboard = () => {
       .get(url, defineConfigGet(params))
       .then((resp: any) => {
         if (resp) {
-          console.log("resp:", resp)
+          setOldPatient(resp.data);
+        }
+      })
+      .catch((err: any) => {
+        console.log("error get old patients:", err);
+      });
+  }
+
+  const getAppointmentFulfilled = () => {
+    const url = `${url_api}${API_DASHBOARD_PATIENT_FULFILLED}`;
+
+    axios
+      .get(url, defineConfigPost())
+      .then((resp: any) => {
+        if (resp) {
+          const appointment = Object.entries(resp.data).map(([name, value]) => ({ name, value }));
+          const sortedAppointment = appointment.sort((a: any, b: any) => { return b.value - a.value });
+          setAppointmentFulfilled(sortedAppointment);
+        }
+      })
+      .catch((err: any) => {
+        console.log("error get old patients:", err);
+      });
+  }
+
+  const getAppointmentCanceled = () => {
+    const url = `${url_api}${API_DASHBOARD_PATIENT_CANCELED}`;
+
+    axios
+      .get(url, defineConfigPost())
+      .then((resp: any) => {
+        if (resp) {
+          const appointment = Object.entries(resp.data).map(([name, value]) => ({ name, value }));
+          const sortedAppointment = appointment.sort((a: any, b: any) => { return b.value - a.value });
+          setAppointmentCanceled(sortedAppointment);
         }
       })
       .catch((err: any) => {
@@ -181,13 +237,13 @@ const PatientDashboard = () => {
   }
 
   const dataLinePatient = {
-    labels: ["New Patient", "Old Patient"],
+    labels: patient?.newPatient?.map((patient: any) => moment(patient.date).format(FORMAT_DATE)),
     datasets: [
       {
         label: "New Patient",
         borderColor: "#8DE27F",
         backgroundColor: "#8DE27F",
-        data: [65, 59, 80, 81, 56],
+        data: patient?.newPatient?.map((patient: any) => patient.number),
         fill: true,
         tension: 0.4
       },
@@ -195,7 +251,7 @@ const PatientDashboard = () => {
         label: "Old Patient",
         borderColor: "#F59898",
         backgroundColor: "#F59898",
-        data: [28, 48, 40, 19, 86],
+        data: patient?.oldPatient?.map((patient: any) => patient.number),
         fill: true,
         tension: 0.4
       },
@@ -203,25 +259,31 @@ const PatientDashboard = () => {
   };
 
   const dataDoughnutGender = {
-    labels: ["Male", "Female", "Other"],
+    labels: genderPatient?.map((gender: any) => gender.title),
     datasets: [
       {
         label: "Male",
         borderColor: "rgba(90, 106, 207, 1)",
         backgroundColor: "rgba(90, 106, 207, 1)",
-        data: [65, 59, 80],
+        data: genderPatient?.filter((gender: any) => gender.title.trim() === "MALE")?.number,
       },
       {
         label: "Female",
         borderColor: "rgba(133, 147, 237, 1)",
         backgroundColor: "rgba(133, 147, 237, 1)",
-        data: [28, 48, 40],
+        data: genderPatient?.filter((gender: any) => gender.title.trim() === "FEMALE")?.number,
       },
       {
         label: "Other",
         borderColor: "rgba(199, 206, 255, 1)",
         backgroundColor: "rgba(199, 206, 255, 1)",
-        data: [28, 48, 40],
+        data: genderPatient?.filter((gender: any) => gender.title.trim() === "OTHER")?.number,
+      },
+      {
+        label: "total appointment",
+        borderColor: "rgba(199, 206, 255, 1)",
+        backgroundColor: "rgba(199, 206, 255, 1)",
+        data: genderPatient?.filter((gender: any) => gender.title === "TOTAL APPOINTMENT ")?.number,
       },
     ],
   };
@@ -367,14 +429,14 @@ const PatientDashboard = () => {
                   </select>
                 </div>
                 <div className="mt-3">
-                  <p className="fw-bold">41 234</p>
-                  <p className="fw-bold">15% Increase in 7 days</p>
+                  <p className="fw-bold">{newPatient?.newPatientCount}</p>
+                  <p className="fw-bold">{newPatient?.newPatientCountCompare}% Increase in 7 days</p>
                   <div className="progress">
                     <div
                       className="progress-bar"
                       role="progressbar"
-                      style={{ width: "75%", background: "linear-gradient(90deg, #7EF9A0 0%, #A0FF69 69.79%, #D7F990 100%)" }}
-                      aria-valuenow={25}
+                      style={{ width: `${newPatient?.percentIncrease}%`, background: "linear-gradient(90deg, #7EF9A0 0%, #A0FF69 69.79%, #D7F990 100%)" }}
+                      aria-valuenow={newPatient?.percentIncrease}
                       aria-valuemin={0}
                       aria-valuemax={100}
                     ></div>
@@ -401,14 +463,14 @@ const PatientDashboard = () => {
                   </select>
                 </div>
                 <div className="mt-3">
-                  <p className="fw-bold">35 234</p>
-                  <p className="fw-bold">15% Increase in 7 days</p>
+                  <p className="fw-bold">{oldPatient?.oldPatientCount}</p>
+                  <p className="fw-bold">{oldPatient?.oldPatientCountCompare}% Increase in 7 days</p>
                   <div className="progress">
                     <div
                       className="progress-bar"
                       role="progressbar"
-                      style={{ width: "75%", background: "linear-gradient(117deg, #FF8473 16.53%, #FF937F 42.12%, #FFA18A 65.16%, #FBED93 77.95%)" }}
-                      aria-valuenow={75}
+                      style={{ width: `${oldPatient?.percentIncrease}%`, background: "linear-gradient(117deg, #FF8473 16.53%, #FF937F 42.12%, #FFA18A 65.16%, #FBED93 77.95%)" }}
+                      aria-valuenow={oldPatient?.percentIncrease}
                       aria-valuemin={0}
                       aria-valuemax={100}
                     ></div>
@@ -427,21 +489,15 @@ const PatientDashboard = () => {
               <p className="title">Patient with most appointment</p>
               <table className="table m-3">
                 <tbody>
-                  <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>Larry the Bird</td>
-                    <td>@twitter</td>
-                  </tr>
+                  {appointmentFulfilled && appointmentFulfilled.map((item: any, idx: number) => {
+                    return (
+                      <tr>
+                        <th scope="row">{++idx}</th>
+                        <td>{item.name}</td>
+                        <td>{item.value}</td>
+                      </tr>
+                    )
+                  })}
                 </tbody>
               </table>
             </div>
@@ -451,21 +507,15 @@ const PatientDashboard = () => {
               <p className="title">Spam Patient</p>
               <table className="table m-3">
                 <tbody>
-                  <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>Larry the Bird</td>
-                    <td>@twitter</td>
-                  </tr>
+                  {appointmentCanceled && appointmentCanceled.map((item: any, idx: number) => {
+                    return (
+                      <tr>
+                        <th scope="row">{++idx}</th>
+                        <td>{item.name}</td>
+                        <td>{item.value}</td>
+                      </tr>
+                    )
+                  })}
                 </tbody>
               </table>
             </div>

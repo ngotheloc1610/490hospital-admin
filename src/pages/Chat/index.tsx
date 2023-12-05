@@ -15,6 +15,7 @@ import { FORMAT_DATE, FORMAT_DAY, FORMAT_TIME } from "../../constants/general.co
 import Layout from "../../components/Layout";
 import PopUpCreateRoom from "./PopUpCreateRoom";
 import SockJS from "sockjs-client";
+// import Stomp from 'stompjs';
 
 const Chat = () => {
     const url_api = process.env.REACT_APP_API_URL;
@@ -35,28 +36,12 @@ const Chat = () => {
 
     const [triggerSendMessage, setTriggerSendMessage] = useState(false);
 
+    let stompClient: any;
+    let socket;
+
     useEffect(() => {
-        const socket = new SockJS(url_ws);
-
-        socket.onopen = () => {
-            console.log('WebSocket connection opened.');
-        };
-
-        socket.onmessage = (event) => {
-            console.log('Received message:', event.data);
-            // Handle the incoming message
-        };
-
-        socket.onclose = (event) => {
-            console.log('WebSocket connection closed:', event);
-        };
-
-        // Cleanup the WebSocket connection when the component unmounts
-        return () => {
-            socket.close();
-        };
+        // connect()
     }, []); // Ensure this effect runs only once when the component mounts
-
 
     useEffect(() => {
         messageRef?.current?.scrollIntoView({ behavior: 'smooth' })
@@ -66,13 +51,41 @@ const Chat = () => {
         getListInboxRoom()
     }, [])
 
-
-
     useEffect(() => {
         if (idRoom) {
             getMessageByRoom(idRoom);
         }
     }, [triggerSendMessage])
+
+    // const connect = async () => {
+    //     socket = new SockJS(url_ws)
+    //     stompClient = Stomp.over(socket)
+    //     stompClient.connect({}, onConnected, onError)
+    // }
+
+    // const onConnected: any = async () => {
+
+    //     stompClient.subscribe('/chat.sendMessage', onMessageReceived)
+
+    //     stompClient.send("/topic/messages",
+    //         {},
+    //         JSON.stringify({
+    //             sender: "",
+    //             type: 'NEW_USER',
+    //             time: Date.now()
+    //         })
+    //     )
+    // }
+
+    // const onError: any = async (err: any) => {
+    //     console.log(err);
+
+    // }
+
+    // const onMessageReceived = async (payload: any) => {
+    //     console.log("onMessageReceived")
+    //     console.log(payload)
+    // }
 
     const getListInboxRoom = () => {
         const url = `${url_api}${API_INBOX_ROOM_LIST}`;

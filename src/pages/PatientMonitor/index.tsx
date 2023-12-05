@@ -12,6 +12,8 @@ import {
 import { ICON_PENCIL } from "../../assets";
 import { API_MONITOR_ALL } from "../../constants/api.constant";
 import { defineConfigPost } from "../../Common/utils";
+import moment from "moment";
+import { FORMAT_DATE } from "../../constants/general.constant";
 
 const PatientMonitor = () => {
   const outlet = useOutlet();
@@ -39,7 +41,7 @@ const PatientMonitor = () => {
       .then((resp: any) => {
         if (resp) {
           console.log("resp:", resp)
-          setListData(resp.content.data);
+          setListData(resp.data);
         }
       })
       .catch((err: any) => {
@@ -116,13 +118,13 @@ const PatientMonitor = () => {
           {listData && listData.map((item: any, idx: number) => {
             return (
               <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
-                <td>{item.patientName}</td>
-                <td>{item.DOB}</td>
+                <td>{item?.patientName}</td>
+                <td>{item.dob ? moment(item.dob).format(FORMAT_DATE) : ""}</td>
                 <td>
-                  <p>{item.email}</p>
-                  <p>{item.phone}</p>
+                  <p>{item?.email}</p>
+                  <p>{item?.phone}</p>
                 </td>
-                <td>{item.diagnosis}</td>
+                <td>{item?.diagnosis}</td>
                 <td></td>
                 <td></td>
                 <td></td>

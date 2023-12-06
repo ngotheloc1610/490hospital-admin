@@ -146,7 +146,7 @@ const InfoPatient = () => {
             </tr>
           </thead>
           <tbody>
-            {listAppointment && listAppointment.map((item: any, idx: number) => {
+            {listAppointment && listAppointment.length > 0 && listAppointment.map((item: any, idx: number) => {
               return (
                 <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
                   <td >

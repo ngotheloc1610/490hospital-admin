@@ -155,20 +155,20 @@ const Doctor = () => {
             const phone = item.practitionerTarget?.telecom?.find(
               (i: any) => i?.system === "phone"
             )?.value;
-            const src = `data:${item.practitionerTarget?.photo[0]?.contentType};base64,${item?.practitionerTarget?.photo[0]?.data}`;
+            const src = item?.practitionerTarget?.photo[0]?.url;
             return (
               <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
                 <th scope="row">
-                  <img src={src} alt="image" />
+                  <img src={src} alt="img doctor" />
                 </th>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
                   {item.practitioner?.display}
                 </td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
-                  {item.practitionerTarget?.gender}
+                  {item.practitionerTarget.gender}
                 </td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
-                  {item.practitionerTarget?.birthDate}
+                  {item.practitionerTarget?.birthDate !== "null" ? item.practitionerTarget?.birthDate : ""}
                 </td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
                   {phone}

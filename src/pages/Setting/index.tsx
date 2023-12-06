@@ -61,22 +61,42 @@ const Setting = () => {
     ]
   }])
 
-  const createAlertBloodPressure = () => {
+  const createAlertBloodPressure = (bloodItem: any) => {
     const url = `${url_api}${API_ALERT_BLOOD_PRESSURE}`;
 
+    let ruleList: any = [];
+    bloodItem.rule.forEach((itemRule: any) => {
+      ruleList.push({
+        type: "",
+        rule: itemRule.ruleName,
+        threshold: !isNaN(itemRule.threshold) ? parseFloat(itemRule.threshold) : 0.0
+      })
+    })
+
     const params = {
-      alertName: ""
-    }
+      clinicId: "",
+      category: "",
+      alertName: bloodItem.alertName,
+      severity: bloodItem.alertSeverity,
+      ruleList: ruleList
+    };
+
     axios
       .post(url, params, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
+          console.log("resp:", resp)
 
         }
       })
       .catch((err: any) => {
         console.log("error create alert blood pressure", err);
       });
+  }
+
+  const applyBloodPressure = (item: any) => {
+    console.log("item:", item)
+    createAlertBloodPressure(item);
   }
 
   const _renderListSeverity = () => {
@@ -220,7 +240,7 @@ const Setting = () => {
                                   className="form-select"
                                   onChange={(e: any) => {
                                     const updatedList = [...listBloodPressure];
-                                    updatedList[idxRule].ruleName = e.target.value;
+                                    updatedList[idx].rule[idxRule].ruleName = e.target.value;
                                     setListBloodPressure(updatedList);
                                   }}
                                   value={itemRule.ruleName}
@@ -235,7 +255,7 @@ const Setting = () => {
                                       value={itemRule.threshold}
                                       onChange={(e: any) => {
                                         const updatedList = [...listBloodPressure];
-                                        updatedList[idxRule].threshold = e.target.value;
+                                        updatedList[idx].rule[idxRule].threshold = e.target.value;
                                         setListBloodPressure(updatedList);
                                       }}
                                     />
@@ -270,7 +290,7 @@ const Setting = () => {
                             </td>
                             <td></td>
                             <td className="d-flex">
-                              <button type="button" className="button button--primary button--smaller me-1">
+                              <button type="button" className="button button--primary button--smaller me-1" onClick={() => applyBloodPressure(item)}>
                                 Apply for all patient
                               </button>
                               <button type="button" className="button button--deny button--smaller" onClick={() => {
@@ -390,7 +410,7 @@ const Setting = () => {
                                   className="form-select"
                                   onChange={(e: any) => {
                                     const updatedList = [...listBloodGlucose];
-                                    updatedList[idxRule].ruleName = e.target.value;
+                                    updatedList[idx].rule[idxRule].ruleName = e.target.value;
                                     setListBloodGlucose(updatedList);
                                   }}
                                   value={itemRule.ruleName}
@@ -405,7 +425,7 @@ const Setting = () => {
                                       value={itemRule.threshold}
                                       onChange={(e: any) => {
                                         const updatedList = [...listBloodGlucose];
-                                        updatedList[idxRule].threshold = e.target.value;
+                                        updatedList[idx].rule[idxRule].threshold = e.target.value;
                                         setListBloodGlucose(updatedList);
                                       }}
                                     />
@@ -560,7 +580,7 @@ const Setting = () => {
                                   className="form-select"
                                   onChange={(e: any) => {
                                     const updatedList = [...listHeartRate];
-                                    updatedList[idxRule].ruleName = e.target.value;
+                                    updatedList[idx].rule[idxRule].ruleName = e.target.value;
                                     setListHeartRate(updatedList);
                                   }}
                                   value={itemRule.ruleName}
@@ -575,7 +595,7 @@ const Setting = () => {
                                       value={itemRule.threshold}
                                       onChange={(e: any) => {
                                         const updatedList = [...listHeartRate];
-                                        updatedList[idxRule].threshold = e.target.value;
+                                        updatedList[idx].rule[idxRule].threshold = e.target.value;
                                         setListHeartRate(updatedList);
                                       }}
                                     />
@@ -730,7 +750,7 @@ const Setting = () => {
                                   className="form-select"
                                   onChange={(e: any) => {
                                     const updatedList = [...listBMI];
-                                    updatedList[idxRule].ruleName = e.target.value;
+                                    updatedList[idx].rule[idxRule].ruleName = e.target.value;
                                     setListBMI(updatedList);
                                   }}
                                   value={itemRule.ruleName}
@@ -743,7 +763,7 @@ const Setting = () => {
                                   value={itemRule.threshold}
                                   onChange={(e: any) => {
                                     const updatedList = [...listBMI];
-                                    updatedList[idxRule].threshold = e.target.value;
+                                    updatedList[idx].rule[idxRule].threshold = e.target.value;
                                     setListBMI(updatedList);
                                   }}
                                 /></td>
@@ -895,7 +915,7 @@ const Setting = () => {
                                   className="form-select"
                                   onChange={(e: any) => {
                                     const updatedList = [...listTemperature];
-                                    updatedList[idxRule].ruleName = e.target.value;
+                                    updatedList[idx].rule[idxRule].ruleName = e.target.value;
                                     setListTemperature(updatedList);
                                   }}
                                   value={itemRule.ruleName}
@@ -910,7 +930,7 @@ const Setting = () => {
                                       value={itemRule.threshold}
                                       onChange={(e: any) => {
                                         const updatedList = [...listTemperature];
-                                        updatedList[idxRule].threshold = e.target.value;
+                                        updatedList[idx].rule[idxRule].threshold = e.target.value;
                                         setListTemperature(updatedList);
                                       }}
                                     />

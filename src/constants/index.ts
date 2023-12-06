@@ -302,3 +302,66 @@ export const ALERT_STATUS = [
     value: "Minor",
   },
 ];
+
+export const RULE_BLOOD_PRESSURE = [
+  {
+    title: "Systolic Greater Than",
+    value: "Systolic Greater Than",
+  },
+  {
+    title: "Systolic Less Than",
+    value: "Systolic Less Than",
+  },
+  {
+    title: "Diastolic Greater Than",
+    value: "Diastolic Greater Than",
+  },
+  {
+    title: "Diastolic Less Than",
+    value: "Diastolic Less Than",
+  },
+];
+
+export const RULE_BLOOD_GLUCOSE = [
+  {
+    title: "Blood Glucose Greater Than",
+    value: "Blood Glucose Greater Than",
+  },
+  {
+    title: "Blood Glucose Less Than",
+    value: "Blood Glucose Less Than",
+  },
+];
+
+export const RULE_HEART_RATE = [
+  {
+    title: "Heart Rate Greater Than",
+    value: "Heart Rate Greater Than",
+  },
+  {
+    title: "Heart Rate Less Than",
+    value: "Heart Rate Less Than",
+  },
+];
+
+export const RULE_BMI = [
+  {
+    title: "BMI Greater Than",
+    value: "BMI Greater Than",
+  },
+  {
+    title: "BMI Less Than",
+    value: "BMI Less Than",
+  },
+];
+
+export const RULE_TEMPERATURE = [
+  {
+    title: "Temperature Greater Than",
+    value: "Temperature Greater Than",
+  },
+  {
+    title: "Temperature Less Than",
+    value: "Temperature Less Than",
+  },
+];

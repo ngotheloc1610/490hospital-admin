@@ -122,14 +122,14 @@ const PatientDashboard = () => {
         if (resp) {
           const newPatient = Object.entries(resp.data.newPatient).map(([date, number]) => ({ date, number }));
           const sortedNewPatient = newPatient.sort((a: any, b: any) => {
-            const dateA = a.date.getTime();
-            const dateB = b.date.getTime();
+            const dateA = new Date(a.date).getTime();
+            const dateB = new Date(b.date).getTime();
             return dateA - dateB;
           });
           const oldPatient = Object.entries(resp.data.oldPatient).map(([date, number]) => ({ date, number }));
           const sortedOldPatient = oldPatient.sort((a: any, b: any) => {
-            const dateA = a.date.getTime();
-            const dateB = b.date.getTime();
+            const dateA = new Date(a.date).getTime();
+            const dateB = new Date(b.date).getTime();
             return dateA - dateB;
           });
           setPatient({ newPatient: sortedNewPatient, oldPatient: sortedOldPatient })

@@ -1,79 +1,12 @@
-import { Field, FieldArray, Form, Formik } from "formik";
-import * as Yup from "yup";
 import Layout from "../../components/Layout";
 import { useState } from "react";
 import { ICON_TRASH } from "../../assets";
 import { defineConfigPost } from "../../Common/utils";
 import axios from "axios";
 import { API_ALERT_BLOOD_PRESSURE } from "../../constants/api.constant";
-import { tr } from "date-fns/locale";
-
-const validationSchema = Yup.object().shape({
-
-});
-
-const defaultValue = {
-  bloodPressure: [
-    {
-      alertName: "",
-      alertSeverity: "",
-      rule: [
-        {
-          ruleName: "",
-          threshold: "",
-        }
-      ]
-    }
-  ],
-  bloodGlucose: [{
-    alertName: "",
-    alertSeverity: "",
-    rule: [
-      {
-        ruleName: "",
-        threshold: "",
-      }
-    ]
-  }],
-  heartRate: [{
-    alertName: "",
-    alertSeverity: "",
-    rule: [
-      {
-        ruleName: "",
-        threshold: "",
-      }
-    ]
-  }],
-  BMI: [
-    {
-      alertName: "",
-      alertSeverity: "",
-      rule: [
-        {
-          ruleName: "",
-          threshold: "",
-        }
-      ]
-    }
-  ],
-  temperature: [{
-    alertName: "",
-    alertSeverity: "",
-    rule: [
-      {
-        ruleName: "",
-        threshold: "",
-      }
-    ]
-  }]
-};
+import { ALERT_STATUS, RULE_BLOOD_GLUCOSE, RULE_BLOOD_PRESSURE, RULE_BMI, RULE_HEART_RATE, RULE_TEMPERATURE } from "../../constants";
 
 const Setting = () => {
-  const [listSeverity, setListSeverity] = useState<any>([]);
-  const [listRule, setListRule] = useState<any>([]);
-
-  const [setting, setSetting] = useState<any>(defaultValue)
 
   const url_api = process.env.REACT_APP_API_URL;
 
@@ -87,15 +20,58 @@ const Setting = () => {
       }
     ]
   }])
+  const [listBloodGlucose, setListBloodGlucose] = useState<any>([{
+    alertName: "",
+    alertSeverity: "",
+    rule: [
+      {
+        ruleName: "",
+        threshold: "",
+      }
+    ]
+  }])
+  const [listHeartRate, setListHeartRate] = useState<any>([{
+    alertName: "",
+    alertSeverity: "",
+    rule: [
+      {
+        ruleName: "",
+        threshold: "",
+      }
+    ]
+  }])
+  const [listTemperature, setListTemperature] = useState<any>([{
+    alertName: "",
+    alertSeverity: "",
+    rule: [
+      {
+        ruleName: "",
+        threshold: "",
+      }
+    ]
+  }])
+  const [listBMI, setListBMI] = useState<any>([{
+    alertName: "",
+    alertSeverity: "",
+    rule: [
+      {
+        ruleName: "",
+        threshold: "",
+      }
+    ]
+  }])
 
   const createAlertBloodPressure = () => {
     const url = `${url_api}${API_ALERT_BLOOD_PRESSURE}`;
 
+    const params = {
+      alertName: ""
+    }
     axios
-      .post(url, defineConfigPost())
+      .post(url, params, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
-          setListRule(resp.data);
+
         }
       })
       .catch((err: any) => {
@@ -103,662 +79,934 @@ const Setting = () => {
       });
   }
 
+  const _renderListSeverity = () => {
+    return (
+      <>
+        <option hidden>Select a severity</option>
+        {ALERT_STATUS.map((item: any) => (
+          <option value={item.value} key={item.value}>
+            {item.title}
+          </option>
+        ))
+        }
+      </>
+    );
+  };
+
+  const _renderListRuleBloodPressure = () => {
+    return (
+      <>
+        <option hidden>Select a rule</option>
+        {RULE_BLOOD_PRESSURE.map((item: any) => (
+          <option value={item.value} key={item.value}>
+            {item.title}
+          </option>
+        ))}
+      </>
+    );
+  };
+  const _renderListRuleTemperature = () => {
+    return (
+      <>
+        <option hidden>Select a rule</option>
+        {RULE_TEMPERATURE.map((item: any) => (
+          <option value={item.value} key={item.value}>
+            {item.title}
+          </option>
+        ))}
+      </>
+    );
+  };
+  const _renderListRuleBloodGlucose = () => {
+    return (
+      <>
+        <option hidden>Select a rule</option>
+        {RULE_BLOOD_GLUCOSE.map((item: any) => (
+          <option value={item.value} key={item.value}>
+            {item.title}
+          </option>
+        ))}
+      </>
+    );
+  };
+  const _renderListRuleHeartRate = () => {
+    return (
+      <>
+        <option hidden>Select a rule</option>
+        {RULE_HEART_RATE.map((item: any) => (
+          <option value={item.value} key={item.value}>
+            {item.title}
+          </option>
+        ))}
+      </>
+    );
+  };
+  const _renderListRuleBMI = () => {
+    return (
+      <>
+        <option hidden>Select a rule</option>
+        {RULE_BMI.map((item: any) => (
+          <option value={item.value} key={item.value}>
+            {item.title}
+          </option>
+        ))}
+      </>
+    );
+  };
+
 
   return (
     <Layout>
-      <Formik
-        initialValues={setting}
-        enableReinitialize={true}
-        validationSchema={validationSchema}
-        onSubmit={(values, actions) => {
-          console.log("values:", values)
-          actions.setSubmitting(false);
-          actions.resetForm();
-        }}
-      >
-        {({ values, errors, touched, submitForm }) => (
-          <>
-            <Form>
-              <div className="container mt-3">
-                <div className="accordion" id="accordionExample">
-                  <div className="accordion-item">
-                    <h2 className="accordion-header" id="headingOne">
-                      <button className="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        Blood Pressure
-                      </button>
-                    </h2>
-                    <div id="collapseOne" className="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                      <div className="accordion-body">
-                        <table className="table rounded">
-                          <thead>
-                            <tr>
-                              <th>ID</th>
-                              <th>Alert Name</th>
-                              <th>Alert Severity</th>
-                              <th>Rules</th>
-                              <th>Threshold</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {/* <FieldArray name="bloodPressure">
-                              {({ push, remove }) => (
-                                <>
-                                  {values.bloodPressure.map((bp: any, index: number) => (
-                                    <tr key={index}>
-                                      <td>{index}</td>
-                                      <td>
-                                        <Field
-                                          type="text"
-                                          name={`bloodPressure.${index}.alertName`}
-                                          className="form-control"
-                                          value={bp.alertName}
-                                        />
-                                      </td>
-                                      <td>
-                                        <Field
-                                          as="select"
-                                          name={`bloodPressure.${index}.alertSeverity`}
-                                          className={`form-select`}
-                                        >
-                                          {listSeverity.length > 0 ? (
-                                            listSeverity.map((item: any) => (
-                                              <option value={item.id} key={item.id}>
-                                                {item.name}
-                                              </option>
-                                            ))
-                                          ) : (
-                                            <option disabled>No option</option>
-                                          )}
-                                        </Field>
-                                      </td>
-                                      <td>
-                                        <FieldArray name={`bloodPressure.${index}.rule`}>
-                                          {({ push: pushRule, remove: removeRule }) => (
-                                            <>
-                                              {bp.rule.map((rule: any, ruleIndex: number) => (
-                                                <tr key={ruleIndex}>
-                                                  <td>
-                                                    <Field
-                                                      as="select"
-                                                      name={`bloodPressure.${index}.rule.${ruleIndex}.ruleName`}
-                                                      className={`form-select`}
-                                                    >
-                                                      {listRule.length > 0 ? (
-                                                        listRule.map((item: any) => (
-                                                          <option value={item.id} key={item.id}>
-                                                            {item.name}
-                                                          </option>
-                                                        ))
-                                                      ) : (
-                                                        <option disabled>No option</option>
-                                                      )}
-                                                    </Field>
-                                                  </td>
-                                                  <td>
-                                                    <Field
-                                                      type="text"
-                                                      name={`bloodPressure.${index}.rule.${ruleIndex}.threshold`}
-                                                      className="form-control"
-                                                      value={rule.threshold}
-                                                    />
-                                                  </td>
-                                                  <td>
-                                                    <button type="button" style={{ background: "transparent" }} className="mt-1" onClick={() => removeRule(ruleIndex)}>
-                                                      <ICON_TRASH />
-                                                    </button>
-                                                  </td>
-                                                </tr>
-                                              ))}
-                                              <div className="text-end mt-2">
-                                                <button type="button" className="button button--primary button--small me-1" onClick={() => pushRule({ ruleName: '', threshold: '' })}>
-                                                  <i className="bi bi-plus-circle me-2"></i>
-                                                  Add new rule
-                                                </button>
-                                                <button type="button" className="button button--primary button--small me-1">
-                                                  Apply for all patient
-                                                </button>
-                                                <button type="button" className="button button--deny button--small" onClick={() => remove(index)}>
-                                                  Delete Alert
-                                                </button>
-                                              </div>
-                                            </>
-                                          )}
-                                        </FieldArray>
+      <div className="container mt-3">
+        <div className="accordion" id="accordionExample">
+          <div className="accordion-item">
+            <h2 className="accordion-header" id="headingOne">
+              <button className="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                Blood Pressure
+              </button>
+            </h2>
+            <div id="collapseOne" className="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+              <div className="accordion-body">
+                <table className="table rounded">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Alert Name</th>
+                      <th>Alert Severity</th>
+                      <th>Rules</th>
+                      <th>Threshold</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {listBloodPressure.map((item: any, idx: number) => (
+                      <>
+                        {item.rule && item.rule.length > 0 ? <>
+                          {item.rule.map((itemRule: any, idxRule: number) => {
+                            return (
+                              <tr>
+                                {idxRule <= 0 && (
+                                  <>
+                                    <td rowSpan={item.rule ? item.rule.length : 1}>{idx + 1}</td>
+                                    <td rowSpan={item.rule ? item.rule.length : 1}>
+                                      <input
+                                        type="text"
+                                        className={`form-control`}
+                                        value={item.alertName}
+                                        onChange={(e: any) => {
+                                          const updatedList = [...listBloodPressure];
+                                          updatedList[idx].alertName = e.target.value;
+                                          setListBloodPressure(updatedList);
+                                        }}
+                                      />
+                                    </td>
+                                    <td rowSpan={item.rule ? item.rule.length : 1}>
+                                      <select
+                                        className="form-select"
+                                        onChange={(e: any) => {
+                                          const updatedList = [...listBloodPressure];
+                                          updatedList[idx].alertSeverity = e.target.value;
+                                          setListBloodPressure(updatedList);
+                                        }}
+                                        value={item.alertSeverity}
+                                      >
+                                        {_renderListSeverity()}
+                                      </select>
+                                    </td>
+                                  </>
+                                )}
 
-                                      </td>
-                                      <td>
-
-                                      </td>
-                                    </tr>
-                                  ))}
-                                  <button type="button" className="button button--primary button--small" onClick={() => push({ alertName: '', alertSeverity: '', rule: [{ ruleName: '', threshold: '' }] })}>
-                                    <i className="bi bi-plus-circle me-2 text-white" style={{ background: "transparent" }}></i>
-                                    Add new alert
-                                  </button>
-                                </>
-                              )}
-                            </FieldArray> */}
-
-                            {listBloodPressure.map((item: any, idx: number) => (
-                              <>
-                                {item.rule && item.rule.length > 0 ? item.rule.map((itemRule: any, idxRule: number) => {
-                                  return (
-                                    <tr>
-                                      <td rowSpan={item.rule.length}>{++idx}</td>
-                                      <td rowSpan={item.rule.length}>{item.alertName}</td>
-                                      <td rowSpan={item.rule.length}>{item.alert.severity}</td>
-                                      <td>{itemRule.ruleName}</td>
-                                      <td>{itemRule.threshold}</td>
-                                    </tr>
-                                  )
-                                }) : <tr>
-                                  <td>{++idx}</td>
-                                  <td>{item.alertName}</td>
-                                  <td>{item.alert.severity}</td>
-                                  <td></td>
-                                  <td></td>
-                                </tr>}
-                              </>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="accordion-item">
-                    <h2 className="accordion-header" id="headingTwo">
-                      <button className="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                        Blood Glucose
-                      </button>
-                    </h2>
-                    <div id="collapseTwo" className="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                      <div className="accordion-body">
-                        <table className="table rounded">
-                          <thead>
-                            <tr>
-                              <th>ID</th>
-                              <th>Alert Name</th>
-                              <th>Alert Severity</th>
-                              <th>Rules</th>
-                              <th>Threshold</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <FieldArray name="bloodGlucose">
-                              {({ push, remove }) => (
-                                <>
-                                  {values.bloodGlucose.map((bg: any, index: number) => (
-                                    <tr key={index}>
-                                      <td>{index}</td>
-                                      <td>
-                                        <Field
-                                          type="text"
-                                          name={`bloodGlucose.${index}.alertName`}
-                                          className="form-control"
-                                          value={bg.alertName}
-                                        />
-                                      </td>
-                                      <td>
-                                        <Field
-                                          as="select"
-                                          name={`bloodGlucose.${index}.alertSeverity`}
-                                          className={`form-select`}
-                                        >
-                                          {listSeverity.length > 0 ? (
-                                            listSeverity.map((item: any) => (
-                                              <option value={item.id} key={item.id}>
-                                                {item.name}
-                                              </option>
-                                            ))
-                                          ) : (
-                                            <option disabled>No option</option>
-                                          )}
-                                        </Field>
-                                      </td>
-                                      <td>
-                                        <FieldArray name={`bloodGlucose.${index}.rule`}>
-                                          {({ push: pushRule, remove: removeRule }) => (
-                                            <>
-                                              {bg.rule.map((rule: any, ruleIndex: number) => (
-                                                <tr key={ruleIndex}>
-                                                  <td>
-                                                    <Field
-                                                      as="select"
-                                                      name={`bloodGlucose.${index}.rule.${ruleIndex}.ruleName`}
-                                                      className={`form-select`}
-                                                    >
-                                                      {listRule.length > 0 ? (
-                                                        listRule.map((item: any) => (
-                                                          <option value={item.id} key={item.id}>
-                                                            {item.name}
-                                                          </option>
-                                                        ))
-                                                      ) : (
-                                                        <option disabled>No option</option>
-                                                      )}
-                                                    </Field>
-                                                  </td>
-                                                  <td>
-                                                    <Field
-                                                      type="text"
-                                                      name={`bloodGlucose.${index}.rule.${ruleIndex}.threshold`}
-                                                      className="form-control"
-                                                      value={rule.threshold}
-                                                    />
-                                                  </td>
-                                                  <td>
-                                                    <button type="button" style={{ background: "transparent" }} className="mt-1" onClick={() => removeRule(ruleIndex)}>
-                                                      <ICON_TRASH />
-                                                    </button>
-                                                  </td>
-                                                </tr>
-                                              ))}
-                                              <div className="text-end mt-2">
-                                                <button type="button" className="button button--primary button--small me-1" onClick={() => pushRule({ ruleName: '', threshold: '' })}>
-                                                  <i className="bi bi-plus-circle me-2"></i>
-                                                  Add new rule
-                                                </button>
-                                                <button type="button" className="button button--primary button--small me-1">
-                                                  Apply for all patient
-                                                </button>
-                                                <button type="button" className="button button--deny button--small" onClick={() => remove(index)}>
-                                                  Delete Alert
-                                                </button>
-                                              </div>
-                                            </>
-                                          )}
-                                        </FieldArray>
-
-                                      </td>
-                                      <td>
-
-                                      </td>
-                                    </tr>
-                                  ))}
-                                  <button type="button" className="button button--primary button--small" onClick={() => push({ alertName: '', alertSeverity: '', rule: [{ ruleName: '', threshold: '' }] })}>
-                                    <i className="bi bi-plus-circle me-2 text-white" style={{ background: "transparent" }}></i>
-                                    Add new alert
-                                  </button>
-                                </>
-                              )}
-                            </FieldArray>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="accordion-item">
-                    <h2 className="accordion-header" id="headingThree">
-                      <button className="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                        Heart Rate
-                      </button>
-                    </h2>
-                    <div id="collapseThree" className="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                      <div className="accordion-body">
-                        <table className="table rounded">
-                          <thead>
-                            <tr>
-                              <th>ID</th>
-                              <th>Alert Name</th>
-                              <th>Alert Severity</th>
-                              <th>Rules</th>
-                              <th>Threshold</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <FieldArray name="heartRate">
-                              {({ push, remove }) => (
-                                <>
-                                  {values.heartRate.map((hr: any, index: number) => (
-                                    <tr key={index}>
-                                      <td>{index}</td>
-                                      <td>
-                                        <Field
-                                          type="text"
-                                          name={`heartRate.${index}.alertName`}
-                                          className="form-control"
-                                          value={hr.alertName}
-                                        />
-                                      </td>
-                                      <td>
-                                        <Field
-                                          as="select"
-                                          name={`heartRate.${index}.alertSeverity`}
-                                          className={`form-select`}
-                                        >
-                                          {listSeverity.length > 0 ? (
-                                            listSeverity.map((item: any) => (
-                                              <option value={item.id} key={item.id}>
-                                                {item.name}
-                                              </option>
-                                            ))
-                                          ) : (
-                                            <option disabled>No option</option>
-                                          )}
-                                        </Field>
-                                      </td>
-                                      <td>
-                                        <FieldArray name={`heartRate.${index}.rule`}>
-                                          {({ push: pushRule, remove: removeRule }) => (
-                                            <>
-                                              {hr.rule.map((rule: any, ruleIndex: number) => (
-                                                <tr key={ruleIndex}>
-                                                  <td>
-                                                    <Field
-                                                      as="select"
-                                                      name={`heartRate.${index}.rule.${ruleIndex}.ruleName`}
-                                                      className={`form-select`}
-                                                    >
-                                                      {listRule.length > 0 ? (
-                                                        listRule.map((item: any) => (
-                                                          <option value={item.id} key={item.id}>
-                                                            {item.name}
-                                                          </option>
-                                                        ))
-                                                      ) : (
-                                                        <option disabled>No option</option>
-                                                      )}
-                                                    </Field>
-                                                  </td>
-                                                  <td>
-                                                    <Field
-                                                      type="text"
-                                                      name={`heartRate.${index}.rule.${ruleIndex}.threshold`}
-                                                      className="form-control"
-                                                      value={rule.threshold}
-                                                    />
-                                                  </td>
-                                                  <td>
-                                                    <button type="button" style={{ background: "transparent" }} className="mt-1" onClick={() => removeRule(ruleIndex)}>
-                                                      <ICON_TRASH />
-                                                    </button>
-                                                  </td>
-                                                </tr>
-                                              ))}
-                                              <div className="text-end mt-2">
-                                                <button type="button" className="button button--primary button--small me-1" onClick={() => pushRule({ ruleName: '', threshold: '' })}>
-                                                  <i className="bi bi-plus-circle me-2"></i>
-                                                  Add new rule
-                                                </button>
-                                                <button type="button" className="button button--primary button--small me-1">
-                                                  Apply for all patient
-                                                </button>
-                                                <button type="button" className="button button--deny button--small" onClick={() => remove(index)}>
-                                                  Delete Alert
-                                                </button>
-                                              </div>
-                                            </>
-                                          )}
-                                        </FieldArray>
-
-                                      </td>
-                                      <td>
-
-                                      </td>
-                                    </tr>
-                                  ))}
-                                  <button type="button" className="button button--primary button--small" onClick={() => push({ alertName: '', alertSeverity: '', rule: [{ ruleName: '', threshold: '' }] })}>
-                                    <i className="bi bi-plus-circle me-2 text-white" style={{ background: "transparent" }}></i>
-                                    Add new alert
-                                  </button>
-                                </>
-                              )}
-                            </FieldArray>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="accordion-item">
-                    <h2 className="accordion-header" id="headingThree">
-                      <button className="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                        Body Mass Index (BMI)
-                      </button>
-                    </h2>
-                    <div id="collapseFour" className="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                      <div className="accordion-body">
-                        <table className="table rounded">
-                          <thead>
-                            <tr>
-                              <th>ID</th>
-                              <th>Alert Name</th>
-                              <th>Alert Severity</th>
-                              <th>Rules</th>
-                              <th>Threshold</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <FieldArray name="BMI">
-                              {({ push, remove }) => (
-                                <>
-                                  {values.BMI.map((item: any, index: number) => (
-                                    <tr key={index}>
-                                      <td>{index}</td>
-                                      <td>
-                                        <Field
-                                          type="text"
-                                          name={`BMI.${index}.alertName`}
-                                          className="form-control"
-                                          value={item.alertName}
-                                        />
-                                      </td>
-                                      <td>
-                                        <Field
-                                          as="select"
-                                          name={`BMI.${index}.alertSeverity`}
-                                          className={`form-select`}
-                                        >
-                                          {listSeverity.length > 0 ? (
-                                            listSeverity.map((item: any) => (
-                                              <option value={item.id} key={item.id}>
-                                                {item.name}
-                                              </option>
-                                            ))
-                                          ) : (
-                                            <option disabled>No option</option>
-                                          )}
-                                        </Field>
-                                      </td>
-                                      <td>
-                                        <FieldArray name={`BMI.${index}.rule`}>
-                                          {({ push: pushRule, remove: removeRule }) => (
-                                            <>
-                                              {item.rule.map((rule: any, ruleIndex: number) => (
-                                                <tr key={ruleIndex}>
-                                                  <td>
-                                                    <Field
-                                                      as="select"
-                                                      name={`BMI.${index}.rule.${ruleIndex}.ruleName`}
-                                                      className={`form-select`}
-                                                    >
-                                                      {listRule.length > 0 ? (
-                                                        listRule.map((item: any) => (
-                                                          <option value={item.id} key={item.id}>
-                                                            {item.name}
-                                                          </option>
-                                                        ))
-                                                      ) : (
-                                                        <option disabled>No option</option>
-                                                      )}
-                                                    </Field>
-                                                  </td>
-                                                  <td>
-                                                    <Field
-                                                      type="text"
-                                                      name={`BMI.${index}.rule.${ruleIndex}.threshold`}
-                                                      className="form-control"
-                                                      value={rule.threshold}
-                                                    />
-                                                  </td>
-                                                  <td>
-                                                    <button type="button" style={{ background: "transparent" }} className="mt-1" onClick={() => removeRule(ruleIndex)}>
-                                                      <ICON_TRASH />
-                                                    </button>
-                                                  </td>
-                                                </tr>
-                                              ))}
-                                              <div className="text-end mt-2">
-                                                <button type="button" className="button button--primary button--small me-1" onClick={() => pushRule({ ruleName: '', threshold: '' })}>
-                                                  <i className="bi bi-plus-circle me-2"></i>
-                                                  Add new rule
-                                                </button>
-                                                <button type="button" className="button button--primary button--small me-1">
-                                                  Apply for all patient
-                                                </button>
-                                                <button type="button" className="button button--deny button--small" onClick={() => remove(index)}>
-                                                  Delete Alert
-                                                </button>
-                                              </div>
-                                            </>
-                                          )}
-                                        </FieldArray>
-
-                                      </td>
-                                      <td>
-
-                                      </td>
-                                    </tr>
-                                  ))}
-                                  <button type="button" className="button button--primary button--small" onClick={() => push({ alertName: '', alertSeverity: '', rule: [{ ruleName: '', threshold: '' }] })}>
-                                    <i className="bi bi-plus-circle me-2 text-white" style={{ background: "transparent" }}></i>
-                                    Add new alert
-                                  </button>
-                                </>
-                              )}
-                            </FieldArray>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="accordion-item">
-                    <h2 className="accordion-header" id="headingThree">
-                      <button className="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-                        Temperature
-                      </button>
-                    </h2>
-                    <div id="collapseFive" className="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                      <div className="accordion-body">
-                        <table className="table rounded">
-                          <thead>
-                            <tr>
-                              <th>ID</th>
-                              <th>Alert Name</th>
-                              <th>Alert Severity</th>
-                              <th>Rules</th>
-                              <th>Threshold</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <FieldArray name="temperature">
-                              {({ push, remove }) => (
-                                <>
-                                  {values.temperature.map((tp: any, index: number) => (
-                                    <tr key={index}>
-                                      <td>{index}</td>
-                                      <td>
-                                        <Field
-                                          type="text"
-                                          name={`temperature.${index}.alertName`}
-                                          className="form-control"
-                                          value={tp.alertName}
-                                        />
-                                      </td>
-                                      <td>
-                                        <Field
-                                          as="select"
-                                          name={`temperature.${index}.alertSeverity`}
-                                          className={`form-select`}
-                                        >
-                                          {listSeverity.length > 0 ? (
-                                            listSeverity.map((item: any) => (
-                                              <option value={item.id} key={item.id}>
-                                                {item.name}
-                                              </option>
-                                            ))
-                                          ) : (
-                                            <option disabled>No option</option>
-                                          )}
-                                        </Field>
-                                      </td>
-                                      <td>
-                                        <FieldArray name={`temperature.${index}.rule`}>
-                                          {({ push: pushRule, remove: removeRule }) => (
-                                            <>
-                                              {tp.rule.map((rule: any, ruleIndex: number) => (
-                                                <tr key={ruleIndex}>
-                                                  <td>
-                                                    <Field
-                                                      as="select"
-                                                      name={`temperature.${index}.rule.${ruleIndex}.ruleName`}
-                                                      className={`form-select`}
-                                                    >
-                                                      {listRule.length > 0 ? (
-                                                        listRule.map((item: any) => (
-                                                          <option value={item.id} key={item.id}>
-                                                            {item.name}
-                                                          </option>
-                                                        ))
-                                                      ) : (
-                                                        <option disabled>No option</option>
-                                                      )}
-                                                    </Field>
-                                                  </td>
-                                                  <td>
-                                                    <Field
-                                                      type="text"
-                                                      name={`temperature.${index}.rule.${ruleIndex}.threshold`}
-                                                      className="form-control"
-                                                      value={rule.threshold}
-                                                    />
-                                                  </td>
-                                                  <td>
-                                                    <button type="button" style={{ background: "transparent" }} className="mt-1" onClick={() => removeRule(ruleIndex)}>
-                                                      <ICON_TRASH />
-                                                    </button>
-                                                  </td>
-                                                </tr>
-                                              ))}
-                                              <div className="text-end mt-2">
-                                                <button type="button" className="button button--primary button--small me-1" onClick={() => pushRule({ ruleName: '', threshold: '' })}>
-                                                  <i className="bi bi-plus-circle me-2"></i>
-                                                  Add new rule
-                                                </button>
-                                                <button type="button" className="button button--primary button--small me-1">
-                                                  Apply for all patient
-                                                </button>
-                                                <button type="button" className="button button--deny button--small" onClick={() => remove(index)}>
-                                                  Delete Alert
-                                                </button>
-                                              </div>
-                                            </>
-                                          )}
-                                        </FieldArray>
-
-                                      </td>
-                                      <td>
-
-                                      </td>
-                                    </tr>
-                                  ))}
-                                  <button type="button" className="button button--primary button--small" onClick={() => push({ alertName: '', alertSeverity: '', rule: [{ ruleName: '', threshold: '' }] })}>
-                                    <i className="bi bi-plus-circle me-2 text-white" style={{ background: "transparent" }}></i>
-                                    Add new alert
-                                  </button>
-                                </>
-                              )}
-                            </FieldArray>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                                <td> <select
+                                  className="form-select"
+                                  onChange={(e: any) => {
+                                    const updatedList = [...listBloodPressure];
+                                    updatedList[idxRule].ruleName = e.target.value;
+                                    setListBloodPressure(updatedList);
+                                  }}
+                                  value={itemRule.ruleName}
+                                >
+                                  {_renderListRuleBloodPressure()}
+                                </select></td>
+                                <td>
+                                  <div className="d-flex">
+                                    <input
+                                      type="text"
+                                      className={`form-control`}
+                                      value={itemRule.threshold}
+                                      onChange={(e: any) => {
+                                        const updatedList = [...listBloodPressure];
+                                        updatedList[idxRule].threshold = e.target.value;
+                                        setListBloodPressure(updatedList);
+                                      }}
+                                    />
+                                    <span className="my-auto">mmHg</span>
+                                  </div>
+                                </td>
+                                <td>
+                                  <span onClick={() => {
+                                    const updatedList = [...listBloodPressure];
+                                    updatedList[idx].rule.splice(idxRule, 1);
+                                    setListBloodPressure(updatedList);
+                                  }}><ICON_TRASH /></span>
+                                </td>
+                              </tr>
+                            )
+                          })}
+                          <tr>
+                            <td></td>
+                            <td></td>
+                            <td>
+                              <button type="button" className="button button--primary button--smaller" onClick={() => {
+                                const updatedList = [...listBloodPressure];
+                                updatedList[idx].rule.push({
+                                  ruleName: "",
+                                  threshold: "",
+                                });
+                                setListBloodPressure(updatedList);
+                              }}>
+                                <i className="bi bi-plus-circle me-2"></i>
+                                Add new rule
+                              </button>
+                            </td>
+                            <td></td>
+                            <td className="d-flex">
+                              <button type="button" className="button button--primary button--smaller me-1">
+                                Apply for all patient
+                              </button>
+                              <button type="button" className="button button--deny button--smaller" onClick={() => {
+                                const updatedList = [...listBloodPressure];
+                                updatedList.splice(idx, 1);
+                                setListBloodPressure(updatedList);
+                              }}>
+                                Delete Alert
+                              </button>
+                            </td>
+                          </tr>
+                        </> : <tr>
+                          <td>{idx + 1}</td>
+                          <td> <input
+                            type="text"
+                            className={`form-control`}
+                            value={item.alertName}
+                            onChange={(e: any) => {
+                              const updatedList = [...listBloodPressure];
+                              updatedList[idx].alertName = e.target.value;
+                              setListBloodPressure(updatedList);
+                            }}
+                          /></td>
+                          <td> <select
+                            className="form-select"
+                            onChange={(e: any) => {
+                              const updatedList = [...listBloodPressure];
+                              updatedList[idx].alertSeverity = e.target.value;
+                              setListBloodPressure(updatedList);
+                            }}
+                            value={item.alertSeverity}
+                          >
+                            {_renderListSeverity()}
+                          </select></td>
+                          <td></td>
+                          <td></td>
+                        </tr>}
+                      </>
+                    ))}
+                    <button type="button" className="button button--primary button--small" onClick={() => {
+                      setListBloodPressure([...listBloodPressure, {
+                        alertName: "",
+                        alertSeverity: "",
+                        rule: [
+                          {
+                            ruleName: "",
+                            threshold: "",
+                          }
+                        ]
+                      }])
+                    }}>
+                      <i className="bi bi-plus-circle text-white me-2" style={{ background: "transparent" }}></i>
+                      <span className="text-white" style={{ background: "transparent" }}>Add new alert</span>
+                    </button>
+                  </tbody>
+                </table>
               </div>
-            </Form>
-          </>
-        )}
-      </Formik>
+            </div>
+          </div>
+          <div className="accordion-item">
+            <h2 className="accordion-header" id="headingTwo">
+              <button className="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                Blood Glucose
+              </button>
+            </h2>
+            <div id="collapseTwo" className="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+              <div className="accordion-body">
+                <table className="table rounded">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Alert Name</th>
+                      <th>Alert Severity</th>
+                      <th>Rules</th>
+                      <th>Threshold</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {listBloodGlucose.map((item: any, idx: number) => (
+                      <>
+                        {item.rule && item.rule.length > 0 ? <>
+                          {item.rule.map((itemRule: any, idxRule: number) => {
+                            return (
+                              <tr>
+                                {idxRule <= 0 && (
+                                  <>
+                                    <td rowSpan={item.rule ? item.rule.length : 1}>{idx + 1}</td>
+                                    <td rowSpan={item.rule ? item.rule.length : 1}>
+                                      <input
+                                        type="text"
+                                        className={`form-control`}
+                                        value={item.alertName}
+                                        onChange={(e: any) => {
+                                          const updatedList = [...listBloodGlucose];
+                                          updatedList[idx].alertName = e.target.value;
+                                          setListBloodGlucose(updatedList);
+                                        }}
+                                      />
+                                    </td>
+                                    <td rowSpan={item.rule ? item.rule.length : 1}>
+                                      <select
+                                        className="form-select"
+                                        onChange={(e: any) => {
+                                          const updatedList = [...listBloodGlucose];
+                                          updatedList[idx].alertSeverity = e.target.value;
+                                          setListBloodGlucose(updatedList);
+                                        }}
+                                        value={item.alertSeverity}
+                                      >
+                                        {_renderListSeverity()}
+                                      </select>
+                                    </td>
+                                  </>
+                                )}
+
+                                <td> <select
+                                  className="form-select"
+                                  onChange={(e: any) => {
+                                    const updatedList = [...listBloodGlucose];
+                                    updatedList[idxRule].ruleName = e.target.value;
+                                    setListBloodGlucose(updatedList);
+                                  }}
+                                  value={itemRule.ruleName}
+                                >
+                                  {_renderListRuleBloodGlucose()}
+                                </select></td>
+                                <td>
+                                  <div className="d-flex">
+                                    <input
+                                      type="text"
+                                      className={`form-control`}
+                                      value={itemRule.threshold}
+                                      onChange={(e: any) => {
+                                        const updatedList = [...listBloodGlucose];
+                                        updatedList[idxRule].threshold = e.target.value;
+                                        setListBloodGlucose(updatedList);
+                                      }}
+                                    />
+                                    <span className="my-auto">mmol/L</span>
+                                  </div>
+                                </td>
+                                <td>
+                                  <span onClick={() => {
+                                    const updatedList = [...listBloodGlucose];
+                                    updatedList[idx].rule.splice(idxRule, 1);
+                                    setListBloodGlucose(updatedList);
+                                  }}><ICON_TRASH /></span>
+                                </td>
+                              </tr>
+                            )
+                          })}
+                          <tr>
+                            <td></td>
+                            <td></td>
+                            <td>
+                              <button type="button" className="button button--primary button--smaller" onClick={() => {
+                                const updatedList = [...listBloodGlucose];
+                                updatedList[idx].rule.push({
+                                  ruleName: "",
+                                  threshold: "",
+                                });
+                                setListBloodGlucose(updatedList);
+                              }}>
+                                <i className="bi bi-plus-circle me-2"></i>
+                                Add new rule
+                              </button>
+                            </td>
+                            <td></td>
+                            <td className="d-flex">
+                              <button type="button" className="button button--primary button--smaller me-1">
+                                Apply for all patient
+                              </button>
+                              <button type="button" className="button button--deny button--smaller" onClick={() => {
+                                const updatedList = [...listBloodGlucose];
+                                updatedList.splice(idx, 1);
+                                setListBloodGlucose(updatedList);
+                              }}>
+                                Delete Alert
+                              </button>
+                            </td>
+                          </tr>
+                        </> : <tr>
+                          <td>{idx + 1}</td>
+                          <td> <input
+                            type="text"
+                            className={`form-control`}
+                            value={item.alertName}
+                            onChange={(e: any) => {
+                              const updatedList = [...listBloodGlucose];
+                              updatedList[idx].alertName = e.target.value;
+                              setListBloodGlucose(updatedList);
+                            }}
+                          /></td>
+                          <td> <select
+                            className="form-select"
+                            onChange={(e: any) => {
+                              const updatedList = [...listBloodGlucose];
+                              updatedList[idx].alertSeverity = e.target.value;
+                              setListBloodGlucose(updatedList);
+                            }}
+                            value={item.alertSeverity}
+                          >
+                            {_renderListSeverity()}
+                          </select></td>
+                          <td></td>
+                          <td></td>
+                        </tr>}
+                      </>
+                    ))}
+                    <button type="button" className="button button--primary button--small" onClick={() => {
+                      setListBloodGlucose([...listBloodGlucose, {
+                        alertName: "",
+                        alertSeverity: "",
+                        rule: [
+                          {
+                            ruleName: "",
+                            threshold: "",
+                          }
+                        ]
+                      }])
+                    }}>
+                      <i className="bi bi-plus-circle text-white me-2" style={{ background: "transparent" }}></i>
+                      <span className="text-white" style={{ background: "transparent" }}>Add new alert</span>
+                    </button>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div className="accordion-item">
+            <h2 className="accordion-header" id="headingThree">
+              <button className="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                Heart Rate
+              </button>
+            </h2>
+            <div id="collapseThree" className="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+              <div className="accordion-body">
+                <table className="table rounded">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Alert Name</th>
+                      <th>Alert Severity</th>
+                      <th>Rules</th>
+                      <th>Threshold</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {listHeartRate.map((item: any, idx: number) => (
+                      <>
+                        {item.rule && item.rule.length > 0 ? <>
+                          {item.rule.map((itemRule: any, idxRule: number) => {
+                            return (
+                              <tr>
+                                {idxRule <= 0 && (
+                                  <>
+                                    <td rowSpan={item.rule ? item.rule.length : 1}>{idx + 1}</td>
+                                    <td rowSpan={item.rule ? item.rule.length : 1}>
+                                      <input
+                                        type="text"
+                                        className={`form-control`}
+                                        value={item.alertName}
+                                        onChange={(e: any) => {
+                                          const updatedList = [...listHeartRate];
+                                          updatedList[idx].alertName = e.target.value;
+                                          setListHeartRate(updatedList);
+                                        }}
+                                      />
+                                    </td>
+                                    <td rowSpan={item.rule ? item.rule.length : 1}>
+                                      <select
+                                        className="form-select"
+                                        onChange={(e: any) => {
+                                          const updatedList = [...listHeartRate];
+                                          updatedList[idx].alertSeverity = e.target.value;
+                                          setListHeartRate(updatedList);
+                                        }}
+                                        value={item.alertSeverity}
+                                      >
+                                        {_renderListSeverity()}
+                                      </select>
+                                    </td>
+                                  </>
+                                )}
+
+                                <td> <select
+                                  className="form-select"
+                                  onChange={(e: any) => {
+                                    const updatedList = [...listHeartRate];
+                                    updatedList[idxRule].ruleName = e.target.value;
+                                    setListHeartRate(updatedList);
+                                  }}
+                                  value={itemRule.ruleName}
+                                >
+                                  {_renderListRuleHeartRate()}
+                                </select></td>
+                                <td>
+                                  <div className="d-flex">
+                                    <input
+                                      type="text"
+                                      className={`form-control`}
+                                      value={itemRule.threshold}
+                                      onChange={(e: any) => {
+                                        const updatedList = [...listHeartRate];
+                                        updatedList[idxRule].threshold = e.target.value;
+                                        setListHeartRate(updatedList);
+                                      }}
+                                    />
+                                    <span className="my-auto">bpm</span>
+                                  </div>
+                                </td>
+                                <td>
+                                  <span onClick={() => {
+                                    const updatedList = [...listHeartRate];
+                                    updatedList[idx].rule.splice(idxRule, 1);
+                                    setListHeartRate(updatedList);
+                                  }}><ICON_TRASH /></span>
+                                </td>
+                              </tr>
+                            )
+                          })}
+                          <tr>
+                            <td></td>
+                            <td></td>
+                            <td>
+                              <button type="button" className="button button--primary button--smaller" onClick={() => {
+                                const updatedList = [...listHeartRate];
+                                updatedList[idx].rule.push({
+                                  ruleName: "",
+                                  threshold: "",
+                                });
+                                setListHeartRate(updatedList);
+                              }}>
+                                <i className="bi bi-plus-circle me-2"></i>
+                                Add new rule
+                              </button>
+                            </td>
+                            <td></td>
+                            <td className="d-flex">
+                              <button type="button" className="button button--primary button--smaller me-1">
+                                Apply for all patient
+                              </button>
+                              <button type="button" className="button button--deny button--smaller" onClick={() => {
+                                const updatedList = [...listHeartRate];
+                                updatedList.splice(idx, 1);
+                                setListHeartRate(updatedList);
+                              }}>
+                                Delete Alert
+                              </button>
+                            </td>
+                          </tr>
+                        </> : <tr>
+                          <td>{idx + 1}</td>
+                          <td> <input
+                            type="text"
+                            className={`form-control`}
+                            value={item.alertName}
+                            onChange={(e: any) => {
+                              const updatedList = [...listHeartRate];
+                              updatedList[idx].alertName = e.target.value;
+                              setListHeartRate(updatedList);
+                            }}
+                          /></td>
+                          <td> <select
+                            className="form-select"
+                            onChange={(e: any) => {
+                              const updatedList = [...listHeartRate];
+                              updatedList[idx].alertSeverity = e.target.value;
+                              setListHeartRate(updatedList);
+                            }}
+                            value={item.alertSeverity}
+                          >
+                            {_renderListSeverity()}
+                          </select></td>
+                          <td></td>
+                          <td></td>
+                        </tr>}
+                      </>
+                    ))}
+                    <button type="button" className="button button--primary button--small" onClick={() => {
+                      setListHeartRate([...listHeartRate, {
+                        alertName: "",
+                        alertSeverity: "",
+                        rule: [
+                          {
+                            ruleName: "",
+                            threshold: "",
+                          }
+                        ]
+                      }])
+                    }}>
+                      <i className="bi bi-plus-circle text-white me-2" style={{ background: "transparent" }}></i>
+                      <span className="text-white" style={{ background: "transparent" }}>Add new alert</span>
+                    </button>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div className="accordion-item">
+            <h2 className="accordion-header" id="headingThree">
+              <button className="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                Body Mass Index (BMI)
+              </button>
+            </h2>
+            <div id="collapseFour" className="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+              <div className="accordion-body">
+                <table className="table rounded">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Alert Name</th>
+                      <th>Alert Severity</th>
+                      <th>Rules</th>
+                      <th>Threshold</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {listBMI.map((item: any, idx: number) => (
+                      <>
+                        {item.rule && item.rule.length > 0 ? <>
+                          {item.rule.map((itemRule: any, idxRule: number) => {
+                            return (
+                              <tr>
+                                {idxRule <= 0 && (
+                                  <>
+                                    <td rowSpan={item.rule ? item.rule.length : 1}>{idx + 1}</td>
+                                    <td rowSpan={item.rule ? item.rule.length : 1}>
+                                      <input
+                                        type="text"
+                                        className={`form-control`}
+                                        value={item.alertName}
+                                        onChange={(e: any) => {
+                                          const updatedList = [...listBMI];
+                                          updatedList[idx].alertName = e.target.value;
+                                          setListBMI(updatedList);
+                                        }}
+                                      />
+                                    </td>
+                                    <td rowSpan={item.rule ? item.rule.length : 1}>
+                                      <select
+                                        className="form-select"
+                                        onChange={(e: any) => {
+                                          const updatedList = [...listBMI];
+                                          updatedList[idx].alertSeverity = e.target.value;
+                                          setListBMI(updatedList);
+                                        }}
+                                        value={item.alertSeverity}
+                                      >
+                                        {_renderListSeverity()}
+                                      </select>
+                                    </td>
+                                  </>
+                                )}
+
+                                <td> <select
+                                  className="form-select"
+                                  onChange={(e: any) => {
+                                    const updatedList = [...listBMI];
+                                    updatedList[idxRule].ruleName = e.target.value;
+                                    setListBMI(updatedList);
+                                  }}
+                                  value={itemRule.ruleName}
+                                >
+                                  {_renderListRuleBMI()}
+                                </select></td>
+                                <td><input
+                                  type="text"
+                                  className={`form-control`}
+                                  value={itemRule.threshold}
+                                  onChange={(e: any) => {
+                                    const updatedList = [...listBMI];
+                                    updatedList[idxRule].threshold = e.target.value;
+                                    setListBMI(updatedList);
+                                  }}
+                                /></td>
+                                <td>
+                                  <span onClick={() => {
+                                    const updatedList = [...listBMI];
+                                    updatedList[idx].rule.splice(idxRule, 1);
+                                    setListBMI(updatedList);
+                                  }}><ICON_TRASH /></span>
+                                </td>
+                              </tr>
+                            )
+                          })}
+                          <tr>
+                            <td></td>
+                            <td></td>
+                            <td>
+                              <button type="button" className="button button--primary button--smaller" onClick={() => {
+                                const updatedList = [...listBMI];
+                                updatedList[idx].rule.push({
+                                  ruleName: "",
+                                  threshold: "",
+                                });
+                                setListBMI(updatedList);
+                              }}>
+                                <i className="bi bi-plus-circle me-2"></i>
+                                Add new rule
+                              </button>
+                            </td>
+                            <td></td>
+                            <td className="d-flex">
+                              <button type="button" className="button button--primary button--smaller me-1">
+                                Apply for all patient
+                              </button>
+                              <button type="button" className="button button--deny button--smaller" onClick={() => {
+                                const updatedList = [...listBMI];
+                                updatedList.splice(idx, 1);
+                                setListBMI(updatedList);
+                              }}>
+                                Delete Alert
+                              </button>
+                            </td>
+                          </tr>
+                        </> : <tr>
+                          <td>{idx + 1}</td>
+                          <td> <input
+                            type="text"
+                            className={`form-control`}
+                            value={item.alertName}
+                            onChange={(e: any) => {
+                              const updatedList = [...listBMI];
+                              updatedList[idx].alertName = e.target.value;
+                              setListBMI(updatedList);
+                            }}
+                          /></td>
+                          <td> <select
+                            className="form-select"
+                            onChange={(e: any) => {
+                              const updatedList = [...listBMI];
+                              updatedList[idx].alertSeverity = e.target.value;
+                              setListBMI(updatedList);
+                            }}
+                            value={item.alertSeverity}
+                          >
+                            {_renderListSeverity()}
+                          </select></td>
+                          <td></td>
+                          <td></td>
+                        </tr>}
+                      </>
+                    ))}
+                    <button type="button" className="button button--primary button--small" onClick={() => {
+                      setListBMI([...listBMI, {
+                        alertName: "",
+                        alertSeverity: "",
+                        rule: [
+                          {
+                            ruleName: "",
+                            threshold: "",
+                          }
+                        ]
+                      }])
+                    }}>
+                      <i className="bi bi-plus-circle text-white me-2" style={{ background: "transparent" }}></i>
+                      <span className="text-white" style={{ background: "transparent" }}>Add new alert</span>
+                    </button>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div className="accordion-item">
+            <h2 className="accordion-header" id="headingThree">
+              <button className="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                Temperature
+              </button>
+            </h2>
+            <div id="collapseFive" className="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+              <div className="accordion-body">
+                <table className="table rounded">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Alert Name</th>
+                      <th>Alert Severity</th>
+                      <th>Rules</th>
+                      <th>Threshold</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {listTemperature.map((item: any, idx: number) => (
+                      <>
+                        {item.rule && item.rule.length > 0 ? <>
+                          {item.rule.map((itemRule: any, idxRule: number) => {
+                            return (
+                              <tr>
+                                {idxRule <= 0 && (
+                                  <>
+                                    <td rowSpan={item.rule ? item.rule.length : 1}>{idx + 1}</td>
+                                    <td rowSpan={item.rule ? item.rule.length : 1}>
+                                      <input
+                                        type="text"
+                                        className={`form-control`}
+                                        value={item.alertName}
+                                        onChange={(e: any) => {
+                                          const updatedList = [...listTemperature];
+                                          updatedList[idx].alertName = e.target.value;
+                                          setListTemperature(updatedList);
+                                        }}
+                                      />
+                                    </td>
+                                    <td rowSpan={item.rule ? item.rule.length : 1}>
+                                      <select
+                                        className="form-select"
+                                        onChange={(e: any) => {
+                                          const updatedList = [...listTemperature];
+                                          updatedList[idx].alertSeverity = e.target.value;
+                                          setListTemperature(updatedList);
+                                        }}
+                                        value={item.alertSeverity}
+                                      >
+                                        {_renderListSeverity()}
+                                      </select>
+                                    </td>
+                                  </>
+                                )}
+
+                                <td> <select
+                                  className="form-select"
+                                  onChange={(e: any) => {
+                                    const updatedList = [...listTemperature];
+                                    updatedList[idxRule].ruleName = e.target.value;
+                                    setListTemperature(updatedList);
+                                  }}
+                                  value={itemRule.ruleName}
+                                >
+                                  {_renderListRuleTemperature()}
+                                </select></td>
+                                <td>
+                                  <div className="d-flex">
+                                    <input
+                                      type="text"
+                                      className={`form-control`}
+                                      value={itemRule.threshold}
+                                      onChange={(e: any) => {
+                                        const updatedList = [...listTemperature];
+                                        updatedList[idxRule].threshold = e.target.value;
+                                        setListTemperature(updatedList);
+                                      }}
+                                    />
+                                    <span className="my-auto">&deg;C</span>
+                                  </div>
+                                </td>
+                                <td>
+                                  <span onClick={() => {
+                                    const updatedList = [...listTemperature];
+                                    updatedList[idx].rule.splice(idxRule, 1);
+                                    setListTemperature(updatedList);
+                                  }}><ICON_TRASH /></span>
+                                </td>
+                              </tr>
+                            )
+                          })}
+                          <tr>
+                            <td></td>
+                            <td></td>
+                            <td>
+                              <button type="button" className="button button--primary button--smaller" onClick={() => {
+                                const updatedList = [...listTemperature];
+                                updatedList[idx].rule.push({
+                                  ruleName: "",
+                                  threshold: "",
+                                });
+                                setListTemperature(updatedList);
+                              }}>
+                                <i className="bi bi-plus-circle me-2"></i>
+                                Add new rule
+                              </button>
+                            </td>
+                            <td></td>
+                            <td className="d-flex">
+                              <button type="button" className="button button--primary button--smaller me-1">
+                                Apply for all patient
+                              </button>
+                              <button type="button" className="button button--deny button--smaller" onClick={() => {
+                                const updatedList = [...listTemperature];
+                                updatedList.splice(idx, 1);
+                                setListTemperature(updatedList);
+                              }}>
+                                Delete Alert
+                              </button>
+                            </td>
+                          </tr>
+                        </> : <tr>
+                          <td>{idx + 1}</td>
+                          <td> <input
+                            type="text"
+                            className={`form-control`}
+                            value={item.alertName}
+                            onChange={(e: any) => {
+                              const updatedList = [...listTemperature];
+                              updatedList[idx].alertName = e.target.value;
+                              setListTemperature(updatedList);
+                            }}
+                          /></td>
+                          <td> <select
+                            className="form-select"
+                            onChange={(e: any) => {
+                              const updatedList = [...listTemperature];
+                              updatedList[idx].alertSeverity = e.target.value;
+                              setListTemperature(updatedList);
+                            }}
+                            value={item.alertSeverity}
+                          >
+                            {_renderListSeverity()}
+                          </select></td>
+                          <td></td>
+                          <td></td>
+                        </tr>}
+                      </>
+                    ))}
+                    <button type="button" className="button button--primary button--small" onClick={() => {
+                      setListTemperature([...listTemperature, {
+                        alertName: "",
+                        alertSeverity: "",
+                        rule: [
+                          {
+                            ruleName: "",
+                            threshold: "",
+                          }
+                        ]
+                      }])
+                    }}>
+                      <i className="bi bi-plus-circle text-white me-2" style={{ background: "transparent" }}></i>
+                      <span className="text-white" style={{ background: "transparent" }}>Add new alert</span>
+                    </button>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </Layout>
   );
 };

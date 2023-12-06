@@ -82,11 +82,11 @@ const InfoDoctor = () => {
               <th scope="row" style={{ width: "15%" }}>
                 Starting date
               </th>
-              <td>{moment(doctor?.startWork).format(FORMAT_DATE)}</td>
+              <td>{doctor?.startWork ? moment(doctor?.startWork).format(FORMAT_DATE) : ""}</td>
             </tr>
             <tr>
               <th scope="row">End date</th>
-              <td>{moment(doctor?.endWork).format(FORMAT_DATE)}</td>
+              <td>{doctor?.endWork ? moment(doctor?.endWork).format(FORMAT_DATE) : ""}</td>
             </tr>
             <tr>
               <th scope="row">Room</th>

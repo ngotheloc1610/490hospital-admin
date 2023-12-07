@@ -7,20 +7,23 @@ import {
     Day,
     Week,
     Month,
-    PopupOpenEventArgs,
 } from '@syncfusion/ej2-react-schedule';
 import axios from "axios";
 import { useParams } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 import { SCHEDULE_ALL, SCHEDULE_CANCEL, SCHEDULE_CREATE } from "../../../constants/api.constant";
 import { defineConfigPost } from "../../../Common/utils";
 import { success } from "../../../Common/notify";
 import { useAppSelector } from "../../../redux/hooks";
+import moment from "moment";
+import { FORMAT_DATE } from "../../../constants/general.constant";
 
 const ScheduleDoctor = () => {
     const url_api = process.env.REACT_APP_API_URL;
 
     const param = useParams();
+    const navigate = useNavigate();
     const { practitioner } = useAppSelector(state => state.practitionerSlice);
 
     const [schedules, setSchedules] = useState<any>([]);
@@ -37,7 +40,26 @@ const ScheduleDoctor = () => {
         endTime: { name: 'EndTime', title: 'End Time' }
     }
 
-    const eventSettings = { dataSource: dataSchedule, fields: fieldsData }
+    const eventTemplate = (props: {[key: string]: any}) => {
+        return (
+            <div>
+                <div>{props.Subject}</div>
+                <div>
+                    <span className="fw-bold">Time: </span>
+                    <span>{moment(props.StartTime).format(FORMAT_DATE)}</span>
+                    <span> - </span>
+                    <span>{moment(props.EndTime).format(FORMAT_DATE)}</span>
+                </div>
+                <div>
+                    <span className="fw-bold">Location: </span>
+                    <span>{props.Location}</span>
+                </div>
+                <p className="text-reset" onClick={() => navigate("/dashboard/patient")}>Link to profile patient...</p>
+            </div>
+        )
+    }
+
+    const eventSettings = { dataSource: dataSchedule, fields: fieldsData, template: eventTemplate }
     const timeScale = { enable: true, interval: 60, slotCount: 1 };
 
     useEffect(() => {
@@ -61,8 +83,6 @@ const ScheduleDoctor = () => {
             })
         })
     }, [schedules])
-
-
 
     const getAllScheduler = () => {
         const id = param.doctorId;
@@ -101,7 +121,6 @@ const ScheduleDoctor = () => {
             .post(url, params, defineConfigPost())
             .then((resp: any) => {
                 if (resp) {
-                    console.log("resp:", resp)
                     setTriggerScheduler(!triggerScheduler);
                     success("Create scheduler successfully!");
                 }
@@ -128,7 +147,6 @@ const ScheduleDoctor = () => {
     }
 
     const onActionBegin = (args: any) => {
-        console.log("args:", args.requestType)
         if (args.requestType === 'eventCreate') {
             createScheduler(args.data[0])
         } else if (args.requestType === 'eventRemove') {
@@ -136,30 +154,13 @@ const ScheduleDoctor = () => {
         }
     }
 
-    const onPopupOpen = (args: PopupOpenEventArgs) => {
-        // if (args.type === 'Editor') {
-        //     if (!args.data || !args.data.Id) {
-        //         args.data = {
-        //             Id: "",
-        //             Subject: 'New Event',
-        //             StartTime: new Date(),
-        //             EndTime: new Date(),
-        //             IsAllDay: false,
-        //         };
-        //     }
-        // }
-    };
-
-
-
     return (
         <section className="schedule">
             <ScheduleComponent width='100%' height='100%' selectedDate={new Date()}
-                popupOpen={onPopupOpen}
                 actionBegin={onActionBegin}
                 eventSettings={eventSettings}
                 timeScale={timeScale}
-                className={dataSchedule.some((event: any) => event.Status === "busy-unavailable") ? 'custom-style' : ''}
+                
             >
                 <Inject services={[Day, Week, Month]} />
                 <ViewsDirective>

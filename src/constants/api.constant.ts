@@ -45,7 +45,7 @@ export const API_ARRIVED_APPOINTMENT = "/appointment/arrivedAppoint/";
 export const API_PRACTITIONER_CANCEL_APPOINTMENT = "/appointment/practitionerCancelAppoint/";
 export const API_DETAIL_APPOINTMENT = "/appointment/detail/";
 export const API_CHANGE_APPOINTMENT_PATIENT = "/appointment/ChangeAppoint/patient/";
-export const API_CHANGE_APPOINTMENT_DOCTOR = "/appointment/ChangeAppoint/listDoctor/";
+export const API_CHANGE_APPOINTMENT_DOCTOR = "/appointment/ChangeAppoint/listDoctor";
 export const API_GET_SPECIALTY_APPOINTMENT = "/appointment/specialty";
 export const API_GET_DOCTOR_APPOINTMENT = "/appointment/doctor";
 export const API_SCHEDULE_GET_APPOINTMENT = "/appointment/schedule";
@@ -53,9 +53,6 @@ export const API_CREATE_APPOINTMENT = "/appointment/practitioner/create";
 export const API_GET_PATIENT_APPOINTMENT = "/appointment/patient";
 
 export const SCHEDULE_ALL = "/schedule/schedule-by-doctorId/"
-export const SCHEDULE_DATE = "/schedule/schedule-by-date/"
-export const SCHEDULE_WEEK = "/schedule/schedule-by-week/"
-export const SCHEDULE_MONTH = "/schedule/schedule-by-month/"
 export const SCHEDULE_CREATE = "/schedule/create"
 export const SCHEDULE_CANCEL = "/schedule/cancel-Schedule/"
 
@@ -91,6 +88,9 @@ export const API_DIAGNOSTIC_CREATE_ENCOUNTER = "/diagnostic/create_encounter/"
 export const API_DIAGNOSTIC_CREATE_DIAGNOSTIC = "/diagnostic/createDisgnostic"
 export const API_DIAGNOSTIC_CONDITION_BY_PATIENT = "/diagnostic/getAllCondition/"
 export const API_DIAGNOSTIC_BMI = "/diagnostic/BMI"
+export const API_DIAGNOSTIC_CONDITION = "/diagnostic/conditionCode"
+export const API_DIAGNOSTIC_BODY_SITE = "/diagnostic/BodySite"
+export const API_DIAGNOSTIC_CATEGORY = "/diagnostic/category"
 
 export const API_ALERT_BLOOD_PRESSURE = "/alert/createAlertSettting/BloodPressure"
 export const API_ALERT_BLOOD_GLUCOSE = "/alert/createAlertSettting/BloodGlucose"

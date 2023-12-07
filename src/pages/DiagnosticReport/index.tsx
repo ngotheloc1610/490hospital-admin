@@ -1,12 +1,13 @@
-import { memo, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Layout from "../../components/Layout";
 import { ICON_PENCIL, ICON_TRASH, USER } from "../../assets";
 import { Link, useParams } from "react-router-dom";
 import { FORMAT_DATE, TOTAL_STEP } from "../../constants/general.constant";
-import { defineConfigPost } from "../../Common/utils";
+import { defineConfigGet, defineConfigPost } from "../../Common/utils";
 import axios from "axios";
-import { API_DIAGNOSTIC_BOOK_DETAIL, API_DIAGNOSTIC_CONDITIONS, API_DIAGNOSTIC_CONDITION_BY_PATIENT, API_DIAGNOSTIC_OBSERVATION, API_DIAGNOSTIC_PATIENT_PROFILE } from "../../constants/api.constant";
+import { API_DIAGNOSTIC_BMI, API_DIAGNOSTIC_BODY_SITE, API_DIAGNOSTIC_BOOK_DETAIL, API_DIAGNOSTIC_CATEGORY, API_DIAGNOSTIC_CONDITION, API_DIAGNOSTIC_CONDITION_BY_PATIENT, API_DIAGNOSTIC_OBSERVATION, API_DIAGNOSTIC_PATIENT_PROFILE } from "../../constants/api.constant";
 import moment from "moment";
+import { ALERT_STATUS, BLOOD_GLUCOSE, BLOOD_PRESSURE, BMI, HEART_RATE, TEMPERATURE } from "../../constants";
 
 const DiagnosticReport = () => {
 
@@ -18,14 +19,8 @@ const DiagnosticReport = () => {
 
   const [isPassStep1, setIsPassStep1] = useState<boolean>(false);
 
-  const [listBloodPressure, setListBloodPressure] = useState<any>([]);
-  const [listBloodGlucose, setListBloodGlucose] = useState<any>([]);
-  const [listTemperature, setListTemperature] = useState<any>([]);
-  const [listBMI, setListBMI] = useState<any>([]);
-  const [listHeartRate, setListHeartRate] = useState<any>([]);
   const [listCondition, setListCondition] = useState<any>([]);
   const [listBodySite, setListBodySite] = useState<any>([]);
-  const [listSeverity, setListSeverity] = useState<any>([]);
   const [listDiagnosis, setListDiagnosis] = useState<any>([]);
   const [listCategory, setListCategory] = useState<any>([]);
 
@@ -39,6 +34,10 @@ const DiagnosticReport = () => {
   const [finalDiagnosis, setFinalDiagnosis] = useState<string>("");
   const [category, setCategory] = useState<string>("");
   const [noteDiagnosis, setNoteDiagnosis] = useState<string>("");
+
+  const [height, setHeight] = useState<number>(0);
+  const [weight, setWeight] = useState<number>(0);
+  const [bmiPatient, setBMIPatient] = useState<number>(0);
 
   const [listCurrentCondition, setListCurrentCondition] = useState<any>([{
     condition: "",
@@ -70,11 +69,40 @@ const DiagnosticReport = () => {
   const [listPreviousEncounter, setListPreviousEncounter] = useState<any>([]);
 
   useEffect(() => {
-    getObservations("651b8db3d10aa661ad1b70e9")
+    // getObservations("651b8db3d10aa661ad1b70e9")
     getProfilePatient("651b8db3d10aa661ad1b70e9")
     getBookingDetail("651b8db3d10aa661ad1b70e9")
     getPreviousEncounter("651b8db3d10aa661ad1b70e9")
+    getCondition()
+    getBodySite()
+    getCategory()
   }, [])
+
+  useEffect(() => {
+    if(height !== 0 && weight !== 0 ){
+      calcBMI()
+    }
+  }, [height, weight])
+  
+  const calcBMI = () => {
+    const url = `${url_api}${API_DIAGNOSTIC_BMI}`;
+
+    const params = {
+      weight: weight,
+      height: height
+    }
+
+    axios
+      .get(url, defineConfigGet(params))
+      .then((resp: any) => {
+        if (resp) {
+          setBMIPatient(resp.data);
+        }
+      })
+      .catch((err: any) => {
+        console.log("error calc bmi for patient:", err);
+      });
+  }
 
   const getObservations = (encounterId: string) => {
     const url = `${url_api}${API_DIAGNOSTIC_OBSERVATION}${encounterId}`;
@@ -88,6 +116,52 @@ const DiagnosticReport = () => {
       })
       .catch((err: any) => {
         console.log("error get encounter by appointment:", err);
+      });
+  }
+
+  const getCondition = () => {
+    const url = `${url_api}${API_DIAGNOSTIC_CONDITION}`;
+
+    axios
+      .get(url, defineConfigPost())
+      .then((resp: any) => {
+        if (resp) {
+          setListCondition(resp.data);
+          setListDiagnosis(resp.data);
+        }
+      })
+      .catch((err: any) => {
+        console.log("error get condition:", err);
+      });
+  }
+
+  const getBodySite = () => {
+    const url = `${url_api}${API_DIAGNOSTIC_BODY_SITE}`;
+
+    axios
+      .get(url, defineConfigPost())
+      .then((resp: any) => {
+        if (resp) {
+          setListBodySite(resp.data);
+        }
+      })
+      .catch((err: any) => {
+        console.log("error get body site:", err);
+      });
+  }
+
+  const getCategory = () => {
+    const url = `${url_api}${API_DIAGNOSTIC_CATEGORY}`;
+
+    axios
+      .get(url, defineConfigPost())
+      .then((resp: any) => {
+        if (resp) {
+          setListCategory(resp.data);
+        }
+      })
+      .catch((err: any) => {
+        console.log("error get category:", err);
       });
   }
 
@@ -140,15 +214,13 @@ const DiagnosticReport = () => {
     return (
       <>
         <option hidden>-- Additional Conditions (if applicable)</option>
-        {listBloodGlucose ? (
-          listBloodGlucose.map((item: any) => (
-            <option value={item.name} key={item.code}>
-              {item.name}
+        {
+          BLOOD_GLUCOSE.map((item: any) => (
+            <option value={item.value} key={item.value}>
+              {item.title}
             </option>
           ))
-        ) : (
-          <option disabled>No option</option>
-        )}
+        }
       </>
     );
   };
@@ -157,15 +229,13 @@ const DiagnosticReport = () => {
     return (
       <>
         <option hidden>-- Additional Conditions (if applicable)</option>
-        {listBloodPressure ? (
-          listBloodPressure.map((item: any) => (
-            <option value={item.name} key={item.code}>
-              {item.name}
+        {
+          BLOOD_PRESSURE.map((item: any) => (
+            <option value={item.value} key={item.value}>
+              {item.title}
             </option>
           ))
-        ) : (
-          <option disabled>No option</option>
-        )}
+        }
       </>
     );
   };
@@ -174,15 +244,13 @@ const DiagnosticReport = () => {
     return (
       <>
         <option hidden>-- Additional Conditions (if applicable)</option>
-        {listTemperature ? (
-          listTemperature.map((item: any) => (
-            <option value={item.name} key={item.code}>
-              {item.name}
+        {
+          TEMPERATURE.map((item: any) => (
+            <option value={item.value} key={item.value}>
+              {item.title}
             </option>
           ))
-        ) : (
-          <option disabled>No option</option>
-        )}
+        }
       </>
     );
   };
@@ -191,15 +259,13 @@ const DiagnosticReport = () => {
     return (
       <>
         <option hidden>-- Additional Conditions (if applicable)</option>
-        {listBMI ? (
-          listBMI.map((item: any) => (
-            <option value={item.name} key={item.code}>
-              {item.name}
+        {
+          BMI.map((item: any) => (
+            <option value={item.value} key={item.value}>
+              {item.title}
             </option>
           ))
-        ) : (
-          <option disabled>No option</option>
-        )}
+        }
       </>
     );
   };
@@ -208,15 +274,13 @@ const DiagnosticReport = () => {
     return (
       <>
         <option hidden>-- Additional Conditions (if applicable)</option>
-        {listHeartRate ? (
-          listHeartRate.map((item: any) => (
-            <option value={item.name} key={item.code}>
-              {item.name}
+        {
+          HEART_RATE.map((item: any) => (
+            <option value={item.value} key={item.value}>
+              {item.title}
             </option>
           ))
-        ) : (
-          <option disabled>No option</option>
-        )}
+        }
       </>
     );
   };
@@ -224,11 +288,11 @@ const DiagnosticReport = () => {
   const _renderListCondition = () => {
     return (
       <>
-        <option hidden>Shortness of breath</option>
+        <option hidden>Select a condition</option>
         {listCondition ? (
           listCondition.map((item: any) => (
-            <option value={item.name} key={item.code}>
-              {item.name}
+            <option value={item.code} key={item.code}>
+              {item.display}
             </option>
           ))
         ) : (
@@ -242,15 +306,13 @@ const DiagnosticReport = () => {
     return (
       <>
         <option hidden>Select a severity</option>
-        {listSeverity ? (
-          listSeverity.map((item: any) => (
-            <option value={item.name} key={item.code}>
-              {item.name}
+        {
+          ALERT_STATUS.map((item: any) => (
+            <option value={item.value} key={item.value}>
+              {item.title}
             </option>
           ))
-        ) : (
-          <option disabled>No option</option>
-        )}
+        }
       </>
     );
   };
@@ -261,8 +323,8 @@ const DiagnosticReport = () => {
         <option hidden>Select a body site</option>
         {listBodySite ? (
           listBodySite.map((item: any) => (
-            <option value={item.name} key={item.code}>
-              {item.name}
+            <option value={item.code} key={item.code}>
+              {item.display}
             </option>
           ))
         ) : (
@@ -278,8 +340,8 @@ const DiagnosticReport = () => {
         <option hidden>Select a final diagnosis</option>
         {listDiagnosis ? (
           listDiagnosis.map((item: any) => (
-            <option value={item.name} key={item.code}>
-              {item.name}
+            <option value={item.code} key={item.code}>
+              {item.display}
             </option>
           ))
         ) : (
@@ -295,8 +357,8 @@ const DiagnosticReport = () => {
         <option hidden>Select a category</option>
         {listCategory ? (
           listCategory.map((item: any) => (
-            <option value={item.name} key={item.code}>
-              {item.name}
+            <option value={item.code} key={item.code}>
+              {item.display}
             </option>
           ))
         ) : (
@@ -356,15 +418,15 @@ const DiagnosticReport = () => {
       <div>
         <div className="row g-3 box mt-1">
           <div className="col-6">
-            <div className="d-flex">
+            <div className="d-flex mb-2">
               <label htmlFor="bloodPressure" className="my-auto fw-bold">
                 Blood Pressure:
               </label>
               <div className="ms-2">
-                <input type="text" className="input-small" />
+                <input type="number" className="input-small" />
                 <span> / </span>
-                <input type="text" className="input-small" />
-                <span>mmHg</span>
+                <input type="number" className="input-small" />
+                <span className="ms-1">mmHg</span>
               </div>
             </div>
             <select
@@ -377,14 +439,13 @@ const DiagnosticReport = () => {
             </select>
           </div>
           <div className="col-6">
-            <div className="d-flex">
+            <div className="d-flex mb-2">
               <label htmlFor="temperature" className="my-auto fw-bold">
                 Temperature:
               </label>
               <div className="ms-2">
-                <input type="text" className="input-small" />
-                <span>&deg;C</span>
-
+                <input type="number" className="input-small" />
+                <span className="ms-1">&deg;C</span>
               </div>
             </div>
             <select
@@ -397,13 +458,13 @@ const DiagnosticReport = () => {
             </select>
           </div>
           <div className="col-6">
-            <div className="d-flex">
+            <div className="d-flex mb-2">
               <label htmlFor="bloodGlucose" className="my-auto fw-bold">
                 Blood Glucose:
               </label>
               <div className="ms-2">
-                <input type="text" className="input-small" />
-                <span>mmol/L</span>
+                <input type="number" className="input-small" />
+                <span className="ms-1">mmol/L</span>
               </div>
             </div>
             <select
@@ -416,20 +477,28 @@ const DiagnosticReport = () => {
             </select>
           </div>
           <div className="col-6">
-            <div className="">
+            <div className="d-flex mb-2">
               <label htmlFor="bmi" className="my-auto fw-bold">
                 Body Mass Index (BMI):
               </label>
-              <div className="text-end d-inline ms-3">
-                <input type="text" disabled className="input-small" />
+              <div className="d-flex justify-content-between ms-3">
+                <div className="me-3">
+                <input type="text" value={bmiPatient} disabled className="input-small" />
+                </div>
 
-                <span>Weight</span>
-                <input type="text" className="input-small" />
-                <span>kg</span>
+              <div className="d-flex">
+              <div className="me-3">
+               <span className="me-2">Weight:</span>
+                <input type="number" value={weight} onChange={(e:any) => setWeight(e.target.value)} className="input-small" />
+                <span className="ms-1">kg</span>
+               </div>
 
-                <span>Height</span>
-                <input type="text" className="input-small" />
-                <span>cm</span>
+               <div>
+               <span className="me-2">Height:</span>
+                <input type="number"  value={height} onChange={(e:any) => setHeight(e.target.value)} className="input-small" />
+                <span className="ms-1">cm</span>
+               </div>
+              </div>
               </div>
             </div>
             <select
@@ -442,13 +511,13 @@ const DiagnosticReport = () => {
             </select>
           </div>
           <div className="col-6">
-            <div className="d-flex">
+            <div className="d-flex mb-2">
               <label htmlFor="heartRate" className="my-auto fw-bold">
                 Heart Rate:
               </label>
               <div className="ms-2">
-                <input type="text" className="input-small" />
-                <span>bpm</span>
+                <input type="number" className="input-small" />
+                <span className="ms-1">bpm</span>
               </div>
             </div>
             <select
@@ -463,7 +532,7 @@ const DiagnosticReport = () => {
           <div className="col-6">
             <label htmlFor="note" className="d-block fw-bold ">Note:</label>
             <textarea
-              className="p-3 rounded w-100"
+              className="p-3 rounded w-100 mt-2"
               cols={5}
               rows={5}
               placeholder="Add notes here"
@@ -495,7 +564,7 @@ const DiagnosticReport = () => {
               </tr>
             </thead>
             <tbody>
-              {listPreviousEncounter && listPreviousEncounter.map((item: any, idx: number) => {
+              {listPreviousEncounter && listPreviousEncounter.length > 0 && listPreviousEncounter.map((item: any, idx: number) => {
                 return (
                   <tr>
                     <td>{item?.conditionName}</td>
@@ -626,18 +695,18 @@ const DiagnosticReport = () => {
                   </div>
                 </div>
                 <div className="col-12">
-                  <button className="button button--small button--primary" onClick={() => {
+                  <button className="button button--smaller button--primary d-block ms-auto" onClick={() => {
                     const updatedList = [...listCurrentCondition];
                     updatedList.splice(idx, 1);
                     setListCurrentCondition(updatedList);
-                  }}><ICON_TRASH /> Remove condition</button>
+                  }}><span className="text-white"><ICON_TRASH /></span></button>
                 </div>
               </div>
             )
           })}
 
           <div className="p-3">
-            <button className="button button--outline button--small" onClick={() => setListCurrentCondition([...listCurrentCondition, {
+            <button className="button button--outline button--smaller" onClick={() => setListCurrentCondition([...listCurrentCondition, {
               condition: "",
               bodySite: "",
               severity: "",
@@ -747,18 +816,18 @@ const DiagnosticReport = () => {
                 </div>
 
                 <div className="col-12">
-                  <button className="button button--small button--primary" onClick={() => {
+                <button className="button button--smaller button--primary d-block ms-auto" onClick={() => {
                     const updatedList = [...listExtraCondition];
                     updatedList.splice(idx, 1);
                     setListExtraCondition(updatedList);
-                  }}><ICON_TRASH /> Remove condition</button>
+                  }}><span className="text-white"><ICON_TRASH /></span></button>
                 </div>
               </div>
             )
           })}
 
           <div className="p-3">
-            <button className="button button--outline button--small" onClick={() => setListExtraCondition([...listExtraCondition, {
+            <button className="button button--outline button--smaller" onClick={() => setListExtraCondition([...listExtraCondition, {
               condition: "",
               bodySite: "",
               severity: "",
@@ -825,7 +894,7 @@ const DiagnosticReport = () => {
 
   return (
     <Layout>
-      <section className="diagnostic-report">
+      <section className="diagnostic-report mt-3">
         <div className="container">
           <div className="d-flex justify-content-between mb-3">
             <h3 className="fw-bold">Appointment Details</h3>
@@ -894,4 +963,4 @@ const DiagnosticReport = () => {
   );
 };
 
-export default memo(DiagnosticReport);
+export default DiagnosticReport;

@@ -115,19 +115,19 @@ const PatientMonitor = () => {
           </tr>
         </thead>
         <tbody>
-          {listData && listData.map((item: any, idx: number) => {
+          {listData && listData.length > 0 && listData.map((item: any, idx: number) => {
             return (
               <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
-                <td>{item?.patientName}</td>
-                <td>{item.dob ? moment(item.dob).format(FORMAT_DATE) : ""}</td>
-                <td>
+                <td onClick={() => navigate(`/monitor/${item.idEncounter}`)}>{item?.patientName}</td>
+                <td onClick={() => navigate(`/monitor/${item.idEncounter}`)}>{item.dob ? moment(item.dob).format(FORMAT_DATE) : ""}</td>
+                <td onClick={() => navigate(`/monitor/${item.idEncounter}`)}>
                   <p>{item?.email}</p>
                   <p>{item?.phone}</p>
                 </td>
-                <td>{item?.diagnosis}</td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td onClick={() => navigate(`/monitor/${item.idEncounter}`)}>{item?.diagnosis}</td>
+                <td onClick={() => navigate(`/monitor/${item.idEncounter}`)}></td>
+                <td onClick={() => navigate(`/monitor/${item.idEncounter}`)}></td>
+                <td onClick={() => navigate(`/monitor/${item.idEncounter}`)}></td>
                 <td>
                   <span className="ms-1">
                     <ICON_PENCIL />

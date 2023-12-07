@@ -77,7 +77,7 @@ const Sidebar = () => {
                 <span>Doctor</span>
               </a>
             </li>
-            <li className={`${getClass(RouterUrl.PATIENT)}`}>
+            <li className={`${location.pathname === "/patient" ? "active" : ""}`}>
               <a
                 onClick={() => goToLink(RouterUrl.PATIENT)}
                 data-content-id="patient"

@@ -193,7 +193,7 @@ const Information = () => {
                                     <div className="h-100 d-flex flex-column">
                                         <div className="h-100">
                                             <img
-                                                src={practitionerInfo?.photo?.length > 0 ? `data:${practitionerInfo?.photo[0]?.contentType};base64,${practitionerInfo?.photo[0]?.data}` : USER}
+                                                src={practitionerInfo?.photo?.length > 0 ? practitionerInfo?.photo[0]?.url : USER}
                                                 alt="img practitioner"
                                                 className={`d-block m-auto ${practitionerInfo ? "" : "bg-image"}`}
                                                 style={{ objectFit: "cover" }}

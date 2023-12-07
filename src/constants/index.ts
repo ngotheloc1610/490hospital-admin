@@ -365,3 +365,138 @@ export const RULE_TEMPERATURE = [
     value: "Temperature Less Than",
   },
 ];
+
+export const BLOOD_PRESSURE = [
+  {
+    title:"Bleeding from nose",
+    value:"Bleeding from nose"
+  },
+  {
+    title:"Shortness of breath",
+    value:"Shortness of breath"
+  },
+  {
+    title:"Dizziness",
+    value:"Dizziness"
+  },
+  {
+    title:"Fainting",
+    value:"Fainting"
+  },
+  {
+    title:"Fatigue",
+    value:"Fatigue"
+  },
+  {
+    title:"Nausea",
+    value:"Nausea"
+  },
+]
+
+export const BLOOD_GLUCOSE = [
+  {
+    title:"Increased thirst",
+    value:"Increased thirst"
+  },
+  {
+    title:"Abdominal pain",
+    value:"Abdominal pain"
+  },
+  {
+    title:"Loss of consciousness",
+    value:"Loss of consciousness"
+  },
+  {
+    title:"Headache",
+    value:"Headache"
+  },
+  {
+    title:"Shaking",
+    value:"Shaking"
+  },
+  {
+    title:"Numbness of tongue",
+    value:"Numbness of tongue"
+  },
+]
+
+export const HEART_RATE = [
+  {
+    title:"Palpitations",
+    value:"Palpitations"
+  },
+  {
+    title:"Lightheadedness",
+    value:"Lightheadedness"
+  },
+  {
+    title:"Chest pain",
+    value:"Chest pain"
+  },
+  {
+    title:"Confusion",
+    value:"Confusion"
+  },
+  {
+    title:"Difficulty in initiating movement",
+    value:"Difficulty in initiating movement"
+  },
+  {
+    title:"Shortness of breath",
+    value:"Shortness of breath"
+  },
+]
+
+export const BMI = [
+  {
+    title:"Snoring",
+    value:"Snoring"
+  },
+  {
+    title:"Back pain",
+    value:"Back pain"
+  },
+  {
+    title:"Joint pain",
+    value:"Joint pain"
+  },
+  {
+    title:"Loss of hair",
+    value:"Loss of hair"
+  },
+  {
+    title:"Tired all the time",
+    value:"Tired all the time"
+  },
+]
+
+export const TEMPERATURE = [
+  {
+    title:"Sweating",
+    value:"Sweating"
+  },
+  {
+    title:"Chill",
+    value:"Chill"
+  },
+  {
+    title:"Muscle pain",
+    value:"Muscle pain"
+  },
+  {
+    title:"Loss of appetite",
+    value:"Loss of appetite"
+  },
+  {
+    title:"Shallow breathing",
+    value:"Shallow breathing"
+  },
+  {
+    title:"Clumsiness",
+    value:"Clumsiness"
+  },
+  {
+    title:"Drowsy",
+    value:"Drowsy"
+  },
+]

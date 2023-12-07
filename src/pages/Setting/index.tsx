@@ -3,7 +3,7 @@ import { useState } from "react";
 import { ICON_TRASH } from "../../assets";
 import { defineConfigPost } from "../../Common/utils";
 import axios from "axios";
-import { API_ALERT_BLOOD_PRESSURE } from "../../constants/api.constant";
+import { API_ALERT_BLOOD_GLUCOSE, API_ALERT_BLOOD_PRESSURE, API_ALERT_BMI, API_ALERT_HEART_RATE, API_ALERT_TEMPERATURE } from "../../constants/api.constant";
 import { ALERT_STATUS, RULE_BLOOD_GLUCOSE, RULE_BLOOD_PRESSURE, RULE_BMI, RULE_HEART_RATE, RULE_TEMPERATURE } from "../../constants";
 
 const Setting = () => {
@@ -93,10 +93,149 @@ const Setting = () => {
         console.log("error create alert blood pressure", err);
       });
   }
+  const createAlertBloodGlucose = (bloodItem: any) => {
+    const url = `${url_api}${API_ALERT_BLOOD_GLUCOSE}`;
+
+    let ruleList: any = [];
+    bloodItem.rule.forEach((itemRule: any) => {
+      ruleList.push({
+        type: "",
+        rule: itemRule.ruleName,
+        threshold: !isNaN(itemRule.threshold) ? parseFloat(itemRule.threshold) : 0.0
+      })
+    })
+
+    const params = {
+      clinicId: "",
+      category: "",
+      alertName: bloodItem.alertName,
+      severity: bloodItem.alertSeverity,
+      ruleList: ruleList
+    };
+
+    axios
+      .post(url, params, defineConfigPost())
+      .then((resp: any) => {
+        if (resp) {
+          console.log("resp:", resp)
+
+        }
+      })
+      .catch((err: any) => {
+        console.log("error create alert blood glucose", err);
+      });
+  }
+  const createAlertHeartRate = (bloodItem: any) => {
+    const url = `${url_api}${API_ALERT_HEART_RATE}`;
+
+    let ruleList: any = [];
+    bloodItem.rule.forEach((itemRule: any) => {
+      ruleList.push({
+        type: "",
+        rule: itemRule.ruleName,
+        threshold: !isNaN(itemRule.threshold) ? parseFloat(itemRule.threshold) : 0.0
+      })
+    })
+
+    const params = {
+      clinicId: "",
+      category: "",
+      alertName: bloodItem.alertName,
+      severity: bloodItem.alertSeverity,
+      ruleList: ruleList
+    };
+
+    axios
+      .post(url, params, defineConfigPost())
+      .then((resp: any) => {
+        if (resp) {
+          console.log("resp:", resp)
+
+        }
+      })
+      .catch((err: any) => {
+        console.log("error create alert heart rate", err);
+      });
+  }
+  const createAlertBMI = (bloodItem: any) => {
+    const url = `${url_api}${API_ALERT_BMI}`;
+
+    let ruleList: any = [];
+    bloodItem.rule.forEach((itemRule: any) => {
+      ruleList.push({
+        type: "",
+        rule: itemRule.ruleName,
+        threshold: !isNaN(itemRule.threshold) ? parseFloat(itemRule.threshold) : 0.0
+      })
+    })
+
+    const params = {
+      clinicId: "",
+      category: "",
+      alertName: bloodItem.alertName,
+      severity: bloodItem.alertSeverity,
+      ruleList: ruleList
+    };
+
+    axios
+      .post(url, params, defineConfigPost())
+      .then((resp: any) => {
+        if (resp) {
+          console.log("resp:", resp)
+
+        }
+      })
+      .catch((err: any) => {
+        console.log("error create alert bmi", err);
+      });
+  }
+  const createAlertTemperature = (bloodItem: any) => {
+    const url = `${url_api}${API_ALERT_TEMPERATURE}`;
+
+    let ruleList: any = [];
+    bloodItem.rule.forEach((itemRule: any) => {
+      ruleList.push({
+        type: "",
+        rule: itemRule.ruleName,
+        threshold: !isNaN(itemRule.threshold) ? parseFloat(itemRule.threshold) : 0.0
+      })
+    })
+
+    const params = {
+      clinicId: "",
+      category: "",
+      alertName: bloodItem.alertName,
+      severity: bloodItem.alertSeverity,
+      ruleList: ruleList
+    };
+
+    axios
+      .post(url, params, defineConfigPost())
+      .then((resp: any) => {
+        if (resp) {
+          console.log("resp:", resp)
+
+        }
+      })
+      .catch((err: any) => {
+        console.log("error create alert temperature", err);
+      });
+  }
 
   const applyBloodPressure = (item: any) => {
-    console.log("item:", item)
     createAlertBloodPressure(item);
+  }
+  const applyBloodGlucose = (item: any) => {
+    createAlertBloodGlucose(item);
+  }
+  const applyHeartRate = (item: any) => {
+    createAlertHeartRate(item);
+  }
+  const applyBMI = (item: any) => {
+    createAlertBMI(item);
+  }
+  const applyTemperature = (item: any) => {
+    createAlertTemperature(item);
   }
 
   const _renderListSeverity = () => {
@@ -173,7 +312,6 @@ const Setting = () => {
       </>
     );
   };
-
 
   return (
     <Layout>
@@ -460,7 +598,7 @@ const Setting = () => {
                             </td>
                             <td></td>
                             <td className="d-flex">
-                              <button type="button" className="button button--primary button--smaller me-1">
+                              <button type="button" className="button button--primary button--smaller me-1" onClick={() => applyBloodGlucose(item)}>
                                 Apply for all patient
                               </button>
                               <button type="button" className="button button--deny button--smaller" onClick={() => {
@@ -630,7 +768,7 @@ const Setting = () => {
                             </td>
                             <td></td>
                             <td className="d-flex">
-                              <button type="button" className="button button--primary button--smaller me-1">
+                              <button type="button" className="button button--primary button--smaller me-1" onClick={() => applyHeartRate(item)}>
                                 Apply for all patient
                               </button>
                               <button type="button" className="button button--deny button--smaller" onClick={() => {
@@ -795,7 +933,7 @@ const Setting = () => {
                             </td>
                             <td></td>
                             <td className="d-flex">
-                              <button type="button" className="button button--primary button--smaller me-1">
+                              <button type="button" className="button button--primary button--smaller me-1" onClick={() => applyBMI(item)}>
                                 Apply for all patient
                               </button>
                               <button type="button" className="button button--deny button--smaller" onClick={() => {
@@ -965,7 +1103,7 @@ const Setting = () => {
                             </td>
                             <td></td>
                             <td className="d-flex">
-                              <button type="button" className="button button--primary button--smaller me-1">
+                              <button type="button" className="button button--primary button--smaller me-1" onClick={() => applyTemperature(item)}>
                                 Apply for all patient
                               </button>
                               <button type="button" className="button button--deny button--smaller" onClick={() => {

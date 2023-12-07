@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ICON_PENCIL, ICON_TRASH, USER } from "../../assets";
 import { Bar } from "react-chartjs-2";
 import {
@@ -10,6 +10,12 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { useParams } from "react-router-dom";
+import { API_DIAGNOSTIC_BOOK_DETAIL, API_DIAGNOSTIC_CONDITION_BY_PATIENT, API_DIAGNOSTIC_ENCOUNTER_HISTORY, API_DIAGNOSTIC_PATIENT_PROFILE } from "../../constants/api.constant";
+import { defineConfigPost } from "../../Common/utils";
+import axios from "axios";
+import moment from "moment";
+import { FORMAT_DATE } from "../../constants/general.constant";
 
 ChartJS.register(
   CategoryScale,
@@ -21,12 +27,29 @@ ChartJS.register(
 );
 
 const PatientMonitorDetail = () => {
+  const url_api = process.env.REACT_APP_API_URL;
+
   const [isHeartRate, setIsHeartRate] = useState<boolean>(true);
   const [isBloodPressure, setIsBloodPressure] = useState<boolean>(false);
   const [isBloodGlucose, setIsBloodGlucose] = useState<boolean>(false);
   const [isTemperature, setIsTemperature] = useState<boolean>(false);
   const [isBMI, setIsBMI] = useState<boolean>(false);
 
+  const [bookingDetail, setBookingDetail] = useState<any>({
+    appointmentDate: "",
+    time: "",
+    typeOfAppointment: "",
+    nameDoctor: "",
+    specialty: "",
+    room: "",
+    appointmentStatus: ""
+  })
+  const [patientDetail, setPatientDetail] = useState<any>(null);
+  const [listPreviousEncounter, setListPreviousEncounter] = useState<any>([]);
+  const [listEncounterHistory, setListEncounterHistory] = useState<any>([]);
+
+  const params = useParams();
+  
   const options = {
     plugins: {
       title: {
@@ -75,6 +98,77 @@ const PatientMonitorDetail = () => {
       // },
     ],
   };
+
+  const getProfilePatient = (encounterId: string) => {
+    const url = `${url_api}${API_DIAGNOSTIC_PATIENT_PROFILE}${encounterId}`;
+
+    axios
+      .get(url, defineConfigPost())
+      .then((resp: any) => {
+        if (resp) {
+          setPatientDetail(resp.data);
+        }
+      })
+      .catch((err: any) => {
+        console.log("error get encounter by appointment:", err);
+      });
+  }
+
+  const getBookingDetail = (encounterId: string) => {
+    const url = `${url_api}${API_DIAGNOSTIC_BOOK_DETAIL}${encounterId}`;
+
+    axios
+      .get(url, defineConfigPost())
+      .then((resp: any) => {
+        if (resp) {
+          setBookingDetail(resp.data);
+        }
+      })
+      .catch((err: any) => {
+        console.log("error get encounter by appointment:", err);
+      });
+  }
+
+  const getPreviousEncounter = (encounterId: string) => {
+    const url = `${url_api}${API_DIAGNOSTIC_CONDITION_BY_PATIENT}${encounterId}`;
+
+    axios
+      .get(url, defineConfigPost())
+      .then((resp: any) => {
+        if (resp) {
+          setListPreviousEncounter(resp.data);
+        }
+      })
+      .catch((err: any) => {
+        console.log("error get encounter by appointment:", err);
+      });
+  }
+
+  const getEncounterHistory = (encounterId: string) => {
+    const url = `${url_api}${API_DIAGNOSTIC_ENCOUNTER_HISTORY}${encounterId}`;
+
+    axios
+      .get(url, defineConfigPost())
+      .then((resp: any) => {
+        if (resp) {
+          setListEncounterHistory(resp.data);
+        }
+      })
+      .catch((err: any) => {
+        console.log("error get encounter history:", err);
+      });
+  }
+
+  useEffect(() => {
+   if(params.monitorId){
+    getProfilePatient(params.monitorId)
+    getBookingDetail(params.monitorId)
+    getPreviousEncounter(params.monitorId)
+    getEncounterHistory(params.monitorId)
+   }
+  }, [params.monitorId])
+  
+
 
   const handleClickHeartRate = () => {
     setIsHeartRate(true);
@@ -219,24 +313,28 @@ const PatientMonitorDetail = () => {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-              <td>@mdo</td>
-              <td>@mdo</td>
-              <td>@mdo</td>
-              <td>@mdo</td>
-              <td>@mdo</td>
-              <td>
-                <span className="ms-1 cursor-pointer">
-                  <ICON_PENCIL />
-                </span>
-                <span className="ms-1 cursor-pointer">
-                  <ICON_TRASH />
-                </span>
-              </td>
-            </tr>
+          {listPreviousEncounter && listPreviousEncounter.length > 0 && listPreviousEncounter.map((item: any, idx: number) => {
+                return (
+                  <tr>
+                    <td>{item?.conditionName}</td>
+                    <td>{item?.bodySite}</td>
+                    <td>{item?.severity}</td>
+                    <td>{item?.clinicalStatus}</td>
+                    <td>{item?.onset}</td>
+                    <td>{item.recordedDate ? moment(item.recordedDate).format(FORMAT_DATE) : ""}</td>
+                    <td>{item?.note}</td>
+                    <td>{item.encounterDate ? moment(item.encounterDate).format(FORMAT_DATE) : ""}</td>
+                    <td>
+                      <span className="ms-1 cursor-pointer">
+                        <ICON_PENCIL />
+                      </span>
+                      <span className="ms-1 cursor-pointer">
+                        <ICON_TRASH />
+                      </span>
+                    </td>
+                  </tr>
+                )
+              })}
           </tbody>
         </table>
       </div>
@@ -259,13 +357,13 @@ const PatientMonitorDetail = () => {
                     <img src={USER} alt="" />
                   </div>
                   <div>
-                    <p><span className="fw-bold">Name: </span></p>
-                    <p><span className="fw-bold">Gender: </span></p>
-                    <p><span className="fw-bold">Date of birth: </span></p>
-                    <p><span className="fw-bold">Address: </span></p>
-                    <p><span className="fw-bold">Citizen identification: </span></p>
-                    <p><span className="fw-bold">Phone number: </span></p>
-                    <p><span className="fw-bold">Email: </span></p>
+                    <p><span className="fw-bold">Name: </span><span>{patientDetail && patientDetail?.nameFirstRep?.text}</span></p>
+                    <p><span className="fw-bold">Gender: </span><span>{patientDetail && patientDetail?.gender}</span></p>
+                    <p><span className="fw-bold">Date of birth: </span><span>{patientDetail && moment(patientDetail?.birthDate).format(FORMAT_DATE)}</span></p>
+                    <p><span className="fw-bold">Address: </span><span>{patientDetail && patientDetail?.addressFirstRep?.text}</span></p>
+                    <p><span className="fw-bold">Citizen identification: </span><span>{patientDetail && patientDetail?.identifierFirstRep?.value}</span></p>
+                    <p><span className="fw-bold">Phone number: </span><span>{patientDetail && patientDetail?.telecom.filter((item: any) => item.system === "phone")?.value}</span></p>
+                    <p><span className="fw-bold">Email: </span><span>{patientDetail && patientDetail?.telecom.filter((item: any) => item.system === "email")?.value}</span></p>
                   </div>
                 </div>
               </div>
@@ -276,13 +374,13 @@ const PatientMonitorDetail = () => {
                   <h5 className="fw-bold">Booking details</h5>
                 </div>
                 <div>
-                  <p><span className="fw-bold">Location: </span></p>
-                  <p><span className="fw-bold">Appointment Date: </span></p>
-                  <p><span className="fw-bold">Appointment Time: </span></p>
-                  <p><span className="fw-bold">Doctor: </span></p>
-                  <p><span className="fw-bold">Specialty: </span></p>
-                  <p><span className="fw-bold">Appointment Type: </span></p>
-                  <p><span className="fw-bold">Appointment Status: </span></p>
+                  <p><span className="fw-bold">Appointment Date: </span><span>{bookingDetail.appointmentDate}</span></p>
+                  <p><span className="fw-bold">Appointment Time: </span><span>{bookingDetail.time}</span></p>
+                  <p><span className="fw-bold">Doctor: </span><span>{bookingDetail.nameDoctor}</span></p>
+                  <p><span className="fw-bold">Specialty: </span><span>{bookingDetail.specialty}</span></p>
+                  <p><span className="fw-bold">Location: </span><span>{bookingDetail.room}</span></p>
+                  <p><span className="fw-bold">Appointment Type: </span><span>{bookingDetail.typeOfAppointment}</span></p>
+                  <p><span className="fw-bold">Appointment Status: </span><span>{bookingDetail.appointmentStatus}</span></p>
                 </div>
               </div>
             </div>

@@ -48,7 +48,7 @@ const InfoDoctor = () => {
             </tr>
             <tr>
               <th scope="row">Date of birth</th>
-              <td>{doctor?.dateOfBirth}</td>
+              <td>{doctor?.dateOfBirth !== "null" ? doctor?.dateOfBirth : ""}</td>
             </tr>
             <tr>
               <th scope="row">Address</th>
@@ -56,7 +56,7 @@ const InfoDoctor = () => {
             </tr>
             <tr>
               <th scope="row">Citizen identification</th>
-              <td>{doctor?.identification}</td>
+              <td>{doctor?.identification!== "null" ? doctor?.identification : ""}</td>
             </tr>
             <tr>
               <th scope="row">Phone number</th>
@@ -184,13 +184,13 @@ const InfoDoctor = () => {
             <div className="col-4">
               <div className="h-100 d-flex flex-column">
                 <div className="h-100">
-                  <img src={doctor?.practitionerTarget?.photo ? `data:${doctor.practitionerTarget.photo[0].contentType};base64,${doctor.practitionerTarget.photo[0].data}` : USER} alt="img doctor" className="h-100 d-block m-auto" />
+                  <img src={doctor?.photo ? doctor?.photo : USER} alt="img doctor" className="h-100 d-block m-auto" />
                 </div>
               </div>
             </div>
             <div className="col-8">
               <div className="mb-3 d-flex justify-content-between">
-                <h3 className="fw-bold text-uppercase">{doctor?.practitioner?.display}</h3>
+                <h3 className="fw-bold text-uppercase">{doctor?.name}</h3>
                 <div>
                   <button className="button button--primary button--small" onClick={() => navigate(`/doctor/overview/detail/${doctor?.id}`)}>Edit</button>
                 </div>

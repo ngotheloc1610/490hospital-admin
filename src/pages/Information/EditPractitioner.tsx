@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import { API_PROFILE_PRACTITIONER, API_UPDATE_PRACTITIONER, API_UPDATE_PROFILE_PRACTITIONER } from "../../constants/api.constant";
+import { API_PROFILE_PRACTITIONER, API_UPDATE_PROFILE_PRACTITIONER } from "../../constants/api.constant";
 import { defineConfigPost } from "../../Common/utils";
 import { error, success } from "../../Common/notify";
 import { GENDER } from "../../constants";

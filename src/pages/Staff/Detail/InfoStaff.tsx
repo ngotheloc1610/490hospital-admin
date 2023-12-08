@@ -34,13 +34,6 @@ const InfoStaff = () => {
   }, [param.staffId, triggerEdit]);
 
   const _renderBasicInfo = () => {
-    const email = staff.practitionerTarget?.telecom?.find(
-      (i: any) => i?.system === "email"
-    )?.value;
-    const phone = staff.practitionerTarget?.telecom?.find(
-      (i: any) => i?.system === "phone"
-    )?.value;
-
     return (
       <div>
         <p className="fw-bold border-top pt-2 text-dark">Basic Information</p>
@@ -48,27 +41,27 @@ const InfoStaff = () => {
           <tbody>
             <tr>
               <th scope="row" style={{ width: "35%" }}>Gender</th>
-              <td>{staff?.practitionerTarget?.gender}</td>
+              <td>{staff?.gender}</td>
             </tr>
             <tr>
               <th scope="row">Date of birth</th>
-              <td>{staff?.practitionerTarget?.birthDate}</td>
+              <td>{staff?.dateOfBirth !== "null" ? staff?.dateOfBirth : "" }</td>
             </tr>
             <tr>
               <th scope="row">Address</th>
-              <td>{staff?.practitionerTarget?.address[0].text}</td>
+              <td>{staff?.address}</td>
             </tr>
             <tr>
               <th scope="row">Citizen identification</th>
-              <td>{staff?.practitionerTarget?.identifierFirstRep?.value}</td>
+              <td>{staff?.identification !== "null" ? staff?.identification : ""}</td>
             </tr>
             <tr>
               <th scope="row">Phone number</th>
-              <td>{phone}</td>
+              <td>{staff?.phoneNumber}</td>
             </tr>
             <tr>
               <th scope="row">Email</th>
-              <td>{email}</td>
+              <td>{staff?.email}</td>
             </tr>
           </tbody>
         </table>
@@ -86,17 +79,15 @@ const InfoStaff = () => {
               <th scope="row" style={{ width: "15%" }}>
                 Starting date
               </th>
-              <td>{staff.period?.start ? moment(staff.period?.start).format(FORMAT_DATE) : ""}</td>
+              <td>{staff?.startWork ? moment(staff.startWork).format(FORMAT_DATE) : ""}</td>
             </tr>
             <tr>
               <th scope="row">End date</th>
-              <td>{staff.period?.end ? moment(staff.period?.end).format(FORMAT_DATE) : ""}</td>
+              <td>{staff?.endWork ? moment(staff.endWork).format(FORMAT_DATE) : ""}</td>
             </tr>
             <tr>
               <th scope="row">Specialty</th>
-              <td>{staff.specialty && staff.specialty.map((spec: any) => {
-                return <span>{spec.coding[0].display}</span>
-              })}</td>
+              <td>{staff?.displaySpecialty}</td>
             </tr>
           </tbody>
         </table>
@@ -112,13 +103,13 @@ const InfoStaff = () => {
             <div className="col-4">
               <div className="h-100 d-flex flex-column">
                 <div className="h-100">
-                  <img src={staff?.practitionerTarget?.photo ? `data:${staff.practitionerTarget.photo[0].contentType};base64,${staff.practitionerTarget.photo[0].data}` : USER} alt="img staff" className="h-100 d-block m-auto" />
+                  <img src={staff?.photo ? staff?.photo : USER} alt="img staff" className="h-100 d-block m-auto" />
                 </div>
               </div>
             </div>
             <div className="col-8">
               <div className="pb-3 mb-d-flex justify-content-between">
-                <h3 className="fw-bold text-uppercase">{staff.practitioner?.display}</h3>
+                <h3 className="fw-bold text-uppercase">{staff?.name}</h3>
                 <div>
                   <button className="button button--primary button--small" onClick={() => navigate(`/staff/overview/detail/${staff?.id}`)}>Edit</button>
                 </div>

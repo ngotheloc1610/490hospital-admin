@@ -75,7 +75,7 @@ const InfoPatient = () => {
     <section className="container">
       <div>
         <div className="pb-3 mb-3 border-bottom d-flex justify-content-between">
-          <h3 className="fw-bold text-uppercase">{patient?.nameFirstRep?.text}</h3>
+          <h3 className="fw-bold text-uppercase">{patient?.name}</h3>
           <div>
             <button className="button button--primary button--small" onClick={() => navigate(`/patient/information/detail/${patient?.id}`)}>Edit</button>
           </div>
@@ -91,24 +91,24 @@ const InfoPatient = () => {
                 </tr>
                 <tr>
                   <th scope="row">Date of birth</th>
-                  <td>{moment(patient?.birthDate).format(FORMAT_DATE)}</td>
+                  <td>{moment(patient?.dateOfBirth).format(FORMAT_DATE)}</td>
                 </tr>
                 <tr>
                   <th scope="row">Address</th>
-                  <td>{patient?.addressFirstRep?.text}</td>
+                  <td>{patient?.address}</td>
                 </tr>
                 <tr>
                   <th scope="row">Citizen identification</th>
-                  <td>{patient?.identifierFirstRep?.value}</td>
+                  <td>{patient?.identifier}</td>
                 </tr>
                 <tr>
                   <th scope="row">Phone number</th>
-                  <td>{patient?.telecom?.find((i: any) => i?.system === "phone")?.value}</td>
+                  <td>{patient?.phoneNumber}</td>
                 </tr>
                 <tr>
                   <th scope="row">Email</th>
                   <td>
-                    {patient?.telecom?.find((i: any) => i?.system === "email")?.value}
+                    {patient?.email}
                   </td>
                 </tr>
               </tbody>
@@ -118,7 +118,7 @@ const InfoPatient = () => {
             <div className="h-100 d-flex flex-column">
               <div className="h-100">
                 <img
-                  src={patient?.photo?.length > 0 ? `data:${patient.photo[0].contentType};base64,${patient.photo[0].data}` : USER}
+                  src={patient?.photo ? patient?.photo : USER}
                   alt="img patient"
                   className={`d-block m-auto`}
                   style={{ objectFit: "cover" }}

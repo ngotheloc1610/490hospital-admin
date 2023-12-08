@@ -110,6 +110,9 @@ const CreateEditDoctor = () => {
             })
           )
 
+          console.log(moment(data?.startWork).format("YYYY-MM-DD"));
+          
+
           const dataConverted: any = {
             id: data.id,
             name: data?.name,

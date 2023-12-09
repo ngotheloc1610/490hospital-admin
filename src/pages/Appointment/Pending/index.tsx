@@ -11,6 +11,7 @@ import Layout from "../../../components/Layout";
 import PopUpAccept from "./PopUpAccept";
 import PopUpDeny from "./PopUpDeny";
 import { useAppSelector } from "../../../redux/hooks";
+import { KEY_LOCAL_STORAGE, TYPE_DOCTOR } from "../../../constants/general.constant";
 
 const AppointmentPending = () => {
     const [listData, setListData] = useState([]);
@@ -24,6 +25,7 @@ const AppointmentPending = () => {
     const [name, setName] = useState<string>("");
 
     const url_api = process.env.REACT_APP_API_URL;
+    const type = localStorage.getItem(KEY_LOCAL_STORAGE.TYPE);
 
     const { triggerAccept, triggerDeny } = useAppSelector(state => state.appointmentSlice)
 
@@ -109,7 +111,7 @@ const AppointmentPending = () => {
                         <th scope="col">Appointment Date</th>
                         <th scope="col">Appointment Time</th>
                         <th scope="col">Doctor</th>
-                        <th scope="col"></th>
+                        {type !== TYPE_DOCTOR && <th scope="col"></th>}
                     </tr>
                 </thead>
                 <tbody>
@@ -135,10 +137,10 @@ const AppointmentPending = () => {
                                     <span>{convertToTime(item.appointmentTimeEnd)}</span>
                                 </td>
                                 <td >{item.doctorName}</td>
-                                <td >
+                                {type !== TYPE_DOCTOR && <td >
                                     <button className="button button--small button--accept me-2" onClick={() => handleAccept(item)}>Accept</button>
                                     <button className="button button--small button--deny" onClick={() => handleDeny(item)}>Deny</button>
-                                </td>
+                                </td>}
                             </tr>
                         );
                     })}

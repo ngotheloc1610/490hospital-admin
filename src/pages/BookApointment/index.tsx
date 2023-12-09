@@ -108,7 +108,7 @@ const BookAppointment = () => {
   const getSlot = (doctorId: any, date: string) => {
     const url = `${url_api}${API_SCHEDULE_GET_APPOINTMENT}`;
 
-    axios.get(url, defineConfigGet({ doctorID: doctorId, date: date })).then((resp: any) => {
+    axios.get(url, defineConfigGet({ doctorID: doctorId, date: new Date(date).toISOString() })).then((resp: any) => {
       if (resp) {
         setTimeBusy(resp.data)
       }
@@ -127,6 +127,15 @@ const BookAppointment = () => {
       cancellationDate: null,
       serviceCategory: [],
       serviceType: [],
+      specialty: [{
+        coding: [
+          {
+            system: null,
+            code: listSpecialty.filter((item: any) => item.name === specialty)[0].code,
+            display: specialty
+          }
+        ]
+      }],
       appointmentType: {
         coding: [
           {
@@ -141,10 +150,10 @@ const BookAppointment = () => {
       priority: 0,
       description: description,
       supportingInformation: [],
-      start: new Date(startDate),
-      end: new Date(endDate),
+      start: new Date(startDate).toISOString(),
+      end: new Date(endDate).toISOString(),
       minutesDuration: 0,
-      created: new Date(),
+      created: new Date().toISOString(),
       comment: "",
       patientInstruction: [],
       basedOn: [],

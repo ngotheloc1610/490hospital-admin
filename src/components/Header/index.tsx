@@ -2,7 +2,7 @@ import { memo, useState } from "react";
 import { RouterUrl } from "../../constants";
 import { Link, useNavigate } from "react-router-dom";
 import { ICON_PATIENT, LOGO } from "../../assets";
-import { KEY_LOCAL_STORAGE } from "../../constants/general.constant";
+import { KEY_LOCAL_STORAGE, TYPE_ADMIN } from "../../constants/general.constant";
 import { useAppDispatch } from "../../redux/hooks";
 import { setLogin } from "../../redux/features/auth/authSlice";
 import { Avatar, Box, IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
@@ -13,6 +13,8 @@ const Header = () => {
 
   const account = localStorage.getItem(KEY_LOCAL_STORAGE.SUB || "");
   const dispatch = useAppDispatch()
+
+  const type = localStorage.getItem(KEY_LOCAL_STORAGE.TYPE);
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -39,7 +41,7 @@ const Header = () => {
       <nav className="navbar-header">
         <div className="navbar-logo">
           <Link
-            to={RouterUrl.DASHBOARD}
+            to={type === TYPE_ADMIN ? RouterUrl.DASHBOARD : RouterUrl.PATIENT_MONITOR}
             className="navbar-logo__text text-uppercase"
           >
             <img src={LOGO} alt="" className="w-100" />

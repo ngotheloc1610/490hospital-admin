@@ -13,7 +13,7 @@ import {
   ICON_SETTING,
   ICON_STAFF,
 } from "../../assets";
-import { KEY_LOCAL_STORAGE, TYPE_ADMIN } from "../../constants/general.constant";
+import { KEY_LOCAL_STORAGE, TYPE_ADMIN, TYPE_DOCTOR } from "../../constants/general.constant";
 
 const Sidebar = () => {
   const location = useLocation();
@@ -40,7 +40,7 @@ const Sidebar = () => {
     <nav className="main-navbar">
       <div className="inner-navbar">
         <ul className="main-navbar__menu">
-          <li>
+          {type === TYPE_ADMIN && <li>
             <a data-content-id="dashboard" onClick={() => setIsDropdownDashboard(!isDropdownDashboard)}>
               <ICON_DASHBOARD />
               <span>Dashboard</span>
@@ -66,7 +66,8 @@ const Sidebar = () => {
                 </li>
               </ul>
             )}
-          </li>
+          </li>}
+
           {type === TYPE_ADMIN && <>
             <li className={`${getClass(RouterUrl.DOCTOR)}`}>
               <a
@@ -107,7 +108,6 @@ const Sidebar = () => {
             </li>
           </>}
 
-
           <li className={`${getClass(RouterUrl.PATIENT_MONITOR)}`}>
             <a
               onClick={() => goToLink(RouterUrl.PATIENT_MONITOR)}
@@ -117,15 +117,15 @@ const Sidebar = () => {
               <span>Patient Monitor</span>
             </a>
           </li>
-          {/* <li className={`${getClass(RouterUrl.DEPARTMENT)}`}>
+          {type !== TYPE_ADMIN && <li className={`${getClass(RouterUrl.SCHEDULE)}`}>
             <a
-              onClick={() => goToLink(RouterUrl.DEPARTMENT)}
-              data-content-id="department"
+              onClick={() => goToLink(RouterUrl.SCHEDULE)}
+              data-content-id="schedule"
             >
               <ICON_DEPARTMENT />
-              <span>Department</span>
+              <span>Schedule</span>
             </a>
-          </li> */}
+          </li>}
 
           <li className={`${getClass(RouterUrl.BOOK_APPOINTMENT)}`}>
             <a
@@ -189,12 +189,12 @@ const Sidebar = () => {
           </li>
 
 
-          <li className={`${getClass(RouterUrl.CHAT)}`}>
+          {type !== TYPE_DOCTOR && <li className={`${getClass(RouterUrl.CHAT)}`}>
             <a onClick={() => goToLink(RouterUrl.CHAT)} data-content-id="chat">
               <ICON_MESSAGE />
               <span>Inbox Message</span>
             </a>
-          </li>
+          </li>}
 
           {type === TYPE_ADMIN && <li className={`${getClass(RouterUrl.SETTING)}`}>
             <a

@@ -4,9 +4,9 @@ import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import { API_PROFILE_PRACTITIONER, API_UPDATE_PROFILE_PRACTITIONER } from "../../constants/api.constant";
-import { defineConfigPost } from "../../Common/utils";
-import { error, success } from "../../Common/notify";
+import { API_MEDIA_UPLOAD, API_PROFILE_PRACTITIONER, API_UPDATE_PROFILE_PRACTITIONER } from "../../constants/api.constant";
+import { defineConfigGet, defineConfigPost } from "../../Common/utils";
+import { error, success, warn } from "../../Common/notify";
 import { GENDER } from "../../constants";
 import { USER } from "../../assets";
 import { FORMAT_DATE } from "../../constants/general.constant";
@@ -40,8 +40,7 @@ const EditPractitioner = () => {
 
     const navigate = useNavigate();
     const inputRef = useRef<any>(null);
-    const [image, setImage] = useState<any>("");
-
+    const [selectedFile, setSelectedFile] = useState<any>(null);
     const [practitioner, setPractitioner] = useState<any>(defaultValue);
 
     const [practitionerInfo, setPractitionerInfo] = useState<any>({});
@@ -52,6 +51,39 @@ const EditPractitioner = () => {
     useEffect(() => {
         getProfilePractitioner()
     }, [])
+
+    useEffect(() => {
+        if (selectedFile) {
+            uploadImage()
+        }
+    }, [selectedFile])
+
+
+    const uploadImage = () => {
+        const url = `${url_api}${API_MEDIA_UPLOAD}`;
+
+        if (!selectedFile) {
+            warn('Please select an image file before uploading.');
+            return;
+        }
+
+        let formData = new FormData();
+        formData.append('image', selectedFile);
+
+        const params = { file: formData }
+
+        axios
+            .post(url, defineConfigGet(params))
+            .then((resp: any) => {
+                if (resp) {
+                    console.log("resp:", resp)
+                }
+            })
+            .catch((err: any) => {
+                console.log("error upload image:", err);
+                error(err.response.data.error);
+            });
+    }
 
     const getProfilePractitioner = () => {
         const url = `${url_api}${API_PROFILE_PRACTITIONER}`;
@@ -69,7 +101,7 @@ const EditPractitioner = () => {
                         phoneNumber: data.phoneNumber,
                         email: data.email,
                         address: data.address,
-                        identifier: data.identification,
+                        identifier: data.identification !== "null" ? data.identification : "",
                     }
 
                     setPractitionerInfo(data);
@@ -93,7 +125,6 @@ const EditPractitioner = () => {
             name: values.name,
             phoneNumber: values.phoneNumber,
             dateOfBirth: values.birthday,
-            photo: null,
             gender: values.gender,
             address: values.address,
             idSpecialty: null,
@@ -126,13 +157,11 @@ const EditPractitioner = () => {
     const handleChangeImage = (event: any) => {
         const file = event.target.files[0];
 
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImage(reader.result);
-            };
-
-            reader.readAsDataURL(file);
+        // Check if the selected file is an image
+        if (file && file.type.startsWith('image/')) {
+            setSelectedFile(file);
+        } else {
+            warn('Please select a valid image file.');
         }
     };
 
@@ -354,25 +383,28 @@ const EditPractitioner = () => {
 
     const _renderImage = () => {
         return (
-            <div className="h-100 d-flex flex-column" onClick={handlePickImage}>
-                <div className="h-100">
-                    <img
-                        src={image ? image : USER}
-                        alt="img admin"
-                        className={`d-block m-auto ${image ? "" : "bg-image"}`}
-                        style={{ objectFit: "cover" }}
-                    />
-                    <input
-                        type="file"
-                        className="d-none"
-                        ref={inputRef}
-                        onChange={handleChangeImage}
-                    />
+            <form action="" onClick={handlePickImage}>
+                <div className="h-100 d-flex flex-column" >
+                    <div className="h-100">
+                        <img
+                            src={selectedFile ? URL.createObjectURL(selectedFile) : USER}
+                            alt="img admin"
+                            className={`d-block m-auto ${selectedFile ? "" : "bg-image"}`}
+                            style={{ objectFit: "cover" }}
+                        />
+                        <input
+                            type="file"
+                            accept="image/*"
+                            className="d-none"
+                            ref={inputRef}
+                            onChange={handleChangeImage}
+                        />
+                    </div>
+                    <button className="button button--small button--primary w-90 mx-auto mt-3">
+                        {selectedFile ? "Edit" : "Add"} profile picture
+                    </button>
                 </div>
-                <button className="button button--small button--primary w-90 mx-auto mt-3">
-                    {image ? "Edit" : "Add"} profile picture
-                </button>
-            </div>
+            </form>
         );
     };
 

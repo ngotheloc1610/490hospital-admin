@@ -15,17 +15,19 @@ interface IProps {
 const PopUpAccept = (props: IProps) => {
   const { handleShowPopUp, appointment } = props;
 
+  const { profile } = useAppSelector(state => state.practitionerSlice)
+
   const url_api = process.env.REACT_APP_API_URL;
 
   const dispatch = useAppDispatch();
   const { triggerAccept } = useAppSelector(state => state.appointmentSlice)
 
   const acceptAppointment = () => {
-    const url = `${url_api}${API_ACCEPT_APPOINTMENT}${appointment.idPatient}`;
+    const url = `${url_api}${API_ACCEPT_APPOINTMENT}${appointment.idAppointment}`;
 
     const params = {
-      idPractitioner: appointment?.idPatient,
-      namePractitioner: appointment?.patientName
+      idPractitionerAccept: profile?.id,
+      namePractitionerAccept: profile?.name
     }
 
     axios

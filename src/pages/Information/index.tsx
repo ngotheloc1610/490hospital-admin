@@ -168,7 +168,7 @@ const Information = () => {
                                             </tr>
                                             <tr>
                                                 <th scope="row">Date of birth</th>
-                                                <td>{practitionerInfo?.dateOfBirth ? moment(practitionerInfo.dateOfBirth, 'ddd MMM DD HH:mm:ss z YYYY').format(FORMAT_DATE) : "-"}</td>
+                                                <td>{practitionerInfo?.dateOfBirth !== "null" ? moment(practitionerInfo.dateOfBirth, 'ddd MMM DD HH:mm:ss z YYYY').format(FORMAT_DATE) : "-"}</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">Address</th>
@@ -176,7 +176,7 @@ const Information = () => {
                                             </tr>
                                             <tr>
                                                 <th scope="row">Citizen identification</th>
-                                                <td>{practitionerInfo?.identification ? practitionerInfo.identification : "-"}</td>
+                                                <td>{practitionerInfo?.identification !== "null" ? practitionerInfo.identification : "-"}</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">Phone number</th>

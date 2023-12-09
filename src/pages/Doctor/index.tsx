@@ -158,7 +158,7 @@ const Doctor = () => {
             const src = item?.practitionerTarget?.photo[0]?.url;
             return (
               <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
-                <th scope="row">
+                <th scope="row" onClick={() => navigate(`overview/${item.id}`)}>
                   <img src={src} alt="img doctor" />
                 </th>
                 <td onClick={() => navigate(`overview/${item.id}`)}>

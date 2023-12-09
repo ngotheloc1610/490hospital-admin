@@ -17,15 +17,17 @@ const PopUpDeny = (props: IProps) => {
 
   const url_api = process.env.REACT_APP_API_URL;
 
+  const { profile } = useAppSelector(state => state.practitionerSlice)
+
   const dispatch = useAppDispatch();
   const { triggerDeny } = useAppSelector(state => state.appointmentSlice)
 
   const denyAppointment = () => {
-    const url = `${url_api}${API_DENY_APPOINTMENT}${appointment?.idPatient}`;
+    const url = `${url_api}${API_DENY_APPOINTMENT}${appointment?.idAppointment}`;
 
     const params = {
-      idPractitioner: appointment?.idPatient,
-      namePractitioner: appointment?.patientName
+      idPractitionerAccept: profile?.id,
+      namePractitionerAccept: profile?.name
     }
 
     axios

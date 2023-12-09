@@ -4,12 +4,13 @@ import { LOGO_HOSPITAL } from "../../../assets";
 import axios from "axios";
 import { JwtPayload, jwtDecode } from "jwt-decode";
 
-import { API_LOGIN } from "../../../constants/api.constant";
+import { API_LOGIN, API_PROFILE_PRACTITIONER } from "../../../constants/api.constant";
 import { defineConfigPost } from "../../../Common/utils";
-import { KEY_LOCAL_STORAGE } from "../../../constants/general.constant";
+import { KEY_LOCAL_STORAGE, TYPE_ADMIN } from "../../../constants/general.constant";
 import { useAppDispatch } from "../../../redux/hooks";
 import { setLogin } from "../../../redux/features/auth/authSlice";
 import { error } from "../../../Common/notify";
+import { setProfile } from "../../../redux/features/practitioner/practitionerSlice";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -42,13 +43,33 @@ const Login = () => {
           localStorage.setItem(KEY_LOCAL_STORAGE.IAT, decoded.iat);
           localStorage.setItem(KEY_LOCAL_STORAGE.SUB, decoded.sub);
           localStorage.setItem(KEY_LOCAL_STORAGE.TYPE, decoded.aud);
+          getProfilePractitioner();
           dispatch(setLogin(true));
-          navigate("/dashboard/patient")
+          if (decoded.aud === TYPE_ADMIN) {
+            navigate("/dashboard/patient")
+          } else {
+            navigate("/monitor")
+          }
         }
       })
       .catch((err: any) => {
         console.log("error Login:", err);
         error(err.message || err.response.data.error || err.response.data.error.message)
+      });
+  }
+
+  const getProfilePractitioner = () => {
+    const url = `${url_api}${API_PROFILE_PRACTITIONER}`;
+
+    axios
+      .get(url, defineConfigPost())
+      .then((resp: any) => {
+        if (resp) {
+          dispatch(setProfile(resp.data))
+        }
+      })
+      .catch((err) => {
+        console.log("error get profile practitioner:", err);
       });
   }
 

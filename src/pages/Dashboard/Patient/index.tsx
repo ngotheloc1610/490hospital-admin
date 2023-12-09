@@ -37,9 +37,11 @@ ChartJS.register(
 const PatientDashboard = () => {
   const url_api = process.env.REACT_APP_API_URL;
 
-  const [monthPatient, setMonthPatient] = useState<string>("");
-  const [monthNewPatient, setMonthNewPatient] = useState<string>("");
-  const [monthOldPatient, setmonthOldPatient] = useState<string>("");
+  const currentDate = new Date();
+
+  const [monthPatient, setMonthPatient] = useState<string>((currentDate.getMonth() - 1).toString());
+  const [monthNewPatient, setMonthNewPatient] = useState<string>((currentDate.getMonth() - 1).toString());
+  const [monthOldPatient, setmonthOldPatient] = useState<string>((currentDate.getMonth() - 1).toString());
 
   const [dateOfMonthPatient, setDateOfMonthPatient] = useState<any>(new Date());
   const [dateOfMonthNewPatient, setDateOfMonthNewPatient] = useState<any>(new Date("2024-01-01"));
@@ -148,6 +150,8 @@ const PatientDashboard = () => {
       .then((resp: any) => {
         if (resp) {
           const gender = Object.entries(resp.data).map(([title, number]) => ({ title, number }));
+          console.log("gender:", gender)
+
           setGenderPatient(gender);
         }
       })
@@ -265,25 +269,25 @@ const PatientDashboard = () => {
         label: "Male",
         borderColor: "rgba(90, 106, 207, 1)",
         backgroundColor: "rgba(90, 106, 207, 1)",
-        data: genderPatient?.filter((gender: any) => gender.title.trim() === "MALE")?.number,
+        data: [genderPatient?.filter((gender: any) => gender.title.trim() === "MALE")?.number],
       },
       {
         label: "Female",
         borderColor: "rgba(133, 147, 237, 1)",
         backgroundColor: "rgba(133, 147, 237, 1)",
-        data: genderPatient?.filter((gender: any) => gender.title.trim() === "FEMALE")?.number,
+        data: [genderPatient?.filter((gender: any) => gender.title.trim() === "FEMALE")?.number],
       },
       {
         label: "Other",
         borderColor: "rgba(199, 206, 255, 1)",
         backgroundColor: "rgba(199, 206, 255, 1)",
-        data: genderPatient?.filter((gender: any) => gender.title.trim() === "OTHER")?.number,
+        data: [genderPatient?.filter((gender: any) => gender.title.trim() === "OTHER")?.number],
       },
       {
         label: "total appointment",
         borderColor: "rgba(199, 206, 255, 1)",
         backgroundColor: "rgba(199, 206, 255, 1)",
-        data: genderPatient?.filter((gender: any) => gender.title === "TOTAL APPOINTMENT ")?.number,
+        data: [genderPatient?.filter((gender: any) => gender.title === "TOTAL APPOINTMENT ")?.number],
       },
     ],
   };
@@ -365,6 +369,7 @@ const PatientDashboard = () => {
                 <select
                   className="input-select input-select-w15"
                   onChange={(e) => setMonthPatient(e.target.value)}
+                  value={monthPatient}
                 >
                   {_renderMonths()}
                 </select>
@@ -424,6 +429,7 @@ const PatientDashboard = () => {
                   <select
                     className="input-select  input-select-w25"
                     onChange={(e) => setMonthNewPatient(e.target.value)}
+                    value={monthNewPatient}
                   >
                     {_renderMonths()}
                   </select>
@@ -458,6 +464,7 @@ const PatientDashboard = () => {
                   <select
                     className="input-select  input-select-w25"
                     onChange={(e) => setmonthOldPatient(e.target.value)}
+                    value={monthOldPatient}
                   >
                     {_renderMonths()}
                   </select>

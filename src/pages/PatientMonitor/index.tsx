@@ -7,11 +7,12 @@ import PaginationComponent from "../../components/common/Pagination";
 import {
   ALERT_STATUS,
   DEFAULT_ITEM_PER_PAGE,
+  GENDER,
   START_PAGE,
 } from "../../constants";
 import { ICON_PENCIL } from "../../assets";
-import { API_MONITOR_ALL } from "../../constants/api.constant";
-import { defineConfigPost } from "../../Common/utils";
+import { API_MONITOR_ALL, API_SEARCH_DOCTOR } from "../../constants/api.constant";
+import { defineConfigGet, defineConfigPost } from "../../Common/utils";
 import moment from "moment";
 import { FORMAT_DATE } from "../../constants/general.constant";
 
@@ -25,13 +26,36 @@ const PatientMonitor = () => {
   const [totalItem, setTotalItem] = useState<number>(0);
 
   const [name, setName] = useState<string>("");
-  const [alert, setAlert] = useState<string>("");
+  const [gender, setGender] = useState<string>("");
+  const [isSearch, setIsSearch] = useState<boolean>(false)
 
   const url_api = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
-    getPatientMonitor()
-  }, [])
+    if (isSearch) {
+      searchPatient()
+    } else {
+      getPatientMonitor()
+    }
+  }, [currentPage, itemPerPage])
+
+  const searchPatient = () => {
+    const url = `${url_api}${API_SEARCH_DOCTOR}`;
+
+    const params = { page: currentPage, size: itemPerPage, nameP: name, genderP: gender }
+
+    axios
+      .get(url, defineConfigGet(params))
+      .then((resp: any) => {
+        if (resp) {
+          setListData(resp.data.content);
+          setTotalItem(resp.data.totalElements);
+        }
+      })
+      .catch((err: any) => {
+        console.log("err:", err);
+      });
+  }
 
   const getPatientMonitor = () => {
     const url = `${url_api}${API_MONITOR_ALL}`;
@@ -40,8 +64,8 @@ const PatientMonitor = () => {
       .get(url, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
-          console.log("resp:", resp)
-          setListData(resp.data);
+          setListData(resp.data.content);
+          setTotalItem(resp.data.totalElements);
         }
       })
       .catch((err: any) => {
@@ -58,13 +82,19 @@ const PatientMonitor = () => {
     setCurrentPage(0);
   };
 
-  const _renderListAlert = () => {
+  const handleSearch = () => {
+    setIsSearch(true);
+    setCurrentPage(0);
+    searchPatient();
+  }
+
+  const _renderListGender = () => {
     return (
       <>
-        <option hidden>Select an alert Status</option>
-        {ALERT_STATUS.map((item: any) => (
-          <option value={item.value} key={item.value}>
-            {item.title}
+        <option hidden>Gender</option>
+        {GENDER.map((item: any) => (
+          <option value={item.code} key={item.code}>
+            {item.name}
           </option>
         ))}
       </>
@@ -87,14 +117,14 @@ const PatientMonitor = () => {
           <div className="col-6">
             <select
               className="form-select"
-              onChange={(e) => setAlert(e.target.value)}
+              onChange={(e) => setGender(e.target.value)}
             >
-              {_renderListAlert()}
+              {_renderListGender()}
             </select>
           </div>
         </div>
         <div className="col-6">
-          <button className="button-apply">Search</button>
+          <button className="button-apply" onClick={() => handleSearch()}>Search</button>
         </div>
       </div>
     );

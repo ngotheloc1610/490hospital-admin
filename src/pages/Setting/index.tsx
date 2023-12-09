@@ -5,12 +5,35 @@ import { defineConfigPost } from "../../Common/utils";
 import axios from "axios";
 import { API_ALERT_BLOOD_GLUCOSE, API_ALERT_BLOOD_PRESSURE, API_ALERT_BMI, API_ALERT_HEART_RATE, API_ALERT_TEMPERATURE } from "../../constants/api.constant";
 import { ALERT_STATUS, RULE_BLOOD_GLUCOSE, RULE_BLOOD_PRESSURE, RULE_BMI, RULE_HEART_RATE, RULE_TEMPERATURE } from "../../constants";
+import { success } from "../../Common/notify";
+import { ALERT_BLOOD_GLUCOSE, ALERT_BLOOD_PRESSURE, ALERT_BMI, ALERT_HEART_RATE, ALERT_TEMPERATURE } from "../../constants/general.constant";
 
 const Setting = () => {
 
   const url_api = process.env.REACT_APP_API_URL;
 
-  const [listBloodPressure, setListBloodPressure] = useState<any>([{
+  let alertBloodPressure;
+  if (localStorage.getItem(ALERT_BLOOD_PRESSURE)) {
+    alertBloodPressure = JSON.parse(localStorage.getItem(ALERT_BLOOD_PRESSURE) || "")
+  }
+  let alertBloodGlucose;
+  if (localStorage.getItem(ALERT_BLOOD_GLUCOSE)) {
+    alertBloodGlucose = JSON.parse(localStorage.getItem(ALERT_BLOOD_GLUCOSE) || "")
+  }
+  let alertHeartRate;
+  if (localStorage.getItem(ALERT_HEART_RATE)) {
+    alertHeartRate = JSON.parse(localStorage.getItem(ALERT_HEART_RATE) || "")
+  }
+  let alertBMI;
+  if (localStorage.getItem(ALERT_BMI)) {
+    alertBMI = JSON.parse(localStorage.getItem(ALERT_BMI) || "")
+  }
+  let alertTemperature;
+  if (localStorage.getItem(ALERT_TEMPERATURE)) {
+    alertTemperature = JSON.parse(localStorage.getItem(ALERT_TEMPERATURE) || "")
+  }
+
+  const [listBloodPressure, setListBloodPressure] = useState<any>(alertBloodPressure ? alertBloodPressure : [{
     alertName: "",
     alertSeverity: "",
     rule: [
@@ -20,7 +43,7 @@ const Setting = () => {
       }
     ]
   }])
-  const [listBloodGlucose, setListBloodGlucose] = useState<any>([{
+  const [listBloodGlucose, setListBloodGlucose] = useState<any>(alertBloodGlucose ? alertBloodGlucose : [{
     alertName: "",
     alertSeverity: "",
     rule: [
@@ -30,7 +53,7 @@ const Setting = () => {
       }
     ]
   }])
-  const [listHeartRate, setListHeartRate] = useState<any>([{
+  const [listHeartRate, setListHeartRate] = useState<any>(alertHeartRate ? alertHeartRate : [{
     alertName: "",
     alertSeverity: "",
     rule: [
@@ -40,7 +63,7 @@ const Setting = () => {
       }
     ]
   }])
-  const [listTemperature, setListTemperature] = useState<any>([{
+  const [listTemperature, setListTemperature] = useState<any>(alertBMI ? alertBMI : [{
     alertName: "",
     alertSeverity: "",
     rule: [
@@ -50,7 +73,7 @@ const Setting = () => {
       }
     ]
   }])
-  const [listBMI, setListBMI] = useState<any>([{
+  const [listBMI, setListBMI] = useState<any>(alertTemperature ? alertTemperature : [{
     alertName: "",
     alertSeverity: "",
     rule: [
@@ -66,16 +89,18 @@ const Setting = () => {
 
     let ruleList: any = [];
     bloodItem.rule.forEach((itemRule: any) => {
+      const ruleName = itemRule.ruleName
+      const type = ruleName.split(' ')[0];
+      const rule = ruleName.split(type + " ")[1];
       ruleList.push({
-        type: "",
-        rule: itemRule.ruleName,
+        type: type,
+        rule: rule,
         threshold: !isNaN(itemRule.threshold) ? parseFloat(itemRule.threshold) : 0.0
       })
     })
 
     const params = {
-      clinicId: "",
-      category: "",
+      category: "Blood Pressure",
       alertName: bloodItem.alertName,
       severity: bloodItem.alertSeverity,
       ruleList: ruleList
@@ -85,8 +110,8 @@ const Setting = () => {
       .post(url, params, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
-          console.log("resp:", resp)
-
+          localStorage.setItem(ALERT_BLOOD_PRESSURE, JSON.stringify(listBloodPressure))
+          success("Alert Blood Pressure successfully!")
         }
       })
       .catch((err: any) => {
@@ -99,15 +124,14 @@ const Setting = () => {
     let ruleList: any = [];
     bloodItem.rule.forEach((itemRule: any) => {
       ruleList.push({
-        type: "",
+        type: "Blood Glucose",
         rule: itemRule.ruleName,
         threshold: !isNaN(itemRule.threshold) ? parseFloat(itemRule.threshold) : 0.0
       })
     })
 
     const params = {
-      clinicId: "",
-      category: "",
+      category: "Blood Glucose",
       alertName: bloodItem.alertName,
       severity: bloodItem.alertSeverity,
       ruleList: ruleList
@@ -117,8 +141,8 @@ const Setting = () => {
       .post(url, params, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
-          console.log("resp:", resp)
-
+          localStorage.setItem(ALERT_BLOOD_GLUCOSE, JSON.stringify(listBloodGlucose))
+          success("Alert Blood Glucose successfully!")
         }
       })
       .catch((err: any) => {
@@ -131,15 +155,14 @@ const Setting = () => {
     let ruleList: any = [];
     bloodItem.rule.forEach((itemRule: any) => {
       ruleList.push({
-        type: "",
+        type: "Heart Rate",
         rule: itemRule.ruleName,
         threshold: !isNaN(itemRule.threshold) ? parseFloat(itemRule.threshold) : 0.0
       })
     })
 
     const params = {
-      clinicId: "",
-      category: "",
+      category: "Heart Rate",
       alertName: bloodItem.alertName,
       severity: bloodItem.alertSeverity,
       ruleList: ruleList
@@ -149,8 +172,8 @@ const Setting = () => {
       .post(url, params, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
-          console.log("resp:", resp)
-
+          localStorage.setItem(ALERT_HEART_RATE, JSON.stringify(listHeartRate))
+          success("Alert Heart Rate successfully!")
         }
       })
       .catch((err: any) => {
@@ -163,15 +186,14 @@ const Setting = () => {
     let ruleList: any = [];
     bloodItem.rule.forEach((itemRule: any) => {
       ruleList.push({
-        type: "",
+        type: "BMI",
         rule: itemRule.ruleName,
         threshold: !isNaN(itemRule.threshold) ? parseFloat(itemRule.threshold) : 0.0
       })
     })
 
     const params = {
-      clinicId: "",
-      category: "",
+      category: "BMI",
       alertName: bloodItem.alertName,
       severity: bloodItem.alertSeverity,
       ruleList: ruleList
@@ -181,7 +203,8 @@ const Setting = () => {
       .post(url, params, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
-          console.log("resp:", resp)
+          localStorage.setItem(ALERT_BMI, JSON.stringify(listBMI))
+          success("Alert BMI successfully!")
 
         }
       })
@@ -195,15 +218,14 @@ const Setting = () => {
     let ruleList: any = [];
     bloodItem.rule.forEach((itemRule: any) => {
       ruleList.push({
-        type: "",
+        type: "Temperature",
         rule: itemRule.ruleName,
         threshold: !isNaN(itemRule.threshold) ? parseFloat(itemRule.threshold) : 0.0
       })
     })
 
     const params = {
-      clinicId: "",
-      category: "",
+      category: "Temperature",
       alertName: bloodItem.alertName,
       severity: bloodItem.alertSeverity,
       ruleList: ruleList
@@ -213,7 +235,8 @@ const Setting = () => {
       .post(url, params, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
-          console.log("resp:", resp)
+          localStorage.setItem(ALERT_TEMPERATURE, JSON.stringify(listTemperature))
+          success("Alert Temperature successfully!")
 
         }
       })

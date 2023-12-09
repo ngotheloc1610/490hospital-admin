@@ -60,13 +60,13 @@ const CreateEditPatient = () => {
           const data = resp.data;
           const patientDetail = {
             id: data?.id,
-            name: data?.nameFirstRep.text,
+            name: data?.name,
             dateOfBirth: data?.birthDate,
             gender: data?.gender,
-            phoneNumber: data?.telecom?.find((i: any) => i?.system === "phone")?.value,
-            email: data?.telecom?.find((i: any) => i?.system === "email")?.value,
-            address: data?.addressFirstRep?.text,
-            identifier: data?.identifierFirstRep?.value,
+            phoneNumber: data?.phoneNumber,
+            email: data?.email,
+            address: data?.address,
+            identifier: data?.identifier,
           }
           setPatientInfo(patientDetail);
         }

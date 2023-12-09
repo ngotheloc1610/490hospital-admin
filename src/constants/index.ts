@@ -12,6 +12,7 @@ export const RouterUrl = {
   DOCTOR: "/doctor",
   PATIENT: "/patient",
   DEPARTMENT: "/department",
+  SCHEDULE: "/schedule",
   APPOINTMENT_PENDING: "/appointment-pending",
   APPOINTMENT_BOOKED: "/appointment-booked",
   APPOINTMENT_PROPOSED: "/appointment-proposed",
@@ -282,10 +283,6 @@ export const MONTHS = [
 
 export const ALERT_STATUS = [
   {
-    title: "Asymptomatic",
-    value: "Asymptomatic",
-  },
-  {
     title: "Catastrophic",
     value: "Catastrophic",
   },
@@ -297,10 +294,7 @@ export const ALERT_STATUS = [
     title: "Moderate",
     value: "Moderate",
   },
-  {
-    title: "Minor",
-    value: "Minor",
-  },
+
 ];
 
 export const RULE_BLOOD_PRESSURE = [
@@ -368,135 +362,135 @@ export const RULE_TEMPERATURE = [
 
 export const BLOOD_PRESSURE = [
   {
-    title:"Bleeding from nose",
-    value:"Bleeding from nose"
+    title: "Bleeding from nose",
+    value: "Bleeding from nose"
   },
   {
-    title:"Shortness of breath",
-    value:"Shortness of breath"
+    title: "Shortness of breath",
+    value: "Shortness of breath"
   },
   {
-    title:"Dizziness",
-    value:"Dizziness"
+    title: "Dizziness",
+    value: "Dizziness"
   },
   {
-    title:"Fainting",
-    value:"Fainting"
+    title: "Fainting",
+    value: "Fainting"
   },
   {
-    title:"Fatigue",
-    value:"Fatigue"
+    title: "Fatigue",
+    value: "Fatigue"
   },
   {
-    title:"Nausea",
-    value:"Nausea"
+    title: "Nausea",
+    value: "Nausea"
   },
 ]
 
 export const BLOOD_GLUCOSE = [
   {
-    title:"Increased thirst",
-    value:"Increased thirst"
+    title: "Increased thirst",
+    value: "Increased thirst"
   },
   {
-    title:"Abdominal pain",
-    value:"Abdominal pain"
+    title: "Abdominal pain",
+    value: "Abdominal pain"
   },
   {
-    title:"Loss of consciousness",
-    value:"Loss of consciousness"
+    title: "Loss of consciousness",
+    value: "Loss of consciousness"
   },
   {
-    title:"Headache",
-    value:"Headache"
+    title: "Headache",
+    value: "Headache"
   },
   {
-    title:"Shaking",
-    value:"Shaking"
+    title: "Shaking",
+    value: "Shaking"
   },
   {
-    title:"Numbness of tongue",
-    value:"Numbness of tongue"
+    title: "Numbness of tongue",
+    value: "Numbness of tongue"
   },
 ]
 
 export const HEART_RATE = [
   {
-    title:"Palpitations",
-    value:"Palpitations"
+    title: "Palpitations",
+    value: "Palpitations"
   },
   {
-    title:"Lightheadedness",
-    value:"Lightheadedness"
+    title: "Lightheadedness",
+    value: "Lightheadedness"
   },
   {
-    title:"Chest pain",
-    value:"Chest pain"
+    title: "Chest pain",
+    value: "Chest pain"
   },
   {
-    title:"Confusion",
-    value:"Confusion"
+    title: "Confusion",
+    value: "Confusion"
   },
   {
-    title:"Difficulty in initiating movement",
-    value:"Difficulty in initiating movement"
+    title: "Difficulty in initiating movement",
+    value: "Difficulty in initiating movement"
   },
   {
-    title:"Shortness of breath",
-    value:"Shortness of breath"
+    title: "Shortness of breath",
+    value: "Shortness of breath"
   },
 ]
 
 export const BMI = [
   {
-    title:"Snoring",
-    value:"Snoring"
+    title: "Snoring",
+    value: "Snoring"
   },
   {
-    title:"Back pain",
-    value:"Back pain"
+    title: "Back pain",
+    value: "Back pain"
   },
   {
-    title:"Joint pain",
-    value:"Joint pain"
+    title: "Joint pain",
+    value: "Joint pain"
   },
   {
-    title:"Loss of hair",
-    value:"Loss of hair"
+    title: "Loss of hair",
+    value: "Loss of hair"
   },
   {
-    title:"Tired all the time",
-    value:"Tired all the time"
+    title: "Tired all the time",
+    value: "Tired all the time"
   },
 ]
 
 export const TEMPERATURE = [
   {
-    title:"Sweating",
-    value:"Sweating"
+    title: "Sweating",
+    value: "Sweating"
   },
   {
-    title:"Chill",
-    value:"Chill"
+    title: "Chill",
+    value: "Chill"
   },
   {
-    title:"Muscle pain",
-    value:"Muscle pain"
+    title: "Muscle pain",
+    value: "Muscle pain"
   },
   {
-    title:"Loss of appetite",
-    value:"Loss of appetite"
+    title: "Loss of appetite",
+    value: "Loss of appetite"
   },
   {
-    title:"Shallow breathing",
-    value:"Shallow breathing"
+    title: "Shallow breathing",
+    value: "Shallow breathing"
   },
   {
-    title:"Clumsiness",
-    value:"Clumsiness"
+    title: "Clumsiness",
+    value: "Clumsiness"
   },
   {
-    title:"Drowsy",
-    value:"Drowsy"
+    title: "Drowsy",
+    value: "Drowsy"
   },
 ]

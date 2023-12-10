@@ -1,7 +1,7 @@
 import { memo, useEffect, useState } from "react";
 import axios from "axios";
 import { Outlet, useNavigate, useOutlet } from "react-router-dom";
-import { ICON_BLOCK, ICON_PENCIL, ICON_TRASH } from "../../assets";
+import { ICON_BLOCK, ICON_PENCIL } from "../../assets";
 
 import {
   DEFAULT_ITEM_PER_PAGE,
@@ -14,14 +14,11 @@ import { API_ALL_GET_DOCTOR, API_ALL_GET_SPECIALTY, API_SEARCH_DOCTOR } from "..
 import { defineConfigGet, styleStatusPractitioner } from "../../Common/utils";
 
 import Layout from "../../components/Layout";
-import TotalView from "../../components/common/TotalView";
-import PopUpConfirm from "./PopupConfirm";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setPractitioner, setShowPopUpConfirmBlock } from "../../redux/features/practitioner/practitionerSlice";
 import PopUpConfirmBlock from "../../components/common/PopupConfirmBlock";
 
 const Doctor = () => {
-  const [showPopUpConfirm, setShowPopUpConfirm] = useState<boolean>(false);
   const [listData, setListData] = useState([]);
   const [currentPage, setCurrentPage] = useState<number>(START_PAGE);
   const [itemPerPage, setItemPerPage] = useState<number>(DEFAULT_ITEM_PER_PAGE);
@@ -40,7 +37,7 @@ const Doctor = () => {
   const outlet = useOutlet();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { showPopUpBlock } = useAppSelector((state) => state.practitionerSlice)
+  const { showPopUpBlock, triggerBlock } = useAppSelector((state) => state.practitionerSlice)
 
   useEffect(() => {
     getSpecialty();
@@ -52,7 +49,7 @@ const Doctor = () => {
     } else {
       getDoctor()
     }
-  }, [currentPage, itemPerPage]);
+  }, [currentPage, itemPerPage, triggerBlock]);
 
   const getDoctor = () => {
     const url = `${url_api}${API_ALL_GET_DOCTOR}`;
@@ -84,10 +81,6 @@ const Doctor = () => {
         console.log("err:", err);
       });
   }
-
-  const handleCancel = (item: any) => {
-    setShowPopUpConfirm(true);
-  };
 
   const handleModify = (id: string) => {
     navigate(`/doctor/overview/detail/${id}`);
@@ -144,6 +137,7 @@ const Doctor = () => {
             <th scope="col">Email</th>
             <th scope="col">Specialty</th>
             <th scope="col">Status</th>
+            <th scope="col">Status Account</th>
             <th scope="col"></th>
           </tr>
         </thead>
@@ -185,9 +179,9 @@ const Doctor = () => {
                   <span className={styleStatusPractitioner(item.active)}>{item.active ? "Active" : "Inactive"}</span>
                 </td>
                 <td>
-                  {/* <span className="cursor-pointer" onClick={handleCancel}>
-                    <ICON_TRASH />
-                  </span> */}
+                  <span className={styleStatusPractitioner(item.practitionerTarget.active)}>{item.practitionerTarget.active ? "Active" : "Inactive"}</span>
+                </td>
+                <td>
                   <span className="ms-1 cursor-pointer" onClick={() => handleModify(item.id)}>
                     <ICON_PENCIL />
                   </span>
@@ -304,7 +298,6 @@ const Doctor = () => {
         <Outlet />
       ) : (
         <>
-          {/* <TotalView /> */}
           <section className="table-container">
             <div className="table-container-contain">
               <div className="d-flex justify-content-center align-item-center">
@@ -323,10 +316,6 @@ const Doctor = () => {
               </div>
             </div>
           </section>
-          {showPopUpConfirm && (
-            <PopUpConfirm handleCloseConfirmPopup={setShowPopUpConfirm} />
-          )}
-
           {showPopUpBlock && (
             <PopUpConfirmBlock />
           )}

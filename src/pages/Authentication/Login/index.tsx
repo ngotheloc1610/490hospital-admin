@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { LOGO_HOSPITAL } from "../../../assets";
 import axios from "axios";
 import { JwtPayload, jwtDecode } from "jwt-decode";
@@ -8,7 +8,7 @@ import { API_LOGIN, API_PROFILE_PRACTITIONER } from "../../../constants/api.cons
 import { defineConfigPost } from "../../../Common/utils";
 import { KEY_LOCAL_STORAGE, TYPE_ADMIN } from "../../../constants/general.constant";
 import { useAppDispatch } from "../../../redux/hooks";
-import { setLogin } from "../../../redux/features/auth/authSlice";
+import { setForgotPassword, setLogin } from "../../../redux/features/auth/authSlice";
 import { error } from "../../../Common/notify";
 import { setProfile } from "../../../redux/features/practitioner/practitionerSlice";
 
@@ -45,6 +45,7 @@ const Login = () => {
           localStorage.setItem(KEY_LOCAL_STORAGE.TYPE, decoded.aud);
           getProfilePractitioner();
           dispatch(setLogin(true));
+          dispatch(setForgotPassword(false))
           if (decoded.aud === TYPE_ADMIN) {
             navigate("/dashboard/patient")
           } else {
@@ -85,6 +86,12 @@ const Login = () => {
     }
   }
 
+  const handleForgot = () => {
+    dispatch(setForgotPassword(true));
+    navigate("/forgot-password")
+  }
+
+
   return (
     <div className="contain" onKeyDown={handleKeyEnter}>
       <div className="login-container">
@@ -123,8 +130,8 @@ const Login = () => {
           <button className="button button--large button--primary w-100" onClick={() => handleLogin()}>
             Login
           </button>
-          <p className="text-end mt-3">
-            <Link to="/forgot-password">Forgot Password?</Link>
+          <p className="text-end mt-3" onClick={() => handleForgot()}>
+            <span className="text-reset">Forgot Password?</span>
           </p>
         </div>
       </div>

@@ -87,8 +87,8 @@ export const GENDER = [
     code: "FEMALE",
   },
   {
-    name: "All",
-    code: "",
+    name: "Unknown",
+    code: "UNKNOWN",
   },
 ];
 

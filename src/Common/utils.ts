@@ -17,12 +17,12 @@ export const defineConfigPost = () => {
 }
 
 export const convertToDate = (time: string) => {
-    const date = moment(time, 'ddd MMM DD HH:mm:ss z YYYY');
+    const date = moment(time);
     return date.format(FORMAT_DATE);
 }
 
 export const convertToTime = (time: string) => {
-    const date = moment(time, 'ddd MMM DD HH:mm:ss z YYYY');
+    const date = moment(time);
     return date.format(`${FORMAT_TIME} A`);
 }
 
@@ -34,6 +34,10 @@ export const styleStatus = (status: string) => {
             return "canceled";
         case "Fulfilled":
             return "fulfilled";
+        case "Pending":
+            return "pending";
+        case "Proposed":
+            return "proposed";
         default:
             return;
     }

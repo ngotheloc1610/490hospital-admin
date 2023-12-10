@@ -6,7 +6,7 @@ import { API_BLOCK_PRACTITIONER } from "../../constants/api.constant";
 
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { success } from "../../Common/notify";
-import { setListBlock, setShowPopUpConfirmBlock, setTriggerBlock } from "../../redux/features/practitioner/practitionerSlice";
+import { setShowPopUpConfirmBlock, setTriggerBlock } from "../../redux/features/practitioner/practitionerSlice";
 
 
 const PopUpConfirmBlock = () => {
@@ -14,7 +14,7 @@ const PopUpConfirmBlock = () => {
   const url_api = process.env.REACT_APP_API_URL;
 
   const dispatch = useAppDispatch();
-  const { practitioner, listBlock,triggerBlock } = useAppSelector((state) => state.practitionerSlice)
+  const { practitioner, triggerBlock } = useAppSelector((state) => state.practitionerSlice)
 
   const blockPatient = () => {
     const url = `${url_api}${API_BLOCK_PRACTITIONER}${practitioner.id}`;
@@ -23,10 +23,13 @@ const PopUpConfirmBlock = () => {
       .get(url, defineConfigGet({}))
       .then((resp: any) => {
         if (resp) {
-          success("Block Successfully");
+          if (resp.data.statue === true) {
+            success("Unblock Successfully");
+          } else {
+            success("Block Successfully");
+          }
           dispatch(setTriggerBlock(!triggerBlock));
           dispatch(setShowPopUpConfirmBlock(false));
-          dispatch(setListBlock([...listBlock, practitioner.id]));
         }
       })
       .catch((err) => {

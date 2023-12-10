@@ -7,18 +7,18 @@ import { API_ALL_GET_APPOINTMENT_PREVIOUS, API_SEARCH_APPOINTMENT_PREVIOUS } fro
 
 import PaginationComponent from "../../../components/common/Pagination";
 import { USER } from "../../../assets";
+import { useNavigate } from "react-router-dom";
 
 const PreviousAppointment = () => {
     const [listData, setListData] = useState([]);
     const [currentPage, setCurrentPage] = useState<number>(START_PAGE);
     const [itemPerPage, setItemPerPage] = useState<number>(DEFAULT_ITEM_PER_PAGE);
     const [totalItem, setTotalItem] = useState<number>(0);
-
     const [isSearch, setIsSearch] = useState<boolean>(false);
-
-
     const [name, setName] = useState<string>("");
     const [status, setStatus] = useState<string>("");
+
+    const navigate = useNavigate();
 
     const url_api = process.env.REACT_APP_API_URL;
 
@@ -104,7 +104,7 @@ const PreviousAppointment = () => {
                 <tbody>
                     {listData && listData.map((item: any, idx: number) => {
                         return (
-                            <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
+                            <tr className={`${idx % 2 === 1 ? "table-light" : ""}`} onClick={() => navigate("/di")}>
                                 <td >
                                     <img src={item.patientPhoto ? item.patientPhoto : USER} alt="img patient" className="image-patient" />
                                 </td>

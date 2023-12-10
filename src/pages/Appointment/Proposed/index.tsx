@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 import { DEFAULT_ITEM_PER_PAGE, START_PAGE } from "../../../constants";
-import { convertToDate, convertToTime, defineConfigGet } from "../../../Common/utils";
+import { convertToDate, convertToTime, defineConfigGet, styleStatus } from "../../../Common/utils";
 import { API_ALL_GET_APPOINTMENT_PROPOSED, API_SEARCH_APPOINTMENT_PROPOSED } from "../../../constants/api.constant";
 
 import PaginationComponent from "../../../components/common/Pagination";
@@ -95,6 +95,7 @@ const AppointmentProposed = () => {
                         <th scope="col">Appointment Date</th>
                         <th scope="col">Appointment Time</th>
                         <th scope="col">Doctor</th>
+                        <th scope="col">Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -120,6 +121,9 @@ const AppointmentProposed = () => {
                                     <span>{convertToTime(item.appointmentTimeEnd)}</span>
                                 </td>
                                 <td >{item.doctorName}</td>
+                                <td >
+                                    <span className={styleStatus(item.status)}>{item.status}</span>
+                                </td>
                             </tr>
                         );
                     })}

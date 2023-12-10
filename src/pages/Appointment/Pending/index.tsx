@@ -2,16 +2,16 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 import { DEFAULT_ITEM_PER_PAGE, START_PAGE } from "../../../constants";
-import { convertToDate, convertToTime, defineConfigGet } from "../../../Common/utils";
+import { convertToDate, convertToTime, defineConfigGet, styleStatus } from "../../../Common/utils";
 import { API_ALL_GET_APPOINTMENT_PENDING, API_SEARCH_APPOINTMENT_PENDING } from "../../../constants/api.constant";
 
 import PaginationComponent from "../../../components/common/Pagination";
 import { USER } from "../../../assets";
 import Layout from "../../../components/Layout";
-import PopUpAccept from "./PopUpAccept";
-import PopUpDeny from "./PopUpDeny";
 import { useAppSelector } from "../../../redux/hooks";
 import { KEY_LOCAL_STORAGE, TYPE_DOCTOR } from "../../../constants/general.constant";
+import PopUpAccept from "../../../components/common/PopUpAccept";
+import PopUpDeny from "../../../components/common/PopUpDeny";
 
 const AppointmentPending = () => {
     const [listData, setListData] = useState([]);
@@ -111,6 +111,7 @@ const AppointmentPending = () => {
                         <th scope="col">Appointment Date</th>
                         <th scope="col">Appointment Time</th>
                         <th scope="col">Doctor</th>
+                        <th scope="col">Status</th>
                         {type !== TYPE_DOCTOR && <th scope="col"></th>}
                     </tr>
                 </thead>
@@ -137,6 +138,9 @@ const AppointmentPending = () => {
                                     <span>{convertToTime(item.appointmentTimeEnd)}</span>
                                 </td>
                                 <td >{item.doctorName}</td>
+                                <td >
+                                    <span className={styleStatus(item.status)}>{item.status}</span>
+                                </td>
                                 {type !== TYPE_DOCTOR && <td >
                                     <button className="button button--small button--accept me-2" onClick={() => handleAccept(item)}>Accept</button>
                                     <button className="button button--small button--deny" onClick={() => handleDeny(item)}>Deny</button>

@@ -45,7 +45,7 @@ const InfoStaff = () => {
             </tr>
             <tr>
               <th scope="row">Date of birth</th>
-              <td>{staff?.dateOfBirth !== "null" ? staff?.dateOfBirth : "" }</td>
+              <td>{staff?.dateOfBirth !== "null" ? staff?.dateOfBirth : ""}</td>
             </tr>
             <tr>
               <th scope="row">Address</th>
@@ -111,7 +111,7 @@ const InfoStaff = () => {
               <div className="pb-3 mb-d-flex justify-content-between">
                 <h3 className="fw-bold text-uppercase">{staff?.name}</h3>
                 <div>
-                  <button className="button button--primary button--small" onClick={() => navigate(`/staff/overview/detail/${staff?.id}`)}>Edit</button>
+                  <button className="button button--primary button--small" onClick={() => navigate(`/staff/overview/detail/${param.staffId}`)}>Edit</button>
                 </div>
               </div>
               {_renderBasicInfo()}

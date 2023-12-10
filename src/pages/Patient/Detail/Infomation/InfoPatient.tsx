@@ -38,7 +38,6 @@ const InfoPatient = () => {
       .get(url, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
-          console.log("resp:", resp)
           setPatient(resp.data);
         }
       })
@@ -54,7 +53,8 @@ const InfoPatient = () => {
       .get(url, defineConfigGet({ page: currentPage, size: itemPerPage }))
       .then((resp: any) => {
         if (resp) {
-          setListAppointment(resp.data);
+          setListAppointment(resp.data.content);
+          setTotalItem(resp.data.totalElements);
         }
       })
       .catch((err) => {

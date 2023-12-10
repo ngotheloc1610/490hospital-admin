@@ -21,6 +21,7 @@ const InfoDoctor = () => {
 
   useEffect(() => {
     const id = param.doctorId;
+    console.log("id:", id)
     const url = `${url_api}${API_DETAIL_PRACTITIONER}${id}`;
 
     axios
@@ -56,7 +57,7 @@ const InfoDoctor = () => {
             </tr>
             <tr>
               <th scope="row">Citizen identification</th>
-              <td>{doctor?.identification!== "null" ? doctor?.identification : ""}</td>
+              <td>{doctor?.identification !== "null" ? doctor?.identification : ""}</td>
             </tr>
             <tr>
               <th scope="row">Phone number</th>
@@ -192,7 +193,7 @@ const InfoDoctor = () => {
               <div className="mb-3 d-flex justify-content-between">
                 <h3 className="fw-bold text-uppercase">{doctor?.name}</h3>
                 <div>
-                  <button className="button button--primary button--small" onClick={() => navigate(`/doctor/overview/detail/${doctor?.id}`)}>Edit</button>
+                  <button className="button button--primary button--small" onClick={() => navigate(`/doctor/overview/detail/${param.doctorId}`)}>Edit</button>
                 </div>
               </div>
               {_renderBasicInfo()}

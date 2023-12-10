@@ -56,7 +56,7 @@ const CreateEditStaff = () => {
 
   useEffect(() => {
     getStaffInfo(params.staffId)
-  }, [params.staffId])
+  }, [params.staffId, triggerEdit])
 
   useEffect(() => {
     getSpecialty()
@@ -73,13 +73,13 @@ const CreateEditStaff = () => {
           const dataConverted: any = {
             id: data?.id,
             name: data?.name,
-            birthday: data?.dateOfBirth,
+            birthday: data?.dateOfBirth !== "null" ? data?.dateOfBirth : null,
             gender: data?.gender,
             phoneNumber: data?.phoneNumber,
             email: data?.email,
             address: data?.address,
-            identifier: data?.identification,
-            specialty: data?.displaySpecialty,
+            specialty: data?.idSpecialty,
+            identifier: data?.identification !== "null" ? data?.identification : null,
             startDate: moment(data?.startWork).format("YYYY-MM-DD"),
             endDate: moment(data?.endWork).format("YYYY-MM-DD"),
           }
@@ -119,7 +119,7 @@ const CreateEditStaff = () => {
       return item.id === values.specialty;
     })[0]?.name;
 
-    const params = {
+    const paramsRq = {
       username: values.email,
       email: values.email,
       identifier: values.identifier,
@@ -140,13 +140,13 @@ const CreateEditStaff = () => {
     }
 
     axios
-      .put(url, params, defineConfigPost())
+      .put(url, paramsRq, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
           actions.setSubmitting(false);
           actions.resetForm();
           dispatch(setTriggerEdit(!triggerEdit))
-          navigate(`/staff/overview/${values.id}`);
+          navigate(`/staff/overview/${params.staffId}`);
           success("Update information success!");
         }
       })
@@ -300,7 +300,7 @@ const CreateEditStaff = () => {
             >
               {specialtyList ? (
                 specialtyList.map((item: any) => (
-                  <option value={item.name} key={item.code}>
+                  <option value={item.id} key={item.code}>
                     {item.name}
                   </option>
                 ))
@@ -383,7 +383,6 @@ const CreateEditStaff = () => {
       enableReinitialize={true}
       validationSchema={validationSchema}
       onSubmit={(values, actions) => {
-        console.log("values:", values)
         updatePractitioner(values, actions)
       }}
     >
@@ -406,7 +405,7 @@ const CreateEditStaff = () => {
             </div>
           </Form>
           <div className="mt-3 d-flex justify-content-end">
-            <button className="button button--small button--danger me-3" onClick={() => navigate(`/staff/overview/${staff?.id}`)}>
+            <button className="button button--small button--danger me-3" onClick={() => navigate(`/staff/overview/${params.staffId}`)}>
               Back
             </button>
 

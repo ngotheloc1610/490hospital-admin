@@ -5,9 +5,12 @@ import { Link, useParams } from "react-router-dom";
 import { FORMAT_DATE, TOTAL_STEP } from "../../constants/general.constant";
 import { defineConfigGet, defineConfigPost } from "../../Common/utils";
 import axios from "axios";
-import { API_DIAGNOSTIC_BMI, API_DIAGNOSTIC_BODY_SITE, API_DIAGNOSTIC_BOOK_DETAIL, API_DIAGNOSTIC_CATEGORY, API_DIAGNOSTIC_CONDITION, API_DIAGNOSTIC_CONDITION_BY_PATIENT, API_DIAGNOSTIC_OBSERVATION, API_DIAGNOSTIC_PATIENT_PROFILE } from "../../constants/api.constant";
+import { API_DIAGNOSTIC_BMI, API_DIAGNOSTIC_BODY_SITE, API_DIAGNOSTIC_BOOK_DETAIL, API_DIAGNOSTIC_CATEGORY, API_DIAGNOSTIC_CONDITION, API_DIAGNOSTIC_CONDITION_BY_PATIENT, API_DIAGNOSTIC_CREATE_DIAGNOSTIC, API_DIAGNOSTIC_OBSERVATION, API_DIAGNOSTIC_PATIENT_PROFILE } from "../../constants/api.constant";
 import moment from "moment";
 import { ALERT_STATUS, BLOOD_GLUCOSE, BLOOD_PRESSURE, BMI, HEART_RATE, TEMPERATURE } from "../../constants";
+import PopUpArrived from "../../components/common/PopupArrvied";
+import PopUpNoShow from "../../components/common/PopupNoShow";
+import PopUpDeny from "../../components/common/PopUpDeny";
 
 const DiagnosticReport = () => {
 
@@ -39,6 +42,12 @@ const DiagnosticReport = () => {
   const [weight, setWeight] = useState<number>(0);
   const [bmiPatient, setBMIPatient] = useState<number>(0);
 
+  const [isShowPopUpArrived, setIsShowPopUpArrived] = useState<boolean>(false);
+  const [isShowPopUpNoShow, setIsShowPopUpNoShow] = useState<boolean>(false);
+  const [isShowPopUpCancel, setIsShowPopUpCancel] = useState<boolean>(false);
+
+  const [appointment, setAppointment] = useState(null);
+
   const [listCurrentCondition, setListCurrentCondition] = useState<any>([{
     condition: "",
     bodySite: "",
@@ -69,21 +78,63 @@ const DiagnosticReport = () => {
   const [listPreviousEncounter, setListPreviousEncounter] = useState<any>([]);
 
   useEffect(() => {
-    // getObservations("651b8db3d10aa661ad1b70e9")
-    getProfilePatient("651b8db3d10aa661ad1b70e9")
-    getBookingDetail("651b8db3d10aa661ad1b70e9")
-    getPreviousEncounter("651b8db3d10aa661ad1b70e9")
+
     getCondition()
     getBodySite()
     getCategory()
   }, [])
 
   useEffect(() => {
-    if(height !== 0 && weight !== 0 ){
+    if (params.encounterId) {
+      // getObservations(params.encounterId)
+      getProfilePatient(params.encounterId)
+      getBookingDetail(params.encounterId)
+      getPreviousEncounter(params.encounterId)
+    }
+  }, [params.encounterId])
+
+
+  useEffect(() => {
+    if (height !== 0 && weight !== 0) {
       calcBMI()
     }
   }, [height, weight])
-  
+
+  const handleSubmit = () => {
+    createDiagnostic()
+  }
+
+  const createDiagnostic = () => {
+    const url = `${url_api}${API_DIAGNOSTIC_CREATE_DIAGNOSTIC}`;
+
+    const params = {
+      IdEncounter: "",
+      subjectReferencePatient: patientDetail.id,
+      subjectDisplay: patientDetail?.nameFirstRep?.text,
+      categoryDisplay: category,
+      codeDiaDisplay: finalDiagnosis,
+      conditionListTransfers: [],
+      observationListTransfers: [{
+        codeObseDisplay: "",
+        effectiveDateTime: "",
+        componentCode: "",
+        interpretation: ""
+      }],
+
+    }
+
+    axios
+      .post(url, params, defineConfigPost())
+      .then((resp: any) => {
+        if (resp) {
+          console.log("resp:", resp)
+        }
+      })
+      .catch((err: any) => {
+        console.log("error create diagnostic:", err);
+      });
+  }
+
   const calcBMI = () => {
     const url = `${url_api}${API_DIAGNOSTIC_BMI}`;
 
@@ -340,7 +391,7 @@ const DiagnosticReport = () => {
         <option hidden>Select a final diagnosis</option>
         {listDiagnosis ? (
           listDiagnosis.map((item: any) => (
-            <option value={item.code} key={item.code}>
+            <option value={item.display} key={item.code}>
               {item.display}
             </option>
           ))
@@ -357,7 +408,7 @@ const DiagnosticReport = () => {
         <option hidden>Select a category</option>
         {listCategory ? (
           listCategory.map((item: any) => (
-            <option value={item.code} key={item.code}>
+            <option value={item.display} key={item.code}>
               {item.display}
             </option>
           ))
@@ -397,6 +448,7 @@ const DiagnosticReport = () => {
             </button>
             <button
               className="button button--primary button--small"
+              onClick={() => handleSubmit()}
             >
               Submit & Fulfilled
             </button>
@@ -483,22 +535,22 @@ const DiagnosticReport = () => {
               </label>
               <div className="d-flex justify-content-between ms-3">
                 <div className="me-3">
-                <input type="text" value={bmiPatient} disabled className="input-small" />
+                  <input type="text" value={bmiPatient} disabled className="input-small" />
                 </div>
 
-              <div className="d-flex">
-              <div className="me-3">
-               <span className="me-2">Weight:</span>
-                <input type="number" value={weight} onChange={(e:any) => setWeight(e.target.value)} className="input-small" />
-                <span className="ms-1">kg</span>
-               </div>
+                <div className="d-flex">
+                  <div className="me-3">
+                    <span className="me-2">Weight:</span>
+                    <input type="number" value={weight} onChange={(e: any) => setWeight(e.target.value)} className="input-small" />
+                    <span className="ms-1">kg</span>
+                  </div>
 
-               <div>
-               <span className="me-2">Height:</span>
-                <input type="number"  value={height} onChange={(e:any) => setHeight(e.target.value)} className="input-small" />
-                <span className="ms-1">cm</span>
-               </div>
-              </div>
+                  <div>
+                    <span className="me-2">Height:</span>
+                    <input type="number" value={height} onChange={(e: any) => setHeight(e.target.value)} className="input-small" />
+                    <span className="ms-1">cm</span>
+                  </div>
+                </div>
               </div>
             </div>
             <select
@@ -816,7 +868,7 @@ const DiagnosticReport = () => {
                 </div>
 
                 <div className="col-12">
-                <button className="button button--smaller button--primary d-block ms-auto" onClick={() => {
+                  <button className="button button--smaller button--primary d-block ms-auto" onClick={() => {
                     const updatedList = [...listExtraCondition];
                     updatedList.splice(idx, 1);
                     setListExtraCondition(updatedList);
@@ -899,9 +951,9 @@ const DiagnosticReport = () => {
           <div className="d-flex justify-content-between mb-3">
             <h3 className="fw-bold">Appointment Details</h3>
             <div>
-              <button className="button button--small button--primary me-2">Arrived</button>
-              <button className="button button--small button--danger--outline me-2">No Show</button>
-              <button className="button button--small button--danger">Cancel</button>
+              <button className="button button--small button--primary me-2" onClick={() => { setIsShowPopUpArrived(true) }}>Arrived</button>
+              <button className="button button--small button--danger--outline me-2" onClick={() => { setIsShowPopUpNoShow(true) }}>No Show</button>
+              <button className="button button--small button--danger" onClick={() => { setIsShowPopUpCancel(true) }}>Cancel</button>
             </div>
           </div>
 
@@ -959,6 +1011,10 @@ const DiagnosticReport = () => {
           </div>
         </div>
       </section>
+
+      {isShowPopUpArrived && <PopUpArrived handleShowPopUp={setIsShowPopUpArrived} appointment={appointment} />}
+      {isShowPopUpNoShow && <PopUpNoShow handleShowPopUp={setIsShowPopUpNoShow} appointment={appointment} />}
+      {isShowPopUpCancel && <PopUpDeny handleShowPopUp={setIsShowPopUpCancel} appointment={appointment} />}
     </Layout>
   );
 };

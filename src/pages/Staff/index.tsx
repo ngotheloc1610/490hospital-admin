@@ -2,7 +2,6 @@ import { memo, useEffect, useState } from "react";
 import Layout from "../../components/Layout";
 import PaginationComponent from "../../components/common/Pagination";
 import { Outlet, useNavigate, useOutlet } from "react-router-dom";
-import TotalView from "../../components/common/TotalView";
 import PopUpConfirm from "./PopupConfirm";
 import {
   DEFAULT_ITEM_PER_PAGE,
@@ -10,7 +9,7 @@ import {
   START_PAGE,
   STATUS,
 } from "../../constants";
-import { ICON_BLOCK, ICON_PENCIL, ICON_TRASH } from "../../assets";
+import { ICON_BLOCK, ICON_PENCIL } from "../../assets";
 import axios from "axios";
 import { defineConfigGet, styleStatusPractitioner } from "../../Common/utils";
 import { API_ALL_GET_SPECIALTY, API_ALL_GET_STAFF, API_SEARCH_STAFF } from "../../constants/api.constant";
@@ -34,14 +33,19 @@ const Staff = () => {
   const [gender, setGender] = useState<string>("");
   const [specialty, setSpecialty] = useState<string>("");
   const [status, setStatus] = useState<string>("");
+  const [isSearch, setIsSearch] = useState<boolean>(false)
 
   const url_api = process.env.REACT_APP_API_URL;
   const dispatch = useAppDispatch();
-  const { showPopUpBlock } = useAppSelector((state) => state.practitionerSlice)
+  const { showPopUpBlock, triggerBlock } = useAppSelector((state) => state.practitionerSlice)
 
   useEffect(() => {
-    getStaff()
-  }, [currentPage, itemPerPage]);
+    if (isSearch) {
+      searchStaff()
+    } else {
+      getStaff()
+    }
+  }, [currentPage, itemPerPage, triggerBlock]);
 
   useEffect(() => {
     getSpecialty()
@@ -78,6 +82,22 @@ const Staff = () => {
       });
   }
 
+  const searchStaff = () => {
+    const url = `${url_api}${API_SEARCH_STAFF}`;
+
+    axios
+      .get(url, defineConfigGet({ page: currentPage, size: itemPerPage, nameStaff: name, nameSpecialty: specialty, gender: gender, status: status }))
+      .then((resp: any) => {
+        if (resp) {
+          setListData(resp.data.content);
+          setTotalItem(resp.data.totalElements);
+        }
+      })
+      .catch((err) => {
+        console.log("err:", err);
+      });
+  }
+
   const getCurrentPage = (item: number) => {
     setCurrentPage(item - 1);
   };
@@ -85,10 +105,6 @@ const Staff = () => {
   const getItemPerPage = (item: number) => {
     setItemPerPage(item);
     setCurrentPage(0);
-  };
-
-  const handleCancel = (item: any) => {
-    setShowPopUpConfirm(true);
   };
 
   const handleModify = (id: string) => {
@@ -101,20 +117,9 @@ const Staff = () => {
   };
 
   const handleSearch = () => {
-    const url = `${url_api}${API_SEARCH_STAFF}`;
-
-    axios
-      .get(url, defineConfigGet({ page: currentPage, size: itemPerPage, nameStaff: name, nameSpecialty: specialty, gender: gender, status: status }))
-      .then((resp: any) => {
-        if (resp) {
-          console.log("resp:", resp)
-          setListData(resp.data.content);
-          setTotalItem(resp.data.totalElements);
-        }
-      })
-      .catch((err) => {
-        console.log("err:", err);
-      });
+    setIsSearch(true);
+    setCurrentPage(0);
+    searchStaff()
   }
 
   const _renderListSpecialty = () => {
@@ -218,6 +223,7 @@ const Staff = () => {
             <th scope="col">Email</th>
             <th scope="col">Specialty</th>
             <th scope="col">Status</th>
+            <th scope="col">Status Account</th>
             <th scope="col"></th>
           </tr>
         </thead>
@@ -257,10 +263,10 @@ const Staff = () => {
                 <td onClick={() => navigate(`overview/${item.id}`)}>
                   <span className={styleStatusPractitioner(item.active)}>{item.active ? "Active" : "Inactive"}</span>
                 </td>
+                <td onClick={() => navigate(`overview/${item.id}`)}>
+                  <span className={styleStatusPractitioner(item.practitionerTarget.active)}>{item.practitionerTarget.active ? "Active" : "Inactive"}</span>
+                </td>
                 <td>
-                  {/* <span className="cursor-pointer" onClick={handleCancel}>
-                    <ICON_TRASH />
-                  </span> */}
                   <span className="ms-1 cursor-pointer" onClick={() => handleModify(item.id)}>
                     <ICON_PENCIL />
                   </span>
@@ -284,7 +290,6 @@ const Staff = () => {
         <Outlet />
       ) : (
         <>
-          {/* <TotalView /> */}
           <section className="table-container">
             <div className="table-container-contain">
               <div className="d-flex justify-content-center align-item-center">

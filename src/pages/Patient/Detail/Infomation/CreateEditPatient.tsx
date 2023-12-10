@@ -10,7 +10,7 @@ import { GENDER } from "../../../../constants";
 import { USER } from "../../../../assets";
 import { API_GET_PATIENT, API_UPDATE_PATIENT } from "../../../../constants/api.constant";
 import { defineConfigGet, defineConfigPost } from "../../../../Common/utils";
-import { setPatient, setShowPopUpConfirm, setTriggerUpdate } from "../../../../redux/features/patient/patientSlice";
+import { setPatient, setTriggerUpdate } from "../../../../redux/features/patient/patientSlice";
 import { error, success } from "../../../../Common/notify";
 
 const validationSchema = Yup.object().shape({
@@ -61,7 +61,7 @@ const CreateEditPatient = () => {
           const patientDetail = {
             id: data?.id,
             name: data?.name,
-            dateOfBirth: data?.birthDate,
+            dateOfBirth: data?.dateOfBirth,
             gender: data?.gender,
             phoneNumber: data?.phoneNumber,
             email: data?.email,
@@ -125,11 +125,6 @@ const CreateEditPatient = () => {
   const handlePickImage = () => {
     inputRef.current.click();
   };
-
-  const handleDelete = () => {
-    dispatch(setShowPopUpConfirm(true))
-    dispatch(setPatient(patientInfo))
-  }
 
   const _renderBasicInfo = (props: any) => {
     const { errors, touched } = props;
@@ -294,10 +289,6 @@ const CreateEditPatient = () => {
             >
               Back
             </button>
-
-            {/* <button className="button button--small button--danger me-3" onClick={() => handleDelete()}>
-              Delete
-            </button> */}
 
             <button
               className="button button--small button--primary"

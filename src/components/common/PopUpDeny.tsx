@@ -1,29 +1,29 @@
 import { Button, Modal } from "react-bootstrap";
 import axios from "axios";
 
-import { API_ACCEPT_APPOINTMENT } from "../../../constants/api.constant";
-import { defineConfigGet } from "../../../Common/utils";
-import { error, success } from "../../../Common/notify";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { setTriggerAccept } from "../../../redux/features/appointment/appointmentSlice";
+import { API_DENY_APPOINTMENT } from "../../constants/api.constant";
+import { defineConfigGet } from "../../Common/utils";
+import { error, success } from "../../Common/notify";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { setTriggerDeny } from "../../redux/features/appointment/appointmentSlice";
 
 interface IProps {
   handleShowPopUp: any;
   appointment: any;
 }
 
-const PopUpAccept = (props: IProps) => {
+const PopUpDeny = (props: IProps) => {
   const { handleShowPopUp, appointment } = props;
-
-  const { profile } = useAppSelector(state => state.practitionerSlice)
 
   const url_api = process.env.REACT_APP_API_URL;
 
-  const dispatch = useAppDispatch();
-  const { triggerAccept } = useAppSelector(state => state.appointmentSlice)
+  const { profile } = useAppSelector(state => state.practitionerSlice)
 
-  const acceptAppointment = () => {
-    const url = `${url_api}${API_ACCEPT_APPOINTMENT}${appointment.idAppointment}`;
+  const dispatch = useAppDispatch();
+  const { triggerDeny } = useAppSelector(state => state.appointmentSlice)
+
+  const denyAppointment = () => {
+    const url = `${url_api}${API_DENY_APPOINTMENT}${appointment?.idAppointment}`;
 
     const params = {
       idPractitionerAccept: profile?.id,
@@ -34,20 +34,20 @@ const PopUpAccept = (props: IProps) => {
       .post(url, defineConfigGet(params))
       .then((resp) => {
         if (resp) {
-          dispatch(setTriggerAccept(!triggerAccept))
-          success("Accept Successfully");
+          dispatch(setTriggerDeny(!triggerDeny))
+          success("Deny Successfully");
           handleShowPopUp(false);
         }
       })
       .catch((err: any) => {
-        console.log("error accept appointment:", err);
-        error(err.response.data.error || err.response.data.error.message);
+        console.log("err:", err);
+        error(err.response.data.error);
 
       });
   };
 
-  const handleAccept = () => {
-    acceptAppointment();
+  const handleDeny = () => {
+    denyAppointment();
   };
 
   return (
@@ -64,7 +64,7 @@ const PopUpAccept = (props: IProps) => {
             <i className="bi bi-exclamation-circle text-warning"></i>
           </span>
           <span className="ms-3 fs-18 fw-600 text-center">
-            Are you sure to accept appointment？
+            Are you sure to deny appointment？
           </span>
         </Modal.Body>
         <Modal.Footer className="justify-content-center">
@@ -78,7 +78,7 @@ const PopUpAccept = (props: IProps) => {
           </Button>
           <Button
             className="button button--small button--primary"
-            onClick={() => handleAccept()}
+            onClick={() => handleDeny()}
           >
             Yes
           </Button>
@@ -87,4 +87,4 @@ const PopUpAccept = (props: IProps) => {
     </>
   );
 };
-export default PopUpAccept;
+export default PopUpDeny;

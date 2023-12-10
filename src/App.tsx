@@ -161,7 +161,7 @@ const App = () => {
   return (
     <BrowserRouter basename={process.env.PUBLIC_URL}>
       {isLogin && _renderMainPage()}
-      {!isLogin && <Login />}
+      {!isLogin && !isForgotPassword && < Login />}
       {!isLogin && isForgotPassword && <ForgotPassword />}
       <ToastContainer theme="colored" />
     </BrowserRouter>

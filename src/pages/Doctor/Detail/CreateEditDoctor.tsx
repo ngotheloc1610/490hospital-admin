@@ -110,21 +110,19 @@ const CreateEditDoctor = () => {
             })
           )
 
-          console.log(moment(data?.startWork).format("YYYY-MM-DD"));
-          
-
           const dataConverted: any = {
             id: data.id,
             name: data?.name,
-            birthday: data?.dateOfBirth,
+            birthday: data?.dateOfBirth !== "null" ? data?.dateOfBirth : null,
             gender: data?.gender,
             phoneNumber: data?.phoneNumber,
             email: data?.email,
             address: data?.address,
-            identifier: data?.identification,
-            specialty: data?.displaySpecialty,
-            startDate: moment(data?.startWork).format("YYYY-MM-DD"),
-            endDate: moment(data?.endWork).format("YYYY-MM-DD"),
+            identifier: data?.identification !== "null" ? data?.identification : null,
+            startDate: data?.startWork ? moment(data?.startWork).format("YYYY-MM-DD") : null,
+            endDate: data?.endWork ? moment(data?.endWork).format("YYYY-MM-DD") : null,
+            specialty: data?.idSpecialty,
+            room: data?.idRoom,
             education: educations,
             specialize: specialize,
             achievement: achievement,
@@ -175,9 +173,6 @@ const CreateEditDoctor = () => {
     const idSpecialty = specialtyList.filter((item: any) => {
       return item.id === values.specialty;
     })[0]?.id;
-    console.log(specialtyList.filter((item: any) => {
-      return item.id === values.specialty;
-    }));
     const displaySpecialty = specialtyList.filter((item: any) => {
       return item.id === values.specialty;
     })[0]?.name;
@@ -220,7 +215,7 @@ const CreateEditDoctor = () => {
       qualificationPeriodEnd: new Date(item.end)
     }))
 
-    const params = {
+    const paramsRq = {
       username: values.email,
       email: values.email,
       identifier: values.identifier,
@@ -241,13 +236,13 @@ const CreateEditDoctor = () => {
     }
 
     axios
-      .put(url, params, defineConfigPost())
+      .put(url, paramsRq, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
           actions.setSubmitting(false);
           actions.resetForm();
           dispatch(setTriggerEdit(!triggerEdit))
-          navigate(`/doctor/overview/${values.id}`);
+          navigate(`/doctor/overview/${params.doctorId}`);
           success("Update information success!");
         }
       })
@@ -402,6 +397,7 @@ const CreateEditDoctor = () => {
                 setFieldValue("specialty", e.target.value)
               }}
             >
+              <option hidden>Select a specialty</option>
               {specialtyList.length > 0 ? (
                 specialtyList.map((item: any) => (
                   <option value={item.id} key={item.id}>
@@ -421,6 +417,7 @@ const CreateEditDoctor = () => {
             <div className="input-group">
               <select
                 id="room"
+                name="room"
                 className={`form-select ${errors?.room && touched?.room ? "is-invalid" : ""}`}
                 onChange={handleChange}
               >
@@ -494,19 +491,31 @@ const CreateEditDoctor = () => {
                     <tr key={index}>
                       <td>
                         <div className="d-flex">
-                          <input
+                          <Field
+                            name={`education[${index}].start`}
                             id={`education[${index}].start`}
-                            type="date"
-                            className="form-control"
-                            value={values.education.start}
-                            onChange={handleChange}
+                            className="form-control is-invalid"
+                            render={({ field }: any) => (
+                              <input
+                                {...field}
+                                type="date"
+                                className={`form-control`}
+                                max="9999-12-31"
+                              />
+                            )}
                           />
-                          <input
+                          <Field
+                            name={`education[${index}].end`}
                             id={`education[${index}].end`}
-                            type="date"
-                            className="form-control"
-                            value={values.education.end}
-                            onChange={handleChange}
+                            className="form-control is-invalid"
+                            render={({ field }: any) => (
+                              <input
+                                {...field}
+                                type="date"
+                                className={`form-control`}
+                                max="9999-12-31"
+                              />
+                            )}
                           />
                         </div>
                       </td>
@@ -571,19 +580,31 @@ const CreateEditDoctor = () => {
                     <tr key={index}>
                       <td>
                         <div className="d-flex">
-                          <input
+                          <Field
+                            name={`specialize[${index}].start`}
                             id={`specialize[${index}].start`}
-                            type="date"
-                            className="form-control"
-                            value={values.specialize.start}
-                            onChange={handleChange}
+                            className="form-control is-invalid"
+                            render={({ field }: any) => (
+                              <input
+                                {...field}
+                                type="date"
+                                className={`form-control`}
+                                max="9999-12-31"
+                              />
+                            )}
                           />
-                          <input
+                          <Field
+                            name={`specialize[${index}].end`}
                             id={`specialize[${index}].end`}
-                            type="date"
-                            className="form-control"
-                            value={values.specialize.end}
-                            onChange={handleChange}
+                            className="form-control is-invalid"
+                            render={({ field }: any) => (
+                              <input
+                                {...field}
+                                type="date"
+                                className={`form-control`}
+                                max="9999-12-31"
+                              />
+                            )}
                           />
                         </div>
                       </td>
@@ -646,19 +667,31 @@ const CreateEditDoctor = () => {
                     <tr key={index}>
                       <td>
                         <div className="d-flex">
-                          <input
+                          <Field
+                            name={`achievement[${index}].start`}
                             id={`achievement[${index}].start`}
-                            type="date"
-                            className="form-control"
-                            value={values.achievement.start}
-                            onChange={handleChange}
+                            className="form-control is-invalid"
+                            render={({ field }: any) => (
+                              <input
+                                {...field}
+                                type="date"
+                                className={`form-control`}
+                                max="9999-12-31"
+                              />
+                            )}
                           />
-                          <input
+                          <Field
+                            name={`achievement[${index}].end`}
                             id={`achievement[${index}].end`}
-                            type="date"
-                            className="form-control"
-                            value={values.achievement.end}
-                            onChange={handleChange}
+                            className="form-control is-invalid"
+                            render={({ field }: any) => (
+                              <input
+                                {...field}
+                                type="date"
+                                className={`form-control`}
+                                max="9999-12-31"
+                              />
+                            )}
                           />
                         </div>
                       </td>
@@ -727,7 +760,7 @@ const CreateEditDoctor = () => {
   const _renderListRoom = () => {
     return (
       <>
-        <option hidden>Room</option>
+        <option hidden>Select a room</option>
         {listRoom ? (
           listRoom.map((item: any) => (
             <option value={item.id} key={item.code}>
@@ -772,7 +805,7 @@ const CreateEditDoctor = () => {
             </div>
           </Form>
           <div className="mt-3 d-flex justify-content-end">
-            <button className="button button--small button--danger me-3" onClick={() => navigate(`/doctor/overview/${doctor?.id}`)}>
+            <button className="button button--small button--danger me-3" onClick={() => navigate(`/doctor/overview/${params.doctorId}`)}>
               Back
             </button>
 

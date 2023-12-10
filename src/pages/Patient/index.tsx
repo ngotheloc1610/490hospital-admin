@@ -8,17 +8,15 @@ import {
   API_SEARCH_PATIENT,
 } from "../../constants/api.constant";
 import {
-  defineConfigGet
+  defineConfigGet, styleStatusPractitioner
 } from "../../Common/utils";
-import { ICON_BLOCK, ICON_PENCIL, ICON_TRASH } from "../../assets";
+import { ICON_BLOCK, ICON_PENCIL } from "../../assets";
 
-import PopUpConfirm from "./PopupConfirm";
 import Layout from "../../components/Layout";
-import TotalView from "../../components/common/TotalView";
 import PaginationComponent from "../../components/common/Pagination";
 
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setPatient, setShowPopUpConfirm, setShowPopUpConfirmBlock } from "../../redux/features/patient/patientSlice";
+import { setPatient, setShowPopUpConfirmBlock } from "../../redux/features/patient/patientSlice";
 import PopUpConfirmBlock from "./PopupConfirmBlock";
 
 const Patient = () => {
@@ -31,7 +29,7 @@ const Patient = () => {
   const [name, setName] = useState<string>("");
   const [gender, setGender] = useState<string>("");
 
-  const { triggerDelete, showPopUpConfirm, showPopUpConfirmBlock, triggerBlock, listBlock } = useAppSelector((state) => state.patientSlice)
+  const { showPopUpConfirmBlock, triggerBlock } = useAppSelector((state) => state.patientSlice)
   const dispatch = useAppDispatch();
   const outlet = useOutlet();
   const navigate = useNavigate();
@@ -44,7 +42,7 @@ const Patient = () => {
     } else {
       getPatient();
     }
-  }, [currentPage, itemPerPage, triggerDelete, triggerBlock]);
+  }, [currentPage, itemPerPage, triggerBlock]);
 
   const getPatient = () => {
     const url = `${url_api}${API_ALL_GET_PATIENT}`;
@@ -84,11 +82,6 @@ const Patient = () => {
     setCurrentPage(0)
   }
 
-  const handleDelete = (patient: any) => {
-    dispatch(setShowPopUpConfirm(true));
-    dispatch(setPatient(patient));
-  };
-
   const handleBlock = (patient: any) => {
     dispatch(setShowPopUpConfirmBlock(true));
     dispatch(setPatient(patient));
@@ -107,10 +100,6 @@ const Patient = () => {
     setCurrentPage(0);
   };
 
-  const checkBlock = (id: string) => {
-    return listBlock.some((block: string) => block === id)
-  }
-
   const _renderTableListPatient = () => {
     return (
       <table className="table table-hover">
@@ -122,6 +111,7 @@ const Patient = () => {
             <th scope="col">Date of Birth</th>
             <th scope="col">Phone number</th>
             <th scope="col">Email</th>
+            <th scope="col">Status</th>
             <th scope="col"></th>
           </tr>
         </thead>
@@ -136,7 +126,7 @@ const Patient = () => {
             const src = `data:${item?.photo[0]?.contentType};base64,${item?.photo[0]?.data}`;
 
             return (
-              <tr className={`${idx % 2 === 1 ? "table-light" : ""} ${checkBlock(item.id) ? "text-decoration-line-through" : ""}`}>
+              <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
                 <th scope="row">
                   <img src={src} alt="img patient" />
                 </th>
@@ -149,10 +139,10 @@ const Patient = () => {
                   {phone}
                 </td>
                 <td onClick={() => navigate(`information/${item.id}`)}>{email}</td>
+                <td onClick={() => navigate(`information/${item.id}`)}>
+                  <span className={styleStatusPractitioner(item.active)}>{item.active ? "Active" : "Inactive"}</span>
+                </td>
                 <td>
-                  {/* <span className="cursor-pointer" onClick={() => handleDelete(item)}>
-                    <ICON_TRASH />
-                  </span> */}
                   <span className="ms-1 cursor-pointer" onClick={() => handleModify(item.id)}>
                     <ICON_PENCIL />
                   </span>
@@ -240,10 +230,6 @@ const Patient = () => {
             </div>
           </section>
         </>
-      )}
-
-      {showPopUpConfirm && (
-        <PopUpConfirm />
       )}
 
       {showPopUpConfirmBlock && (

@@ -220,6 +220,20 @@ button {
   padding: 5px;
 }
 
+.pending {
+  border-radius: 6px;
+  background: #172f71;
+  color: #fff;
+  padding: 5px;
+}
+
+.proposed {
+  border-radius: 6px;
+  background: #c19db1;
+  color: #8c044e;
+  padding: 5px;
+}
+
 .practitioner-active {
   border-radius: 6px;
   background: var(--e-3-ebff, #E3EBFF);

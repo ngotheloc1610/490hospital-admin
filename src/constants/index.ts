@@ -362,135 +362,135 @@ export const RULE_TEMPERATURE = [
 
 export const BLOOD_PRESSURE = [
   {
-    title: "Bleeding from nose",
+    label: "Bleeding from nose",
     value: "Bleeding from nose"
   },
   {
-    title: "Shortness of breath",
+    label: "Shortness of breath",
     value: "Shortness of breath"
   },
   {
-    title: "Dizziness",
+    label: "Dizziness",
     value: "Dizziness"
   },
   {
-    title: "Fainting",
+    label: "Fainting",
     value: "Fainting"
   },
   {
-    title: "Fatigue",
+    label: "Fatigue",
     value: "Fatigue"
   },
   {
-    title: "Nausea",
+    label: "Nausea",
     value: "Nausea"
   },
 ]
 
 export const BLOOD_GLUCOSE = [
   {
-    title: "Increased thirst",
+    label: "Increased thirst",
     value: "Increased thirst"
   },
   {
-    title: "Abdominal pain",
+    label: "Abdominal pain",
     value: "Abdominal pain"
   },
   {
-    title: "Loss of consciousness",
+    label: "Loss of consciousness",
     value: "Loss of consciousness"
   },
   {
-    title: "Headache",
+    label: "Headache",
     value: "Headache"
   },
   {
-    title: "Shaking",
+    label: "Shaking",
     value: "Shaking"
   },
   {
-    title: "Numbness of tongue",
+    label: "Numbness of tongue",
     value: "Numbness of tongue"
   },
 ]
 
 export const HEART_RATE = [
   {
-    title: "Palpitations",
+    label: "Palpitations",
     value: "Palpitations"
   },
   {
-    title: "Lightheadedness",
+    label: "Lightheadedness",
     value: "Lightheadedness"
   },
   {
-    title: "Chest pain",
+    label: "Chest pain",
     value: "Chest pain"
   },
   {
-    title: "Confusion",
+    label: "Confusion",
     value: "Confusion"
   },
   {
-    title: "Difficulty in initiating movement",
+    label: "Difficulty in initiating movement",
     value: "Difficulty in initiating movement"
   },
   {
-    title: "Shortness of breath",
+    label: "Shortness of breath",
     value: "Shortness of breath"
   },
 ]
 
 export const BMI = [
   {
-    title: "Snoring",
+    label: "Snoring",
     value: "Snoring"
   },
   {
-    title: "Back pain",
+    label: "Back pain",
     value: "Back pain"
   },
   {
-    title: "Joint pain",
+    label: "Joint pain",
     value: "Joint pain"
   },
   {
-    title: "Loss of hair",
+    label: "Loss of hair",
     value: "Loss of hair"
   },
   {
-    title: "Tired all the time",
+    label: "Tired all the time",
     value: "Tired all the time"
   },
 ]
 
 export const TEMPERATURE = [
   {
-    title: "Sweating",
+    label: "Sweating",
     value: "Sweating"
   },
   {
-    title: "Chill",
+    label: "Chill",
     value: "Chill"
   },
   {
-    title: "Muscle pain",
+    label: "Muscle pain",
     value: "Muscle pain"
   },
   {
-    title: "Loss of appetite",
+    label: "Loss of appetite",
     value: "Loss of appetite"
   },
   {
-    title: "Shallow breathing",
+    label: "Shallow breathing",
     value: "Shallow breathing"
   },
   {
-    title: "Clumsiness",
+    label: "Clumsiness",
     value: "Clumsiness"
   },
   {
-    title: "Drowsy",
+    label: "Drowsy",
     value: "Drowsy"
   },
 ]

@@ -1,10 +1,11 @@
 import { useState } from "react";
 import Layout from "../../../components/Layout";
 import { useAppSelector } from "../../../redux/hooks";
-import { defineConfigGet } from "../../../Common/utils";
+import { defineConfigPost } from "../../../Common/utils";
 import { API_CHANGE_PASSWORD } from "../../../constants/api.constant";
 import axios from "axios";
-import { error, warn } from "../../../Common/notify";
+import { error, success, warn } from "../../../Common/notify";
+import { useNavigate } from "react-router-dom";
 
 const ChangePassword = () => {
 
@@ -20,21 +21,23 @@ const ChangePassword = () => {
   const { practitioner } = useAppSelector((state) => state.practitionerSlice)
 
   const url_api = process.env.REACT_APP_API_URL;
+  const navigate = useNavigate()
 
   const changePassword = () => {
     const url = `${url_api}${API_CHANGE_PASSWORD}${practitioner.id}`;
 
     const param = {
-      oldPass: oldPassword.trim(),
-      newPass: newPassword.trim()
+      email: null,
+      newPass:newPassword.trim(),
+      oldPass:oldPassword.trim()
     }
 
     axios
-      .post(url, defineConfigGet(param))
+      .post(url,param, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
-          console.log("resp:", resp);
           if (resp) {
+            success(resp.data)
             setIsSuccess(true);
           }
         }
@@ -154,7 +157,7 @@ const ChangePassword = () => {
             You have successfully change your
             <span className="text-center d-block mt-2">password.</span>
           </p>
-          <p className="text-center">Re-directing to your dashboard...</p>
+          <p className="text-center text-reset" onClick={() => navigate("/information")}>Re-directing to your dashboard...</p>
         </div>
       </div>
     );
@@ -162,7 +165,7 @@ const ChangePassword = () => {
 
   return (
     <Layout>
-      {_renderChangePassword()}
+      {!isSuccess && _renderChangePassword()}
       {isSuccess && _renderSuccess()}
     </Layout>
   );

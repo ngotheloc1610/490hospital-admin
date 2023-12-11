@@ -4,7 +4,7 @@ import { setForgotPassword } from "../../../redux/features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
 import { API_FORGOT_PASSWORD, API_SEND_MAIL } from "../../../constants/api.constant";
 import { error, warn } from "../../../Common/notify";
-import { defineConfigGet } from "../../../Common/utils";
+import { defineConfigPost } from "../../../Common/utils";
 import axios from "axios";
 
 const ForgotPassword = () => {
@@ -52,11 +52,13 @@ const ForgotPassword = () => {
     const url = `${url_api}${API_SEND_MAIL}`;
 
     const params = {
-      email: email
+      email: email.trim(),
+      newPass:null,
+      oldPass:null
     }
 
     axios
-      .post(url, defineConfigGet(params))
+      .post(url,params, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
           console.log("resp:", resp)
@@ -73,12 +75,13 @@ const ForgotPassword = () => {
     const url = `${url_api}${API_FORGOT_PASSWORD}`;
 
     const params = {
-      email: email,
-      newPass: password
+      email: email.trim(),
+      newPass:password.trim(),
+      oldPass:null
     }
 
     axios
-      .post(url, defineConfigGet(params))
+      .post(url,params, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
           console.log("resp:", resp)
@@ -197,7 +200,7 @@ const ForgotPassword = () => {
 
   return (
     <>
-      {_renderForgotYourPw()}
+      {!isSendMail && !isCreateNewPass  &&_renderForgotYourPw()}
       {isSendMail && _renderCreateNewPw()}
       {isSendMail && isCreateNewPass && _renderSuccess()}
     </>

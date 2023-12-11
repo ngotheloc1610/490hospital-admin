@@ -84,6 +84,14 @@ const PreviousAppointment = () => {
         searchAppointment();
     }
 
+    const handleNavigate= (item:any) =>{
+        if(item.status === "Fulfilled"){
+            navigate(`/monitor/${item.encounterId}`)
+        }else{
+            navigate(`/diagnostic-report/${item.encounterId}`)
+        }
+    }
+
 
 
     const _renderTableListAppointment = () => {
@@ -104,7 +112,7 @@ const PreviousAppointment = () => {
                 <tbody>
                     {listData && listData.map((item: any, idx: number) => {
                         return (
-                            <tr className={`${idx % 2 === 1 ? "table-light" : ""}`} onClick={() => navigate("/di")}>
+                            <tr className={`${idx % 2 === 1 ? "table-light" : ""}`} onClick={()=>handleNavigate(item)}>
                                 <td >
                                     <img src={item.patientPhoto ? item.patientPhoto : USER} alt="img patient" className="image-patient" />
                                 </td>

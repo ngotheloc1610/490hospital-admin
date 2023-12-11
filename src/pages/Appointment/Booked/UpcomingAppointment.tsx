@@ -7,6 +7,7 @@ import { API_ALL_GET_APPOINTMENT_UPCOMING, API_SEARCH_APPOINTMENT_UPCOMING } fro
 
 import PaginationComponent from "../../../components/common/Pagination";
 import { USER } from "../../../assets";
+import { useNavigate } from "react-router-dom";
 
 const UpcomingAppointment = () => {
 
@@ -18,6 +19,8 @@ const UpcomingAppointment = () => {
     const [name, setName] = useState<string>("");
     const [status, setStatus] = useState<string>("");
     const [isSearch, setIsSearch] = useState<boolean>(false);
+
+    const navigate = useNavigate()
 
     const url_api = process.env.REACT_APP_API_URL;
 
@@ -102,7 +105,7 @@ const UpcomingAppointment = () => {
                 <tbody>
                     {listData && listData.map((item: any, idx: number) => {
                         return (
-                            <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
+                            <tr className={`${idx % 2 === 1 ? "table-light" : ""}`} onClick={()=>handleNavigate(item)}>
                                 <td >
                                     <img src={item.patientPhoto ? item.patientPhoto : USER} alt="img patient" className="image-patient" />
                                 </td>
@@ -174,6 +177,14 @@ const UpcomingAppointment = () => {
             </div>
         );
     };
+
+    const handleNavigate= (item:any) =>{
+        if(item.status === "Fulfilled"){
+            navigate(`/monitor/${item.encounterId}`)
+        }else{
+            navigate(`/diagnostic-report/${item.encounterId}`)
+        }
+    }
 
 
     return (

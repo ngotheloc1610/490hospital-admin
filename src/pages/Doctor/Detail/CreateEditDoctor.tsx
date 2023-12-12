@@ -218,7 +218,7 @@ const CreateEditDoctor = () => {
     const paramsRq = {
       username: values.email,
       email: values.email,
-      identifier: values.identifier,
+      identification: values.identifier,
       name: values.name,
       phoneNumber: values.phoneNumber,
       dateOfBirth: values.birthday,

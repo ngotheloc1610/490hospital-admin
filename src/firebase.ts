@@ -4,13 +4,13 @@ import { GENERATED_MESSAGING_KEY } from "./constants/general.constant";
 import { success } from "./Common/notify";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDqo2uQS8LxHFEMIYW2vulyLEXlRK7BFG0",
-    authDomain: "dhp-project-82573.firebaseapp.com",
-    projectId: "dhp-project-82573",
-    storageBucket: "dhp-project-82573.appspot.com",
-    messagingSenderId: "1061115445853",
-    appId: "1:1061115445853:web:e95f7dd48f1cef14e683b4",
-    measurementId: "G-2WHB5GSHYH",
+    apiKey: "AIzaSyCaUHSXWWGWLjz9p700fvwjzccTFgaXZxY",
+    authDomain: "sep490-hms.firebaseapp.com",
+    projectId: "sep490-hms",
+    storageBucket: "sep490-hms.appspot.com",
+    messagingSenderId: "858492094553",
+    appId: "1:858492094553:web:03be3f18835757ce758948",
+    measurementId: "G-MTSWM2ZZ90"
 };
 
 const app = initializeApp(firebaseConfig);

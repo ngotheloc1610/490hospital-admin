@@ -6,7 +6,6 @@ import SendIcon from '@mui/icons-material/Send';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import AddCommentOutlinedIcon from '@mui/icons-material/AddCommentOutlined';
-
 import { USER } from "../../assets";
 import { API_INBOX_MESSAGE, API_INBOX_MESSAGE_SEND, API_INBOX_ROOM_LIST } from "../../constants/api.constant";
 import { defineConfigGet, defineConfigPost } from "../../Common/utils";
@@ -14,8 +13,7 @@ import { error } from "../../Common/notify";
 import { FORMAT_DATE, FORMAT_DAY, FORMAT_TIME } from "../../constants/general.constant";
 import Layout from "../../components/Layout";
 import PopUpCreateRoom from "./PopUpCreateRoom";
-import SockJS from "sockjs-client";
-// import Stomp from 'stompjs';
+import { requestForToken } from "../../firebase";
 
 const Chat = () => {
     const url_api = process.env.REACT_APP_API_URL;
@@ -36,56 +34,18 @@ const Chat = () => {
 
     const [triggerSendMessage, setTriggerSendMessage] = useState(false);
 
-    let stompClient: any;
-    let socket;
-
-    useEffect(() => {
-        // connect()
-    }, []); // Ensure this effect runs only once when the component mounts
-
-    useEffect(() => {
-        messageRef?.current?.scrollIntoView({ behavior: 'smooth' })
-    }, [triggerSendMessage])
-
     useEffect(() => {
         getListInboxRoom()
+        requestForToken()
     }, [])
 
     useEffect(() => {
+        messageRef?.current?.scrollIntoView({ behavior: 'smooth' })
+
         if (idRoom) {
             getMessageByRoom(idRoom);
         }
     }, [triggerSendMessage])
-
-    // const connect = async () => {
-    //     socket = new SockJS(url_ws)
-    //     stompClient = Stomp.over(socket)
-    //     stompClient.connect({}, onConnected, onError)
-    // }
-
-    // const onConnected: any = async () => {
-
-    //     stompClient.subscribe('/chat.sendMessage', onMessageReceived)
-
-    //     stompClient.send("/topic/messages",
-    //         {},
-    //         JSON.stringify({
-    //             sender: "",
-    //             type: 'NEW_USER',
-    //             time: Date.now()
-    //         })
-    //     )
-    // }
-
-    // const onError: any = async (err: any) => {
-    //     console.log(err);
-
-    // }
-
-    // const onMessageReceived = async (payload: any) => {
-    //     console.log("onMessageReceived")
-    //     console.log(payload)
-    // }
 
     const getListInboxRoom = () => {
         const url = `${url_api}${API_INBOX_ROOM_LIST}`;
@@ -167,16 +127,7 @@ const Chat = () => {
 
     const handleFileImageChange = (event: any) => {
         const file = event.target.files[0];
-
-        if (file) {
-            const reader: any = new FileReader();
-
-            reader.onloadend = () => {
-                setImage(reader.result);
-            };
-
-            reader.readAsDataURL(file);
-        }
+        setImage(file)
     };
 
 
@@ -198,7 +149,7 @@ const Chat = () => {
                             </div>
                         </div>
                         <div className='chat-room-content'>
-                            {listRoom && listRoom.map((item: any) => {
+                            {listRoom.length > 0 && listRoom.map((item: any) => {
                                 return (
                                     <div className={`chat-room-content-item d-flex justify-content-between ${idRoom === item.id ? "active" : ""}`} onClick={() => { handleGetMessageByRoom(item.id); setIdRoom(item.id) }}>
                                         <div className="me-2 my-auto">
@@ -206,11 +157,11 @@ const Chat = () => {
                                         </div>
                                         <div className="w-50 text-break me-2 d-flex flex-column justify-content-between">
                                             <p className="text-break" style={{ textOverflow: "ellipsis" }}>{item.patient.mail}</p>
-                                            <p className="mb-0">{item.last_message.message}</p>
+                                            <p className="mb-0">{item?.last_message?.message}</p>
                                         </div>
                                         <div className="d-flex flex-column justify-content-between">
-                                            <p>{moment(item.last_message.updated_at.date).format(FORMAT_DATE)}</p>
-                                            <p className="mb-0 text-end">{moment(item.last_message.updated_at.date).format(FORMAT_TIME)}</p>
+                                            <p>{moment(item?.last_message?.updated_at?.date).format(FORMAT_DATE)}</p>
+                                            <p className="mb-0 text-end">{moment(item?.last_message?.updated_at?.date).format(FORMAT_TIME)}</p>
                                         </div>
                                     </div>
                                 )

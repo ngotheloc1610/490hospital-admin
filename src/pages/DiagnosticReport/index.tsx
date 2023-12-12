@@ -5,13 +5,12 @@ import { Link, useParams } from "react-router-dom";
 import { FORMAT_DATE, TOTAL_STEP } from "../../constants/general.constant";
 import { defineConfigGet, defineConfigPost } from "../../Common/utils";
 import axios from "axios";
-import { API_DIAGNOSTIC_BMI, API_DIAGNOSTIC_BODY_SITE, API_DIAGNOSTIC_BOOK_DETAIL, API_DIAGNOSTIC_CATEGORY, API_DIAGNOSTIC_CONDITION, API_DIAGNOSTIC_CONDITION_BY_PATIENT, API_DIAGNOSTIC_CREATE_DIAGNOSTIC, API_DIAGNOSTIC_OBSERVATION, API_DIAGNOSTIC_PATIENT_PROFILE } from "../../constants/api.constant";
+import { API_DIAGNOSTIC_BMI, API_DIAGNOSTIC_BODY_SITE, API_DIAGNOSTIC_BOOK_DETAIL, API_DIAGNOSTIC_CATEGORY, API_DIAGNOSTIC_CONDITION, API_DIAGNOSTIC_CONDITION_BY_PATIENT, API_DIAGNOSTIC_CREATE_DIAGNOSTIC, API_DIAGNOSTIC_PATIENT_PROFILE } from "../../constants/api.constant";
 import moment from "moment";
 import { ALERT_STATUS, BLOOD_GLUCOSE, BLOOD_PRESSURE, BMI, HEART_RATE, TEMPERATURE } from "../../constants";
 import PopUpArrived from "../../components/common/PopupArrvied";
 import PopUpNoShow from "../../components/common/PopupNoShow";
 import PopUpDeny from "../../components/common/PopUpDeny";
-
 import Select from 'react-select'
 import { warn } from "../../Common/notify";
 
@@ -42,7 +41,7 @@ const DiagnosticReport = () => {
 
   const [height, setHeight] = useState<number>(0);
   const [weight, setWeight] = useState<number>(0);
-  
+
   const [indexBloodPressure1, setIndexBloodPressure1] = useState<number>(0)
   const [indexBloodPressure2, setIndexBloodPressure2] = useState<number>(0)
   const [indexBloodGlucose, setIndexBloodGlucose] = useState<number>(0)
@@ -107,91 +106,91 @@ const DiagnosticReport = () => {
   }, [height, weight])
 
   const handleSubmit = () => {
-    if(!indexBMI || !indexBloodGlucose || !indexBloodPressure1 || !indexBloodPressure2 || !indexHeartRate || !indexTemperature
-      ){
-        warn("Vui lòng điền đủ hết chỉ số bệnh nhân!");
+    if (!indexBMI || !indexBloodGlucose || !indexBloodPressure1 || !indexBloodPressure2 || !indexHeartRate || !indexTemperature
+    ) {
+      warn("Vui lòng điền đủ hết chỉ số bệnh nhân!");
       return;
     }
 
     createDiagnostic()
   }
 
-  const handleChangeBloodPressures = (values:any) => {
+  const handleChangeBloodPressures = (values: any) => {
     setBloodPressures(values || []);
   };
-  const handleChangeBloodGlucoses = (values:any) => {
+  const handleChangeBloodGlucoses = (values: any) => {
     setBloodGlucoses(values || []);
   };
-  const handleChangeHeartRates = (values:any) => {
+  const handleChangeHeartRates = (values: any) => {
     setHeartRates(values || []);
   };
-  const handleChangeTemperatures = (values:any) => {
+  const handleChangeTemperatures = (values: any) => {
     setTemperatures(values || []);
   };
-  const handleChangeBMIs = (values:any) => {
+  const handleChangeBMIs = (values: any) => {
     setBMIs(values || []);
   };
 
   const createDiagnostic = () => {
     const url = `${url_api}${API_DIAGNOSTIC_CREATE_DIAGNOSTIC}`;
 
-    let extraConditions:any = []
-    let currentConditions:any = []
-   let listObservation:any = [
-    {
-    codeObseDisplay: "Blood Pressure",
-    effectiveDateTime: null,
-    componentCode: [indexBloodPressure1,indexBloodPressure2],
-    interpretation: bloodPressures
-   },
- 
-    {
-    codeObseDisplay: "Blood Glucose",
-    effectiveDateTime: null,
-    componentCode: [indexBloodGlucose],
-    interpretation: bloodGlucoses
-   },
-    {
-    codeObseDisplay: "Temperature",
-    effectiveDateTime: null,
-    componentCode: [indexTemperature],
-    interpretation: temperatures
-   },
-    {
-    codeObseDisplay: "Heart Rate",
-    effectiveDateTime: null,
-    componentCode: [indexHeartRate],
-    interpretation: heartRates
-   },
-   {
-    codeObseDisplay: "BMI",
-    effectiveDateTime: null,
-    componentCode: [indexBMI],
-    interpretation: bmis
-   },
-  ]
+    let extraConditions: any = []
+    let currentConditions: any = []
+    let listObservation: any = [
+      {
+        codeObseDisplay: "Blood Pressure",
+        effectiveDateTime: null,
+        componentCode: [indexBloodPressure1, indexBloodPressure2],
+        interpretation: bloodPressures
+      },
 
-   listCurrentCondition.forEach((item:any) => currentConditions.push({
-    type:"Normal",
-    severity: item.severity,
-    codeDisplay: item.condition,
-    bodySite: item.bodySite,
-    encounterId: params.encounterId,
-    recordedDate: item.recordedDate,
-    noteText: item.note,
-    createAt: new Date().toISOString()
-   }))
+      {
+        codeObseDisplay: "Blood Glucose",
+        effectiveDateTime: null,
+        componentCode: [indexBloodGlucose],
+        interpretation: bloodGlucoses
+      },
+      {
+        codeObseDisplay: "Temperature",
+        effectiveDateTime: null,
+        componentCode: [indexTemperature],
+        interpretation: temperatures
+      },
+      {
+        codeObseDisplay: "Heart Rate",
+        effectiveDateTime: null,
+        componentCode: [indexHeartRate],
+        interpretation: heartRates
+      },
+      {
+        codeObseDisplay: "BMI",
+        effectiveDateTime: null,
+        componentCode: [indexBMI],
+        interpretation: bmis
+      },
+    ]
 
-   listExtraCondition.forEach((item:any) =>extraConditions.push({
-    type:"Extra",
-    severity: item.severity,
-    codeDisplay: item.condition,
-    bodySite: item.bodySite,
-    encounterId: params.encounterId,
-    recordedDate: item.recordedDate,
-    noteText: item.note,
-    createAt: new Date().toISOString()
-   }) )
+    listCurrentCondition.forEach((item: any) => currentConditions.push({
+      type: "Normal",
+      severity: item.severity,
+      codeDisplay: item.condition,
+      bodySite: item.bodySite,
+      encounterId: params.encounterId,
+      recordedDate: item.recordedDate,
+      noteText: item.note,
+      createAt: new Date().toISOString()
+    }))
+
+    listExtraCondition.forEach((item: any) => extraConditions.push({
+      type: "Extra",
+      severity: item.severity,
+      codeDisplay: item.condition,
+      bodySite: item.bodySite,
+      encounterId: params.encounterId,
+      recordedDate: item.recordedDate,
+      noteText: item.note,
+      createAt: new Date().toISOString()
+    }))
 
     const rqParams = {
       IdEncounter: params.encounterId,
@@ -468,18 +467,18 @@ const DiagnosticReport = () => {
                 Blood Pressure:
               </label>
               <div className="ms-2">
-                <input type="number" className="input-small" value={indexBloodPressure1} onChange={(e:any)=>setIndexBloodPressure1(e.target.value)}/>
+                <input type="number" className="input-small" value={indexBloodPressure1} onChange={(e: any) => setIndexBloodPressure1(e.target.value)} />
                 <span> / </span>
-                <input type="number" className="input-small" value={indexBloodPressure2} onChange={(e:any)=>setIndexBloodPressure2(e.target.value)}/>
+                <input type="number" className="input-small" value={indexBloodPressure2} onChange={(e: any) => setIndexBloodPressure2(e.target.value)} />
                 <span className="ms-1">mmHg</span>
               </div>
             </div>
-            <Select 
-                    options={BLOOD_PRESSURE} 
-                    isMulti
-                    onChange={handleChangeBloodPressures}
-                    value={bloodPressures}
-                    placeholder="-- Additional Conditions (if applicable)"
+            <Select
+              options={BLOOD_PRESSURE}
+              isMulti
+              onChange={handleChangeBloodPressures}
+              value={bloodPressures}
+              placeholder="-- Additional Conditions (if applicable)"
             />
           </div>
           <div className="col-6">
@@ -488,16 +487,16 @@ const DiagnosticReport = () => {
                 Temperature:
               </label>
               <div className="ms-2">
-                <input type="number" className="input-small" value={indexTemperature} onChange={(e:any)=>setIndexTemperature(e.target.value)}/>
+                <input type="number" className="input-small" value={indexTemperature} onChange={(e: any) => setIndexTemperature(e.target.value)} />
                 <span className="ms-1">&deg;C</span>
               </div>
             </div>
-            <Select 
-                    options={TEMPERATURE} 
-                    isMulti
-                    onChange={handleChangeTemperatures}
-                    value={temperatures}
-                    placeholder="-- Additional Conditions (if applicable)"
+            <Select
+              options={TEMPERATURE}
+              isMulti
+              onChange={handleChangeTemperatures}
+              value={temperatures}
+              placeholder="-- Additional Conditions (if applicable)"
             />
           </div>
           <div className="col-6">
@@ -506,16 +505,16 @@ const DiagnosticReport = () => {
                 Blood Glucose:
               </label>
               <div className="ms-2">
-                <input type="number" className="input-small" value={indexBloodGlucose} onChange={(e:any)=>setIndexBloodGlucose(e.target.value)}/>
+                <input type="number" className="input-small" value={indexBloodGlucose} onChange={(e: any) => setIndexBloodGlucose(e.target.value)} />
                 <span className="ms-1">mmol/L</span>
               </div>
             </div>
-            <Select 
-                    options={BLOOD_GLUCOSE} 
-                    isMulti
-                    onChange={handleChangeBloodGlucoses}
-                    value={bloodGlucoses}
-                    placeholder="-- Additional Conditions (if applicable)"
+            <Select
+              options={BLOOD_GLUCOSE}
+              isMulti
+              onChange={handleChangeBloodGlucoses}
+              value={bloodGlucoses}
+              placeholder="-- Additional Conditions (if applicable)"
             />
           </div>
           <div className="col-6">
@@ -543,12 +542,12 @@ const DiagnosticReport = () => {
                 </div>
               </div>
             </div>
-            <Select 
-                    options={BMI}
-                    isMulti
-                    onChange={handleChangeBMIs}
-                    value={bmis}
-                    placeholder="-- Additional Conditions (if applicable)"
+            <Select
+              options={BMI}
+              isMulti
+              onChange={handleChangeBMIs}
+              value={bmis}
+              placeholder="-- Additional Conditions (if applicable)"
             />
           </div>
           <div className="col-12 mb-3">
@@ -557,16 +556,16 @@ const DiagnosticReport = () => {
                 Heart Rate:
               </label>
               <div className="ms-2">
-                <input type="number" className="input-small" value={indexHeartRate} onChange={(e:any)=>setIndexHeartRate(e.target.value)}/>
+                <input type="number" className="input-small" value={indexHeartRate} onChange={(e: any) => setIndexHeartRate(e.target.value)} />
                 <span className="ms-1">bpm</span>
               </div>
             </div>
-            <Select 
-                    options={HEART_RATE}
-                    isMulti
-                    onChange={handleChangeHeartRates}
-                    value={heartRates}
-                    placeholder="-- Additional Conditions (if applicable)"
+            <Select
+              options={HEART_RATE}
+              isMulti
+              onChange={handleChangeHeartRates}
+              value={heartRates}
+              placeholder="-- Additional Conditions (if applicable)"
             />
           </div>
         </div>

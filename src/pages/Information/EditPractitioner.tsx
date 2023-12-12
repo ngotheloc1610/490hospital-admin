@@ -5,11 +5,11 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import { API_MEDIA_UPLOAD, API_PROFILE_PRACTITIONER, API_UPDATE_PROFILE_PRACTITIONER } from "../../constants/api.constant";
-import { defineConfigGet, defineConfigPost } from "../../Common/utils";
+import { defineConfigPost } from "../../Common/utils";
 import { error, success, warn } from "../../Common/notify";
 import { GENDER } from "../../constants";
 import { USER } from "../../assets";
-import { FORMAT_DATE } from "../../constants/general.constant";
+import { FORMAT_DATE, KEY_LOCAL_STORAGE } from "../../constants/general.constant";
 import moment from "moment";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setTriggerEdit } from "../../redux/features/practitioner/practitionerSlice";
@@ -52,14 +52,8 @@ const EditPractitioner = () => {
         getProfilePractitioner()
     }, [])
 
-    useEffect(() => {
-        if (selectedFile) {
-            uploadImage()
-        }
-    }, [selectedFile])
+    const uploadImage = async () => {
 
-
-    const uploadImage = () => {
         const url = `${url_api}${API_MEDIA_UPLOAD}`;
 
         if (!selectedFile) {
@@ -67,22 +61,23 @@ const EditPractitioner = () => {
             return;
         }
 
-        let formData = new FormData();
-        formData.append('image', selectedFile);
+        const formData: FormData = new FormData();
+        formData.append('file', selectedFile);
 
-        const params = { file: formData }
+        try {
+            const config = {
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem(KEY_LOCAL_STORAGE.AUTHEN)}`,
+                    "Content-Type": "multipart/form-data",
+                },
+            }
 
-        axios
-            .post(url, defineConfigGet(params))
-            .then((resp: any) => {
-                if (resp) {
-                    console.log("resp:", resp)
-                }
-            })
-            .catch((err: any) => {
-                console.log("error upload image:", err);
-                error(err.response.data.error);
-            });
+            const { data } = await axios.post(url, formData, config)
+            console.log("data:", data)
+        } catch (err: any) {
+            console.log(err);
+            error(err.response.data.error)
+        }
     }
 
     const getProfilePractitioner = () => {
@@ -121,7 +116,7 @@ const EditPractitioner = () => {
             username: values.email,
             email: values.email,
             password: null,
-            identifier: values.identifier,
+            identification: values.identifier,
             name: values.name,
             phoneNumber: values.phoneNumber,
             dateOfBirth: values.birthday,
@@ -143,6 +138,7 @@ const EditPractitioner = () => {
                 if (resp) {
                     actions.setSubmitting(false);
                     actions.resetForm();
+                    uploadImage()
                     dispatch(setTriggerEdit(!triggerEdit))
                     success("Update Successfully!");
                     navigate("/information");
@@ -383,7 +379,7 @@ const EditPractitioner = () => {
 
     const _renderImage = () => {
         return (
-            <form action="" onClick={handlePickImage}>
+            <form onClick={handlePickImage}>
                 <div className="h-100 d-flex flex-column" >
                     <div className="h-100">
                         <img
@@ -394,7 +390,6 @@ const EditPractitioner = () => {
                         />
                         <input
                             type="file"
-                            accept="image/*"
                             className="d-none"
                             ref={inputRef}
                             onChange={handleChangeImage}

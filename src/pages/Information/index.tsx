@@ -7,7 +7,7 @@ import EditPractitioner from "./EditPractitioner";
 import { defineConfigPost } from "../../Common/utils";
 import { API_PROFILE_PRACTITIONER } from "../../constants/api.constant";
 import { USER } from "../../assets";
-import { FORMAT_DATE } from "../../constants/general.constant";
+import { FORMAT_DATE, KEY_LOCAL_STORAGE, TYPE_ADMIN, TYPE_STAFF } from "../../constants/general.constant";
 import Layout from "../../components/Layout";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setPractitioner } from "../../redux/features/practitioner/practitionerSlice";
@@ -20,6 +20,7 @@ const Information = () => {
     const url_api = process.env.REACT_APP_API_URL;
     const { triggerEdit } = useAppSelector((state) => state.practitionerSlice)
     const dispatch = useAppDispatch();
+    const type = localStorage.getItem(KEY_LOCAL_STORAGE.TYPE);
 
     useEffect(() => {
         getProfilePractitioner()
@@ -204,9 +205,10 @@ const Information = () => {
                             </div>
 
                             {_renderWorkInfo()}
-                            {_renderEducationInfo()}
-                            {_renderSpecializedActivities()}
-                            {_renderAchievement()}
+                            {type !== TYPE_STAFF && <>
+                                {practitionerInfo?.qualificationsEdu?.length > 0 && _renderEducationInfo()}
+                                {practitionerInfo?.qualificationsSpecActivities?.length > 0 && _renderSpecializedActivities()}
+                                {practitionerInfo?.qualificationsAchive?.length > 0 && _renderAchievement()}</>}
                         </div>
                     </>
                 }

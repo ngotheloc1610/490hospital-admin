@@ -1,49 +1,52 @@
-import { log } from 'util';
-import { getMessaging, getToken } from 'firebase/messaging';
-import { getFirestore } from 'firebase/firestore/lite';
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth"
+import { getMessaging, getToken, onMessage } from "firebase/messaging";
+import { GENERATED_MESSAGING_KEY } from "./constants/general.constant";
+import { success } from "./Common/notify";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCaUHSXWWGWLjz9p700fvwjzccTFgaXZxY",
-    authDomain: "sep490-hms.firebaseapp.com",
-    projectId: "sep490-hms",
-    storageBucket: "sep490-hms.appspot.com",
-    messagingSenderId: "858492094553",
-    appId: "1:858492094553:web:03be3f18835757ce758948",
-    measurementId: "G-MTSWM2ZZ90"
+    apiKey: "AIzaSyDqo2uQS8LxHFEMIYW2vulyLEXlRK7BFG0",
+    authDomain: "dhp-project-82573.firebaseapp.com",
+    projectId: "dhp-project-82573",
+    storageBucket: "dhp-project-82573.appspot.com",
+    messagingSenderId: "1061115445853",
+    appId: "1:1061115445853:web:e95f7dd48f1cef14e683b4",
+    measurementId: "G-2WHB5GSHYH",
 };
 
-// const firestore = getFirestore(firebaseApp)
-// const auth = getAuth(firebaseApp);
+const app = initializeApp(firebaseConfig);
 
+const messaging = getMessaging(app);
 
-function requestPermission() {
-    Notification.requestPermission().then((permission: any) => {
-        if (permission === "granted") {
-            console.log("notification permisstion granted");
-            const firebaseApp = initializeApp(firebaseConfig);
-            const messaging = getMessaging(firebaseApp);
+export const requestForToken = () => {
+    return getToken(messaging, { vapidKey: GENERATED_MESSAGING_KEY })
+        .then((currentToken) => {
+            if (currentToken) {
+                console.log("currentToken:", currentToken)
+                return currentToken;
+                // Perform any other neccessary action with the token
+            } else {
+                // Show permission request UI
+                console.log(
+                    "No registration token available. Request permission to generate one."
+                );
+            }
+        })
+        .catch((err) => {
+            console.log("An error occurred while retrieving token. ", err);
+        });
+};
 
-            getToken(messaging, { vapidKey: 'BEUKbyRgHgi_UbRaqXSC9ePzehNWhq4umKlvQXrshEAV5tuBMbxfw_Uhw3RE_LSP3MJXgWcYpJq6VaNZtrjBQbw' }).then((currentToken) => {
-                if (currentToken) {
-                    console.log("currentToken:", currentToken)
-                } else {
-                    console.log('No registration token available. Request permission to generate one.');
-                    // ...
-                }
-            }).catch((err) => {
-                console.log('An error occurred while retrieving token. ', err);
-                // ...
-            });
-
-        } else {
-            console.log("Do not have permission");
-
-        }
-    })
-}
-
-requestPermission()
-
-// export { firestore, auth, messaging }
+export const onMessageListener = () =>
+    new Promise((resolve) => {
+        onMessage(messaging, (payload: any) => {
+            const newNoti = {
+                title: payload.notification.title,
+                body: payload.notification.body,
+            };
+            const roomId = JSON.parse(
+                payload.data["gcm.notification.payload"]
+            ).whereToId;
+            // success(ToastMessageLink(roomId, newNoti.title, newNoti.body));
+            resolve(newNoti);
+        });
+    });

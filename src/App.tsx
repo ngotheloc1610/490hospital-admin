@@ -113,7 +113,9 @@ const RouterDom = () => (
 
     <Route path={RouterUrl.PRACTITIONER} element={<Practitioner />} />
 
-    <Route path={RouterUrl.DIAGNOSTIC_REPORT} element={<DiagnosticReport />} />
+    <Route path={RouterUrl.DIAGNOSTIC_REPORT} >
+      <Route path=":encounterId" element={<DiagnosticReport />} />
+    </Route>
 
     <Route path={RouterUrl.STAFF} element={<Staff />}>
       <Route path="overview" element={<DetailStaff />}>

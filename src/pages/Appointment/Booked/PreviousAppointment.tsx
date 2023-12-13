@@ -87,12 +87,13 @@ const PreviousAppointment = () => {
         searchAppointment();
     }
 
-    const handleNavigate= (item:any) =>{
-        if(item.status === "Fulfilled"){
-            navigate(`/monitor/${item.encounterId}`)
-        }else{
+    const handleNavigate = (item: any) => {
+        if (item.status === "Fulfilled") {
+            navigate(`/monitor/${item.idEncounter}`)
+        } else {
+            console.log("item:", item)
             dispatch(setAppointment(item))
-            navigate(`/diagnostic-report/${item.encounterId}`)
+            navigate(`/diagnostic-report/${item.idEncounter}`)
         }
     }
 
@@ -116,7 +117,7 @@ const PreviousAppointment = () => {
                 <tbody>
                     {listData && listData.map((item: any, idx: number) => {
                         return (
-                            <tr className={`${idx % 2 === 1 ? "table-light" : ""}`} onClick={()=>handleNavigate(item)}>
+                            <tr className={`${idx % 2 === 1 ? "table-light" : ""}`} onClick={() => handleNavigate(item)}>
                                 <td >
                                     <img src={item.patientPhoto ? item.patientPhoto : USER} alt="img patient" className="image-patient" />
                                 </td>

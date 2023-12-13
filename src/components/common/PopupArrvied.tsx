@@ -4,30 +4,28 @@ import { API_ARRIVED_APPOINTMENT } from "../../constants/api.constant";
 import { defineConfigPost } from "../../Common/utils";
 import { error, success } from "../../Common/notify";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { setTriggerArrived } from "../../redux/features/appointment/appointmentSlice";
 
 interface IProps {
     handleShowPopUp: any;
-    appointment: any;
 }
 
 const PopUpArrived = (props: IProps) => {
-    const { handleShowPopUp, appointment } = props;
+    const { handleShowPopUp } = props;
 
-    const { profile } = useAppSelector(state => state.practitionerSlice)
-    const { triggerAccept } = useAppSelector(state => state.appointmentSlice)
+    const { triggerArrived, appointment } = useAppSelector(state => state.appointmentSlice)
     const dispatch = useAppDispatch();
 
     const url_api = process.env.REACT_APP_API_URL;
 
-
     const arrivedAppointment = () => {
-        const url = `${url_api}${API_ARRIVED_APPOINTMENT}${appointment.idAppointment}`;
+        const url = `${url_api}${API_ARRIVED_APPOINTMENT}${appointment?.idAppointment}`;
 
         axios
             .post(url, defineConfigPost())
             .then((resp) => {
                 if (resp) {
-                    //   dispatch(setTriggerAccept(!triggerAccept))
+                    dispatch(setTriggerArrived(!triggerArrived))
                     success("Arrived Successfully");
                     handleShowPopUp(false);
                 }

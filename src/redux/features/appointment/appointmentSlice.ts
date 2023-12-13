@@ -7,12 +7,16 @@ interface IAppointmentState {
   triggerAccept: boolean;
   triggerDeny: boolean;
   triggerNoShow: boolean;
+  triggerArrived: boolean;
+  appointment: any;
 }
 
 const initialState: IAppointmentState = {
   triggerAccept: false,
   triggerDeny: false,
   triggerNoShow: false,
+  triggerArrived: false,
+  appointment: null
 };
 
 export const appointmentSlice = createSlice({
@@ -28,10 +32,16 @@ export const appointmentSlice = createSlice({
     setTriggerNoShow: (state, action: PayloadAction<boolean>) => {
       state.triggerNoShow = action.payload;
     },
+    setTriggerArrived: (state, action: PayloadAction<boolean>) => {
+      state.triggerArrived = action.payload;
+    },
+    setAppointment: (state, action: PayloadAction<any>) => {
+      state.appointment = action.payload;
+    },
   },
 });
 
-export const { setTriggerAccept, setTriggerDeny, setTriggerNoShow } =
+export const { setTriggerAccept, setTriggerDeny, setTriggerNoShow, setTriggerArrived, setAppointment } =
   appointmentSlice.actions;
 
 export const selectAppointment = (state: RootState) => state.appointmentSlice;

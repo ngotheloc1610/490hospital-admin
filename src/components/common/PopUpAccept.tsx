@@ -2,36 +2,37 @@ import { Button, Modal } from "react-bootstrap";
 import axios from "axios";
 
 import { API_ACCEPT_APPOINTMENT } from "../../constants/api.constant";
-import { defineConfigGet } from "../../Common/utils";
+import { defineConfigPost } from "../../Common/utils";
 import { error, success } from "../../Common/notify";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setTriggerAccept } from "../../redux/features/appointment/appointmentSlice";
 
 interface IProps {
   handleShowPopUp: any;
-  appointment: any;
 }
 
 const PopUpAccept = (props: IProps) => {
-  const { handleShowPopUp, appointment } = props;
+  const { handleShowPopUp } = props;
 
   const { profile } = useAppSelector(state => state.practitionerSlice)
 
   const url_api = process.env.REACT_APP_API_URL;
 
   const dispatch = useAppDispatch();
-  const { triggerAccept } = useAppSelector(state => state.appointmentSlice)
+  const { triggerAccept , appointment } = useAppSelector(state => state.appointmentSlice)
 
   const acceptAppointment = () => {
-    const url = `${url_api}${API_ACCEPT_APPOINTMENT}${appointment.idAppointment}`;
+    const url = `${url_api}${API_ACCEPT_APPOINTMENT}${appointment?.idAppointment}`;
 
     const params = {
-      idPractitionerAccept: profile?.id,
-      namePractitionerAccept: profile?.name
+      reference: profile?.id,
+      display: profile?.name,
+      type:"",
+      identifier:null
     }
 
     axios
-      .post(url, defineConfigGet(params))
+      .post(url,params, defineConfigPost())
       .then((resp) => {
         if (resp) {
           dispatch(setTriggerAccept(!triggerAccept))

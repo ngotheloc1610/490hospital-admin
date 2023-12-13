@@ -4,25 +4,25 @@ import { error, success } from "../../Common/notify";
 import { defineConfigGet } from "../../Common/utils";
 import { API_NO_SHOW_APPOINTMENT } from "../../constants/api.constant";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { setTriggerNoShow } from "../../redux/features/appointment/appointmentSlice";
 
 
 interface IProps {
     handleShowPopUp: any;
-    appointment: any;
 }
 
 const PopUpNoShow = (props: IProps) => {
-    const { handleShowPopUp, appointment } = props;
+    const { handleShowPopUp } = props;
 
     const { profile } = useAppSelector(state => state.practitionerSlice)
-    const { triggerAccept } = useAppSelector(state => state.appointmentSlice)
+    const { triggerNoShow, appointment } = useAppSelector(state => state.appointmentSlice)
     const dispatch = useAppDispatch();
 
     const url_api = process.env.REACT_APP_API_URL;
 
 
     const noshowAppointment = () => {
-        const url = `${url_api}${API_NO_SHOW_APPOINTMENT}${appointment.idAppointment}`;
+        const url = `${url_api}${API_NO_SHOW_APPOINTMENT}${appointment?.idAppointment}`;
 
         const params = {
             idPatient: profile?.id,
@@ -32,7 +32,7 @@ const PopUpNoShow = (props: IProps) => {
             .post(url, defineConfigGet(params))
             .then((resp) => {
                 if (resp) {
-                    //   dispatch(setTriggerAccept(!triggerAccept))
+                    dispatch(setTriggerNoShow(!triggerNoShow))
                     success("No Show Successfully");
                     handleShowPopUp(false);
                 }

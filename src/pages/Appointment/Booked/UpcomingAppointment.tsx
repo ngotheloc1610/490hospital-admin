@@ -108,7 +108,7 @@ const UpcomingAppointment = () => {
                 <tbody>
                     {listData && listData.map((item: any, idx: number) => {
                         return (
-                            <tr className={`${idx % 2 === 1 ? "table-light" : ""}`} onClick={()=>handleNavigate(item)}>
+                            <tr className={`${idx % 2 === 1 ? "table-light" : ""}`} onClick={() => handleNavigate(item)}>
                                 <td >
                                     <img src={item.patientPhoto ? item.patientPhoto : USER} alt="img patient" className="image-patient" />
                                 </td>
@@ -123,13 +123,13 @@ const UpcomingAppointment = () => {
                                 </td>
                                 <td >{convertToDate(item.appointDate)}</td>
                                 <td >
-                                    <span>{convertToTime(item.appointmentTimeStart)}</span> 
+                                    <span>{convertToTime(item.appointmentTimeStart)}</span>
                                     <span> - </span>
                                     <span>{convertToTime(item.appointmentTimeEnd)}</span>
                                 </td>
                                 <td >{item.doctorName}</td>
                                 <td ><span className={styleStatus(item.status)}>
-                                {item.status}</span></td>
+                                    {item.status}</span></td>
                             </tr>
                         );
                     })}
@@ -181,12 +181,12 @@ const UpcomingAppointment = () => {
         );
     };
 
-    const handleNavigate= (item:any) =>{
-        if(item.status === "Fulfilled"){
-            navigate(`/monitor/${item.encounterId}`)
-        }else{
+    const handleNavigate = (item: any) => {
+        if (item.status === "Fulfilled") {
+            navigate(`/monitor/${item.idEncounter}`)
+        } else {
             dispatch(setAppointment(item))
-            navigate(`/diagnostic-report/${item.encounterId}`)
+            navigate(`/diagnostic-report/${item.idEncounter}`)
         }
     }
 

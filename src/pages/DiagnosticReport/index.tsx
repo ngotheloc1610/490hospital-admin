@@ -13,12 +13,14 @@ import PopUpNoShow from "../../components/common/PopupNoShow";
 import PopUpDeny from "../../components/common/PopUpDeny";
 import Select from 'react-select'
 import { warn } from "../../Common/notify";
+import { useAppSelector } from "../../redux/hooks";
 
 const DiagnosticReport = () => {
 
   const url_api = process.env.REACT_APP_API_URL;
 
   const params = useParams();
+  const { triggerArrived, triggerDeny, triggerNoShow } = useAppSelector(state => state.appointmentSlice)
 
   const [step, setStep] = useState<number>(1);
 
@@ -98,6 +100,12 @@ const DiagnosticReport = () => {
 
 
   useEffect(() => {
+    if (params.encounterId) {
+      getBookingDetail(params.encounterId)
+    }
+  }, [triggerArrived, triggerDeny, triggerNoShow])
+
+  useEffect(() => {
     if (height !== 0 && weight !== 0) {
       calcBMI()
     }
@@ -134,37 +142,49 @@ const DiagnosticReport = () => {
 
     let extraConditions: any = []
     let currentConditions: any = []
+    let interpretationBloodPressure: any = [];
+    let interpretationBloodGlucose: any = [];
+    let interpretationHeartRate: any = [];
+    let interpretationTemperature: any = [];
+    let interpretationBMI: any = [];
+
+    bloodPressures.forEach((item: any) => interpretationBloodPressure.push(item.value))
+    temperatures.forEach((item: any) => interpretationTemperature.push(item.value))
+    heartRates.forEach((item: any) => interpretationHeartRate.push(item.value))
+    bloodGlucoses.forEach((item: any) => interpretationBloodGlucose.push(item.value))
+    bmis.forEach((item: any) => interpretationBMI.push(item.value))
+
     let listObservation: any = [
       {
         codeObseDisplay: "Blood Pressure",
         effectiveDateTime: null,
         componentCode: [`Systolic Blood Pressure ${indexBloodPressure1}`, `Diastolic Blood Pressure ${indexBloodPressure2}`],
-        interpretation: bloodPressures
+        interpretation: interpretationBloodPressure
       },
 
       {
         codeObseDisplay: "Blood Glucose",
         effectiveDateTime: null,
         componentCode: [`Blood Glucose ${indexBloodGlucose}`],
-        interpretation: bloodGlucoses
+        interpretation: interpretationBloodGlucose
       },
       {
         codeObseDisplay: "Temperature",
         effectiveDateTime: null,
         componentCode: [`Temperature ${indexTemperature}`],
-        interpretation: temperatures
+        interpretation: interpretationTemperature
       },
       {
         codeObseDisplay: "Heart Rate",
         effectiveDateTime: null,
         componentCode: [`Heart Rate ${indexHeartRate}`],
-        interpretation: heartRates
+        interpretation: interpretationHeartRate
       },
       {
         codeObseDisplay: "BMI",
         effectiveDateTime: null,
         componentCode: [`BMI ${indexBMI}`],
-        interpretation: bmis
+        interpretation: interpretationBMI
       },
     ]
 
@@ -174,7 +194,7 @@ const DiagnosticReport = () => {
       codeDisplay: item.condition,
       bodySite: item.bodySite,
       encounterId: params.encounterId,
-      recordedDate: item.recordedDate,
+      recordedDate: new Date(item.recordedDate).toISOString,
       noteText: item.note,
       createAt: new Date().toISOString()
     }))
@@ -185,7 +205,7 @@ const DiagnosticReport = () => {
       codeDisplay: item.condition,
       bodySite: item.bodySite,
       encounterId: params.encounterId,
-      recordedDate: item.recordedDate,
+      recordedDate: new Date(item.recordedDate).toISOString,
       noteText: item.note,
       createAt: new Date().toISOString()
     }))
@@ -924,7 +944,7 @@ const DiagnosticReport = () => {
           <div className="d-flex justify-content-between mb-3">
             <h3 className="fw-bold">Appointment Details</h3>
             <div>
-              <button className="button button--small button--primary me-2" onClick={() => { setIsShowPopUpArrived(true) }}>Arrived</button>
+              {(bookingDetail?.appointmentStatus !== "Booked" && bookingDetail?.appointmentStatus !== "Arrived") && <button className="button button--small button--primary me-2" onClick={() => { setIsShowPopUpArrived(true) }}>Arrived</button>}
               <button className="button button--small button--danger--outline me-2" onClick={() => { setIsShowPopUpNoShow(true) }}>No Show</button>
               <button className="button button--small button--danger" onClick={() => { setIsShowPopUpCancel(true) }}>Cancel</button>
             </div>

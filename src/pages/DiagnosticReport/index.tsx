@@ -935,7 +935,7 @@ const DiagnosticReport = () => {
               <div className="box p-3">
                 <div className="d-flex justify-content-between">
                   <h5 className="fw-bold">Patient details</h5>
-                  <Link className="text-uppercase" to="">view full medial record</Link>
+                  {/* <Link className="text-uppercase" to="">view full medial record</Link> */}
                 </div>
                 <div className="d-flex g-3">
                   <div>
@@ -947,8 +947,8 @@ const DiagnosticReport = () => {
                     <p><span className="fw-bold">Date of birth: </span><span>{patientDetail && moment(patientDetail?.birthDate).format(FORMAT_DATE)}</span></p>
                     <p><span className="fw-bold">Address: </span><span>{patientDetail && patientDetail?.addressFirstRep?.text}</span></p>
                     <p><span className="fw-bold">Citizen identification: </span><span>{patientDetail && patientDetail?.identifierFirstRep?.value}</span></p>
-                    <p><span className="fw-bold">Phone number: </span><span>{patientDetail && patientDetail?.telecom.filter((item: any) => item.system === "phone")?.value}</span></p>
-                    <p><span className="fw-bold">Email: </span><span>{patientDetail && patientDetail?.telecom.filter((item: any) => item.system === "email")?.value}</span></p>
+                    <p><span className="fw-bold">Phone number: </span><span>{patientDetail && patientDetail?.telecom.filter((item: any) => item.system === "phone")[0]?.value}</span></p>
+                    <p><span className="fw-bold">Email: </span><span>{patientDetail && patientDetail?.telecom.filter((item: any) => item.system === "email")[0]?.value}</span></p>
                   </div>
                 </div>
               </div>

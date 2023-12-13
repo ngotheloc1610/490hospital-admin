@@ -8,10 +8,11 @@ import { API_ALL_GET_APPOINTMENT_PENDING, API_SEARCH_APPOINTMENT_PENDING } from 
 import PaginationComponent from "../../../components/common/Pagination";
 import { USER } from "../../../assets";
 import Layout from "../../../components/Layout";
-import { useAppSelector } from "../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { KEY_LOCAL_STORAGE, TYPE_DOCTOR } from "../../../constants/general.constant";
 import PopUpAccept from "../../../components/common/PopUpAccept";
 import PopUpDeny from "../../../components/common/PopUpDeny";
+import { setAppointment } from "../../../redux/features/appointment/appointmentSlice";
 
 const AppointmentPending = () => {
     const [listData, setListData] = useState([]);
@@ -21,13 +22,13 @@ const AppointmentPending = () => {
     const [isSearch, setIsSearch] = useState<boolean>(false);
     const [isShowPopUpAccept, setIsShowPopUpAccept] = useState<boolean>(false);
     const [isShowPopUpDeny, setIsShowPopUpDeny] = useState<boolean>(false);
-    const [appointment, setAppointment] = useState<any>({});
     const [name, setName] = useState<string>("");
 
     const url_api = process.env.REACT_APP_API_URL;
     const type = localStorage.getItem(KEY_LOCAL_STORAGE.TYPE);
 
     const { triggerAccept, triggerDeny } = useAppSelector(state => state.appointmentSlice)
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         if (isSearch) {
@@ -90,12 +91,12 @@ const AppointmentPending = () => {
     }
 
     const handleAccept = (item: any) => {
-        setAppointment(item);
+        dispatch(setAppointment(item))
         setIsShowPopUpAccept(true);
     }
 
     const handleDeny = (item: any) => {
-        setAppointment(item);
+        dispatch(setAppointment(item))
         setIsShowPopUpDeny(true);
     }
 
@@ -187,8 +188,8 @@ const AppointmentPending = () => {
                 />
             </section>
 
-            {isShowPopUpAccept && <PopUpAccept handleShowPopUp={setIsShowPopUpAccept} appointment={appointment} />}
-            {isShowPopUpDeny && <PopUpDeny handleShowPopUp={setIsShowPopUpDeny} appointment={appointment} />}
+            {isShowPopUpAccept && <PopUpAccept handleShowPopUp={setIsShowPopUpAccept} />}
+            {isShowPopUpDeny && <PopUpDeny handleShowPopUp={setIsShowPopUpDeny} />}
         </Layout>
     );
 };

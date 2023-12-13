@@ -53,8 +53,6 @@ const DiagnosticReport = () => {
   const [isShowPopUpNoShow, setIsShowPopUpNoShow] = useState<boolean>(false);
   const [isShowPopUpCancel, setIsShowPopUpCancel] = useState<boolean>(false);
 
-  const [appointment, setAppointment] = useState(null);
-
   const [listCurrentCondition, setListCurrentCondition] = useState<any>([{
     condition: "",
     bodySite: "",
@@ -140,32 +138,32 @@ const DiagnosticReport = () => {
       {
         codeObseDisplay: "Blood Pressure",
         effectiveDateTime: null,
-        componentCode: [indexBloodPressure1, indexBloodPressure2],
+        componentCode: [`Systolic Blood Pressure ${indexBloodPressure1}`, `Diastolic Blood Pressure ${indexBloodPressure2}`],
         interpretation: bloodPressures
       },
 
       {
         codeObseDisplay: "Blood Glucose",
         effectiveDateTime: null,
-        componentCode: [indexBloodGlucose],
+        componentCode: [`Blood Glucose ${indexBloodGlucose}`],
         interpretation: bloodGlucoses
       },
       {
         codeObseDisplay: "Temperature",
         effectiveDateTime: null,
-        componentCode: [indexTemperature],
+        componentCode: [`Temperature ${indexTemperature}`],
         interpretation: temperatures
       },
       {
         codeObseDisplay: "Heart Rate",
         effectiveDateTime: null,
-        componentCode: [indexHeartRate],
+        componentCode: [`Heart Rate ${indexHeartRate}`],
         interpretation: heartRates
       },
       {
         codeObseDisplay: "BMI",
         effectiveDateTime: null,
-        componentCode: [indexBMI],
+        componentCode: [`BMI ${indexBMI}`],
         interpretation: bmis
       },
     ]
@@ -965,7 +963,7 @@ const DiagnosticReport = () => {
                   <p><span className="fw-bold">Appointment Time: </span><span>{bookingDetail.time}</span></p>
                   <p><span className="fw-bold">Doctor: </span><span>{bookingDetail.nameDoctor}</span></p>
                   <p><span className="fw-bold">Specialty: </span><span>{bookingDetail.specialty}</span></p>
-                  <p><span className="fw-bold">Location: </span><span>{bookingDetail.room}</span></p>
+                  <p><span className="fw-bold">Room: </span><span>{bookingDetail.room}</span></p>
                   <p><span className="fw-bold">Appointment Type: </span><span>{bookingDetail.typeOfAppointment}</span></p>
                   <p><span className="fw-bold">Appointment Status: </span><span>{bookingDetail.appointmentStatus}</span></p>
                 </div>
@@ -987,9 +985,9 @@ const DiagnosticReport = () => {
         </div>
       </section>
 
-      {isShowPopUpArrived && <PopUpArrived handleShowPopUp={setIsShowPopUpArrived} appointment={appointment} />}
-      {isShowPopUpNoShow && <PopUpNoShow handleShowPopUp={setIsShowPopUpNoShow} appointment={appointment} />}
-      {isShowPopUpCancel && <PopUpDeny handleShowPopUp={setIsShowPopUpCancel} appointment={appointment} />}
+      {isShowPopUpArrived && <PopUpArrived handleShowPopUp={setIsShowPopUpArrived} />}
+      {isShowPopUpNoShow && <PopUpNoShow handleShowPopUp={setIsShowPopUpNoShow} />}
+      {isShowPopUpCancel && <PopUpDeny handleShowPopUp={setIsShowPopUpCancel} />}
     </Layout>
   );
 };

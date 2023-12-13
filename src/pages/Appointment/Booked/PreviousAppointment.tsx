@@ -8,6 +8,8 @@ import { API_ALL_GET_APPOINTMENT_PREVIOUS, API_SEARCH_APPOINTMENT_PREVIOUS } fro
 import PaginationComponent from "../../../components/common/Pagination";
 import { USER } from "../../../assets";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../../../redux/hooks";
+import { setAppointment } from "../../../redux/features/appointment/appointmentSlice";
 
 const PreviousAppointment = () => {
     const [listData, setListData] = useState([]);
@@ -19,6 +21,7 @@ const PreviousAppointment = () => {
     const [status, setStatus] = useState<string>("");
 
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
 
     const url_api = process.env.REACT_APP_API_URL;
 
@@ -88,6 +91,7 @@ const PreviousAppointment = () => {
         if(item.status === "Fulfilled"){
             navigate(`/monitor/${item.encounterId}`)
         }else{
+            dispatch(setAppointment(item))
             navigate(`/diagnostic-report/${item.encounterId}`)
         }
     }

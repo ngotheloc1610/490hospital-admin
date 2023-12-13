@@ -410,7 +410,7 @@ const PatientMonitorDetail = () => {
                   <p><span className="fw-bold">Appointment Time: </span><span>{bookingDetail.time}</span></p>
                   <p><span className="fw-bold">Doctor: </span><span>{bookingDetail.nameDoctor}</span></p>
                   <p><span className="fw-bold">Specialty: </span><span>{bookingDetail.specialty}</span></p>
-                  <p><span className="fw-bold">Location: </span><span>{bookingDetail.room}</span></p>
+                  <p><span className="fw-bold">Room: </span><span>{bookingDetail.room}</span></p>
                   <p><span className="fw-bold">Appointment Type: </span><span>{bookingDetail.typeOfAppointment}</span></p>
                   <p><span className="fw-bold">Appointment Status: </span><span>{bookingDetail.appointmentStatus}</span></p>
                 </div>

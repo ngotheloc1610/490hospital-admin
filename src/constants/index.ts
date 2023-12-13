@@ -201,7 +201,7 @@ export const LIST_TIME = [
     endTime: "16:00:00",
   },
   {
-    title: "04:00 PM - 04:00 PM",
+    title: "04:00 PM - 05:00 PM",
     startTime: "16:00:00",
     endTime: "17:00:00",
   },

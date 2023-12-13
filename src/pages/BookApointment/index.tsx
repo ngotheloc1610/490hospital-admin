@@ -224,16 +224,19 @@ const BookAppointment = () => {
   }
 
   const disabled = (item: any) => {
-    if (timeBusy.length > 0) {
-      const existedBusy = timeBusy.find((time: any) => {
-        return moment(time.start).format("HH:mm:ss") === item.startTime && moment(time.end).format("HH:mm:ss") === item.endTime;
-      })
+    const currentDate = moment().format(FORMAT_DATE_DEFAULT);
 
-      if (existedBusy) {
-        return true;
-      }
-      return false;
+    if (currentDate === date && moment(new Date(), "HH:mm:ss").isAfter(moment(item.endTime, "HH:mm:ss"))) {
+      return true;
     }
+  
+    if (timeBusy.some((time: any) =>
+      moment(time.start).format("HH:mm:ss") === item.startTime &&
+      moment(time.end).format("HH:mm:ss") === item.endTime
+    )) {
+      return true;
+    }
+  
     return false;
   }
 
@@ -260,7 +263,7 @@ const BookAppointment = () => {
         </div>
       )
     },
-    [triggerTime, timeBusy],
+    [triggerTime, timeBusy, date],
   )
 
   const _renderListSpecialty = () => {
@@ -435,8 +438,7 @@ const BookAppointment = () => {
             <div className="row">
               {listDoctor && listDoctor.map((item: any, idx: number) => {
                 const name = item?.practitioner?.display;
-                const photo = item?.practitionerTarget?.photo[0];
-                const src = `data:${photo?.contentType};base64,${photo?.data}`;
+                const src = item?.practitionerTarget?.photo[0]?.url;
 
                 return (
                   <div className={`col-6 row mb-3 ${item.id === doctor?.id ? "doctor-selected" : ""}`} onClick={() => setDoctor(item)}>
@@ -537,11 +539,11 @@ const BookAppointment = () => {
                   </tr>
                   <tr>
                     <td>Phone number</td>
-                    <td>{patient?.telecom.filter((item: any) => item.system === "phone")[0]?.value}</td>
+                    <td>{patient?.telecom?.filter((item: any) => item.system === "phone")[0]?.value}</td>
                   </tr>
                   <tr>
                     <td>Email</td>
-                    <td>{patient?.telecom.filter((item: any) => item.system === "email")[0]?.value}</td>
+                    <td>{patient?.telecom?.filter((item: any) => item.system === "email")[0]?.value}</td>
                   </tr>
                 </tbody>
               </table>
@@ -585,7 +587,7 @@ const BookAppointment = () => {
               </tr>
               <tr>
                 <td>Status</td>
-                <td><span className="text-warning">No Show</span></td>
+                <td><span className="text-warning">Pending</span></td>
               </tr>
             </tbody>
           </table>

@@ -20,6 +20,8 @@ const Login = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+
   const url_api = process.env.REACT_APP_API_URL;
 
   const requestLogin = () => {
@@ -30,10 +32,14 @@ const Login = () => {
       password: password.trim()
     }
 
+    setIsLoading(true);
+
     axios
       .post(url, params, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
+          setIsLoading(false);
+
           const accessToken = resp.data.accessToken;
 
           localStorage.setItem(KEY_LOCAL_STORAGE.AUTHEN, accessToken);
@@ -128,7 +134,9 @@ const Login = () => {
             </span>
           </div>
           <button className="button button--large button--primary w-100" onClick={() => handleLogin()}>
-            Login
+            {isLoading && <span className="spinner-border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </span>} <span className="ms-2">Login</span>
           </button>
           <p className="text-end mt-3" onClick={() => handleForgot()}>
             <span className="text-reset">Forgot Password?</span>

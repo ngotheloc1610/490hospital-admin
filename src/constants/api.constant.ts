@@ -5,6 +5,7 @@ export const API_PRACTITIONER_ROLE_DETAIL = "/practitionerRole/detail/";
 export const API_CHANGE_PASSWORD = "/password/changePass/";
 export const API_FORGOT_PASSWORD = "/password/forgotPassfromEmail";
 export const API_SEND_MAIL = "/password/sendMail";
+export const API_VERIFY_CODE = "/password/verify";
 
 export const API_ADMIN_TOTAL = "/admin/total";
 export const API_ALL_GET_PATIENT = "/admin/patients";
@@ -97,7 +98,8 @@ export const API_ALERT_TEMPERATURE = "/alert/createAlertSettting/Temperature"
 export const API_ALERT_BMI = "/alert/createAlertSettting/BodyMassIndex(BMI)"
 export const API_ALERT_ALL = "/alert/getAllAlertSetting"
 
-export const API_MEDIA_UPLOAD = "/media/mediaUpload"
+export const API_MEDIA_UPLOAD_PROFILE = "/media/profileMediaUpload"
+export const API_MEDIA_UPLOAD_BY_ADMIN = "/media/adminProfileMediaUpload"
 
 
 

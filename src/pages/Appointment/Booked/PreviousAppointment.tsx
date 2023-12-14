@@ -91,13 +91,10 @@ const PreviousAppointment = () => {
         if (item.status === "Fulfilled") {
             navigate(`/monitor/${item.idEncounter}`)
         } else {
-            console.log("item:", item)
             dispatch(setAppointment(item))
             navigate(`/diagnostic-report/${item.idEncounter}`)
         }
     }
-
-
 
     const _renderTableListAppointment = () => {
         return (

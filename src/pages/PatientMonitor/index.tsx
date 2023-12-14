@@ -15,6 +15,8 @@ import { API_MONITOR_ALL, API_SEARCH_DOCTOR } from "../../constants/api.constant
 import { defineConfigGet, defineConfigPost } from "../../Common/utils";
 import moment from "moment";
 import { FORMAT_DATE } from "../../constants/general.constant";
+import { setAppointment } from "../../redux/features/appointment/appointmentSlice";
+import { useAppDispatch } from "../../redux/hooks";
 
 const PatientMonitor = () => {
   const outlet = useOutlet();
@@ -30,6 +32,7 @@ const PatientMonitor = () => {
   const [isSearch, setIsSearch] = useState<boolean>(false)
 
   const url_api = process.env.REACT_APP_API_URL;
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
     if (isSearch) {
@@ -148,16 +151,16 @@ const PatientMonitor = () => {
           {listData && listData.length > 0 && listData.map((item: any, idx: number) => {
             return (
               <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
-                <td onClick={() => navigate(`/monitor/${item.idEncounter}`)}>{item?.patientName}</td>
-                <td onClick={() => navigate(`/monitor/${item.idEncounter}`)}>{item.dob ? moment(item.dob).format(FORMAT_DATE) : ""}</td>
-                <td onClick={() => navigate(`/monitor/${item.idEncounter}`)}>
+                <td onClick={() => { navigate(`/monitor/${item.idEncounter}`); dispatch(setAppointment(item)) }}>{item?.patientName}</td>
+                <td onClick={() => { navigate(`/monitor/${item.idEncounter}`); dispatch(setAppointment(item)) }}>{item.dob ? moment(item.dob).format(FORMAT_DATE) : ""}</td>
+                <td onClick={() => { navigate(`/monitor/${item.idEncounter}`); dispatch(setAppointment(item)) }}>
                   <p>{item?.email}</p>
                   <p>{item?.phone}</p>
                 </td>
-                <td onClick={() => navigate(`/monitor/${item.idEncounter}`)}>{item?.diagnosis}</td>
-                <td onClick={() => navigate(`/monitor/${item.idEncounter}`)}></td>
-                <td onClick={() => navigate(`/monitor/${item.idEncounter}`)}></td>
-                <td onClick={() => navigate(`/monitor/${item.idEncounter}`)}></td>
+                <td onClick={() => { navigate(`/monitor/${item.idEncounter}`); dispatch(setAppointment(item)) }}>{item?.diagnosis}</td>
+                <td onClick={() => { navigate(`/monitor/${item.idEncounter}`); dispatch(setAppointment(item)) }}></td>
+                <td onClick={() => { navigate(`/monitor/${item.idEncounter}`); dispatch(setAppointment(item)) }}></td>
+                <td onClick={() => { navigate(`/monitor/${item.idEncounter}`); dispatch(setAppointment(item)) }}></td>
                 <td>
                   <span className="ms-1">
                     <ICON_PENCIL />

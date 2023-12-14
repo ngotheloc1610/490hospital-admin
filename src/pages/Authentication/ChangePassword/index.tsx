@@ -18,6 +18,8 @@ const ChangePassword = () => {
   const [cfNewPassword, setCfNewPassword] = useState<string>("");
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+
   const { practitioner } = useAppSelector((state) => state.practitionerSlice)
 
   const url_api = process.env.REACT_APP_API_URL;
@@ -28,18 +30,23 @@ const ChangePassword = () => {
 
     const param = {
       email: null,
-      newPass:newPassword.trim(),
-      oldPass:oldPassword.trim()
+      newPass: newPassword.trim(),
+      oldPass: oldPassword.trim()
     }
 
+    setIsLoading(true);
+
     axios
-      .post(url,param, defineConfigPost())
+      .post(url, param, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
+          setIsLoading(false);
+
           if (resp) {
             success(resp.data)
             setIsSuccess(true);
           }
+
         }
       })
       .catch((err: any) => {
@@ -138,7 +145,9 @@ const ChangePassword = () => {
           </div>
 
           <button className="button button--large button--primary w-100" onClick={handleChangePassword}>
-            Change  Password
+            {isLoading && <span className="spinner-border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </span>} <span className="ms-2">Change password</span>
           </button>
         </div>
       </div>

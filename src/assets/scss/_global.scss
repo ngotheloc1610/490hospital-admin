@@ -258,3 +258,18 @@ button {
 .color-primary {
   color: $primary-color;
 }
+
+.spinner-border {
+  --bs-spinner-width: 1rem !important;
+  --bs-spinner-height: 1rem !important;
+}
+
+.custom-otp-input {
+  width: 95px !important;
+  height: 80px !important;
+  margin: 0 5px;
+  font-size: 18px;
+  border: 2px solid $primary-color;
+  border-radius: 5px;
+  text-align: center;
+}

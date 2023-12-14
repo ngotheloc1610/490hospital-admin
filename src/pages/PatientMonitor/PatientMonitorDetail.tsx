@@ -16,6 +16,7 @@ import { convertToDate, convertToTime, defineConfigPost, styleStatus } from "../
 import axios from "axios";
 import moment from "moment";
 import { FORMAT_DATE } from "../../constants/general.constant";
+import { useAppSelector } from "../../redux/hooks";
 
 ChartJS.register(
   CategoryScale,
@@ -51,7 +52,7 @@ const PatientMonitorDetail = () => {
   const [listObservation, setListObservation] = useState<any>([]);
 
   const params = useParams();
-
+  const { appointment } = useAppSelector(state => state.appointmentSlice)
   const options = {
     plugins: {
       title: {
@@ -101,8 +102,8 @@ const PatientMonitorDetail = () => {
     ],
   };
 
-  const getProfilePatient = (encounterId: string) => {
-    const url = `${url_api}${API_DIAGNOSTIC_PATIENT_PROFILE}${encounterId}`;
+  const getProfilePatient = (idAppointment: string) => {
+    const url = `${url_api}${API_DIAGNOSTIC_PATIENT_PROFILE}${idAppointment}`;
 
     axios
       .get(url, defineConfigPost())
@@ -116,8 +117,8 @@ const PatientMonitorDetail = () => {
       });
   }
 
-  const getBookingDetail = (encounterId: string) => {
-    const url = `${url_api}${API_DIAGNOSTIC_BOOK_DETAIL}${encounterId}`;
+  const getBookingDetail = (idAppointment: string) => {
+    const url = `${url_api}${API_DIAGNOSTIC_BOOK_DETAIL}${idAppointment}`;
 
     axios
       .get(url, defineConfigPost())
@@ -146,8 +147,8 @@ const PatientMonitorDetail = () => {
       });
   }
 
-  const getEncounterHistory = (encounterId: string) => {
-    const url = `${url_api}${API_DIAGNOSTIC_ENCOUNTER_HISTORY}${encounterId}`;
+  const getEncounterHistory = (idAppointment: string) => {
+    const url = `${url_api}${API_DIAGNOSTIC_ENCOUNTER_HISTORY}${idAppointment}`;
 
     axios
       .get(url, defineConfigPost())
@@ -161,8 +162,8 @@ const PatientMonitorDetail = () => {
       });
   }
 
-  const getUpcomingAppointment = (encounterId: string) => {
-    const url = `${url_api}${API_DIAGNOSTIC_UPCOMING}${encounterId}`;
+  const getUpcomingAppointment = (idAppointment: string) => {
+    const url = `${url_api}${API_DIAGNOSTIC_UPCOMING}${idAppointment}`;
 
     axios
       .get(url, defineConfigPost())
@@ -193,14 +194,19 @@ const PatientMonitorDetail = () => {
 
   useEffect(() => {
     if (params.monitorId) {
-      getProfilePatient(params.monitorId)
-      getBookingDetail(params.monitorId)
       getPreviousEncounter(params.monitorId)
-      getEncounterHistory(params.monitorId)
       getObservations(params.monitorId)
-      getUpcomingAppointment(params.monitorId)
     }
   }, [params.monitorId])
+
+  useEffect(() => {
+    if (appointment?.idAppointment) {
+      getProfilePatient(appointment?.idAppointment)
+      getBookingDetail(appointment?.idAppointment)
+      getUpcomingAppointment(appointment?.idAppointment)
+      getEncounterHistory(appointment?.idAppointment)
+    }
+  }, [appointment?.idAppointment])
 
   const handleClickHeartRate = () => {
     setIsHeartRate(true);
@@ -385,8 +391,8 @@ const PatientMonitorDetail = () => {
                   {/* <Link className="text-uppercase" to="">view full medial record</Link> */}
                 </div>
                 <div className="d-flex g-3">
-                  <div>
-                    <img src={USER} alt="" />
+                  <div className="w-25 me-3">
+                    <img src={patientDetail?.photo[0]?.url ? patientDetail?.photo[0]?.url : USER} alt="img patient" className="w-100 h-100 object-fit-cover" />
                   </div>
                   <div>
                     <p><span className="fw-bold">Name: </span><span>{patientDetail?.nameFirstRep?.text}</span></p>

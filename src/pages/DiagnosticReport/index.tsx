@@ -158,32 +158,32 @@ const DiagnosticReport = () => {
       {
         codeObseDisplay: "Blood Pressure",
         effectiveDateTime: null,
-        componentCode: [`Systolic Blood Pressure ${indexBloodPressure1}`, `Diastolic Blood Pressure ${indexBloodPressure2}`],
+        componentCode: [`Systolic Blood Pressure/${indexBloodPressure1}`, `Diastolic Blood Pressure/${indexBloodPressure2}`],
         interpretation: interpretationBloodPressure
       },
 
       {
         codeObseDisplay: "Blood Glucose",
         effectiveDateTime: null,
-        componentCode: [`Blood Glucose ${indexBloodGlucose}`],
+        componentCode: [`Blood Glucose/${indexBloodGlucose}`],
         interpretation: interpretationBloodGlucose
       },
       {
         codeObseDisplay: "Temperature",
         effectiveDateTime: null,
-        componentCode: [`Temperature ${indexTemperature}`],
+        componentCode: [`Temperature/${indexTemperature}`],
         interpretation: interpretationTemperature
       },
       {
         codeObseDisplay: "Heart Rate",
         effectiveDateTime: null,
-        componentCode: [`Heart Rate ${indexHeartRate}`],
+        componentCode: [`Heart Rate/${indexHeartRate}`],
         interpretation: interpretationHeartRate
       },
       {
         codeObseDisplay: "BMI",
         effectiveDateTime: null,
-        componentCode: [`BMI ${indexBMI}`],
+        componentCode: [`Weight/${weight}`, `Height/${height}`],
         interpretation: interpretationBMI
       },
     ]
@@ -945,8 +945,10 @@ const DiagnosticReport = () => {
             <h3 className="fw-bold">Appointment Details</h3>
             <div>
               {(bookingDetail?.appointmentStatus !== "Booked" && bookingDetail?.appointmentStatus !== "Arrived") && <button className="button button--small button--primary me-2" onClick={() => { setIsShowPopUpArrived(true) }}>Arrived</button>}
-              <button className="button button--small button--danger--outline me-2" onClick={() => { setIsShowPopUpNoShow(true) }}>No Show</button>
+             {bookingDetail?.appointmentStatus === "Arrived" && <>
+             <button className="button button--small button--danger--outline me-2" onClick={() => { setIsShowPopUpNoShow(true) }}>No Show</button>
               <button className="button button--small button--danger" onClick={() => { setIsShowPopUpCancel(true) }}>Cancel</button>
+             </>}
             </div>
           </div>
 

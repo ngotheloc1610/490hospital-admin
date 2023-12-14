@@ -2,21 +2,28 @@ import { useState } from "react";
 import { useAppDispatch } from "../../../redux/hooks";
 import { setForgotPassword } from "../../../redux/features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
-import { API_FORGOT_PASSWORD, API_SEND_MAIL } from "../../../constants/api.constant";
-import { error, warn } from "../../../Common/notify";
+import { API_FORGOT_PASSWORD, API_SEND_MAIL, API_VERIFY_CODE } from "../../../constants/api.constant";
+import { error, success, warn } from "../../../Common/notify";
 import { defineConfigPost } from "../../../Common/utils";
 import axios from "axios";
+import OTPInput from "otp-input-react";
 
 const ForgotPassword = () => {
   const url_api = process.env.REACT_APP_API_URL;
 
-  const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
-  const [isShowCfPassword, setIsShowCfPassword] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>("")
+  const [isShowPassword, setIsShowPassword] = useState(false);
+  const [isShowCfPassword, setIsShowCfPassword] = useState(false);
+
+  const [email, setEmail] = useState<string>("");
+  const [OTP, setOTP] = useState<string>("");
   const [password, setPassword] = useState<string>("")
   const [cfPassword, setCfPassword] = useState<string>("")
-  const [isSendMail, setIsSendMail] = useState<boolean>(false);
-  const [isCreateNewPass, setIsCreateNewPass] = useState<boolean>(false);
+
+  const [isSendMail, setIsSendMail] = useState<boolean>(false)
+  const [isCreateNewPass, setIsCreateNewPass] = useState<boolean>(false)
+  const [isVerifyCode, setIsVerifyCode] = useState<boolean>(false)
+
+  const [isLoading, setIsLoading] = useState(false)
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate()
@@ -53,16 +60,60 @@ const ForgotPassword = () => {
 
     const params = {
       email: email.trim(),
-      newPass:null,
-      oldPass:null
+      newPass: null,
+      oldPass: null
     }
 
+    setIsLoading(true)
+
     axios
-      .post(url,params, defineConfigPost())
+      .post(url, params, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
-          console.log("resp:", resp)
-          setIsSendMail(true);
+          if (resp.data === "successful") {
+            setIsSendMail(true);
+            success(resp.data)
+
+          } else {
+            error(resp.data)
+          }
+
+          setIsLoading(false)
+        }
+      })
+      .catch((err: any) => {
+        console.log("err:", err);
+      });
+  }
+
+  const handleVerifyCode = () => {
+    verifyCode();
+  }
+
+  const verifyCode = () => {
+    const url = `${url_api}${API_VERIFY_CODE}`;
+
+    const params = {
+      email: email.trim(),
+      newPass: OTP.trim(),
+      oldPass: null
+    }
+    setIsLoading(true)
+
+    axios
+      .post(url, params, defineConfigPost())
+      .then((resp: any) => {
+        if (resp) {
+          if (resp.data === "successful") {
+            setIsVerifyCode(true);
+            setIsSendMail(true);
+            success(resp.data)
+          } else {
+            error(resp.data)
+          }
+
+          setIsLoading(false)
+
         }
       })
       .catch((err: any) => {
@@ -76,21 +127,32 @@ const ForgotPassword = () => {
 
     const params = {
       email: email.trim(),
-      newPass:password.trim(),
-      oldPass:null
+      newPass: password.trim(),
+      oldPass: null
     }
 
+    setIsLoading(true)
+
     axios
-      .post(url,params, defineConfigPost())
+      .post(url, params, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
           console.log("resp:", resp)
-          setIsCreateNewPass(true);
+          if (resp.data === "change pass successful") {
+            setIsCreateNewPass(true);
+            setIsVerifyCode(true);
+            setIsSendMail(true);
+            success(resp.data)
+          } else {
+            error(resp.data)
+          }
+
+          setIsLoading(false)
+
         }
       })
       .catch((err: any) => {
-        console.log("error Login:", err);
-        error(err.message || err.response.data.error || err.response.data.error.message)
+        console.log("err:", err);
       });
   }
 
@@ -113,7 +175,9 @@ const ForgotPassword = () => {
             </span>
           </div>
           <button className="w-100 button button--large button--primary" onClick={() => handleSendMail()}>
-            Send code
+            {isLoading && <div className="spinner-border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>} <span className="ms-2">Send code</span>
           </button>
           <button className="w-100 button button--large button--outline mt-3" onClick={() => handleBackLogin()}>
             Back to Login
@@ -173,8 +237,30 @@ const ForgotPassword = () => {
             </span>
           </div>
           <button className="button button--large button--primary w-100" onClick={() => handleChangePassword()}>
-            Create password
+            {isLoading && <div className="spinner-border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>} <span className="ms-2">Create password</span>
           </button>
+        </div>
+      </div>
+    );
+  };
+
+  const _renderVerifyCode = () => {
+    return (
+      <div className="forgot">
+        <div className="forgot-container">
+          <h3>Enter Verification Code</h3>
+          <p>Enter code that we have sent to your Email</p>
+          <OTPInput inputClassName="custom-otp-input" value={OTP} onChange={setOTP} autoFocus OTPLength={4} otpType="number" disabled={false} secure />
+          <button className="button button--large button--large--primary w-100 mt-3" onClick={() => handleVerifyCode()}>
+            {isLoading && <div className="spinner-border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>} <span className="ms-2">Verify</span>
+          </button>
+          <p className="mt-3 text-center text-reset cursor-pointer" onClick={() => handleSendMail()}>
+            Resend code
+          </p>
         </div>
       </div>
     );
@@ -192,7 +278,10 @@ const ForgotPassword = () => {
             You have successfully reset your
             <span className="d-block m-auto mt-1">password.</span>
           </p>
-          <p className="text-center">Re-directing to your dashboard...</p>
+          <p className="text-center" onClick={() => {
+            dispatch(setForgotPassword(false))
+            navigate("/login")
+          }}>Re-directing to your login...</p>
         </div>
       </div>
     );
@@ -200,9 +289,10 @@ const ForgotPassword = () => {
 
   return (
     <>
-      {!isSendMail && !isCreateNewPass  &&_renderForgotYourPw()}
-      {isSendMail && _renderCreateNewPw()}
-      {isSendMail && isCreateNewPass && _renderSuccess()}
+      {!isSendMail && !isCreateNewPass && !isVerifyCode && _renderForgotYourPw()}
+      {isSendMail && !isVerifyCode && _renderVerifyCode()}
+      {isSendMail && isVerifyCode && !isCreateNewPass && _renderCreateNewPw()}
+      {isSendMail && isCreateNewPass && isVerifyCode && _renderSuccess()}
     </>
   );
 };

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Layout from "../../components/Layout";
 import { ICON_PENCIL, ICON_TRASH, USER } from "../../assets";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { FORMAT_DATE, TOTAL_STEP } from "../../constants/general.constant";
 import { defineConfigGet, defineConfigPost } from "../../Common/utils";
 import axios from "axios";
@@ -20,7 +20,7 @@ const DiagnosticReport = () => {
   const url_api = process.env.REACT_APP_API_URL;
 
   const params = useParams();
-  const { triggerArrived, triggerDeny, triggerNoShow } = useAppSelector(state => state.appointmentSlice)
+  const { triggerArrived, triggerDeny, triggerNoShow, appointment } = useAppSelector(state => state.appointmentSlice)
 
   const [step, setStep] = useState<number>(1);
 
@@ -92,16 +92,20 @@ const DiagnosticReport = () => {
 
   useEffect(() => {
     if (params.encounterId) {
-      getProfilePatient(params.encounterId)
-      getBookingDetail(params.encounterId)
       getPreviousEncounter(params.encounterId)
     }
   }, [params.encounterId])
 
+  useEffect(() => {
+    if (appointment?.idAppointment) {
+      getProfilePatient(appointment?.idAppointment)
+      getBookingDetail(appointment?.idAppointment)
+    }
+  }, [appointment?.idAppointment])
 
   useEffect(() => {
-    if (params.encounterId) {
-      getBookingDetail(params.encounterId)
+    if (appointment?.idAppointment) {
+      getBookingDetail(appointment?.idAppointment)
     }
   }, [triggerArrived, triggerDeny, triggerNoShow])
 
@@ -301,8 +305,8 @@ const DiagnosticReport = () => {
       });
   }
 
-  const getProfilePatient = (encounterId: string) => {
-    const url = `${url_api}${API_DIAGNOSTIC_PATIENT_PROFILE}${encounterId}`;
+  const getProfilePatient = (idAppointment: string) => {
+    const url = `${url_api}${API_DIAGNOSTIC_PATIENT_PROFILE}${idAppointment}`;
 
     axios
       .get(url, defineConfigPost())
@@ -316,8 +320,8 @@ const DiagnosticReport = () => {
       });
   }
 
-  const getBookingDetail = (encounterId: string) => {
-    const url = `${url_api}${API_DIAGNOSTIC_BOOK_DETAIL}${encounterId}`;
+  const getBookingDetail = (idAppointment: string) => {
+    const url = `${url_api}${API_DIAGNOSTIC_BOOK_DETAIL}${idAppointment}`;
 
     axios
       .get(url, defineConfigPost())
@@ -945,10 +949,10 @@ const DiagnosticReport = () => {
             <h3 className="fw-bold">Appointment Details</h3>
             <div>
               {(bookingDetail?.appointmentStatus !== "Booked" && bookingDetail?.appointmentStatus !== "Arrived") && <button className="button button--small button--primary me-2" onClick={() => { setIsShowPopUpArrived(true) }}>Arrived</button>}
-             {bookingDetail?.appointmentStatus === "Arrived" && <>
-             <button className="button button--small button--danger--outline me-2" onClick={() => { setIsShowPopUpNoShow(true) }}>No Show</button>
-              <button className="button button--small button--danger" onClick={() => { setIsShowPopUpCancel(true) }}>Cancel</button>
-             </>}
+              {bookingDetail?.appointmentStatus === "Arrived" && <>
+                <button className="button button--small button--danger--outline me-2" onClick={() => { setIsShowPopUpNoShow(true) }}>No Show</button>
+                <button className="button button--small button--danger" onClick={() => { setIsShowPopUpCancel(true) }}>Cancel</button>
+              </>}
             </div>
           </div>
 
@@ -960,8 +964,8 @@ const DiagnosticReport = () => {
                   {/* <Link className="text-uppercase" to="">view full medial record</Link> */}
                 </div>
                 <div className="d-flex g-3">
-                  <div>
-                    <img src={USER} alt="" />
+                  <div className="w-25 me-3">
+                    <img src={patientDetail?.photo[0]?.url ? patientDetail?.photo[0]?.url : USER} alt="img patient" className="w-100 h-100 object-fit-cover" />
                   </div>
                   <div>
                     <p><span className="fw-bold">Name: </span><span>{patientDetail && patientDetail?.nameFirstRep?.text}</span></p>

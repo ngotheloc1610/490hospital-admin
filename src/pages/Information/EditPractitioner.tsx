@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import { API_MEDIA_UPLOAD, API_PROFILE_PRACTITIONER, API_UPDATE_PROFILE_PRACTITIONER } from "../../constants/api.constant";
+import { API_MEDIA_UPLOAD_PROFILE, API_PROFILE_PRACTITIONER, API_UPDATE_PROFILE_PRACTITIONER } from "../../constants/api.constant";
 import { defineConfigPost } from "../../Common/utils";
 import { error, success, warn } from "../../Common/notify";
 import { GENDER } from "../../constants";
@@ -54,7 +54,7 @@ const EditPractitioner = () => {
 
     const uploadImage = async () => {
 
-        const url = `${url_api}${API_MEDIA_UPLOAD}`;
+        const url = `${url_api}${API_MEDIA_UPLOAD_PROFILE}`;
 
         if (!selectedFile) {
             warn('Please select an image file before uploading.');

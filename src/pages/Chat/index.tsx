@@ -36,7 +36,7 @@ const Chat = () => {
 
     useEffect(() => {
         getListInboxRoom()
-        requestForToken()
+        // requestForToken()
     }, [])
 
     useEffect(() => {

@@ -13,7 +13,7 @@ import { error } from "../../Common/notify";
 import { FORMAT_DATE, FORMAT_DAY, FORMAT_TIME } from "../../constants/general.constant";
 import Layout from "../../components/Layout";
 import PopUpCreateRoom from "./PopUpCreateRoom";
-import { requestForToken } from "../../firebase";
+// import { requestForToken } from "../../firebase";
 
 const Chat = () => {
     const url_api = process.env.REACT_APP_API_URL;

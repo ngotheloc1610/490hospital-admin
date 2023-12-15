@@ -50,6 +50,7 @@ const ChangePassword = () => {
         }
       })
       .catch((err: any) => {
+        setIsLoading(false);
         error(err.response.data.error)
         console.log("error update patient:", err);
       });

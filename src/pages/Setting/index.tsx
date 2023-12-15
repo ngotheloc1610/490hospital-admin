@@ -168,7 +168,6 @@ const Setting = () => {
               })
             }
           })
-          console.log("bloodPressure:", bloodPressure)
           setListBloodPressure(bloodPressure)
           setListBloodGlucose(bloodGlucose)
           setListHeartRate(heartRate)

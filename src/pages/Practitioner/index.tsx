@@ -45,8 +45,8 @@ const Practitioner = () => {
 
   const [listSpecialty, setListSpecialty] = useState<any>([]);
   const [listRoom, setListRoom] = useState<any>([]);
-
   const [specialtyId, setSpecialtyId] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   useEffect(() => {
     getSpecialty();
@@ -94,9 +94,6 @@ const Practitioner = () => {
     const idSpecialty = listSpecialty.filter((item: any) => {
       return item.id === values.specialty;
     })[0]?.id;
-    console.log(listSpecialty.filter((item: any) => {
-      return item.id === values.specialty;
-    }));
     const displaySpecialty = listSpecialty.filter((item: any) => {
       return item.id === values.specialty;
     })[0]?.name;
@@ -155,9 +152,12 @@ const Practitioner = () => {
       identifier: null
     };
 
+    setIsLoading(true);
+
     axios
       .post(url, params, defineConfigPost())
       .then((resp: any) => {
+        setIsLoading(false)
         if (resp) {
           actions.setSubmitting(false);
           actions.resetForm();
@@ -166,6 +166,7 @@ const Practitioner = () => {
       })
       .catch((err) => {
         console.log("error create practitioner:", err);
+        setIsLoading(false)
         error(err.response.data.error || err.response.data.error.message);
       });
   };
@@ -601,7 +602,6 @@ const Practitioner = () => {
             enableReinitialize={true}
             validationSchema={validationSchema}
             onSubmit={(values, actions) => {
-              console.log("values:", values)
               handleCreatePractitioner(values, actions);
             }}
           >
@@ -627,7 +627,9 @@ const Practitioner = () => {
                     className="button button--small button--primary"
                     onClick={submitForm}
                   >
-                    Save
+                    {isLoading && <span className="spinner-border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </span>} <span className="ms-2">Save</span>
                   </button>
                 </div>
               </>

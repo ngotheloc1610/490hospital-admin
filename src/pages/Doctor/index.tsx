@@ -179,7 +179,7 @@ const Doctor = () => {
                   <span className={styleStatusPractitioner(item.active)}>{item.active ? "Active" : "Inactive"}</span>
                 </td>
                 <td>
-                  <span className={styleStatusPractitioner(item.practitionerTarget.active)}>{item.practitionerTarget.active ? "Active" : "Inactive"}</span>
+                  <p className={styleStatusPractitioner(item.practitionerTarget.active)}>{item.practitionerTarget.active ? "Active" : "Inactive"}</p>
                 </td>
                 <td>
                   <span className="ms-1 cursor-pointer" onClick={() => handleModify(item.id)}>

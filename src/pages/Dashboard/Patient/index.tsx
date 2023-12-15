@@ -40,12 +40,14 @@ const PatientDashboard = () => {
   const currentDate = new Date();
 
   const [monthPatient, setMonthPatient] = useState<string>((currentDate.getMonth() - 1).toString());
+  const [monthGender, setMonthGender] = useState<string>((currentDate.getMonth() - 1).toString());
   const [monthNewPatient, setMonthNewPatient] = useState<string>((currentDate.getMonth() - 1).toString());
   const [monthOldPatient, setmonthOldPatient] = useState<string>((currentDate.getMonth() - 1).toString());
 
   const [dateOfMonthPatient, setDateOfMonthPatient] = useState<any>(new Date());
-  const [dateOfMonthNewPatient, setDateOfMonthNewPatient] = useState<any>(new Date("2024-01-01"));
-  const [dateOfMonthOldPatient, setDateOfMonthOldPatient] = useState<any>(new Date("2024-01-01"));
+  const [dateOfMonthGender, setDateOfMonthGender] = useState<any>(new Date());
+  const [dateOfMonthNewPatient, setDateOfMonthNewPatient] = useState<any>(new Date());
+  const [dateOfMonthOldPatient, setDateOfMonthOldPatient] = useState<any>(new Date());
 
   const [patient, setPatient] = useState<any>(null);
   const [genderPatient, setGenderPatient] = useState<any>(null);
@@ -64,6 +66,16 @@ const PatientDashboard = () => {
       setDateOfMonthPatient(newDate);
     }
   }, [monthPatient])
+  
+  useEffect(() => {
+    const newDate = new Date(dateOfMonthGender);
+    const month = parseInt(monthGender, 10);
+
+    if (!isNaN(month)) {
+      newDate.setMonth(month);
+      setDateOfMonthGender(newDate);
+    }
+  }, [monthGender])
 
   useEffect(() => {
     const newDate = new Date(dateOfMonthNewPatient);
@@ -145,14 +157,61 @@ const PatientDashboard = () => {
   const getNumberGender = () => {
     const url = `${url_api}${API_DASHBOARD_ALL_PATIENT_GENDER}`;
 
+    const startDate = startOfMonth(dateOfMonthGender);
+    const endDate = endOfMonth(dateOfMonthGender);
+
+    const params = {
+      startDate: format(startDate, "yyyy-MM-dd"),
+      endDate: format(endDate, "yyyy-MM-dd")
+    }
+
     axios
-      .get(url, defineConfigPost())
+      .get(url, defineConfigGet(params))
       .then((resp: any) => {
         if (resp) {
-          const gender = Object.entries(resp.data).map(([title, number]) => ({ title, number }));
-          console.log("gender:", gender)
-
-          setGenderPatient(gender);
+          const male = Object.entries(resp.data.MALE).map(([date, number]) => ({ date, number }));
+          const sortedMale = male.sort((a: any, b: any) => {
+            const dateA = new Date(a.date).getTime();
+            const dateB = new Date(b.date).getTime();
+            return dateA - dateB;
+          });
+          const female = Object.entries(resp.data.FEMALE).map(([date, number]) => ({ date, number }));
+          const sortedFemale = female.sort((a: any, b: any) => {
+            const dateA = new Date(a.date).getTime();
+            const dateB = new Date(b.date).getTime();
+            return dateA - dateB;
+          });
+          const other = Object.entries(resp.data.OTHER).map(([date, number]) => ({ date, number }));
+          const sortedOther = other.sort((a: any, b: any) => {
+            const dateA = new Date(a.date).getTime();
+            const dateB = new Date(b.date).getTime();
+            return dateA - dateB;
+          });
+          const totalMale = Object.entries(resp.data.TOTAL_MALE).map(([date, number]) => ({ date, number }));
+          const sortedTotalMale = totalMale.sort((a: any, b: any) => {
+            const dateA = new Date(a.date).getTime();
+            const dateB = new Date(b.date).getTime();
+            return dateA - dateB;
+          });
+          const totalFemale = Object.entries(resp.data.TOTAL_FEMALE).map(([date, number]) => ({ date, number }));
+          const sortedTotalFemale = totalFemale.sort((a: any, b: any) => {
+            const dateA = new Date(a.date).getTime();
+            const dateB = new Date(b.date).getTime();
+            return dateA - dateB;
+          });
+          const totalOther = Object.entries(resp.data.TOTAL_OTHER).map(([date, number]) => ({ date, number }));
+          const sortedTotalOther = totalOther.sort((a: any, b: any) => {
+            const dateA = new Date(a.date).getTime();
+            const dateB = new Date(b.date).getTime();
+            return dateA - dateB;
+          });
+          const total = Object.entries(resp.data.TOTAL_GENDER).map(([date, number]) => ({ date, number }));
+          const sortedTotal = total.sort((a: any, b: any) => {
+            const dateA = new Date(a.date).getTime();
+            const dateB = new Date(b.date).getTime();
+            return dateA - dateB;
+          });
+          setGenderPatient({ male: sortedMale, female: sortedFemale,other:sortedOther,totalMale: sortedTotalMale ,totalFemale: sortedTotalFemale, totalOther : sortedTotalOther,total: sortedTotal})
         }
       })
       .catch((err: any) => {
@@ -263,40 +322,34 @@ const PatientDashboard = () => {
   };
 
   const dataDoughnutGender = {
-    labels: genderPatient?.map((gender: any) => gender.title),
+    labels: genderPatient?.male?.map((gender: any) => moment(gender.date).format(FORMAT_DATE)),
     datasets: [
       {
         label: "Male",
         borderColor: "rgba(90, 106, 207, 1)",
         backgroundColor: "rgba(90, 106, 207, 1)",
-        data: [genderPatient?.filter((gender: any) => gender.title.trim() === "MALE")?.number],
+        data: genderPatient?.male?.map((gender: any) => gender.number),
       },
       {
         label: "Female",
         borderColor: "rgba(133, 147, 237, 1)",
         backgroundColor: "rgba(133, 147, 237, 1)",
-        data: [genderPatient?.filter((gender: any) => gender.title.trim() === "FEMALE")?.number],
+        data: genderPatient?.female?.map((gender: any) => gender.number),
       },
       {
         label: "Other",
         borderColor: "rgba(199, 206, 255, 1)",
         backgroundColor: "rgba(199, 206, 255, 1)",
-        data: [genderPatient?.filter((gender: any) => gender.title.trim() === "OTHER")?.number],
-      },
-      {
-        label: "total appointment",
-        borderColor: "rgba(199, 206, 255, 1)",
-        backgroundColor: "rgba(199, 206, 255, 1)",
-        data: [genderPatient?.filter((gender: any) => gender.title === "TOTAL APPOINTMENT ")?.number],
+        data: genderPatient?.other?.map((gender: any) => gender.number),
       },
     ],
   };
 
-  const optionsLine = {
+  const optionsLine:any = {
     plugins: {
       legend: {
-        display: false,
-        // position: 'bottom',
+        display: true,
+        position: 'bottom',
       },
     },
     cutoutPercentage: 70,
@@ -312,23 +365,12 @@ const PatientDashboard = () => {
     }
   };
 
-  const optionsDoughnut = {
+  const optionsDoughnut:any = {
     plugins: {
       legend: {
         display: false,
+        position: 'bottom',
       },
-      datalabels: {
-        color: '#ffffff', // Label text color
-        font: {
-          weight: 'bold',
-          size: 14,
-        },
-        formatter: (value: any, context: any) => {
-          // Customize label text here
-          return value + '%';
-        }
-      }
-
     },
     cutoutPercentage: 70,
     tooltips: {
@@ -340,9 +382,30 @@ const PatientDashboard = () => {
           return label + ': ' + value + '%';
         }
       }
-    },
-
+    }
   };
+
+  const doughnutLabel = {
+    id: "doughnutLabel",
+    afterDatasetsDraw(chart: any, args: any, plugins: any) {
+      const { ctx, data } = chart;
+
+      const centerX = chart.getDatasetMeta(0).data[0]?.x;
+      const centerY = chart.getDatasetMeta(0).data[0]?.y;
+
+      const totals = data.datasets.reduce((acc: number, dataset: any) => {
+        return acc + dataset.data.reduce((sum: number, value: number) => sum + value, 0);
+      }, 0);
+
+      ctx.save();
+      ctx.font = "bold 30px sans-serif";
+      ctx.fillStyle = "#9083D5";
+      ctx.textAlign = "center";
+      ctx.textBaseLine = "middle";
+      ctx.fillText(totals, centerX, centerY)
+      ctx.fillText("Total", centerX, 245)
+    }
+  }
 
   const _renderMonths = () => {
     return (
@@ -385,30 +448,23 @@ const PatientDashboard = () => {
 
           <div className="col-4">
             <div className="box">
-              <div className="p-3">
+              <div className="p-3 border-bottom d-flex justify-content-between">
                 <p className="title">Patient by Gender</p>
+                <select
+                  className="input-select input-select-w30"
+                  onChange={(e) => setMonthGender(e.target.value)}
+                  value={monthGender}
+                >
+                  {_renderMonths()}
+                </select>
               </div>
               <div className="p-3">
                 <Doughnut
-
                   data={dataDoughnutGender}
                   options={optionsDoughnut}
+                  plugins={[doughnutLabel]}
                 />
               </div>
-              {/* <div className="p-3 border-top d-flex justify-content-between">
-                <p>
-                  <span>Male</span>
-                  <span></span>
-                </p>
-                <p>
-                  <span>Female</span>
-                  <span></span>
-                </p>
-                <p>
-                  <span>Other</span>
-                  <span></span>
-                </p>
-              </div> */}
             </div>
           </div>
         </div>

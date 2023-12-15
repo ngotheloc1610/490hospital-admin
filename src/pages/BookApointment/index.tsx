@@ -49,6 +49,8 @@ const BookAppointment = () => {
   const [description, setDescription] = useState<string>("");
   const [namePatient, setNamePatient] = useState<string>("");
 
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+
   useEffect(() => {
     getSpecialty();
   }, [])
@@ -185,12 +187,16 @@ const BookAppointment = () => {
       slot: []
     }
 
+    setIsLoading(true);
+
     axios.post(url, params, defineConfigGet({ idPractitionerBook: profile?.id, namePractitionerBook: profile?.name })).then((resp: any) => {
+      setIsLoading(false);
       if (resp) {
         success(resp.data)
         setIsBooking(true);
       }
     }).catch((err: any) => {
+      setIsLoading(false);
       setIsBooking(false);
       error(err.response.data.error);
       console.log("error book appointment:", err)
@@ -323,7 +329,9 @@ const BookAppointment = () => {
               className="button button--primary button--small me-3"
               onClick={() => handleBook()}
             >
-              Book
+               {isLoading && <div className="spinner-border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>} <span className="ms-2">Book</span>
             </button>
             <button
               className="button button--gray button--small"

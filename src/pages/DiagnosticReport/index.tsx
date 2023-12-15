@@ -84,7 +84,6 @@ const DiagnosticReport = () => {
   const [listPreviousEncounter, setListPreviousEncounter] = useState<any>([]);
 
   useEffect(() => {
-
     getCondition()
     getBodySite()
     getCategory()
@@ -948,8 +947,8 @@ const DiagnosticReport = () => {
           <div className="d-flex justify-content-between mb-3">
             <h3 className="fw-bold">Appointment Details</h3>
             <div>
-              {(bookingDetail?.appointmentStatus !== "Booked" && bookingDetail?.appointmentStatus !== "Arrived") && <button className="button button--small button--primary me-2" onClick={() => { setIsShowPopUpArrived(true) }}>Arrived</button>}
-              {bookingDetail?.appointmentStatus === "Arrived" && <>
+              {bookingDetail?.appointmentStatus.toLowerCase() !== "arrived" && <button className="button button--small button--primary me-2" onClick={() => { setIsShowPopUpArrived(true) }}>Arrived</button>}
+              {(bookingDetail?.appointmentStatus.toLowerCase() !== "arrived" || bookingDetail?.appointmentStatus.toLowerCase() !== "cancel") && <>
                 <button className="button button--small button--danger--outline me-2" onClick={() => { setIsShowPopUpNoShow(true) }}>No Show</button>
                 <button className="button button--small button--danger" onClick={() => { setIsShowPopUpCancel(true) }}>Cancel</button>
               </>}
@@ -1000,13 +999,16 @@ const DiagnosticReport = () => {
 
           <div className="mt-4">
             <h5 className="fw-bold">Appointment Result</h5>
-            <div className="box">
+            {bookingDetail?.appointmentStatus.toLowerCase() === "arrived" ? <div className="box">
               {_renderAppointmentHeader()}
               <div className="appointment-container-body p-3">
                 {isPassStep1 ? _renderStep2() : _renderStep1()}
               </div>
               {_renderAppointmentFooter()}
-            </div>
+            </div> : <div className="text-danger text-reset">
+              No result appointment
+              </div>}
+            
           </div>
         </div>
       </section>

@@ -37,8 +37,8 @@ const Login = () => {
     axios
       .post(url, params, defineConfigPost())
       .then((resp: any) => {
+        setIsLoading(false);
         if (resp) {
-          setIsLoading(false);
 
           const accessToken = resp.data.accessToken;
 
@@ -61,6 +61,7 @@ const Login = () => {
       })
       .catch((err: any) => {
         console.log("error Login:", err);
+        setIsLoading(false);
         error(err.message || err.response.data.error || err.response.data.error.message)
       });
   }

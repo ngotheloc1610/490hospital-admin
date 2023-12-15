@@ -4,14 +4,15 @@ import * as Yup from "yup";
 
 import { GENDER } from "../../../constants";
 import { USER } from "../../../assets";
-import { API_ALL_GET_SPECIALTY, API_DETAIL_PRACTITIONER, API_UPDATE_PRACTITIONER } from "../../../constants/api.constant";
+import { API_ALL_GET_SPECIALTY, API_DETAIL_PRACTITIONER, API_MEDIA_UPLOAD_BY_ADMIN, API_UPDATE_PRACTITIONER } from "../../../constants/api.constant";
 import { defineConfigGet, defineConfigPost } from "../../../Common/utils";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
-import { error, success } from "../../../Common/notify";
+import { error, success, warn } from "../../../Common/notify";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setTriggerEdit } from "../../../redux/features/practitioner/practitionerSlice";
+import { KEY_LOCAL_STORAGE } from "../../../constants/general.constant";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Required"),
@@ -45,14 +46,15 @@ const CreateEditStaff = () => {
   const navigate = useNavigate();
   const params = useParams();
 
-  const [image, setImage] = useState<any>("");
+  const [selectedFile, setSelectedFile] = useState<any>(null);
+  const [isPickImage, setIsPickImage] = useState<boolean>(false)
   const [specialtyList, setSpecialtyList] = useState<any>([]);
   const [staff, setStaff] = useState<any>(defaultValue);
 
   const url_api = process.env.REACT_APP_API_URL;
 
   const dispatch = useAppDispatch();
-  const { triggerEdit } = useAppSelector((state) => state.practitionerSlice)
+  const { triggerEdit, profile } = useAppSelector((state) => state.practitionerSlice)
 
   useEffect(() => {
     getStaffInfo(params.staffId)
@@ -61,6 +63,41 @@ const CreateEditStaff = () => {
   useEffect(() => {
     getSpecialty()
   }, [])
+
+  useEffect(() => {
+    if(selectedFile){
+      uploadImage()
+    }
+  }, [selectedFile])
+
+  const uploadImage = async () => {
+
+    const url = `${url_api}${API_MEDIA_UPLOAD_BY_ADMIN}`;
+
+    if (!selectedFile) {
+        warn('Please select an image file before uploading.');
+        return;
+    }
+
+    const formData: FormData = new FormData();
+    formData.append('file', selectedFile);
+    formData.append('userId', profile?.id)
+
+    try {
+        const config = {
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem(KEY_LOCAL_STORAGE.AUTHEN)}`,
+                "Content-Type": "multipart/form-data",
+            },
+        }
+
+        const { data } = await axios.post(url, formData, config)
+        console.log("data:", data)
+    } catch (err: any) {
+        console.log(err);
+        error(err.response.data.error)
+    }
+}
 
   const getStaffInfo = (id: string | undefined) => {
     const url = `${url_api}${API_DETAIL_PRACTITIONER}${id}`;
@@ -82,6 +119,7 @@ const CreateEditStaff = () => {
             identifier: data?.identification !== "null" ? data?.identification : null,
             startDate: moment(data?.startWork).format("YYYY-MM-DD"),
             endDate: moment(data?.endWork).format("YYYY-MM-DD"),
+            photo: data?.photo
           }
           setStaff(dataConverted);
         }
@@ -158,15 +196,8 @@ const CreateEditStaff = () => {
 
   const handleChangeImage = (event: any) => {
     const file = event.target.files[0];
-
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImage(reader.result);
-      };
-
-      reader.readAsDataURL(file);
-    }
+    setSelectedFile(file)
+    setIsPickImage(true);
   };
 
   const handlePickImage = () => {
@@ -357,11 +388,20 @@ const CreateEditStaff = () => {
     return (
       <div className="h-100 d-flex flex-column" onClick={handlePickImage}>
         <div className="h-100">
-          <img
-            src={staff?.photo?.length > 0 ? `data:${staff.photo[0]?.contentType};base64,${staff.photo[0]?.data}` : image ? image : USER}
-            alt=""
-            className={`d-block m-auto ${image ? "" : "bg-image"}`}
-            style={{ objectFit: "cover" }}
+        {!isPickImage ?  <img
+            src={staff?.photo ? staff?.photo : USER}
+            alt="img patient"
+            className={`${staff?.photo ? "" : "bg-image"} w-100 h-100 object-fit-cover`}
+          /> :  <img
+          src={selectedFile ? URL.createObjectURL(selectedFile) : USER}
+          alt="img patient"
+          className={`${selectedFile ? "" : "bg-image"} w-100 h-100 object-fit-cover`}
+        />}
+          <input
+            type="file"
+            className="d-none"
+            ref={inputRef}
+            onChange={handleChangeImage}
           />
           <input
             type="file"
@@ -371,7 +411,7 @@ const CreateEditStaff = () => {
           />
         </div>
         <button className="button button--small button--primary w-90 mx-auto mt-3">
-          {image ? "Edit" : "Add"} profile picture
+          {staff?.photo ? "Edit" : "Add"} profile picture
         </button>
       </div>
     );
@@ -408,10 +448,6 @@ const CreateEditStaff = () => {
             <button className="button button--small button--danger me-3" onClick={() => navigate(`/staff/overview/${params.staffId}`)}>
               Back
             </button>
-
-            {/* <button className="button button--small button--danger me-3">
-              Delete
-            </button> */}
 
             <button
               className="button button--small button--primary"

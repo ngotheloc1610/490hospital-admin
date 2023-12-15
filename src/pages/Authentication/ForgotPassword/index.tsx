@@ -69,6 +69,8 @@ const ForgotPassword = () => {
     axios
       .post(url, params, defineConfigPost())
       .then((resp: any) => {
+        setIsLoading(false)
+
         if (resp) {
           if (resp.data === "successful") {
             setIsSendMail(true);
@@ -78,10 +80,10 @@ const ForgotPassword = () => {
             error(resp.data)
           }
 
-          setIsLoading(false)
         }
       })
       .catch((err: any) => {
+        setIsLoading(false)
         console.log("err:", err);
       });
   }
@@ -103,6 +105,8 @@ const ForgotPassword = () => {
     axios
       .post(url, params, defineConfigPost())
       .then((resp: any) => {
+        setIsLoading(false)
+
         if (resp) {
           if (resp.data === "successful") {
             setIsVerifyCode(true);
@@ -112,12 +116,12 @@ const ForgotPassword = () => {
             error(resp.data)
           }
 
-          setIsLoading(false)
 
         }
       })
       .catch((err: any) => {
         console.log("error Login:", err);
+        setIsLoading(false)
         error(err.message || err.response.data.error || err.response.data.error.message)
       });
   }
@@ -136,6 +140,8 @@ const ForgotPassword = () => {
     axios
       .post(url, params, defineConfigPost())
       .then((resp: any) => {
+        setIsLoading(false)
+
         if (resp) {
           console.log("resp:", resp)
           if (resp.data === "change pass successful") {
@@ -146,12 +152,10 @@ const ForgotPassword = () => {
           } else {
             error(resp.data)
           }
-
-          setIsLoading(false)
-
         }
       })
       .catch((err: any) => {
+        setIsLoading(false)
         console.log("err:", err);
       });
   }

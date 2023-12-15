@@ -286,11 +286,11 @@ const AppointmentDashboard = () => {
     ],
   };
 
-  const optionsLine = {
+  const optionsLine:any = {
     plugins: {
       legend: {
-        display: false,
-        // position: 'bottom',
+        display: true,
+        position: 'bottom',
       },
     },
     cutoutPercentage: 70,
@@ -306,23 +306,12 @@ const AppointmentDashboard = () => {
     }
   };
 
-  const optionsDoughnut = {
+  const optionsDoughnut:any = {
     plugins: {
       legend: {
         display: false,
+        position: 'bottom',
       },
-      datalabels: {
-        color: '#ffffff', // Label text color
-        font: {
-          weight: 'bold',
-          size: 14,
-        },
-        formatter: (value: any, context: any) => {
-          // Customize label text here
-          return value + '%';
-        }
-      }
-
     },
     cutoutPercentage: 70,
     tooltips: {
@@ -334,7 +323,7 @@ const AppointmentDashboard = () => {
           return label + ': ' + value + '%';
         }
       }
-    },
+    }
   };
 
   const doughnutLabel = {
@@ -405,7 +394,7 @@ const AppointmentDashboard = () => {
               <p className="title">Today Appointment</p>
               <table className="table m-2">
                 <tbody>
-                  {appointmentToday.length > 0 && appointmentToday.map((item: any) => {
+                  {appointmentToday && appointmentToday.length > 0 ? appointmentToday.map((item: any) => {
                     return (<tr>
                       <td>
                         <div className="d-flex">
@@ -421,7 +410,7 @@ const AppointmentDashboard = () => {
                       </td>
                     </tr>
                     )
-                  })}
+                  }) : <span>Không có dữ liệu!</span>}
 
                 </tbody>
               </table>
@@ -469,7 +458,6 @@ const AppointmentDashboard = () => {
           <div className="row m-3">
             <div className="col-8">
               <Line
-
                 data={dataChartAppointmentTotal}
                 options={optionsLine}
               />

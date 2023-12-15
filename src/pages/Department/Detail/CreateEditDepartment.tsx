@@ -250,8 +250,6 @@ const CreateEditDepartment = () => {
       enableReinitialize={true}
       validationSchema={validationSchema}
       onSubmit={(values, actions) => {
-        console.log("values:", values);
-        console.log("actions:", actions);
         actions.setSubmitting(false);
         actions.resetForm();
       }}

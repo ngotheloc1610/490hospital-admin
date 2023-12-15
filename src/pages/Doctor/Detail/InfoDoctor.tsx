@@ -21,7 +21,6 @@ const InfoDoctor = () => {
 
   useEffect(() => {
     const id = param.doctorId;
-    console.log("id:", id)
     const url = `${url_api}${API_DETAIL_PRACTITIONER}${id}`;
 
     axios
@@ -185,7 +184,7 @@ const InfoDoctor = () => {
             <div className="col-4">
               <div className="h-100 d-flex flex-column">
                 <div className="h-100">
-                  <img src={doctor?.photo ? doctor?.photo : USER} alt="img doctor" className="h-100 d-block m-auto" />
+                  <img src={doctor?.photo ? doctor?.photo : USER} alt="img doctor"  className={`d-block m-auto w-100 h-100 object-fit-cover`} />
                 </div>
               </div>
             </div>

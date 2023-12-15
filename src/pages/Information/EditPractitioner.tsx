@@ -385,7 +385,7 @@ const EditPractitioner = () => {
                         <img
                             src={selectedFile ? URL.createObjectURL(selectedFile) : USER}
                             alt="img admin"
-                            className={`d-block m-auto ${selectedFile ? "" : "bg-image"}`}
+                            className={`d-block m-auto ${selectedFile ? "" : "bg-image"} w-100 h-100 object-fit-cover`}
                             style={{ objectFit: "cover" }}
                         />
                         <input

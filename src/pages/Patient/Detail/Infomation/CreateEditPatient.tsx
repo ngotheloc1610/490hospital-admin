@@ -8,10 +8,11 @@ import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 
 import { GENDER } from "../../../../constants";
 import { USER } from "../../../../assets";
-import { API_GET_PATIENT, API_UPDATE_PATIENT } from "../../../../constants/api.constant";
+import { API_GET_PATIENT, API_MEDIA_UPLOAD_BY_ADMIN, API_UPDATE_PATIENT } from "../../../../constants/api.constant";
 import { defineConfigGet, defineConfigPost } from "../../../../Common/utils";
-import { setPatient, setTriggerUpdate } from "../../../../redux/features/patient/patientSlice";
-import { error, success } from "../../../../Common/notify";
+import { setTriggerUpdate } from "../../../../redux/features/patient/patientSlice";
+import { error, success, warn } from "../../../../Common/notify";
+import { KEY_LOCAL_STORAGE } from "../../../../constants/general.constant";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().min(3).required("Required"),
@@ -42,13 +43,22 @@ const CreateEditPatient = () => {
   const dispatch = useAppDispatch();
   const inputRef = useRef<any>(null);
 
-  const [image, setImage] = useState<any>("");
   const [patientInfo, setPatientInfo] = useState<any>(defaultValue);
+  const [selectedFile, setSelectedFile] = useState<any>(null);
+  const [isPickImage, setIsPickImage] = useState<boolean>(false)
   const { triggerUpdate } = useAppSelector(state => state.patientSlice);
+  const { profile } = useAppSelector(state => state.practitionerSlice);
 
   useEffect(() => {
     getPatientInfo(params.patientId)
   }, [params.patientId])
+
+  useEffect(() => {
+    if(selectedFile){
+      uploadImage()
+    }
+  }, [selectedFile])
+  
 
   const getPatientInfo = (id: any) => {
     const url = `${url_api}${API_GET_PATIENT}${id}`;
@@ -67,6 +77,7 @@ const CreateEditPatient = () => {
             email: data?.email,
             address: data?.address,
             identifier: data?.identifier,
+            photo: data?.photo
           }
           setPatientInfo(patientDetail);
         }
@@ -75,6 +86,35 @@ const CreateEditPatient = () => {
         console.log("error get info patient:", err);
       });
   }
+
+  const uploadImage = async () => {
+
+    const url = `${url_api}${API_MEDIA_UPLOAD_BY_ADMIN}`;
+
+    if (!selectedFile) {
+        warn('Please select an image file before uploading.');
+        return;
+    }
+
+    const formData: FormData = new FormData();
+    formData.append('file', selectedFile);
+    formData.append('userId', profile?.id)
+
+    try {
+        const config = {
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem(KEY_LOCAL_STORAGE.AUTHEN)}`,
+                "Content-Type": "multipart/form-data",
+            },
+        }
+
+        const { data } = await axios.post(url, formData, config)
+        console.log("data:", data)
+    } catch (err: any) {
+        console.log(err);
+        error(err.response.data.error)
+    }
+}
 
   const updatePatient = (values: any, actions: any) => {
     const url = `${url_api}${API_UPDATE_PATIENT}${values.id}`;
@@ -111,15 +151,8 @@ const CreateEditPatient = () => {
 
   const handleChangeImage = (event: any) => {
     const file = event.target.files[0];
-
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImage(reader.result);
-      };
-
-      reader.readAsDataURL(file);
-    }
+    setSelectedFile(file)
+    setIsPickImage(true);
   };
 
   const handlePickImage = () => {
@@ -236,12 +269,16 @@ const CreateEditPatient = () => {
     return (
       <div className="h-100 d-flex flex-column" onClick={handlePickImage}>
         <div className="h-100">
-          <img
-            src={patientInfo?.photo?.length > 0 ? `data:${patientInfo?.photo[0]?.contentType};base64,${patientInfo?.photo[0]?.data}` : image ? image : USER}
+          {!isPickImage ?  <img
+            src={patientInfo?.photo ? patientInfo?.photo : USER}
             alt="img patient"
-            className={`d-block m-auto ${image ? "" : "bg-image"}`}
-            style={{ objectFit: "cover" }}
-          />
+            className={`${patientInfo?.photo ? "" : "bg-image"} w-100 h-100 object-fit-cover`}
+          /> :  <img
+          src={selectedFile ? URL.createObjectURL(selectedFile) : USER}
+          alt="img patient"
+          className={`${selectedFile ? "" : "bg-image"} w-100 h-100 object-fit-cover`}
+        />}
+         
           <input
             type="file"
             className="d-none"
@@ -250,7 +287,7 @@ const CreateEditPatient = () => {
           />
         </div>
         <button className="button button--small button--primary w-90 mx-auto mt-3">
-          {image || patientInfo?.photo?.length > 0 ? "Edit" : "Add"} profile picture
+          {patientInfo?.photo ? "Edit" : "Add"} profile picture
         </button>
       </div>
     );

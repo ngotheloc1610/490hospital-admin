@@ -62,7 +62,7 @@ import PatientDashboard from "./pages/Dashboard/Patient";
 import AppointmentDashboard from "./pages/Dashboard/Appointment";
 import PatientMonitorDetail from "./pages/PatientMonitor/PatientMonitorDetail";
 
-import "./firebase"
+// import "./firebase"
 
 if (typeof window !== "undefined") {
   require("bootstrap/dist/js/bootstrap.bundle.min");

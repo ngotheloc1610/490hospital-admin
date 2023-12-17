@@ -6,6 +6,8 @@ import axios from "axios";
 import { API_ALERT_ALL, API_ALERT_BLOOD_GLUCOSE, API_ALERT_BLOOD_PRESSURE, API_ALERT_BMI, API_ALERT_HEART_RATE, API_ALERT_TEMPERATURE } from "../../constants/api.constant";
 import { ALERT_STATUS, RULE_BLOOD_GLUCOSE, RULE_BLOOD_PRESSURE, RULE_BMI, RULE_HEART_RATE, RULE_TEMPERATURE } from "../../constants";
 import { success } from "../../Common/notify";
+import PopUpAlert from "../../components/common/PopUpAlert";
+import { useAppSelector } from "../../redux/hooks";
 
 
 const Setting = () => {
@@ -63,9 +65,14 @@ const Setting = () => {
     ]
   }])
 
+  const [isShowPopUpAlert, setIsShowPopUpAlert] = useState<boolean>(false);
+  const [idAlert, setIdAlert] = useState("");
+
+  const { isDelete } = useAppSelector(state => state.alertSlice)
+
   useEffect(() => {
     getAllAlertSetting()
-  }, [])
+  }, [isDelete])
 
   const getAllAlertSetting = () => {
     const url = `${url_api}${API_ALERT_ALL}`;
@@ -99,6 +106,7 @@ const Setting = () => {
               })
 
               bloodPressure.push({
+                id: item?.id,
                 alertName: item.alertName,
                 alertSeverity: item.severity,
                 rule: rulePressure
@@ -115,6 +123,7 @@ const Setting = () => {
               })
 
               bloodGlucose.push({
+                id: item?.id,
                 alertName: item.alertName,
                 alertSeverity: item.severity,
                 rule: ruleGlucose
@@ -131,6 +140,7 @@ const Setting = () => {
               })
 
               heartRate.push({
+                id: item?.id,
                 alertName: item.alertName,
                 alertSeverity: item.severity,
                 rule: ruleHeart
@@ -147,6 +157,7 @@ const Setting = () => {
               })
 
               temperature.push({
+                id: item?.id,
                 alertName: item.alertName,
                 alertSeverity: item.severity,
                 rule: ruleTemperature
@@ -162,6 +173,7 @@ const Setting = () => {
               })
 
               bmi.push({
+                id: item?.id,
                 alertName: item.alertName,
                 alertSeverity: item.severity,
                 rule: ruleBMI
@@ -180,7 +192,7 @@ const Setting = () => {
       });
   }
 
-  const createAlertBloodPressure = (bloodItem: any) => {
+  const createAlertBloodPressure = (bloodItem: any, id: string) => {
     const url = `${url_api}${API_ALERT_BLOOD_PRESSURE}`;
 
     let ruleList: any = [];
@@ -196,6 +208,7 @@ const Setting = () => {
     })
 
     const params = {
+      id: id ? id : null,
       category: "Blood Pressure",
       alertName: bloodItem.alertName,
       severity: bloodItem.alertSeverity,
@@ -213,7 +226,7 @@ const Setting = () => {
         console.log("error create alert blood pressure", err);
       });
   }
-  const createAlertBloodGlucose = (bloodItem: any) => {
+  const createAlertBloodGlucose = (bloodItem: any, id: string) => {
     const url = `${url_api}${API_ALERT_BLOOD_GLUCOSE}`;
 
     let ruleList: any = [];
@@ -226,6 +239,7 @@ const Setting = () => {
     })
 
     const params = {
+      id: id ? id : null,
       category: "Blood Glucose",
       alertName: bloodItem.alertName,
       severity: bloodItem.alertSeverity,
@@ -243,7 +257,7 @@ const Setting = () => {
         console.log("error create alert blood glucose", err);
       });
   }
-  const createAlertHeartRate = (bloodItem: any) => {
+  const createAlertHeartRate = (bloodItem: any, id: string) => {
     const url = `${url_api}${API_ALERT_HEART_RATE}`;
 
     let ruleList: any = [];
@@ -256,6 +270,7 @@ const Setting = () => {
     })
 
     const params = {
+      id: id ? id : null,
       category: "Heart Rate",
       alertName: bloodItem.alertName,
       severity: bloodItem.alertSeverity,
@@ -273,7 +288,7 @@ const Setting = () => {
         console.log("error create alert heart rate", err);
       });
   }
-  const createAlertBMI = (bloodItem: any) => {
+  const createAlertBMI = (bloodItem: any, id: string) => {
     const url = `${url_api}${API_ALERT_BMI}`;
 
     let ruleList: any = [];
@@ -286,6 +301,7 @@ const Setting = () => {
     })
 
     const params = {
+      id: id ? id : null,
       category: "BMI",
       alertName: bloodItem.alertName,
       severity: bloodItem.alertSeverity,
@@ -303,7 +319,7 @@ const Setting = () => {
         console.log("error create alert bmi", err);
       });
   }
-  const createAlertTemperature = (bloodItem: any) => {
+  const createAlertTemperature = (bloodItem: any, id: string) => {
     const url = `${url_api}${API_ALERT_TEMPERATURE}`;
 
     let ruleList: any = [];
@@ -316,6 +332,7 @@ const Setting = () => {
     })
 
     const params = {
+      id: id ? id : null,
       category: "Temperature",
       alertName: bloodItem.alertName,
       severity: bloodItem.alertSeverity,
@@ -334,20 +351,20 @@ const Setting = () => {
       });
   }
 
-  const applyBloodPressure = (item: any) => {
-    createAlertBloodPressure(item);
+  const applyBloodPressure = (item: any, id: string) => {
+    createAlertBloodPressure(item, id);
   }
-  const applyBloodGlucose = (item: any) => {
-    createAlertBloodGlucose(item);
+  const applyBloodGlucose = (item: any, id: string) => {
+    createAlertBloodGlucose(item, id);
   }
-  const applyHeartRate = (item: any) => {
-    createAlertHeartRate(item);
+  const applyHeartRate = (item: any, id: string) => {
+    createAlertHeartRate(item, id);
   }
-  const applyBMI = (item: any) => {
-    createAlertBMI(item);
+  const applyBMI = (item: any, id: string) => {
+    createAlertBMI(item, id);
   }
-  const applyTemperature = (item: any) => {
-    createAlertTemperature(item);
+  const applyTemperature = (item: any, id: string) => {
+    createAlertTemperature(item, id);
   }
 
   const _renderListSeverity = () => {
@@ -540,13 +557,14 @@ const Setting = () => {
                             </td>
                             <td></td>
                             <td className="d-flex">
-                              <button type="button" className="button button--primary button--smaller me-1" onClick={() => applyBloodPressure(item)}>
+                              <button type="button" className="button button--primary button--smaller me-1" onClick={() => {
+                                applyBloodPressure(item, listBloodPressure[idx]?.id)
+                              }}>
                                 Apply for all patient
                               </button>
                               <button type="button" className="button button--deny button--smaller" onClick={() => {
-                                const updatedList = [...listBloodPressure];
-                                updatedList.splice(idx, 1);
-                                setListBloodPressure(updatedList);
+                                setIsShowPopUpAlert(true);
+                                setIdAlert(listBloodPressure[idx]?.id)
                               }}>
                                 Delete Alert
                               </button>
@@ -710,13 +728,12 @@ const Setting = () => {
                             </td>
                             <td></td>
                             <td className="d-flex">
-                              <button type="button" className="button button--primary button--smaller me-1" onClick={() => applyBloodGlucose(item)}>
+                              <button type="button" className="button button--primary button--smaller me-1" onClick={() => applyBloodGlucose(item, listBloodGlucose[idx]?.id)}>
                                 Apply for all patient
                               </button>
                               <button type="button" className="button button--deny button--smaller" onClick={() => {
-                                const updatedList = [...listBloodGlucose];
-                                updatedList.splice(idx, 1);
-                                setListBloodGlucose(updatedList);
+                                setIsShowPopUpAlert(true);
+                                setIdAlert(listBloodGlucose[idx]?.id)
                               }}>
                                 Delete Alert
                               </button>
@@ -880,13 +897,12 @@ const Setting = () => {
                             </td>
                             <td></td>
                             <td className="d-flex">
-                              <button type="button" className="button button--primary button--smaller me-1" onClick={() => applyHeartRate(item)}>
+                              <button type="button" className="button button--primary button--smaller me-1" onClick={() => applyHeartRate(item, listHeartRate[idx]?.id)}>
                                 Apply for all patient
                               </button>
                               <button type="button" className="button button--deny button--smaller" onClick={() => {
-                                const updatedList = [...listHeartRate];
-                                updatedList.splice(idx, 1);
-                                setListHeartRate(updatedList);
+                                setIsShowPopUpAlert(true);
+                                setIdAlert(listHeartRate[idx]?.id)
                               }}>
                                 Delete Alert
                               </button>
@@ -1045,13 +1061,12 @@ const Setting = () => {
                             </td>
                             <td></td>
                             <td className="d-flex">
-                              <button type="button" className="button button--primary button--smaller me-1" onClick={() => applyBMI(item)}>
+                              <button type="button" className="button button--primary button--smaller me-1" onClick={() => applyBMI(item, listBMI[idx]?.id)}>
                                 Apply for all patient
                               </button>
                               <button type="button" className="button button--deny button--smaller" onClick={() => {
-                                const updatedList = [...listBMI];
-                                updatedList.splice(idx, 1);
-                                setListBMI(updatedList);
+                                setIsShowPopUpAlert(true);
+                                setIdAlert(listBMI[idx]?.id)
                               }}>
                                 Delete Alert
                               </button>
@@ -1215,13 +1230,12 @@ const Setting = () => {
                             </td>
                             <td></td>
                             <td className="d-flex">
-                              <button type="button" className="button button--primary button--smaller me-1" onClick={() => applyTemperature(item)}>
+                              <button type="button" className="button button--primary button--smaller me-1" onClick={() => applyTemperature(item, listTemperature[idx]?.id)}>
                                 Apply for all patient
                               </button>
                               <button type="button" className="button button--deny button--smaller" onClick={() => {
-                                const updatedList = [...listTemperature];
-                                updatedList.splice(idx, 1);
-                                setListTemperature(updatedList);
+                                setIsShowPopUpAlert(true);
+                                setIdAlert(listTemperature[idx]?.id)
                               }}>
                                 Delete Alert
                               </button>
@@ -1277,6 +1291,8 @@ const Setting = () => {
           </div>
         </div>
       </div>
+
+      {isShowPopUpAlert && <PopUpAlert handleShowPopUp={setIsShowPopUpAlert} idAlertSetting={idAlert} />}
     </Layout>
   );
 };

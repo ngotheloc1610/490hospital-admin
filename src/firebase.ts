@@ -17,36 +17,36 @@ const app = initializeApp(firebaseConfig);
 
 const messaging = getMessaging(app);
 
-// export const requestForToken = () => {
-//     return getToken(messaging, { vapidKey: GENERATED_MESSAGING_KEY })
-//         .then((currentToken) => {
-//             if (currentToken) {
-//                 console.log("currentToken:", currentToken)
-//                 return currentToken;
-//                 // Perform any other neccessary action with the token
-//             } else {
-//                 // Show permission request UI
-//                 console.log(
-//                     "No registration token available. Request permission to generate one."
-//                 );
-//             }
-//         })
-//         .catch((err) => {
-//             console.log("An error occurred while retrieving token. ", err);
-//         });
-// };
+export const requestForToken = () => {
+    return getToken(messaging, { vapidKey: GENERATED_MESSAGING_KEY })
+        .then((currentToken) => {
+            if (currentToken) {
+                console.log("currentToken:", currentToken)
+                return currentToken;
+                // Perform any other neccessary action with the token
+            } else {
+                // Show permission request UI
+                console.log(
+                    "No registration token available. Request permission to generate one."
+                );
+            }
+        })
+        .catch((err) => {
+            console.log("An error occurred while retrieving token. ", err);
+        });
+};
 
-// export const onMessageListener = () =>
-//     new Promise((resolve) => {
-//         onMessage(messaging, (payload: any) => {
-//             const newNoti = {
-//                 title: payload.notification.title,
-//                 body: payload.notification.body,
-//             };
-//             const roomId = JSON.parse(
-//                 payload.data["gcm.notification.payload"]
-//             ).whereToId;
-//             // success(ToastMessageLink(roomId, newNoti.title, newNoti.body));
-//             resolve(newNoti);
-//         });
-//     });
+export const onMessageListener = () =>
+    new Promise((resolve) => {
+        onMessage(messaging, (payload: any) => {
+            const newNoti = {
+                title: payload.notification.title,
+                body: payload.notification.body,
+            };
+            const roomId = JSON.parse(
+                payload.data["gcm.notification.payload"]
+            ).whereToId;
+            // success(ToastMessageLink(roomId, newNoti.title, newNoti.body));
+            resolve(newNoti);
+        });
+    });

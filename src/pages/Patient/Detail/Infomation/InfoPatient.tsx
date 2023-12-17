@@ -120,7 +120,7 @@ const InfoPatient = () => {
                 <img
                   src={patient?.photo ? patient?.photo : USER}
                   alt="img patient"
-                  className={`d-block m-auto w-100 h-100 object-fit-cover`}
+                  className={`d-block m-auto w-100 h-250 object-fit-cover`}
                 />
               </div>
 

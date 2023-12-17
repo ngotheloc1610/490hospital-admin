@@ -184,7 +184,7 @@ const InfoDoctor = () => {
             <div className="col-4">
               <div className="h-100 d-flex flex-column">
                 <div className="h-100">
-                  <img src={doctor?.photo ? doctor?.photo : USER} alt="img doctor"  className={`d-block m-auto w-100 h-100 object-fit-cover`} />
+                  <img src={doctor?.photo ? doctor?.photo : USER} alt="img doctor" className={`d-block m-auto w-100 h-350 object-fit-cover`} />
                 </div>
               </div>
             </div>

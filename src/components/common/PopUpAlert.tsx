@@ -1,53 +1,44 @@
 import { Button, Modal } from "react-bootstrap";
 import axios from "axios";
+import { API_ALERT_DELETE } from "../../constants/api.constant";
+import { defineConfigPost } from "../../Common/utils";
 import { error, success } from "../../Common/notify";
-import { defineConfigGet } from "../../Common/utils";
-import { API_NO_SHOW_APPOINTMENT } from "../../constants/api.constant";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setTriggerNoShow } from "../../redux/features/appointment/appointmentSlice";
-import { KEY_LOCAL_STORAGE } from "../../constants/general.constant";
-
+import { setDelete } from "../../redux/features/alert/alertSlice";
 
 interface IProps {
     handleShowPopUp: any;
+    idAlertSetting: string;
 }
 
-const PopUpNoShow = (props: IProps) => {
-    const { handleShowPopUp } = props;
-
-    const { triggerNoShow, appointment } = useAppSelector(state => state.appointmentSlice)
-    const dispatch = useAppDispatch();
+const PopUpAlert = (props: IProps) => {
+    const { handleShowPopUp, idAlertSetting } = props;
 
     const url_api = process.env.REACT_APP_API_URL;
+    const dispatch = useAppDispatch();
+    const { isDelete } = useAppSelector(state => state.alertSlice)
 
-
-    const noshowAppointment = () => {
-        const url = `${url_api}${API_NO_SHOW_APPOINTMENT}${appointment?.idAppointment}`;
-
-        const accountID: any = localStorage.getItem(KEY_LOCAL_STORAGE.ID);
-
-        const params = {
-            idPatient: accountID,
-        }
+    const deleteAlert = () => {
+        const url = `${url_api}${API_ALERT_DELETE}${idAlertSetting}`;
 
         axios
-            .post(url, defineConfigGet(params))
+            .delete(url, defineConfigPost())
             .then((resp) => {
                 if (resp) {
-                    dispatch(setTriggerNoShow(!triggerNoShow))
-                    success("No Show Successfully");
+                    success("Delete Alert Successfully");
+                    dispatch(setDelete(!isDelete));
                     handleShowPopUp(false);
                 }
             })
             .catch((err: any) => {
-                console.log("error accept appointment:", err);
-                error(err.response.data.error || err.response.data.error.message);
+                console.log("err:", err);
+                error(err.response.data.error);
 
             });
     };
 
-    const handleNoshow = () => {
-        noshowAppointment();
+    const handleDeleteAlert = () => {
+        deleteAlert();
     };
 
     return (
@@ -64,7 +55,7 @@ const PopUpNoShow = (props: IProps) => {
                         <i className="bi bi-exclamation-circle text-warning"></i>
                     </span>
                     <span className="ms-3 fs-18 fw-600 text-center">
-                        Are you sure to no show appointment？
+                        Are you sure to delete alert?
                     </span>
                 </Modal.Body>
                 <Modal.Footer className="justify-content-center">
@@ -78,7 +69,7 @@ const PopUpNoShow = (props: IProps) => {
                     </Button>
                     <Button
                         className="button button--small button--primary"
-                        onClick={() => handleNoshow()}
+                        onClick={() => handleDeleteAlert()}
                     >
                         Yes
                     </Button>
@@ -87,4 +78,4 @@ const PopUpNoShow = (props: IProps) => {
         </>
     );
 };
-export default PopUpNoShow;
+export default PopUpAlert;

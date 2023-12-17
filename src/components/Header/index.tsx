@@ -30,6 +30,8 @@ const Header = () => {
     localStorage.removeItem(KEY_LOCAL_STORAGE.IAT)
     localStorage.removeItem(KEY_LOCAL_STORAGE.EXP)
     localStorage.removeItem(KEY_LOCAL_STORAGE.SUB)
+    localStorage.removeItem(KEY_LOCAL_STORAGE.ID)
+    localStorage.removeItem(KEY_LOCAL_STORAGE.NAME)
 
     dispatch(setLogin(false));
 

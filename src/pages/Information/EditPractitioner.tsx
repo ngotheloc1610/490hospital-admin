@@ -42,8 +42,9 @@ const EditPractitioner = () => {
     const inputRef = useRef<any>(null);
     const [selectedFile, setSelectedFile] = useState<any>(null);
     const [practitioner, setPractitioner] = useState<any>(defaultValue);
-
     const [practitionerInfo, setPractitionerInfo] = useState<any>({});
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [isPickImage, setIsPickImage] = useState<boolean>(false);
 
     const dispatch = useAppDispatch();
     const { triggerEdit } = useAppSelector((state) => state.practitionerSlice)
@@ -51,6 +52,12 @@ const EditPractitioner = () => {
     useEffect(() => {
         getProfilePractitioner()
     }, [])
+
+    useEffect(() => {
+        if (selectedFile) {
+            uploadImage()
+        }
+    }, [selectedFile])
 
     const uploadImage = async () => {
 
@@ -64,6 +71,8 @@ const EditPractitioner = () => {
         const formData: FormData = new FormData();
         formData.append('file', selectedFile);
 
+        setIsLoading(true);
+
         try {
             const config = {
                 headers: {
@@ -73,9 +82,13 @@ const EditPractitioner = () => {
             }
 
             const { data } = await axios.post(url, formData, config)
-            console.log("data:", data)
+            if (data === "Successful!") {
+                setIsLoading(false)
+                success("Upload image Successful!")
+            }
         } catch (err: any) {
             console.log(err);
+            setIsLoading(false)
             error(err.response.data.error)
         }
     }
@@ -99,6 +112,7 @@ const EditPractitioner = () => {
                         identifier: data.identification !== "null" ? data.identification : "",
                     }
 
+                    console.log("data:", data)
                     setPractitionerInfo(data);
                     setPractitioner(dataConverted);
                 }
@@ -138,7 +152,6 @@ const EditPractitioner = () => {
                 if (resp) {
                     actions.setSubmitting(false);
                     actions.resetForm();
-                    uploadImage()
                     dispatch(setTriggerEdit(!triggerEdit))
                     success("Update Successfully!");
                     navigate("/information");
@@ -153,9 +166,9 @@ const EditPractitioner = () => {
     const handleChangeImage = (event: any) => {
         const file = event.target.files[0];
 
-        // Check if the selected file is an image
         if (file && file.type.startsWith('image/')) {
             setSelectedFile(file);
+            setIsPickImage(true)
         } else {
             warn('Please select a valid image file.');
         }
@@ -382,12 +395,19 @@ const EditPractitioner = () => {
             <form onClick={handlePickImage}>
                 <div className="h-100 d-flex flex-column" >
                     <div className="h-100">
-                        <img
+                        {!isLoading ? !isPickImage ? <img
+                            src={practitionerInfo?.photo ? practitionerInfo?.photo : USER}
+                            alt="img patient"
+                            className={`${practitionerInfo?.photo ? "" : "bg-image"} w-100 h-350 object-fit-cover p-2 border`}
+                        /> : <img
                             src={selectedFile ? URL.createObjectURL(selectedFile) : USER}
                             alt="img admin"
-                            className={`d-block m-auto ${selectedFile ? "" : "bg-image"} w-100 h-100 object-fit-cover`}
+                            className={`d-block m-auto ${selectedFile ? "" : "bg-image"} w-100 h-350 object-fit-cover`}
                             style={{ objectFit: "cover" }}
-                        />
+                        /> : <div className="d-flex justify-content-center bg-light h-100">
+                            <div className="spinner-border my-auto" style={{ width: "5rem", height: "5rem" }} role="status">
+                                <span className="visually-hidden">Loading...</span>
+                            </div></div>}
                         <input
                             type="file"
                             className="d-none"
@@ -395,9 +415,9 @@ const EditPractitioner = () => {
                             onChange={handleChangeImage}
                         />
                     </div>
-                    <button className="button button--small button--primary w-90 mx-auto mt-3">
+                    <p className="button button--small button--primary w-100 mx-auto mt-3 p-3">
                         {selectedFile ? "Edit" : "Add"} profile picture
-                    </button>
+                    </p>
                 </div>
             </form>
         );
@@ -409,7 +429,6 @@ const EditPractitioner = () => {
             enableReinitialize={true}
             validationSchema={validationSchema}
             onSubmit={(values, actions) => {
-                console.log("values:", values)
                 updatePatient(values, actions)
 
             }}

@@ -147,7 +147,7 @@ const Information = () => {
 
     return (
         <Layout>
-            <section className="patient-detail container" >
+            <section className="patient-detail" >
                 {outlet ? <EditPractitioner /> :
                     <>
                         <div>
@@ -196,8 +196,7 @@ const Information = () => {
                                             <img
                                                 src={practitionerInfo?.photo?.length > 0 ? practitionerInfo?.photo[0]?.url : USER}
                                                 alt="img practitioner"
-                                                className={`d-block m-auto ${practitionerInfo ? "" : "bg-image"}`}
-                                                style={{ objectFit: "cover" }}
+                                                className={`d-block m-auto ${practitionerInfo ? "" : "bg-image"} w-100 h-200 object-fit-cover`}
                                             />
                                         </div>
                                     </div>

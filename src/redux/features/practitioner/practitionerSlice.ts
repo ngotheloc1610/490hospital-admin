@@ -8,7 +8,6 @@ interface IPractitioner {
     showPopUpBlock: boolean,
     practitioner: any,
     triggerBlock: boolean,
-    profile: any,
 }
 
 const initialState: IPractitioner = {
@@ -16,7 +15,6 @@ const initialState: IPractitioner = {
     practitioner: false,
     showPopUpBlock: false,
     triggerBlock: false,
-    profile: null
 };
 
 export const practitionerSlice = createSlice({
@@ -35,13 +33,10 @@ export const practitionerSlice = createSlice({
         setTriggerBlock: (state, action: PayloadAction<boolean>) => {
             state.triggerBlock = action.payload;
         },
-        setProfile: (state, action: PayloadAction<any>) => {
-            state.profile = action.payload;
-        },
     },
 });
 
-export const { setTriggerEdit, setPractitioner, setShowPopUpConfirmBlock, setTriggerBlock, setProfile } = practitionerSlice.actions;
+export const { setTriggerEdit, setPractitioner, setShowPopUpConfirmBlock, setTriggerBlock } = practitionerSlice.actions;
 
 export const selectPractitioner = (state: RootState) => state.practitionerSlice;
 

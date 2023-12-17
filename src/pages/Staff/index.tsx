@@ -240,7 +240,7 @@ const Staff = () => {
             return (
               <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
                 <th scope="row" onClick={() => navigate(`overview/${item.id}`)}>
-                  <img src={src} alt="img staff" />
+                  <img src={src} alt="img staff" style={{ width: "50px", height: "50px", borderRadius: "100rem", objectFit: "cover" }} />
                 </th>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
                   {item.practitioner?.display}

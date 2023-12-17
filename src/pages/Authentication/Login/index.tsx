@@ -10,7 +10,6 @@ import { KEY_LOCAL_STORAGE, TYPE_ADMIN } from "../../../constants/general.consta
 import { useAppDispatch } from "../../../redux/hooks";
 import { setForgotPassword, setLogin } from "../../../redux/features/auth/authSlice";
 import { error } from "../../../Common/notify";
-import { setProfile } from "../../../redux/features/practitioner/practitionerSlice";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -34,6 +33,7 @@ const Login = () => {
 
     setIsLoading(true);
 
+
     axios
       .post(url, params, defineConfigPost())
       .then((resp: any) => {
@@ -45,6 +45,7 @@ const Login = () => {
           localStorage.setItem(KEY_LOCAL_STORAGE.AUTHEN, accessToken);
 
           const decoded: any = jwtDecode<JwtPayload>(accessToken);
+
           localStorage.setItem(KEY_LOCAL_STORAGE.EXP, decoded.exp);
           localStorage.setItem(KEY_LOCAL_STORAGE.IAT, decoded.iat);
           localStorage.setItem(KEY_LOCAL_STORAGE.SUB, decoded.sub);
@@ -73,7 +74,8 @@ const Login = () => {
       .get(url, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
-          dispatch(setProfile(resp.data))
+          localStorage.setItem(KEY_LOCAL_STORAGE.ID, resp.data.id);
+          localStorage.setItem(KEY_LOCAL_STORAGE.NAME, resp.data.name);
         }
       })
       .catch((err) => {

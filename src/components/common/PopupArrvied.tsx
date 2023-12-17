@@ -1,10 +1,11 @@
 import { Button, Modal } from "react-bootstrap";
 import axios from "axios";
-import { API_ARRIVED_APPOINTMENT } from "../../constants/api.constant";
-import { defineConfigPost } from "../../Common/utils";
+import { API_DIAGNOSTIC_CREATE_ENCOUNTER } from "../../constants/api.constant";
+import { defineConfigGet, defineConfigPost } from "../../Common/utils";
 import { error, success } from "../../Common/notify";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setTriggerArrived } from "../../redux/features/appointment/appointmentSlice";
+import { setIdEncounter } from "../../redux/features/diagnostic/diagnosticSlice";
 
 interface IProps {
     handleShowPopUp: any;
@@ -19,12 +20,17 @@ const PopUpArrived = (props: IProps) => {
     const url_api = process.env.REACT_APP_API_URL;
 
     const arrivedAppointment = () => {
-        const url = `${url_api}${API_ARRIVED_APPOINTMENT}${appointment?.idAppointment}`;
+        const url = `${url_api}${API_DIAGNOSTIC_CREATE_ENCOUNTER}${appointment?.idAppointment}`;
+
+        const param = {
+            param: appointment?.specialty
+        }
 
         axios
-            .post(url, defineConfigPost())
+            .post(url, param, defineConfigPost())
             .then((resp) => {
                 if (resp) {
+                    dispatch(setIdEncounter(resp.data.id))
                     dispatch(setTriggerArrived(!triggerArrived))
                     success("Arrived Successfully");
                     handleShowPopUp(false);

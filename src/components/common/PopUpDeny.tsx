@@ -6,6 +6,7 @@ import { defineConfigGet, defineConfigPost } from "../../Common/utils";
 import { error, success } from "../../Common/notify";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setTriggerDeny } from "../../redux/features/appointment/appointmentSlice";
+import { KEY_LOCAL_STORAGE } from "../../constants/general.constant";
 
 interface IProps {
   handleShowPopUp: any;
@@ -16,23 +17,24 @@ const PopUpDeny = (props: IProps) => {
 
   const url_api = process.env.REACT_APP_API_URL;
 
-  const { profile } = useAppSelector(state => state.practitionerSlice)
-
   const dispatch = useAppDispatch();
   const { triggerDeny, appointment } = useAppSelector(state => state.appointmentSlice)
 
   const denyAppointment = () => {
     const url = `${url_api}${API_DENY_APPOINTMENT}${appointment?.idAppointment}`;
 
+    const accountID: any = localStorage.getItem(KEY_LOCAL_STORAGE.ID);
+    const accountName: any = localStorage.getItem(KEY_LOCAL_STORAGE.NAME);
+
     const params = {
-      reference: profile?.id,
-      display: profile?.name,
-      type:"",
-      identifier:null
+      reference: accountID,
+      display: accountName,
+      type: "",
+      identifier: null
     }
 
     axios
-      .post(url, params,defineConfigPost())
+      .post(url, params, defineConfigPost())
       .then((resp) => {
         if (resp) {
           dispatch(setTriggerDeny(!triggerDeny))

@@ -43,8 +43,13 @@ const ChangePassword = () => {
           setIsLoading(false);
 
           if (resp) {
-            success(resp.data)
-            setIsSuccess(true);
+            const data = resp.data;
+            if (data === "change pass successful") {
+              success(data)
+              setIsSuccess(true);
+            } else {
+              error(data)
+            }
           }
 
         }
@@ -52,6 +57,7 @@ const ChangePassword = () => {
       .catch((err: any) => {
         setIsLoading(false);
         error(err.response.data.error)
+        setIsLoading(false);
         console.log("error update patient:", err);
       });
   }

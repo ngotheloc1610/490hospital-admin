@@ -4,12 +4,12 @@ import axios from "axios";
 import { defineConfigPost } from "../../Common/utils";
 
 interface IProps {
-    handleShowPopUp: any
+  handleShowPopUp: any
 }
 
 const PopUpCreateRoom = (props: IProps) => {
 
-    const {handleShowPopUp} = props
+  const { handleShowPopUp } = props
 
   const url_api = process.env.REACT_APP_API_URL;
 
@@ -17,25 +17,25 @@ const PopUpCreateRoom = (props: IProps) => {
     const url = `${url_api}${API_INBOX_ROOM_CREATE}`;
 
     const params = {
-        patientId: "",
-        organizationId: ""
+      patientId: "",
+      practitionerId: null,
+      roomId: null
     }
 
     axios
-        .post(url, params, defineConfigPost())
-        .then((resp: any) => {
-            if (resp) {
-            console.log("resp:", resp)
-            }
-        })
-        .catch((err) => {
-            // error(err.response.data.errors.message)
-            console.log("err:", err);
-        });
+      .post(url, params, defineConfigPost())
+      .then((resp: any) => {
+        if (resp) {
+          console.log("resp:", resp)
+        }
+      })
+      .catch((err) => {
+        console.log("err:", err);
+      });
   }
 
-  const handleCreateRoom = ( ) =>{
-
+  const handleCreateRoom = () => {
+    createRoom()
   }
 
 
@@ -45,22 +45,22 @@ const PopUpCreateRoom = (props: IProps) => {
         centered
         show={true}
         onHide={() => {
-            handleShowPopUp(false)
+          handleShowPopUp(false)
         }}
       >
-        <Modal.Header  onClick={() => {
-                handleShowPopUp(false)
+        <Modal.Header onClick={() => {
+          handleShowPopUp(false)
         }}>
           <Modal.Title>Create Room</Modal.Title>
         </Modal.Header>
         <Modal.Body className="mt-2 mb-2">
-         
+
         </Modal.Body>
         <Modal.Footer className="justify-content-center">
           <Button
             className="button button--small button--outline"
             onClick={() => {
-                handleShowPopUp(false)
+              handleShowPopUp(false)
             }}
           >
             Close

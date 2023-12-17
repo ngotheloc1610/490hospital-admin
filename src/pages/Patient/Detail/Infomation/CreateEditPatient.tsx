@@ -46,19 +46,20 @@ const CreateEditPatient = () => {
   const [patientInfo, setPatientInfo] = useState<any>(defaultValue);
   const [selectedFile, setSelectedFile] = useState<any>(null);
   const [isPickImage, setIsPickImage] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+
   const { triggerUpdate } = useAppSelector(state => state.patientSlice);
-  const { profile } = useAppSelector(state => state.practitionerSlice);
 
   useEffect(() => {
     getPatientInfo(params.patientId)
   }, [params.patientId])
 
   useEffect(() => {
-    if(selectedFile){
+    if (selectedFile) {
       uploadImage()
     }
   }, [selectedFile])
-  
+
 
   const getPatientInfo = (id: any) => {
     const url = `${url_api}${API_GET_PATIENT}${id}`;
@@ -92,29 +93,35 @@ const CreateEditPatient = () => {
     const url = `${url_api}${API_MEDIA_UPLOAD_BY_ADMIN}`;
 
     if (!selectedFile) {
-        warn('Please select an image file before uploading.');
-        return;
+      warn('Please select an image file before uploading.');
+      return;
     }
 
     const formData: FormData = new FormData();
     formData.append('file', selectedFile);
-    formData.append('userId', profile?.id)
+    formData.append('userId', patientInfo?.id)
+
+    setIsLoading(true)
 
     try {
-        const config = {
-            headers: {
-                "Authorization": `Bearer ${localStorage.getItem(KEY_LOCAL_STORAGE.AUTHEN)}`,
-                "Content-Type": "multipart/form-data",
-            },
-        }
+      const config = {
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem(KEY_LOCAL_STORAGE.AUTHEN)}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
 
-        const { data } = await axios.post(url, formData, config)
-        console.log("data:", data)
+      const { data } = await axios.post(url, formData, config)
+      if (data === "Successful!") {
+        setIsLoading(false)
+        success("Upload image Successful!")
+      }
     } catch (err: any) {
-        console.log(err);
-        error(err.response.data.error)
+      console.log(err);
+      setIsLoading(false)
+      error(err.response.data.error)
     }
-}
+  }
 
   const updatePatient = (values: any, actions: any) => {
     const url = `${url_api}${API_UPDATE_PATIENT}${values.id}`;
@@ -122,11 +129,9 @@ const CreateEditPatient = () => {
     const param = {
       username: values.email,
       email: values.email,
-      password: null,
       name: values.name,
       identifier: values.identifier,
       phoneNumber: values.phoneNumber,
-      photo: null,
       dateOfBirth: values.dateOfBirth,
       address: values.address,
       gender: values.gender,
@@ -269,16 +274,19 @@ const CreateEditPatient = () => {
     return (
       <div className="h-100 d-flex flex-column" onClick={handlePickImage}>
         <div className="h-100">
-          {!isPickImage ?  <img
+          {!isLoading ? !isPickImage ? <img
             src={patientInfo?.photo ? patientInfo?.photo : USER}
             alt="img patient"
-            className={`${patientInfo?.photo ? "" : "bg-image"} w-100 h-100 object-fit-cover`}
-          /> :  <img
-          src={selectedFile ? URL.createObjectURL(selectedFile) : USER}
-          alt="img patient"
-          className={`${selectedFile ? "" : "bg-image"} w-100 h-100 object-fit-cover`}
-        />}
-         
+            className={`${patientInfo?.photo ? "" : "bg-image"} w-100 h-350 object-fit-cover p-2 border`}
+          /> : <img
+            src={selectedFile ? URL.createObjectURL(selectedFile) : USER}
+            alt="img admin"
+            className={`d-block m-auto ${selectedFile ? "" : "bg-image"} w-100 h-350 object-fit-cover`}
+            style={{ objectFit: "cover" }}
+          /> : <div className="d-flex justify-content-center bg-light h-100">
+            <div className="spinner-border my-auto" style={{ width: "5rem", height: "5rem" }} role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div></div>}
           <input
             type="file"
             className="d-none"

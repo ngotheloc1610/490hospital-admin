@@ -90,6 +90,10 @@ export const GENDER = [
     name: "Unknown",
     code: "UNKNOWN",
   },
+  {
+    name: "All",
+    code: "",
+  },
 ];
 
 export const GENDER_ALL = [
@@ -135,6 +139,10 @@ export const STATUS_APPOINTMENT = [
     name: "No Show",
     code: "No Show",
   },
+  {
+    name: "All",
+    code: "",
+  },
 ];
 
 export const STATUS_APPOINTMENT_UPCOMING = [
@@ -145,6 +153,10 @@ export const STATUS_APPOINTMENT_UPCOMING = [
   {
     name: "No Show",
     code: "No Show",
+  },
+  {
+    name: "All",
+    code: "",
   },
 ];
 

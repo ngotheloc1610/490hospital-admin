@@ -5,14 +5,12 @@ import axios from "axios";
 import Layout from "../../components/Layout";
 import PaginationComponent from "../../components/common/Pagination";
 import {
-  ALERT_STATUS,
   DEFAULT_ITEM_PER_PAGE,
-  GENDER,
   START_PAGE,
 } from "../../constants";
 import { ICON_PENCIL } from "../../assets";
 import { API_MONITOR_ALL, API_SEARCH_DOCTOR } from "../../constants/api.constant";
-import { defineConfigGet, defineConfigPost } from "../../Common/utils";
+import { defineConfigGet, defineConfigPost, styleBloodGlucose, styleBloodPressure, styleHeartRate } from "../../Common/utils";
 import moment from "moment";
 import { FORMAT_DATE } from "../../constants/general.constant";
 import { setAppointment } from "../../redux/features/appointment/appointmentSlice";
@@ -26,10 +24,9 @@ const PatientMonitor = () => {
   const [currentPage, setCurrentPage] = useState<number>(START_PAGE);
   const [itemPerPage, setItemPerPage] = useState<number>(DEFAULT_ITEM_PER_PAGE);
   const [totalItem, setTotalItem] = useState<number>(0);
-
   const [name, setName] = useState<string>("");
-  const [gender, setGender] = useState<string>("");
   const [isSearch, setIsSearch] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const url_api = process.env.REACT_APP_API_URL;
   const dispatch = useAppDispatch()
@@ -45,7 +42,7 @@ const PatientMonitor = () => {
   const searchPatient = () => {
     const url = `${url_api}${API_SEARCH_DOCTOR}`;
 
-    const params = { page: currentPage, size: itemPerPage, nameP: name, genderP: gender }
+    const params = { page: currentPage, size: itemPerPage, nameP: name }
 
     axios
       .get(url, defineConfigGet(params))
@@ -63,15 +60,18 @@ const PatientMonitor = () => {
   const getPatientMonitor = () => {
     const url = `${url_api}${API_MONITOR_ALL}`;
 
+    setIsLoading(true)
     axios
       .get(url, defineConfigPost())
       .then((resp: any) => {
+        setIsLoading(false)
         if (resp) {
           setListData(resp.data.content);
           setTotalItem(resp.data.totalElements);
         }
       })
       .catch((err: any) => {
+        setIsLoading(false)
         console.log("error get patient monitors:", err);
       });
   }
@@ -91,40 +91,17 @@ const PatientMonitor = () => {
     searchPatient();
   }
 
-  const _renderListGender = () => {
-    return (
-      <>
-        <option hidden>Gender</option>
-        {GENDER.map((item: any) => (
-          <option value={item.code} key={item.code}>
-            {item.name}
-          </option>
-        ))}
-      </>
-    );
-  };
-
   const _renderSearch = () => {
     return (
       <div className="row">
-        <div className="col-6 row">
-          <div className="col-6">
-            <input
-              type="text"
-              placeholder="Search by name"
-              className="form-control"
-              value={name}
-              onChange={(e: any) => setName(e.target.value)}
-            />
-          </div>
-          <div className="col-6">
-            <select
-              className="form-select"
-              onChange={(e) => setGender(e.target.value)}
-            >
-              {_renderListGender()}
-            </select>
-          </div>
+        <div className="col-6">
+          <input
+            type="text"
+            placeholder="Search by name"
+            className="form-control"
+            value={name}
+            onChange={(e: any) => setName(e.target.value)}
+          />
         </div>
         <div className="col-6">
           <button className="button-apply" onClick={() => handleSearch()}>Search</button>
@@ -147,8 +124,12 @@ const PatientMonitor = () => {
             <th scope="col">Heart Rates</th>
           </tr>
         </thead>
-        <tbody>
+        {!isLoading ? <tbody>
           {listData && listData.length > 0 && listData.map((item: any, idx: number) => {
+            const indexBloodPressure = item?.observationMonitors?.filter((item: any) => item?.observationName === "Blood Pressure")[0];
+            const indexBloodGlucose = item?.observationMonitors?.filter((item: any) => item?.observationName === "Blood Glucose")[0];
+            const indexHeartRate = item?.observationMonitors?.filter((item: any) => item?.observationName === "Heart Rate")[0];
+
             return (
               <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
                 <td onClick={() => { navigate(`/monitor/${item.idEncounter}`); dispatch(setAppointment(item)) }}>{item?.patientName}</td>
@@ -158,9 +139,18 @@ const PatientMonitor = () => {
                   <p>{item?.phone}</p>
                 </td>
                 <td onClick={() => { navigate(`/monitor/${item.idEncounter}`); dispatch(setAppointment(item)) }}>{item?.diagnosis}</td>
-                <td onClick={() => { navigate(`/monitor/${item.idEncounter}`); dispatch(setAppointment(item)) }}></td>
-                <td onClick={() => { navigate(`/monitor/${item.idEncounter}`); dispatch(setAppointment(item)) }}></td>
-                <td onClick={() => { navigate(`/monitor/${item.idEncounter}`); dispatch(setAppointment(item)) }}></td>
+                <td onClick={() => { navigate(`/monitor/${item.idEncounter}`); dispatch(setAppointment(item)) }}>
+                  <span className={styleBloodPressure(indexBloodPressure)}>{indexBloodPressure?.value || "-"}</span>
+                  <span className={styleBloodPressure(indexBloodPressure)}> mmHg</span>
+                </td>
+                <td onClick={() => { navigate(`/monitor/${item.idEncounter}`); dispatch(setAppointment(item)) }}>
+                  <span className={styleBloodGlucose(indexBloodPressure)}>{indexBloodGlucose?.value || "-"}</span>
+                  <span className={styleBloodGlucose(indexBloodPressure)}> mmol/L</span>
+                </td>
+                <td onClick={() => { navigate(`/monitor/${item.idEncounter}`); dispatch(setAppointment(item)) }}>
+                  <span className={styleHeartRate(indexBloodPressure)}>{indexHeartRate?.value || "-"}</span>
+                  <span className={styleHeartRate(indexBloodPressure)}> bpm</span>
+                </td>
                 <td>
                   <span className="ms-1">
                     <ICON_PENCIL />
@@ -169,7 +159,10 @@ const PatientMonitor = () => {
               </tr>
             );
           })}
-        </tbody>
+        </tbody> : <div className="d-flex justify-content-center"><div className="spinner-border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div></div>}
+
       </table>
     );
   };

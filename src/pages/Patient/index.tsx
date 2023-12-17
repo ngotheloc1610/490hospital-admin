@@ -128,7 +128,7 @@ const Patient = () => {
             return (
               <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
                 <th scope="row">
-                  <img src={src} alt="img patient" />
+                  <img src={src} alt="img patient" style={{ width: "50px", height: "50px", borderRadius: "100rem", objectFit: "cover" }} />
                 </th>
                 <td onClick={() => navigate(`information/${item.id}`)}>
                   {item.nameFirstRep.text}

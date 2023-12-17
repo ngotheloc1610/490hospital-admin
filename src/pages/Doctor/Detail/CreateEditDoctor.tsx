@@ -59,9 +59,10 @@ const CreateEditDoctor = () => {
   const [listRoom, setListRoom] = useState<any>([]);
   const [specialtyId, setSpecialtyId] = useState<string>("");
   const [doctor, setDoctor] = useState<any>(defaultValue);
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const dispatch = useAppDispatch();
-  const { triggerEdit ,profile} = useAppSelector((state) => state.practitionerSlice)
+  const { triggerEdit } = useAppSelector((state) => state.practitionerSlice)
 
   useEffect(() => {
     getSpecialty();
@@ -78,7 +79,7 @@ const CreateEditDoctor = () => {
   }, [params.doctorId])
 
   useEffect(() => {
-    if(selectedFile){
+    if (selectedFile) {
       uploadImage()
     }
   }, [selectedFile])
@@ -88,29 +89,35 @@ const CreateEditDoctor = () => {
     const url = `${url_api}${API_MEDIA_UPLOAD_BY_ADMIN}`;
 
     if (!selectedFile) {
-        warn('Please select an image file before uploading.');
-        return;
+      warn('Please select an image file before uploading.');
+      return;
     }
 
     const formData: FormData = new FormData();
     formData.append('file', selectedFile);
-    formData.append('userId', profile?.id)
+    formData.append('userId', doctor?.id)
+
+    setIsLoading(true)
 
     try {
-        const config = {
-            headers: {
-                "Authorization": `Bearer ${localStorage.getItem(KEY_LOCAL_STORAGE.AUTHEN)}`,
-                "Content-Type": "multipart/form-data",
-            },
-        }
+      const config = {
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem(KEY_LOCAL_STORAGE.AUTHEN)}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
 
-        const { data } = await axios.post(url, formData, config)
-        console.log("data:", data)
+      const { data } = await axios.post(url, formData, config)
+      if (data === "Successful!") {
+        setIsLoading(false)
+        success("Upload image Successful!")
+      }
     } catch (err: any) {
-        console.log(err);
-        error(err.response.data.error)
+      console.log(err);
+      setIsLoading(false)
+      error(err.response.data.error)
     }
-}
+  }
 
   const getDoctorInfo = (id: string | undefined) => {
     const url = `${url_api}${API_DETAIL_PRACTITIONER}${id}`;
@@ -260,7 +267,6 @@ const CreateEditDoctor = () => {
       name: values.name,
       phoneNumber: values.phoneNumber,
       dateOfBirth: values.birthday,
-      photo: null,
       gender: values.gender,
       address: values.address,
       idSpecialty: idSpecialty,
@@ -768,15 +774,19 @@ const CreateEditDoctor = () => {
     return (
       <div className="h-100 d-flex flex-column" onClick={handlePickImage}>
         <div className="h-100">
-        {!isPickImage ?  <img
+          {!isLoading ? !isPickImage ? <img
             src={doctor?.photo ? doctor?.photo : USER}
             alt="img patient"
-            className={`${doctor?.photo ? "" : "bg-image"} w-100 h-100 object-fit-cover`}
-          /> :  <img
-          src={selectedFile ? URL.createObjectURL(selectedFile) : USER}
-          alt="img patient"
-          className={`${selectedFile ? "" : "bg-image"} w-100 h-100 object-fit-cover`}
-        />}
+            className={`${doctor?.photo ? "" : "bg-image"} w-100 h-350 object-fit-cover p-2 border`}
+          /> : <img
+            src={selectedFile ? URL.createObjectURL(selectedFile) : USER}
+            alt="img admin"
+            className={`d-block m-auto ${selectedFile ? "" : "bg-image"} w-100 h-350 object-fit-cover`}
+            style={{ objectFit: "cover" }}
+          /> : <div className="d-flex justify-content-center bg-light h-100">
+            <div className="spinner-border my-auto" style={{ width: "5rem", height: "5rem" }} role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div></div>}
           <input
             type="file"
             className="d-none"
@@ -784,9 +794,9 @@ const CreateEditDoctor = () => {
             onChange={handleChangeImage}
           />
         </div>
-        <button className="button button--small button--primary w-90 mx-auto mt-3">
+        <p className="button button--small button--primary w-100 mx-auto mt-3 p-3">
           {doctor?.photo ? "Edit" : "Add"} profile picture
-        </button>
+        </p>
       </div>
     );
   };

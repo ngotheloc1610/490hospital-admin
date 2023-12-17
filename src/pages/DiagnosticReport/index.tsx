@@ -21,6 +21,7 @@ const DiagnosticReport = () => {
 
   const params = useParams();
   const { triggerArrived, triggerDeny, triggerNoShow, appointment } = useAppSelector(state => state.appointmentSlice)
+  const { idEncounter } = useAppSelector(state => state.diagnosticSlice)
 
   const [step, setStep] = useState<number>(1);
 
@@ -214,7 +215,7 @@ const DiagnosticReport = () => {
     }))
 
     const rqParams = {
-      IdEncounter: params.encounterId,
+      IdEncounter: params.encounterId ? params.encounterId : idEncounter,
       subjectReferencePatient: patientDetail.id,
       subjectDisplay: patientDetail?.nameFirstRep?.text,
       categoryDisplay: category,
@@ -1007,8 +1008,8 @@ const DiagnosticReport = () => {
               {_renderAppointmentFooter()}
             </div> : <div className="text-danger text-reset">
               No result appointment
-              </div>}
-            
+            </div>}
+
           </div>
         </div>
       </section>

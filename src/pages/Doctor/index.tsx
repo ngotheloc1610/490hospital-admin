@@ -153,7 +153,7 @@ const Doctor = () => {
             return (
               <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
                 <th scope="row" onClick={() => navigate(`overview/${item.id}`)}>
-                  <img src={src} alt="img doctor" />
+                  <img src={src} alt="img doctor" style={{ width: "50px", height: "50px", borderRadius: "100rem", objectFit: "cover" }} />
                 </th>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
                   {item.practitioner?.display}
@@ -179,7 +179,7 @@ const Doctor = () => {
                   <span className={styleStatusPractitioner(item.active)}>{item.active ? "Active" : "Inactive"}</span>
                 </td>
                 <td>
-                  <p className={styleStatusPractitioner(item.practitionerTarget.active)}>{item.practitionerTarget.active ? "Active" : "Inactive"}</p>
+                  <span className={styleStatusPractitioner(item.practitionerTarget.active)}>{item.practitionerTarget.active ? "Active" : "Inactive"}</span>
                 </td>
                 <td>
                   <span className="ms-1 cursor-pointer" onClick={() => handleModify(item.id)}>

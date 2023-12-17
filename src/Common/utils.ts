@@ -53,3 +53,49 @@ export const styleStatusPractitioner = (status: boolean) => {
             return;
     }
 }
+
+export const styleBloodPressure = (item: any) => {
+    if (item?.observationName === "Blood Pressure") {
+        switch (item?.alertSeverity) {
+            case "Major":
+                return "major";
+            case "Moderate":
+                return "normal";
+            case "Catastrophic":
+                return "catastrophic";
+            default:
+                return;
+        }
+    }
+    return ""
+}
+export const styleBloodGlucose = (item: any) => {
+    if (item?.observationName === "Blood Glucose") {
+        switch (item?.alertSeverity) {
+            case "Major":
+                return "major";
+            case "Moderate":
+                return "normal";
+            case "Catastrophic":
+                return "catastrophic";
+            default:
+                return;
+        }
+    }
+    return ""
+}
+export const styleHeartRate = (item: any) => {
+    if (item?.observationName === "Heart Rate") {
+        switch (item?.alertSeverity) {
+            case "Major":
+                return "major";
+            case "Moderate":
+                return "normal";
+            case "Catastrophic":
+                return "catastrophic";
+            default:
+                return;
+        }
+    }
+    return ""
+}

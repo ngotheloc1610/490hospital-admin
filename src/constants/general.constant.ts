@@ -13,9 +13,11 @@ export const KEY_LOCAL_STORAGE = {
   IAT: "iat",
   SUB: "sub",
   TYPE: "type",
+  ID: "id",
+  NAME: "name",
 };
 
-export const GENERATED_MESSAGING_KEY = "BPtCV3KlXtPFOPeeOUJM_mH4TTBdHHiTg7AQkd0sbJlHBJDunqP4FUDNPG76zEg1ZJ6f34tc-r7_lrzyMEb8FUo"
+export const GENERATED_MESSAGING_KEY = "AAAAx-IdyFk:APA91bEjVZnooBkWWCPdLzybjCTkK9nXQG3ODiNIOGS1J3yzNympOjjoG26nbAJVPzmr8nt-KCQ4Zwq1eGsrj5oNbYmEO3j40M5tH_urgNagDwe7kLVYIWsJ5O8N3E7cEBEf-rjBXixM"
 
 export const TYPE_ADMIN = "ADMIN";
 export const TYPE_DOCTOR = "DOCTOR";

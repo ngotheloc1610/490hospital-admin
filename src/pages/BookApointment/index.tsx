@@ -4,7 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 import Layout from "../../components/Layout";
-import { FORMAT_DATE, FORMAT_DATE_DEFAULT, FORMAT_DATE_TIME, TOTAL_STEP } from "../../constants/general.constant";
+import { FORMAT_DATE, FORMAT_DATE_DEFAULT, FORMAT_DATE_TIME, KEY_LOCAL_STORAGE, TOTAL_STEP } from "../../constants/general.constant";
 import { useAppSelector } from "../../redux/hooks";
 import { defineConfigGet, defineConfigPost } from "../../Common/utils";
 import { error, success, warn } from "../../Common/notify";
@@ -17,7 +17,6 @@ const BookAppointment = () => {
 
   const { isLogin } = useAppSelector((state) => state.authSlice)
   const navigate = useNavigate();
-  const { profile } = useAppSelector(state => state.practitionerSlice)
 
   const [step, setStep] = useState<number>(1);
 
@@ -189,7 +188,10 @@ const BookAppointment = () => {
 
     setIsLoading(true);
 
-    axios.post(url, params, defineConfigGet({ idPractitionerBook: profile?.id, namePractitionerBook: profile?.name })).then((resp: any) => {
+    const accountID: any = localStorage.getItem(KEY_LOCAL_STORAGE.ID);
+    const accountName: any = localStorage.getItem(KEY_LOCAL_STORAGE.NAME);
+
+    axios.post(url, params, defineConfigGet({ idPractitionerBook: accountID, namePractitionerBook: accountName })).then((resp: any) => {
       setIsLoading(false);
       if (resp) {
         success(resp.data)
@@ -235,14 +237,14 @@ const BookAppointment = () => {
     if (currentDate === date && moment(new Date(), "HH:mm:ss").isAfter(moment(item.endTime, "HH:mm:ss"))) {
       return true;
     }
-  
+
     if (timeBusy.some((time: any) =>
       moment(time.start).format("HH:mm:ss") === item.startTime &&
       moment(time.end).format("HH:mm:ss") === item.endTime
     )) {
       return true;
     }
-  
+
     return false;
   }
 
@@ -329,9 +331,9 @@ const BookAppointment = () => {
               className="button button--primary button--small me-3"
               onClick={() => handleBook()}
             >
-               {isLoading && <div className="spinner-border" role="status">
-              <span className="visually-hidden">Loading...</span>
-            </div>} <span className="ms-2">Book</span>
+              {isLoading && <div className="spinner-border" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>} <span className="ms-2">Book</span>
             </button>
             <button
               className="button button--gray button--small"

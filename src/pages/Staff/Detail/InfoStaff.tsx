@@ -103,7 +103,7 @@ const InfoStaff = () => {
             <div className="col-4">
               <div className="h-100 d-flex flex-column">
                 <div className="h-100">
-                  <img src={staff?.photo ? staff?.photo : USER} alt="img staff" className="h-100 d-block m-auto" />
+                  <img src={staff?.photo ? staff?.photo : USER} alt="img staff" className="w-100 h-100 d-block m-auto object-cover" />
                 </div>
               </div>
             </div>

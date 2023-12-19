@@ -7,6 +7,7 @@ import { API_BLOCK_PATIENT } from "../../constants/api.constant";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setShowPopUpConfirmBlock, setTriggerBlock } from "../../redux/features/patient/patientSlice";
 import { success } from "../../Common/notify";
+import { useState } from "react";
 
 
 const PopUpConfirmBlock = () => {
@@ -16,13 +17,19 @@ const PopUpConfirmBlock = () => {
   const dispatch = useAppDispatch();
   const { triggerBlock, patient } = useAppSelector((state) => state.patientSlice)
 
+  const [reason, setReason] = useState<string>("")
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const blockPatient = () => {
     const url = `${url_api}${API_BLOCK_PATIENT}${patient?.id}`;
 
+    setIsLoading(true)
+
     axios
-      .get(url, defineConfigGet({}))
+      .get(url, defineConfigGet({ reason: reason }))
       .then((resp: any) => {
         if (resp) {
+          setIsLoading(false)
           if (resp.data.active === true) {
             success("Unblock Successfully");
           } else {
@@ -33,6 +40,7 @@ const PopUpConfirmBlock = () => {
         }
       })
       .catch((err) => {
+        setIsLoading(true)
         console.log("err:", err);
       });
   }
@@ -55,10 +63,11 @@ const PopUpConfirmBlock = () => {
             <i className="bi bi-exclamation-circle text-warning"></i>
           </span>
           <span className="ms-3 fs-18 fw-600 text-center">
-            Are you sure to block
+            Are you sure to {patient.active ? "block" : "unblock"}
             <span className="fw-bold"> {patient?.nameFirstRep?.text || patient?.name}</span> in Patient
             list？
           </span>
+          <input className="form-control mt-3" value={reason} onChange={(e: any) => setReason(e.target.value)} placeholder="Reason block/unblock patient..." />
         </Modal.Body>
         <Modal.Footer className="justify-content-center">
           <Button
@@ -73,6 +82,10 @@ const PopUpConfirmBlock = () => {
             className="button button--small button--primary"
             onClick={() => handleBlock()}
           >
+            {isLoading &&
+              <span className="spinner-border my-auto" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </span>}
             Yes
           </Button>
         </Modal.Footer>

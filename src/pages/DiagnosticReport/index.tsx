@@ -14,13 +14,14 @@ import PopUpDeny from "../../components/common/PopUpDeny";
 import Select from 'react-select'
 import { warn } from "../../Common/notify";
 import { useAppSelector } from "../../redux/hooks";
+import PopUpCancel from "../../components/common/PopUpCancel";
 
 const DiagnosticReport = () => {
 
   const url_api = process.env.REACT_APP_API_URL;
 
   const params = useParams();
-  const { triggerArrived, triggerDeny, triggerNoShow, appointment } = useAppSelector(state => state.appointmentSlice)
+  const { triggerArrived, triggerCancel, triggerNoShow, appointment } = useAppSelector(state => state.appointmentSlice)
   const { idEncounter } = useAppSelector(state => state.diagnosticSlice)
 
   const [step, setStep] = useState<number>(1);
@@ -107,7 +108,7 @@ const DiagnosticReport = () => {
     if (appointment?.idAppointment) {
       getBookingDetail(appointment?.idAppointment)
     }
-  }, [triggerArrived, triggerDeny, triggerNoShow])
+  }, [triggerArrived, triggerCancel, triggerNoShow])
 
   useEffect(() => {
     if (height !== 0 && weight !== 0) {
@@ -1016,7 +1017,7 @@ const DiagnosticReport = () => {
 
       {isShowPopUpArrived && <PopUpArrived handleShowPopUp={setIsShowPopUpArrived} />}
       {isShowPopUpNoShow && <PopUpNoShow handleShowPopUp={setIsShowPopUpNoShow} />}
-      {isShowPopUpCancel && <PopUpDeny handleShowPopUp={setIsShowPopUpCancel} />}
+      {isShowPopUpCancel && <PopUpCancel handleShowPopUp={setIsShowPopUpCancel} />}
     </Layout>
   );
 };

@@ -7,6 +7,7 @@ import { error, success } from "../../Common/notify";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setTriggerDeny } from "../../redux/features/appointment/appointmentSlice";
 import { KEY_LOCAL_STORAGE } from "../../constants/general.constant";
+import { useState } from "react";
 
 interface IProps {
   handleShowPopUp: any;
@@ -19,6 +20,7 @@ const PopUpDeny = (props: IProps) => {
 
   const dispatch = useAppDispatch();
   const { triggerDeny, appointment } = useAppSelector(state => state.appointmentSlice)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const denyAppointment = () => {
     const url = `${url_api}${API_DENY_APPOINTMENT}${appointment?.idAppointment}`;
@@ -33,9 +35,11 @@ const PopUpDeny = (props: IProps) => {
       identifier: null
     }
 
+    setIsLoading(true)
     axios
       .post(url, params, defineConfigPost())
       .then((resp) => {
+        setIsLoading(false)
         if (resp) {
           dispatch(setTriggerDeny(!triggerDeny))
           success("Deny Successfully");
@@ -44,6 +48,7 @@ const PopUpDeny = (props: IProps) => {
       })
       .catch((err: any) => {
         console.log("err:", err);
+        setIsLoading(false)
         error(err.response.data.error);
 
       });
@@ -83,6 +88,10 @@ const PopUpDeny = (props: IProps) => {
             className="button button--small button--primary"
             onClick={() => handleDeny()}
           >
+            {isLoading &&
+              <span className="spinner-border my-auto" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </span>}
             Yes
           </Button>
         </Modal.Footer>

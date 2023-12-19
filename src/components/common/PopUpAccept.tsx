@@ -7,6 +7,7 @@ import { error, success } from "../../Common/notify";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setTriggerAccept } from "../../redux/features/appointment/appointmentSlice";
 import { KEY_LOCAL_STORAGE } from "../../constants/general.constant";
+import { useState } from "react";
 
 interface IProps {
   handleShowPopUp: any;
@@ -19,6 +20,7 @@ const PopUpAccept = (props: IProps) => {
 
   const dispatch = useAppDispatch();
   const { triggerAccept, appointment } = useAppSelector(state => state.appointmentSlice)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const acceptAppointment = () => {
     const url = `${url_api}${API_ACCEPT_APPOINTMENT}${appointment?.idAppointment}`;
@@ -32,10 +34,12 @@ const PopUpAccept = (props: IProps) => {
       type: "",
       identifier: null
     }
+    setIsLoading(true)
 
     axios
       .post(url, params, defineConfigPost())
       .then((resp) => {
+        setIsLoading(false)
         if (resp) {
           dispatch(setTriggerAccept(!triggerAccept))
           success("Accept Successfully");
@@ -44,6 +48,7 @@ const PopUpAccept = (props: IProps) => {
       })
       .catch((err: any) => {
         console.log("error accept appointment:", err);
+        setIsLoading(false)
         error(err.response.data.error || err.response.data.error.message);
 
       });
@@ -83,6 +88,10 @@ const PopUpAccept = (props: IProps) => {
             className="button button--small button--primary"
             onClick={() => handleAccept()}
           >
+            {isLoading &&
+              <span className="spinner-border my-auto" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </span>}
             Yes
           </Button>
         </Modal.Footer>

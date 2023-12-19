@@ -194,7 +194,7 @@ const Information = () => {
                                     <div className="h-100 d-flex flex-column">
                                         <div className="h-100">
                                             <img
-                                                src={practitionerInfo?.photo?.length > 0 ? practitionerInfo?.photo[0]?.url : USER}
+                                                src={practitionerInfo?.photo ? practitionerInfo?.photo : USER}
                                                 alt="img practitioner"
                                                 className={`d-block m-auto ${practitionerInfo ? "" : "bg-image"} w-100 h-200 object-fit-cover`}
                                             />

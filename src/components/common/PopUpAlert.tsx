@@ -5,6 +5,7 @@ import { defineConfigPost } from "../../Common/utils";
 import { error, success } from "../../Common/notify";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setDelete } from "../../redux/features/alert/alertSlice";
+import { useState } from "react";
 
 interface IProps {
     handleShowPopUp: any;
@@ -17,13 +18,15 @@ const PopUpAlert = (props: IProps) => {
     const url_api = process.env.REACT_APP_API_URL;
     const dispatch = useAppDispatch();
     const { isDelete } = useAppSelector(state => state.alertSlice)
+    const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const deleteAlert = () => {
         const url = `${url_api}${API_ALERT_DELETE}${idAlertSetting}`;
-
+        setIsLoading(true)
         axios
             .delete(url, defineConfigPost())
             .then((resp) => {
+                setIsLoading(false)
                 if (resp) {
                     success("Delete Alert Successfully");
                     dispatch(setDelete(!isDelete));
@@ -32,6 +35,7 @@ const PopUpAlert = (props: IProps) => {
             })
             .catch((err: any) => {
                 console.log("err:", err);
+                setIsLoading(false)
                 error(err.response.data.error);
 
             });
@@ -71,6 +75,10 @@ const PopUpAlert = (props: IProps) => {
                         className="button button--small button--primary"
                         onClick={() => handleDeleteAlert()}
                     >
+                        {isLoading &&
+                            <span className="spinner-border my-auto" role="status">
+                                <span className="visually-hidden">Loading...</span>
+                            </span>}
                         Yes
                     </Button>
                 </Modal.Footer>

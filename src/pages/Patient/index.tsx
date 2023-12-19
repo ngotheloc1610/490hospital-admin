@@ -123,7 +123,7 @@ const Patient = () => {
             const phone = item.telecom?.find(
               (i: any) => i?.system === "phone"
             )?.value;
-            const src = `data:${item?.photo[0]?.contentType};base64,${item?.photo[0]?.data}`;
+            const src = item?.photo[0]?.url;
 
             return (
               <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>

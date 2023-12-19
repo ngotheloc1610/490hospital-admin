@@ -453,7 +453,7 @@ const BookAppointment = () => {
                 return (
                   <div className={`col-6 row mb-3 ${item.id === doctor?.id ? "doctor-selected" : ""}`} onClick={() => setDoctor(item)}>
                     <div className='col-4'>
-                      <img src={src} alt="img doctor" />
+                      <img src={src} alt="img doctor" style={{ widows: "100px", height: "100px", objectFit: "cover" }} />
                     </div>
                     <div className='col-8'>
                       <h3 className='mb-3'>{name}</h3>

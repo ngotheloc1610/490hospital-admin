@@ -38,24 +38,25 @@ const Chat = () => {
     }, [])
 
     const webSocketService = WebSocketService();
+    console.log("webSocketService:", webSocketService)
 
     useEffect(() => {
         webSocketService.connect();
 
-        return () => {
-            webSocketService.disconnect();
-        };
+        // return () => {
+        //     webSocketService.disconnect();
+        // };
     }, []);
 
-    useEffect(() => {
-        webSocketService.subscribe(`/topic/receive-message/${idRoom}`, (message: any) => {
-            console.log('Received message:', message);
-        });
+    // useEffect(() => {
+    //     webSocketService.subscribe(`/topic/receive-message/${idRoom}`, (message: any) => {
+    //         console.log('Received message:', message);
+    //     });
 
-        return () => {
-            // Unsubscribe or do cleanup when the component is unmounted
-        };
-    }, [webSocketService]);
+    //     return () => {
+    //         // Unsubscribe or do cleanup when the component is unmounted
+    //     };
+    // }, [webSocketService]);
 
     useEffect(() => {
         messageRef?.current?.scrollIntoView({ behavior: 'smooth' })

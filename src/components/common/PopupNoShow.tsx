@@ -6,6 +6,7 @@ import { API_NO_SHOW_APPOINTMENT } from "../../constants/api.constant";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setTriggerNoShow } from "../../redux/features/appointment/appointmentSlice";
 import { KEY_LOCAL_STORAGE } from "../../constants/general.constant";
+import { useState } from "react";
 
 
 interface IProps {
@@ -19,6 +20,7 @@ const PopUpNoShow = (props: IProps) => {
     const dispatch = useAppDispatch();
 
     const url_api = process.env.REACT_APP_API_URL;
+    const [isLoading, setIsLoading] = useState<boolean>(false)
 
 
     const noshowAppointment = () => {
@@ -29,10 +31,12 @@ const PopUpNoShow = (props: IProps) => {
         const params = {
             idPatient: accountID,
         }
+        setIsLoading(true)
 
         axios
             .post(url, defineConfigGet(params))
             .then((resp) => {
+                setIsLoading(false)
                 if (resp) {
                     dispatch(setTriggerNoShow(!triggerNoShow))
                     success("No Show Successfully");
@@ -41,6 +45,7 @@ const PopUpNoShow = (props: IProps) => {
             })
             .catch((err: any) => {
                 console.log("error accept appointment:", err);
+                setIsLoading(false)
                 error(err.response.data.error || err.response.data.error.message);
 
             });
@@ -80,6 +85,10 @@ const PopUpNoShow = (props: IProps) => {
                         className="button button--small button--primary"
                         onClick={() => handleNoshow()}
                     >
+                        {isLoading &&
+                            <span className="spinner-border my-auto" role="status">
+                                <span className="visually-hidden">Loading...</span>
+                            </span>}
                         Yes
                     </Button>
                 </Modal.Footer>

@@ -1,50 +1,51 @@
 import { Button, Modal } from "react-bootstrap";
 import axios from "axios";
 
+import { API_PRACTITIONER_CANCEL_APPOINTMENT } from "../../constants/api.constant";
 import { defineConfigGet } from "../../Common/utils";
-import { API_BLOCK_PRACTITIONER } from "../../constants/api.constant";
-
+import { error, success } from "../../Common/notify";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { success } from "../../Common/notify";
-import { setShowPopUpConfirmBlock, setTriggerBlock } from "../../redux/features/practitioner/practitionerSlice";
+import { setTriggerCancel } from "../../redux/features/appointment/appointmentSlice";
+import { KEY_LOCAL_STORAGE } from "../../constants/general.constant";
 import { useState } from "react";
 
+interface IProps {
+  handleShowPopUp: any;
+}
 
-const PopUpConfirmBlock = () => {
+const PopUpCancel = (props: IProps) => {
+  const { handleShowPopUp } = props;
 
   const url_api = process.env.REACT_APP_API_URL;
-
-  const dispatch = useAppDispatch();
-  const { practitioner, triggerBlock } = useAppSelector((state) => state.practitionerSlice)
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  const blockPatient = () => {
-    const url = `${url_api}${API_BLOCK_PRACTITIONER}${practitioner.id}`;
+  const dispatch = useAppDispatch();
+  const { triggerDeny, appointment } = useAppSelector(state => state.appointmentSlice)
 
+  const cancelAppointment = () => {
+    const accountID: any = localStorage.getItem(KEY_LOCAL_STORAGE.ID);
+    const url = `${url_api}${API_PRACTITIONER_CANCEL_APPOINTMENT}${accountID}`;
     setIsLoading(true)
-
     axios
-      .get(url, defineConfigGet({}))
-      .then((resp: any) => {
+      .post(url, defineConfigGet({ idAppointment: appointment?.idAppointment }))
+      .then((resp) => {
+        setIsLoading(false)
         if (resp) {
-          setIsLoading(false)
-          if (practitioner?.practitionerTarget?.active === true) {
-            success("Unblock Successfully");
-          } else {
-            success("Block Successfully");
-          }
-          dispatch(setTriggerBlock(!triggerBlock));
-          dispatch(setShowPopUpConfirmBlock(false));
+          dispatch(setTriggerCancel(!triggerDeny))
+          success("Cancel Successfully");
+          handleShowPopUp(false);
         }
       })
-      .catch((err) => {
+      .catch((err: any) => {
+        console.log("err:", err);
         setIsLoading(false)
-        console.log("error block practitioner:", err);
-      });
-  }
+        error(err.response.data.error);
 
-  const handleBlock = () => {
-    blockPatient()
+      });
+  };
+
+  const handleCancel = () => {
+    cancelAppointment();
   };
 
   return (
@@ -53,7 +54,7 @@ const PopUpConfirmBlock = () => {
         centered
         show={true}
         onHide={() => {
-          dispatch(setShowPopUpConfirmBlock(false));
+          handleShowPopUp(false);
         }}
       >
         <Modal.Body className="mt-2 mb-2">
@@ -61,23 +62,21 @@ const PopUpConfirmBlock = () => {
             <i className="bi bi-exclamation-circle text-warning"></i>
           </span>
           <span className="ms-3 fs-18 fw-600 text-center">
-            Are you sure to {practitioner?.practitionerTarget?.active ? "block" : "unblock"}
-            <span className="fw-bold">{practitioner?.nameFirstRep?.text}</span> in practitioner
-            list？
+            Are you sure to cancel appointment？
           </span>
         </Modal.Body>
         <Modal.Footer className="justify-content-center">
           <Button
             className="button button--small button--outline"
             onClick={() => {
-              dispatch(setShowPopUpConfirmBlock(false));
+              handleShowPopUp(false);
             }}
           >
             No
           </Button>
           <Button
             className="button button--small button--primary"
-            onClick={() => handleBlock()}
+            onClick={() => handleCancel()}
           >
             {isLoading &&
               <span className="spinner-border my-auto" role="status">
@@ -90,4 +89,4 @@ const PopUpConfirmBlock = () => {
     </>
   );
 };
-export default PopUpConfirmBlock;
+export default PopUpCancel;

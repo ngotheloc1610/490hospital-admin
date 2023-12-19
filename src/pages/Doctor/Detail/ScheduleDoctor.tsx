@@ -13,11 +13,11 @@ import { useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
 
 import { SCHEDULE_ALL, SCHEDULE_CANCEL, SCHEDULE_CREATE } from "../../../constants/api.constant";
-import { defineConfigPost } from "../../../Common/utils";
+import { defineConfigGet, defineConfigPost } from "../../../Common/utils";
 import { success } from "../../../Common/notify";
 import { useAppSelector } from "../../../redux/hooks";
 import moment from "moment";
-import { FORMAT_DATE } from "../../../constants/general.constant";
+import { FORMAT_DATE, KEY_LOCAL_STORAGE } from "../../../constants/general.constant";
 
 const ScheduleDoctor = () => {
     const url_api = process.env.REACT_APP_API_URL;
@@ -40,7 +40,7 @@ const ScheduleDoctor = () => {
         endTime: { name: 'EndTime', title: 'End Time' }
     }
 
-    const eventTemplate = (props: {[key: string]: any}) => {
+    const eventTemplate = (props: { [key: string]: any }) => {
         return (
             <div>
                 <div>{props.Subject}</div>
@@ -133,11 +133,14 @@ const ScheduleDoctor = () => {
     const cancelScheduler = (id: string) => {
         const url = `${url_api}${SCHEDULE_CANCEL}${id}`;
 
+        const accountID = localStorage.getItem(KEY_LOCAL_STORAGE.ID);
+
         axios
-            .get(url, defineConfigPost())
+            .get(url, defineConfigGet({ idPractitionerCancel: accountID }))
             .then((resp: any) => {
                 if (resp) {
                     setTriggerScheduler(!triggerScheduler);
+                    navigate('/book-appointment')
                     success("Canceled scheduler successfully!");
                 }
             })
@@ -160,7 +163,7 @@ const ScheduleDoctor = () => {
                 actionBegin={onActionBegin}
                 eventSettings={eventSettings}
                 timeScale={timeScale}
-                
+
             >
                 <Inject services={[Day, Week, Month]} />
                 <ViewsDirective>

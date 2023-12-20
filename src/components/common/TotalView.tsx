@@ -5,7 +5,7 @@ import {
   ICON_PATIENT,
   ICON_STAFF,
 } from "../../assets";
-import { API_ADMIN_TOTAL } from "../../constants/api.constant";
+import { API_ADMIN_TOTAL, API_DASHBOARD_TOTAL } from "../../constants/api.constant";
 import axios from "axios";
 import { defineConfigGet } from "../../Common/utils";
 import { ITotalView } from "../../interface/general.interface";
@@ -21,15 +21,16 @@ function TotalView() {
   });
 
   useEffect(() => {
-    const url = `${url_api}${API_ADMIN_TOTAL}`;
+    const url = `${url_api}${API_DASHBOARD_TOTAL}`;
 
     axios.get(url, defineConfigGet({})).then((resp: any) => {
       if (resp) {
+        console.log("resp:", resp)
         const total: ITotalView = {
-          patient: resp.data.PATIENT,
-          doctor: resp.data.DOCTOR,
-          department: resp.data.DEPARTMENT,
-          staff: resp.data.STAFF,
+          patient: resp.data.total_patients,
+          doctor: resp.data.total_doctors,
+          department: resp.data.total_specialties,
+          staff: resp.data.total_staffs,
         }
         setTotal(total);
       }

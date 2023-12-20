@@ -61,6 +61,7 @@ import AppointmentProposed from "./pages/Appointment/Proposed";
 import PatientDashboard from "./pages/Dashboard/Patient";
 import AppointmentDashboard from "./pages/Dashboard/Appointment";
 import PatientMonitorDetail from "./pages/PatientMonitor/PatientMonitorDetail";
+import Schedule from "./pages/Schedule";
 
 // import "./firebase"
 
@@ -141,6 +142,7 @@ const RouterDom = () => (
     <Route path={RouterUrl.BOOK_APPOINTMENT} element={<BookAppointment />} />
 
     <Route path={RouterUrl.SETTING} element={<Setting />} />
+    <Route path={RouterUrl.SCHEDULE} element={<Schedule />} />
 
     <Route path="*" element={<Navigate to={RouterUrl.DASHBOARD} />} />
   </Routes>

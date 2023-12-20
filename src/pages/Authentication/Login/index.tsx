@@ -63,7 +63,7 @@ const Login = () => {
       .catch((err: any) => {
         console.log("error Login:", err);
         setIsLoading(false);
-        error(err.message || err.response.data.error || err.response.data.error.message)
+        error(err.response.data.error.message)
       });
   }
 
@@ -76,6 +76,7 @@ const Login = () => {
         if (resp) {
           localStorage.setItem(KEY_LOCAL_STORAGE.ID, resp.data.id);
           localStorage.setItem(KEY_LOCAL_STORAGE.NAME, resp.data.name);
+          localStorage.setItem(KEY_LOCAL_STORAGE.IMAGE, resp.data.photo)
         }
       })
       .catch((err) => {

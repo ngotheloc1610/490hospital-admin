@@ -66,7 +66,7 @@ const PatientDashboard = () => {
       setDateOfMonthPatient(newDate);
     }
   }, [monthPatient])
-  
+
   useEffect(() => {
     const newDate = new Date(dateOfMonthGender);
     const month = parseInt(monthGender, 10);
@@ -211,7 +211,7 @@ const PatientDashboard = () => {
             const dateB = new Date(b.date).getTime();
             return dateA - dateB;
           });
-          setGenderPatient({ male: sortedMale, female: sortedFemale,other:sortedOther,totalMale: sortedTotalMale ,totalFemale: sortedTotalFemale, totalOther : sortedTotalOther,total: sortedTotal})
+          setGenderPatient({ male: sortedMale, female: sortedFemale, other: sortedOther, totalMale: sortedTotalMale, totalFemale: sortedTotalFemale, totalOther: sortedTotalOther, total: sortedTotal })
         }
       })
       .catch((err: any) => {
@@ -345,7 +345,7 @@ const PatientDashboard = () => {
     ],
   };
 
-  const optionsLine:any = {
+  const optionsLine: any = {
     plugins: {
       legend: {
         display: true,
@@ -365,7 +365,7 @@ const PatientDashboard = () => {
     }
   };
 
-  const optionsDoughnut:any = {
+  const optionsDoughnut: any = {
     plugins: {
       legend: {
         display: false,
@@ -552,7 +552,7 @@ const PatientDashboard = () => {
               <p className="title">Patient with most appointment</p>
               <table className="table m-3">
                 <tbody>
-                  {appointmentFulfilled && appointmentFulfilled.map((item: any, idx: number) => {
+                  {appointmentFulfilled && appointmentFulfilled.length > 0 ? appointmentFulfilled.map((item: any, idx: number) => {
                     return (
                       <tr>
                         <th scope="row">{++idx}</th>
@@ -560,7 +560,7 @@ const PatientDashboard = () => {
                         <td>{item.value}</td>
                       </tr>
                     )
-                  })}
+                  }) : <span>Không có dữ liệu!</span>}
                 </tbody>
               </table>
             </div>
@@ -570,7 +570,7 @@ const PatientDashboard = () => {
               <p className="title">Spam Patient</p>
               <table className="table m-3">
                 <tbody>
-                  {appointmentCanceled && appointmentCanceled.map((item: any, idx: number) => {
+                  {appointmentCanceled && appointmentCanceled.length > 0 ? appointmentCanceled.map((item: any, idx: number) => {
                     return (
                       <tr>
                         <th scope="row">{++idx}</th>
@@ -578,7 +578,7 @@ const PatientDashboard = () => {
                         <td>{item.value}</td>
                       </tr>
                     )
-                  })}
+                  }) : <span>Không có dữ liệu!</span>}
                 </tbody>
               </table>
             </div>

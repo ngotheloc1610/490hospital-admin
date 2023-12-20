@@ -32,11 +32,14 @@ const Header = () => {
     localStorage.removeItem(KEY_LOCAL_STORAGE.SUB)
     localStorage.removeItem(KEY_LOCAL_STORAGE.ID)
     localStorage.removeItem(KEY_LOCAL_STORAGE.NAME)
+    localStorage.removeItem(KEY_LOCAL_STORAGE.IMAGE)
 
     dispatch(setLogin(false));
 
     navigate("/login")
   }
+
+  const imageSRC: any = localStorage.getItem(KEY_LOCAL_STORAGE.IMAGE);
 
   return (
     <header className="navbar-wrapper">
@@ -122,7 +125,7 @@ const Header = () => {
                 aria-expanded="false"
               >
                 <div className="user-profile__avatar">
-                  <ICON_PATIENT />
+                  <img src={imageSRC ? imageSRC : ICON_PATIENT} alt="img" style={{ height: "40px", width: "40px", borderRadius: "100rem", objectFit: "cover" }} />
                 </div>
                 <div className="user-profile__username">{account}</div>
                 <i className="bi bi-chevron-down" />

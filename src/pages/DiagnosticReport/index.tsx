@@ -12,7 +12,7 @@ import PopUpArrived from "../../components/common/PopupArrvied";
 import PopUpNoShow from "../../components/common/PopupNoShow";
 import PopUpDeny from "../../components/common/PopUpDeny";
 import Select from 'react-select'
-import { warn } from "../../Common/notify";
+import { success, warn } from "../../Common/notify";
 import { useAppSelector } from "../../redux/hooks";
 import PopUpCancel from "../../components/common/PopUpCancel";
 
@@ -216,7 +216,7 @@ const DiagnosticReport = () => {
     }))
 
     const rqParams = {
-      IdEncounter: params.encounterId ? params.encounterId : idEncounter,
+      idEncounter: params.encounterId ? params.encounterId : idEncounter,
       subjectReferencePatient: patientDetail.id,
       subjectDisplay: patientDetail?.nameFirstRep?.text,
       categoryDisplay: category,
@@ -231,6 +231,7 @@ const DiagnosticReport = () => {
       .post(url, rqParams, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
+          success("Create diagnostic successfully!");
           console.log("resp:", resp)
         }
       })
@@ -950,7 +951,7 @@ const DiagnosticReport = () => {
             <h3 className="fw-bold">Appointment Details</h3>
             <div>
               {bookingDetail?.appointmentStatus.toLowerCase() !== "arrived" && <button className="button button--small button--primary me-2" onClick={() => { setIsShowPopUpArrived(true) }}>Arrived</button>}
-              {(bookingDetail?.appointmentStatus.toLowerCase() !== "arrived" || bookingDetail?.appointmentStatus.toLowerCase() !== "cancel") && <>
+              {(bookingDetail?.appointmentStatus.toLowerCase() !== "arrived") && <>
                 <button className="button button--small button--danger--outline me-2" onClick={() => { setIsShowPopUpNoShow(true) }}>No Show</button>
                 <button className="button button--small button--danger" onClick={() => { setIsShowPopUpCancel(true) }}>Cancel</button>
               </>}

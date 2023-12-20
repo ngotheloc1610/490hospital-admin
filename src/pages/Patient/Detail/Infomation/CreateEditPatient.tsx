@@ -294,9 +294,9 @@ const CreateEditPatient = () => {
             onChange={handleChangeImage}
           />
         </div>
-        <button className="button button--small button--primary w-90 mx-auto mt-3">
+        <p className="button button--small button--primary w-100 p-3 mx-auto mt-3">
           {patientInfo?.photo ? "Edit" : "Add"} profile picture
-        </button>
+        </p>
       </div>
     );
   };

@@ -455,7 +455,7 @@ const BookAppointment = () => {
           <div className="mt-3">
             <h5 className="fw-bold mb-3">Select Doctor</h5>
             <div className="row">
-              {listDoctor && listDoctor.map((item: any, idx: number) => {
+              {listDoctor && listDoctor.length > 0 ? listDoctor.map((item: any, idx: number) => {
                 const name = item?.practitioner?.display;
                 const src = item?.practitionerTarget?.photo[0]?.url;
 
@@ -481,7 +481,7 @@ const BookAppointment = () => {
                     </div>
                   </div>
                 )
-              })}
+              }) : <p>No have doctor in {specialty}</p>}
             </div>
           </div>
 

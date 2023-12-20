@@ -99,3 +99,35 @@ export const styleHeartRate = (item: any) => {
     }
     return ""
 }
+
+export const styleBMI = (item: any) => {
+    if (item?.observationName === "BMI") {
+        switch (item?.alertSeverity) {
+            case "Major":
+                return "major";
+            case "Moderate":
+                return "normal";
+            case "Catastrophic":
+                return "catastrophic";
+            default:
+                return;
+        }
+    }
+    return ""
+}
+
+export const styleTemperature = (item: any) => {
+    if (item?.observationName === "Temperature") {
+        switch (item?.alertSeverity) {
+            case "Major":
+                return "major";
+            case "Moderate":
+                return "normal";
+            case "Catastrophic":
+                return "catastrophic";
+            default:
+                return;
+        }
+    }
+    return ""
+}

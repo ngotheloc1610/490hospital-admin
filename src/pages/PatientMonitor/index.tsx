@@ -10,7 +10,7 @@ import {
 } from "../../constants";
 import { ICON_PENCIL } from "../../assets";
 import { API_MONITOR_ALL, API_MONITOR_SEARCH } from "../../constants/api.constant";
-import { defineConfigGet, defineConfigPost, styleBloodGlucose, styleBloodPressure, styleHeartRate } from "../../Common/utils";
+import { defineConfigGet, defineConfigPost, styleBMI, styleBloodGlucose, styleBloodPressure, styleHeartRate, styleTemperature } from "../../Common/utils";
 import moment from "moment";
 import { FORMAT_DATE } from "../../constants/general.constant";
 import { setAppointment } from "../../redux/features/appointment/appointmentSlice";
@@ -122,6 +122,8 @@ const PatientMonitor = () => {
             <th scope="col">Blood Pressure</th>
             <th scope="col">Blood Glucose</th>
             <th scope="col">Heart Rates</th>
+            <th scope="col">BMI</th>
+            <th scope="col">Temperature</th>
           </tr>
         </thead>
         {!isLoading ? <tbody>
@@ -129,6 +131,8 @@ const PatientMonitor = () => {
             const indexBloodPressure = item?.observationMonitors?.filter((item: any) => item?.observationName === "Blood Pressure")[0];
             const indexBloodGlucose = item?.observationMonitors?.filter((item: any) => item?.observationName === "Blood Glucose")[0];
             const indexHeartRate = item?.observationMonitors?.filter((item: any) => item?.observationName === "Heart Rate")[0];
+            const indexBMI = item?.observationMonitors?.filter((item: any) => item?.observationName === "BMI")[0];
+            const indexTemperature = item?.observationMonitors?.filter((item: any) => item?.observationName === "Temperature")[0];
 
             return (
               <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
@@ -150,6 +154,14 @@ const PatientMonitor = () => {
                 <td onClick={() => { navigate(`/monitor/${item.idEncounter}`); dispatch(setAppointment(item)) }}>
                   <span className={styleHeartRate(indexBloodPressure)}>{indexHeartRate?.value || "-"}</span>
                   <span className={styleHeartRate(indexBloodPressure)}> bpm</span>
+                </td>
+                <td onClick={() => { navigate(`/monitor/${item.idEncounter}`); dispatch(setAppointment(item)) }}>
+                  <span className={styleBMI(indexBMI)}>{indexBMI?.value || "-"}</span>
+                  <span className={styleBMI(indexBMI)}></span>
+                </td>
+                <td onClick={() => { navigate(`/monitor/${item.idEncounter}`); dispatch(setAppointment(item)) }}>
+                  <span className={styleTemperature(indexTemperature)}>{indexTemperature?.value || "-"}</span>
+                  <span className={styleTemperature(indexTemperature)}></span>
                 </td>
                 <td>
                   <span className="ms-1">

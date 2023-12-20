@@ -87,8 +87,8 @@ export const GENDER = [
     code: "FEMALE",
   },
   {
-    name: "Unknown",
-    code: "UNKNOWN",
+    name: "Other",
+    code: "OTHER",
   },
   {
     name: "All",
@@ -114,11 +114,11 @@ export const GENDER_ALL = [
 export const STATUS = [
   {
     name: "Active",
-    code: "Active",
+    code: true,
   },
   {
     name: "Inactive",
-    code: "Inactive",
+    code: false,
   },
   {
     name: "All",

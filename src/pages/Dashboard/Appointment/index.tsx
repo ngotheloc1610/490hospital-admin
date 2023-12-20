@@ -40,6 +40,7 @@ const AppointmentDashboard = () => {
   const [monthAppointmentBook, setMonthAppointmentBook] = useState<string>((currentDate.getMonth() - 1).toString());
 
   const [appointmentToday, setAppointmentToday] = useState<any>([])
+  const [topBookSpecialty, setTopBookSpecialty] = useState<any>([])
   const [appointmentTotal, setAppointmentTotal] = useState<any>(null)
   const [appointmentBooked, setAppointmentBooked] = useState<any>(null)
 
@@ -49,7 +50,7 @@ const AppointmentDashboard = () => {
     getAppointmentToday()
     getAppointmentTotal()
     getAppointmentBooked()
-
+    getTopBookSpecialty()
   }, [])
 
   useEffect(() => {
@@ -88,6 +89,21 @@ const AppointmentDashboard = () => {
       .then((resp: any) => {
         if (resp) {
           setAppointmentToday(resp.data);
+        }
+      })
+      .catch((err: any) => {
+        console.log("error get appointment today:", err);
+      });
+  }
+
+  const getTopBookSpecialty = () => {
+    const url = `${url_api}${API_DASHBOARD_APPOINTMENT_TODAY}`;
+
+    axios
+      .get(url, defineConfigPost())
+      .then((resp: any) => {
+        if (resp) {
+          setTopBookSpecialty(resp.data);
         }
       })
       .catch((err: any) => {
@@ -286,7 +302,7 @@ const AppointmentDashboard = () => {
     ],
   };
 
-  const optionsLine:any = {
+  const optionsLine: any = {
     plugins: {
       legend: {
         display: true,
@@ -306,7 +322,7 @@ const AppointmentDashboard = () => {
     }
   };
 
-  const optionsDoughnut:any = {
+  const optionsDoughnut: any = {
     plugins: {
       legend: {
         display: false,
@@ -421,21 +437,12 @@ const AppointmentDashboard = () => {
               <p className="title">Top Book specialty</p>
               <table className="table m-3">
                 <tbody>
-                  <tr>
+                  {topBookSpecialty && topBookSpecialty.length > 0 ? <tr>
                     <th scope="row">1</th>
                     <td>Mark</td>
                     <td>Otto</td>
                   </tr>
-                  <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>Larry the Bird</td>
-                    <td>@twitter</td>
-                  </tr>
+                    : <span>Không có dữ liệu!</span>}
                 </tbody>
               </table>
             </div>

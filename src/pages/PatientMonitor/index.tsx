@@ -9,7 +9,7 @@ import {
   START_PAGE,
 } from "../../constants";
 import { ICON_PENCIL } from "../../assets";
-import { API_MONITOR_ALL, API_SEARCH_DOCTOR } from "../../constants/api.constant";
+import { API_MONITOR_ALL, API_MONITOR_SEARCH } from "../../constants/api.constant";
 import { defineConfigGet, defineConfigPost, styleBloodGlucose, styleBloodPressure, styleHeartRate } from "../../Common/utils";
 import moment from "moment";
 import { FORMAT_DATE } from "../../constants/general.constant";
@@ -40,7 +40,7 @@ const PatientMonitor = () => {
   }, [currentPage, itemPerPage])
 
   const searchPatient = () => {
-    const url = `${url_api}${API_SEARCH_DOCTOR}`;
+    const url = `${url_api}${API_MONITOR_SEARCH}`;
 
     const params = { page: currentPage, size: itemPerPage, nameP: name }
 

@@ -18,7 +18,7 @@ import { TYPE_DOCTOR } from "../../constants/general.constant";
 
 const validationSchema = Yup.object().shape({
   username: Yup.string().email('Địa chỉ email không hợp lệ').required("Required"),
-  fullname: Yup.string().required("Required"),
+  fullname: Yup.string().required("Required").matches(/^[a-zA-Z0-9_]+$/),
   type: Yup.string().required("Required"),
   room: Yup.string().optional(),
   specialty: Yup.string().required("Required"),
@@ -628,8 +628,8 @@ const Practitioner = () => {
                     onClick={submitForm}
                   >
                     {isLoading && <span className="spinner-border" role="status">
-              <span className="visually-hidden">Loading...</span>
-            </span>} <span className="ms-2">Save</span>
+                      <span className="visually-hidden">Loading...</span>
+                    </span>} <span className="ms-2">Save</span>
                   </button>
                 </div>
               </>

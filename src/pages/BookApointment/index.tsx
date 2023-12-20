@@ -4,7 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 import Layout from "../../components/Layout";
-import { FORMAT_DATE, FORMAT_DATE_DEFAULT, FORMAT_DATE_TIME, KEY_LOCAL_STORAGE, TOTAL_STEP } from "../../constants/general.constant";
+import { FORMAT_DATE, FORMAT_DATE_DEFAULT, FORMAT_DATE_TIME, KEY_LOCAL_STORAGE, TOTAL_STEP, TYPE_ADMIN } from "../../constants/general.constant";
 import { useAppSelector } from "../../redux/hooks";
 import { defineConfigGet, defineConfigPost } from "../../Common/utils";
 import { error, success, warn } from "../../Common/notify";
@@ -229,6 +229,15 @@ const BookAppointment = () => {
 
   const handleSearchPatient = () => {
     getPatient()
+  }
+
+  const handleNavigate = () => {
+    const accountType = localStorage.getItem(KEY_LOCAL_STORAGE.TYPE);
+    if (accountType !== TYPE_ADMIN) {
+      navigate("/appointment-pending")
+    } else {
+      navigate("/appointment")
+    }
   }
 
   const disabled = (item: any) => {
@@ -522,7 +531,7 @@ const BookAppointment = () => {
           <p className="fw-bold text-uppercase">patient details</p>
           <div className="row">
             <div className="col-3">
-              <img src={USER} alt="img patient" />
+              <img src={patient?.photo ? patient?.photo[0]?.url : USER} alt="img patient" style={{ width: "100%", height: "90%", objectFit: "cover" }} />
             </div>
             <div className="col-9">
               <table className="table table-borderless">
@@ -631,7 +640,7 @@ const BookAppointment = () => {
             <span className="d-block mb-1">schedule to keep up with the</span>
             <span className="d-block">appointment time</span>
           </p>
-          <button className="button button--large button--primary d-block m-auto" onClick={() => navigate("/appointment")}>
+          <button className="button button--large button--primary d-block m-auto" onClick={() => handleNavigate()}>
             Return to list appointment
           </button>
         </div>

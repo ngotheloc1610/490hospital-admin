@@ -15,6 +15,7 @@ export const KEY_LOCAL_STORAGE = {
   TYPE: "type",
   ID: "id",
   NAME: "name",
+  IMAGE: "image"
 };
 
 export const GENERATED_MESSAGING_KEY = "AAAAx-IdyFk:APA91bEjVZnooBkWWCPdLzybjCTkK9nXQG3ODiNIOGS1J3yzNympOjjoG26nbAJVPzmr8nt-KCQ4Zwq1eGsrj5oNbYmEO3j40M5tH_urgNagDwe7kLVYIWsJ5O8N3E7cEBEf-rjBXixM"

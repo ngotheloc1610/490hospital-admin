@@ -311,20 +311,20 @@ export const ALERT_STATUS = [
 
 export const RULE_BLOOD_PRESSURE = [
   {
-    title: "Systolic Greater Than",
-    value: "Systolic Greater Than",
+    title: "Greater Than",
+    value: "Greater Than",
   },
   {
-    title: "Systolic Less Than",
-    value: "Systolic Less Than",
+    title: "Less Than",
+    value: "Less Than",
   },
   {
-    title: "Diastolic Greater Than",
-    value: "Diastolic Greater Than",
+    title: "Greater Than",
+    value: "Greater Than",
   },
   {
-    title: "Diastolic Less Than",
-    value: "Diastolic Less Than",
+    title: "Less Than",
+    value: "Less Than",
   },
 ];
 

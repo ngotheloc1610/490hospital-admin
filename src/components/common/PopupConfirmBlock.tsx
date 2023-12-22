@@ -17,6 +17,7 @@ const PopUpConfirmBlock = () => {
   const dispatch = useAppDispatch();
   const { practitioner, triggerBlock } = useAppSelector((state) => state.practitionerSlice)
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [reason, setReason] = useState<string>("")
 
   const blockPatient = () => {
     const url = `${url_api}${API_BLOCK_PRACTITIONER}${practitioner.id}`;
@@ -24,7 +25,7 @@ const PopUpConfirmBlock = () => {
     setIsLoading(true)
 
     axios
-      .get(url, defineConfigGet({}))
+      .get(url, defineConfigGet({ reason: reason }))
       .then((resp: any) => {
         if (resp) {
           setIsLoading(false)
@@ -65,6 +66,7 @@ const PopUpConfirmBlock = () => {
             <span className="fw-bold">{practitioner?.nameFirstRep?.text}</span> in practitioner
             list？
           </span>
+          <input className="form-control mt-3" value={reason} onChange={(e: any) => setReason(e.target.value)} placeholder="Reason block/unblock practitioner..." />
         </Modal.Body>
         <Modal.Footer className="justify-content-center">
           <Button

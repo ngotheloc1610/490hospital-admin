@@ -112,7 +112,7 @@ const PreviousAppointment = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {listData && listData.map((item: any, idx: number) => {
+                    {listData && listData?.length > 0 ? listData.map((item: any, idx: number) => {
                         return (
                             <tr className={`${idx % 2 === 1 ? "table-light" : ""}`} onClick={() => handleNavigate(item)}>
                                 <td >
@@ -138,7 +138,7 @@ const PreviousAppointment = () => {
                                     {item.status}</span></td>
                             </tr>
                         );
-                    })}
+                    }) : <span>Không có dữ liệu!</span>}
                 </tbody>
             </table>
         );

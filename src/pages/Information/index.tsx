@@ -18,13 +18,13 @@ const Information = () => {
     const outlet = useOutlet();
     const navigate = useNavigate();
     const url_api = process.env.REACT_APP_API_URL;
-    const { triggerEdit } = useAppSelector((state) => state.practitionerSlice)
+    const { triggerEdit, triggerBack } = useAppSelector((state) => state.practitionerSlice)
     const dispatch = useAppDispatch();
     const type = localStorage.getItem(KEY_LOCAL_STORAGE.TYPE);
 
     useEffect(() => {
         getProfilePractitioner()
-    }, [triggerEdit]);
+    }, [triggerEdit, triggerBack]);
 
     const getProfilePractitioner = () => {
         const url = `${url_api}${API_PROFILE_PRACTITIONER}`;
@@ -81,7 +81,7 @@ const Information = () => {
                             return (
                                 <tr>
                                     <th scope="row" style={{ width: "15%" }}>
-                                        {moment(item.qualificationPeriodStart).format(FORMAT_DATE)} - {moment(item.qualificationPeriodEnd).format(FORMAT_DATE)}
+                                        {item.qualificationPeriodStart ? moment(item.qualificationPeriodStart).format(FORMAT_DATE) : ""} - {item.qualificationPeriodEnd ? moment(item.qualificationPeriodEnd).format(FORMAT_DATE) : ""}
                                     </th>
                                     <td>
                                         {item.qualificationText}
@@ -107,7 +107,7 @@ const Information = () => {
                             return (
                                 <tr>
                                     <th scope="row" style={{ width: "15%" }}>
-                                        {moment(item.qualificationPeriodStart).format(FORMAT_DATE)} - {moment(item.qualificationPeriodEnd).format(FORMAT_DATE)}
+                                        {item.qualificationPeriodStart ? moment(item.qualificationPeriodStart).format(FORMAT_DATE) : ""} - {item.qualificationPeriodEnd ? moment(item.qualificationPeriodEnd).format(FORMAT_DATE) : ""}
                                     </th>
                                     <td>
                                         {item.qualificationText}
@@ -131,7 +131,7 @@ const Information = () => {
                             return (
                                 <tr>
                                     <th scope="row" style={{ width: "15%" }}>
-                                        {moment(item.qualificationPeriodStart).format(FORMAT_DATE)} - {moment(item.qualificationPeriodEnd).format(FORMAT_DATE)}
+                                        {item.qualificationPeriodStart ? moment(item.qualificationPeriodStart).format(FORMAT_DATE) : ""} - {item.qualificationPeriodEnd ? moment(item.qualificationPeriodEnd).format(FORMAT_DATE) : ""}
                                     </th>
                                     <td>
                                         {item.qualificationText}

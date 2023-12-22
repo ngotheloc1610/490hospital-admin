@@ -7,14 +7,16 @@ interface IPatientStatus {
     triggerUpdate: boolean,
     triggerBlock: boolean,
     showPopUpConfirmBlock: boolean,
-    patient: any
+    patient: any,
+    idAppointment: string
 }
 
 const initialState: IPatientStatus = {
     triggerUpdate: false,
     triggerBlock: false,
     showPopUpConfirmBlock: false,
-    patient: null
+    patient: null,
+    idAppointment: ""
 };
 
 export const patientSlice = createSlice({
@@ -33,11 +35,14 @@ export const patientSlice = createSlice({
         setPatient: (state, action: PayloadAction<any>) => {
             state.patient = action.payload;
         },
+        setIdAppointment: (state, action: PayloadAction<string>) => {
+            state.idAppointment = action.payload;
+        },
 
     },
 });
 
-export const { setTriggerUpdate, setTriggerBlock, setShowPopUpConfirmBlock, setPatient } = patientSlice.actions;
+export const { setTriggerUpdate, setTriggerBlock, setShowPopUpConfirmBlock, setPatient, setIdAppointment } = patientSlice.actions;
 
 export const selectPatient = (state: RootState) => state.patientSlice;
 

@@ -36,8 +36,8 @@ const AppointmentDashboard = () => {
 
   const currentDate = new Date();
 
-  const [monthAppointment, setMonthAppointment] = useState<string>((currentDate.getMonth() - 1).toString());
-  const [monthAppointmentBook, setMonthAppointmentBook] = useState<string>((currentDate.getMonth() - 1).toString());
+  const [monthAppointment, setMonthAppointment] = useState<string>((currentDate.getMonth()).toString());
+  const [monthAppointmentBook, setMonthAppointmentBook] = useState<string>((currentDate.getMonth()).toString());
 
   const [appointmentToday, setAppointmentToday] = useState<any>([])
   const [topBookSpecialty, setTopBookSpecialty] = useState<any>([])

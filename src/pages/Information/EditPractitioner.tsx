@@ -12,7 +12,7 @@ import { USER } from "../../assets";
 import { FORMAT_DATE, KEY_LOCAL_STORAGE } from "../../constants/general.constant";
 import moment from "moment";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setTriggerEdit } from "../../redux/features/practitioner/practitionerSlice";
+import { setTriggerBack, setTriggerEdit } from "../../redux/features/practitioner/practitionerSlice";
 
 const validationSchema = Yup.object().shape({
     name: Yup.string().required("Required"),
@@ -47,7 +47,7 @@ const EditPractitioner = () => {
     const [isPickImage, setIsPickImage] = useState<boolean>(false);
 
     const dispatch = useAppDispatch();
-    const { triggerEdit } = useAppSelector((state) => state.practitionerSlice)
+    const { triggerEdit, triggerBack } = useAppSelector((state) => state.practitionerSlice)
 
     useEffect(() => {
         getProfilePractitioner()
@@ -325,7 +325,7 @@ const EditPractitioner = () => {
                             return (
                                 <tr>
                                     <th scope="row" style={{ width: "15%" }}>
-                                        {moment(item.qualificationPeriodStart).format(FORMAT_DATE)} - {moment(item.qualificationPeriodEnd).format(FORMAT_DATE)}
+                                        {item.qualificationPeriodStart ? moment(item.qualificationPeriodStart).format(FORMAT_DATE) : ""} - {item.qualificationPeriodEnd ? moment(item.qualificationPeriodEnd).format(FORMAT_DATE) : ""}
                                     </th>
                                     <td>
                                         {item.qualificationText}
@@ -351,7 +351,7 @@ const EditPractitioner = () => {
                             return (
                                 <tr>
                                     <th scope="row" style={{ width: "15%" }}>
-                                        {moment(item.qualificationPeriodStart).format(FORMAT_DATE)} - {moment(item.qualificationPeriodEnd).format(FORMAT_DATE)}
+                                        {item.qualificationPeriodStart ? moment(item.qualificationPeriodStart).format(FORMAT_DATE) : ""} - {item.qualificationPeriodEnd ? moment(item.qualificationPeriodEnd).format(FORMAT_DATE) : ""}
                                     </th>
                                     <td>
                                         {item.qualificationText}
@@ -375,7 +375,7 @@ const EditPractitioner = () => {
                             return (
                                 <tr>
                                     <th scope="row" style={{ width: "15%" }}>
-                                        {moment(item.qualificationPeriodStart).format(FORMAT_DATE)} - {moment(item.qualificationPeriodEnd).format(FORMAT_DATE)}
+                                        {item.qualificationPeriodStart ? moment(item.qualificationPeriodStart).format(FORMAT_DATE) : ""} - {item.qualificationPeriodEnd ? moment(item.qualificationPeriodEnd).format(FORMAT_DATE) : ""}
                                     </th>
                                     <td>
                                         {item.qualificationText}
@@ -457,7 +457,7 @@ const EditPractitioner = () => {
                     <div className="mt-3 d-flex justify-content-end">
                         <button
                             className="button button--small button--danger me-3"
-                            onClick={() => navigate("/information")}
+                            onClick={() => { navigate("/information"); dispatch(setTriggerBack(!triggerBack)) }}
                         >
                             Cancel
                         </button>

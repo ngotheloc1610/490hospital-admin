@@ -11,7 +11,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
 import { error, success, warn } from "../../../Common/notify";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { setTriggerEdit } from "../../../redux/features/practitioner/practitionerSlice";
+import { setTriggerBack, setTriggerEdit } from "../../../redux/features/practitioner/practitionerSlice";
 import { KEY_LOCAL_STORAGE } from "../../../constants/general.constant";
 
 const validationSchema = Yup.object().shape({
@@ -55,7 +55,7 @@ const CreateEditStaff = () => {
   const url_api = process.env.REACT_APP_API_URL;
 
   const dispatch = useAppDispatch();
-  const { triggerEdit } = useAppSelector((state) => state.practitionerSlice)
+  const { triggerEdit, triggerBack } = useAppSelector((state) => state.practitionerSlice)
 
   useEffect(() => {
     getStaffInfo(params.staffId)
@@ -395,11 +395,11 @@ const CreateEditStaff = () => {
           {!isLoading ? !isPickImage ? <img
             src={staff?.photo ? staff?.photo : USER}
             alt="img patient"
-            className={`${staff?.photo ? "" : "bg-image"} w-100 h-350 object-fit-cover p-2 border`}
+            className={`${staff?.photo ? "" : "bg-image"} w-100 h-400 object-fit-cover p-2 border`}
           /> : <img
             src={selectedFile ? URL.createObjectURL(selectedFile) : USER}
             alt="img admin"
-            className={`d-block m-auto ${selectedFile ? "" : "bg-image"} w-100 h-350 object-fit-cover`}
+            className={`d-block m-auto ${selectedFile ? "" : "bg-image"} w-100 h-400 object-fit-cover`}
             style={{ objectFit: "cover" }}
           /> : <div className="d-flex justify-content-center bg-light h-100">
             <div className="spinner-border my-auto" style={{ width: "5rem", height: "5rem" }} role="status">
@@ -447,7 +447,7 @@ const CreateEditStaff = () => {
             </div>
           </Form>
           <div className="mt-3 d-flex justify-content-end">
-            <button className="button button--small button--danger me-3" onClick={() => navigate(`/staff/overview/${params.staffId}`)}>
+            <button className="button button--small button--danger me-3" onClick={() => { navigate(`/staff/overview/${params.staffId}`); dispatch(setTriggerBack(!triggerBack)) }}>
               Back
             </button>
 

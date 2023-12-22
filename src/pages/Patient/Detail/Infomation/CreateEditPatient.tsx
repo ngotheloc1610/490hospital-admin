@@ -13,6 +13,7 @@ import { defineConfigGet, defineConfigPost } from "../../../../Common/utils";
 import { setTriggerUpdate } from "../../../../redux/features/patient/patientSlice";
 import { error, success, warn } from "../../../../Common/notify";
 import { KEY_LOCAL_STORAGE } from "../../../../constants/general.constant";
+import { setTriggerBack } from "../../../../redux/features/practitioner/practitionerSlice";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().min(3).required("Required"),
@@ -49,6 +50,7 @@ const CreateEditPatient = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const { triggerUpdate } = useAppSelector(state => state.patientSlice);
+  const { triggerBack } = useAppSelector(state => state.practitionerSlice);
 
   useEffect(() => {
     getPatientInfo(params.patientId)
@@ -330,7 +332,7 @@ const CreateEditPatient = () => {
           <div className="mt-3 d-flex justify-content-end">
             <button
               className="button button--small button--danger me-3"
-              onClick={() => navigate(`/patient/information/${patientInfo?.id}`)}
+              onClick={() => { navigate(`/patient/information/${patientInfo?.id}`); dispatch(setTriggerBack(!triggerBack)) }}
             >
               Back
             </button>

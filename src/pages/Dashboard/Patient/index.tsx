@@ -15,7 +15,7 @@ import {
 import { MONTHS } from "../../../constants";
 import { ICON_PATIENT } from "../../../assets";
 import { API_DASHBOARD_ALL_PATIENT_GENDER, API_DASHBOARD_NEW_PATIENT, API_DASHBOARD_OLD_PATIENT, API_DASHBOARD_PATIENT_CANCELED, API_DASHBOARD_PATIENT_FULFILLED, API_DASHBOARD_PATIENT_PER_DAY } from "../../../constants/api.constant";
-import { defineConfigGet, defineConfigPost } from "../../../Common/utils";
+import { defineConfigGet, defineConfigPost, getTotalDaysInMonth } from "../../../Common/utils";
 import axios from "axios";
 import { startOfMonth, endOfMonth, format } from 'date-fns';
 import TotalView from "../../../components/common/TotalView";
@@ -39,10 +39,10 @@ const PatientDashboard = () => {
 
   const currentDate = new Date();
 
-  const [monthPatient, setMonthPatient] = useState<string>((currentDate.getMonth() - 1).toString());
-  const [monthGender, setMonthGender] = useState<string>((currentDate.getMonth() - 1).toString());
-  const [monthNewPatient, setMonthNewPatient] = useState<string>((currentDate.getMonth() - 1).toString());
-  const [monthOldPatient, setmonthOldPatient] = useState<string>((currentDate.getMonth() - 1).toString());
+  const [monthPatient, setMonthPatient] = useState<string>((currentDate.getMonth()).toString());
+  const [monthGender, setMonthGender] = useState<string>((currentDate.getMonth()).toString());
+  const [monthNewPatient, setMonthNewPatient] = useState<string>((currentDate.getMonth()).toString());
+  const [monthOldPatient, setmonthOldPatient] = useState<string>((currentDate.getMonth()).toString());
 
   const [dateOfMonthPatient, setDateOfMonthPatient] = useState<any>(new Date());
   const [dateOfMonthGender, setDateOfMonthGender] = useState<any>(new Date());
@@ -79,7 +79,7 @@ const PatientDashboard = () => {
 
   useEffect(() => {
     const newDate = new Date(dateOfMonthNewPatient);
-    const month = parseInt(monthPatient, 10);
+    const month = parseInt(monthNewPatient, 10);
 
     if (!isNaN(month)) {
       newDate.setMonth(month);
@@ -89,7 +89,7 @@ const PatientDashboard = () => {
 
   useEffect(() => {
     const newDate = new Date(dateOfMonthOldPatient);
-    const month = parseInt(monthPatient, 10);
+    const month = parseInt(monthOldPatient, 10);
 
     if (!isNaN(month)) {
       newDate.setMonth(month);
@@ -109,6 +109,10 @@ const PatientDashboard = () => {
   useEffect(() => {
     getNumberPatients()
   }, [dateOfMonthPatient])
+
+  useEffect(() => {
+    getNumberGender()
+  }, [dateOfMonthGender])
 
   useEffect(() => {
     getNewPatient()
@@ -299,7 +303,7 @@ const PatientDashboard = () => {
       });
   }
 
-  const dataLinePatient = {
+  const dataPatient = {
     labels: patient?.newPatient?.map((patient: any) => moment(patient.date).format(FORMAT_DATE)),
     datasets: [
       {
@@ -321,7 +325,7 @@ const PatientDashboard = () => {
     ],
   };
 
-  const dataDoughnutGender = {
+  const dataGender = {
     labels: genderPatient?.male?.map((gender: any) => moment(gender.date).format(FORMAT_DATE)),
     datasets: [
       {
@@ -424,47 +428,62 @@ const PatientDashboard = () => {
     <>
       <TotalView />
       <div className="m-3">
-        <div className="row gy-5">
-          <div className="col-8 ">
-            <div className="box">
-              <div className="p-3 border-bottom d-flex justify-content-between">
-                <p className="title">Number of patients</p>
-                <select
-                  className="input-select input-select-w15"
-                  onChange={(e) => setMonthPatient(e.target.value)}
-                  value={monthPatient}
-                >
-                  {_renderMonths()}
-                </select>
-              </div>
-              <div className="p-3">
-                <Line
-                  data={dataLinePatient}
-                  options={optionsLine}
-                />
-              </div>
+        <div className="box ">
+          <div className="border-bottom d-flex justify-content-between p-3">
+            <p className="title">Number of Patients</p>
+            <select
+              className="input-select input-select-w15"
+              onChange={(e) => setMonthPatient(e.target.value)}
+              value={monthPatient}
+            >
+              {_renderMonths()}
+            </select>
+          </div>
+          <div className="row m-3">
+            <div className="col-8">
+              <Line
+                data={dataPatient}
+                options={optionsLine}
+              />
+            </div>
+
+            <div className="col-4">
+              <Doughnut
+                data={dataPatient}
+                options={optionsDoughnut}
+                plugins={[doughnutLabel]}
+              />
             </div>
           </div>
+        </div>
+      </div>
 
-          <div className="col-4">
-            <div className="box">
-              <div className="p-3 border-bottom d-flex justify-content-between">
-                <p className="title">Patient by Gender</p>
-                <select
-                  className="input-select input-select-w30"
-                  onChange={(e) => setMonthGender(e.target.value)}
-                  value={monthGender}
-                >
-                  {_renderMonths()}
-                </select>
-              </div>
-              <div className="p-3">
-                <Doughnut
-                  data={dataDoughnutGender}
-                  options={optionsDoughnut}
-                  plugins={[doughnutLabel]}
-                />
-              </div>
+      <div className="m-3">
+        <div className="box ">
+          <div className="border-bottom d-flex justify-content-between p-3">
+            <p className="title">Number of Gender</p>
+            <select
+              className="input-select input-select-w15"
+              onChange={(e) => setMonthGender(e.target.value)}
+              value={monthGender}
+            >
+              {_renderMonths()}
+            </select>
+          </div>
+          <div className="row m-3">
+            <div className="col-8">
+              <Line
+                data={dataGender}
+                options={optionsLine}
+              />
+            </div>
+
+            <div className="col-4">
+              <Doughnut
+                data={dataGender}
+                options={optionsDoughnut}
+                plugins={[doughnutLabel]}
+              />
             </div>
           </div>
         </div>
@@ -492,7 +511,7 @@ const PatientDashboard = () => {
                 </div>
                 <div className="mt-3">
                   <p className="fw-bold">{newPatient?.newPatientCount}</p>
-                  <p className="fw-bold">{newPatient?.newPatientCountCompare}% Increase in 7 days</p>
+                  <p className="fw-bold">{newPatient?.newPatientCountCompare}% Increase in {getTotalDaysInMonth(currentDate.getFullYear(), Number(monthNewPatient))} days</p>
                   <div className="progress">
                     <div
                       className="progress-bar"
@@ -527,7 +546,7 @@ const PatientDashboard = () => {
                 </div>
                 <div className="mt-3">
                   <p className="fw-bold">{oldPatient?.oldPatientCount}</p>
-                  <p className="fw-bold">{oldPatient?.oldPatientCountCompare}% Increase in 7 days</p>
+                  <p className="fw-bold">{oldPatient?.oldPatientCountCompare}% Increase in {getTotalDaysInMonth(currentDate.getFullYear(), Number(monthOldPatient))} days</p>
                   <div className="progress">
                     <div
                       className="progress-bar"

@@ -9,7 +9,8 @@ import { USER } from "../../../../assets";
 import PaginationComponent from "../../../../components/common/Pagination";
 import moment from "moment";
 import { FORMAT_DATE } from "../../../../constants/general.constant";
-import { useAppSelector } from "../../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+import { setIdAppointment } from "../../../../redux/features/patient/patientSlice";
 
 const InfoPatient = () => {
   const [currentPage, setCurrentPage] = useState<number>(0);
@@ -22,10 +23,13 @@ const InfoPatient = () => {
   const navigate = useNavigate();
   const url_api = process.env.REACT_APP_API_URL;
   const { triggerUpdate } = useAppSelector(state => state.patientSlice);
+  const { triggerBack } = useAppSelector(state => state.practitionerSlice);
+
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     getPatientDetail(param.patientId)
-  }, [param.patientId, triggerUpdate]);
+  }, [param.patientId, triggerUpdate, triggerBack]);
 
   useEffect(() => {
     getListAppointment(param.patientId)
@@ -148,18 +152,18 @@ const InfoPatient = () => {
             {listAppointment && listAppointment.length > 0 && listAppointment.map((item: any, idx: number) => {
               return (
                 <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
-                  <td >
+                  <td onClick={() => { navigate(`/monitor/${item.idEncounter}`); dispatch(setIdAppointment(item?.idAppointment)) }}>
                     {item.patientName}
                   </td>
 
-                  <td >{convertToDate(item.appointDate)}</td>
-                  <td >
+                  <td onClick={() => { navigate(`/monitor/${item.idEncounter}`); dispatch(setIdAppointment(item?.idAppointment)) }}>{convertToDate(item.appointDate)}</td>
+                  <td onClick={() => { navigate(`/monitor/${item.idEncounter}`); dispatch(setIdAppointment(item?.idAppointment)) }}>
                     <span>{convertToTime(item.appointmentTimeStart)} </span>
                     <span> - </span>
                     <span>{convertToTime(item.appointmentTimeEnd)}</span>
                   </td>
-                  <td >{item.doctorName}</td>
-                  <td>
+                  <td onClick={() => { navigate(`/monitor/${item.idEncounter}`); dispatch(setIdAppointment(item?.idAppointment)) }}>{item.doctorName}</td>
+                  <td onClick={() => { navigate(`/monitor/${item.idEncounter}`); dispatch(setIdAppointment(item?.idAppointment)) }}>
                     <span className={styleStatus(item.status)}>{item.status}</span>
                   </td>
                 </tr>

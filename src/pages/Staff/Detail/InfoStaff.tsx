@@ -15,7 +15,7 @@ const InfoStaff = () => {
   const param = useParams();
   const navigate = useNavigate();
   const url_api = process.env.REACT_APP_API_URL;
-  const { triggerEdit } = useAppSelector((state) => state.practitionerSlice)
+  const { triggerEdit, triggerBack } = useAppSelector((state) => state.practitionerSlice)
 
   useEffect(() => {
     const id = param.staffId;
@@ -31,7 +31,7 @@ const InfoStaff = () => {
       .catch((err) => {
         console.log("error get information practitioner (Staff):", err);
       });
-  }, [param.staffId, triggerEdit]);
+  }, [param.staffId, triggerEdit, triggerBack]);
 
   const _renderBasicInfo = () => {
     return (
@@ -103,7 +103,7 @@ const InfoStaff = () => {
             <div className="col-4">
               <div className="h-100 d-flex flex-column">
                 <div className="h-100">
-                  <img src={staff?.photo ? staff?.photo : USER} alt="img staff" className="w-100 h-100 d-block m-auto object-cover" />
+                  <img src={staff?.photo ? staff?.photo : USER} alt="img staff" className="w-100 h-400 d-block m-auto object-cover" />
                 </div>
               </div>
             </div>

@@ -92,7 +92,7 @@ const DiagnosticReport = () => {
   }, [])
 
   useEffect(() => {
-    if (params.encounterId) {
+    if (params.encounterId && params.encounterId !== "null") {
       getPreviousEncounter(params.encounterId)
     }
   }, [params.encounterId])
@@ -201,7 +201,6 @@ const DiagnosticReport = () => {
       encounterId: params.encounterId,
       recordedDate: new Date(item.recordedDate).toISOString,
       noteText: item.note,
-      createAt: new Date().toISOString()
     }))
 
     listExtraCondition.forEach((item: any) => extraConditions.push({
@@ -212,7 +211,6 @@ const DiagnosticReport = () => {
       encounterId: params.encounterId,
       recordedDate: new Date(item.recordedDate).toISOString,
       noteText: item.note,
-      createAt: new Date().toISOString()
     }))
 
     const rqParams = {
@@ -358,7 +356,7 @@ const DiagnosticReport = () => {
         <option hidden>Select a condition</option>
         {listCondition ? (
           listCondition.map((item: any) => (
-            <option value={item.code} key={item.code}>
+            <option value={item.display} key={item.code}>
               {item.display}
             </option>
           ))
@@ -390,7 +388,7 @@ const DiagnosticReport = () => {
         <option hidden>Select a body site</option>
         {listBodySite ? (
           listBodySite.map((item: any) => (
-            <option value={item.code} key={item.code}>
+            <option value={item.display} key={item.code}>
               {item.display}
             </option>
           ))
@@ -491,9 +489,17 @@ const DiagnosticReport = () => {
                 Blood Pressure:
               </label>
               <div className="ms-2">
-                <input type="number" className="input-small" value={indexBloodPressure1} onChange={(e: any) => setIndexBloodPressure1(e.target.value)} />
+                <input type="number" min={0} className="input-small" value={indexBloodPressure1} onChange={(e: any) => {
+                  if (!isNaN(parseFloat(e.target.value))) {
+                    setIndexBloodPressure1(e.target.value)
+                  }
+                }} />
                 <span> / </span>
-                <input type="number" className="input-small" value={indexBloodPressure2} onChange={(e: any) => setIndexBloodPressure2(e.target.value)} />
+                <input type="number" min={0} className="input-small" value={indexBloodPressure2} onChange={(e: any) => {
+                  if (!isNaN(parseFloat(e.target.value))) {
+                    setIndexBloodPressure2(e.target.value)
+                  }
+                }} />
                 <span className="ms-1">mmHg</span>
               </div>
             </div>
@@ -511,7 +517,11 @@ const DiagnosticReport = () => {
                 Temperature:
               </label>
               <div className="ms-2">
-                <input type="number" className="input-small" value={indexTemperature} onChange={(e: any) => setIndexTemperature(e.target.value)} />
+                <input type="number" className="input-small" min={0} value={indexTemperature} onChange={(e: any) => {
+                  if (!isNaN(parseFloat(e.target.value))) {
+                    setIndexTemperature(e.target.value)
+                  }
+                }} />
                 <span className="ms-1">&deg;C</span>
               </div>
             </div>
@@ -529,7 +539,11 @@ const DiagnosticReport = () => {
                 Blood Glucose:
               </label>
               <div className="ms-2">
-                <input type="number" className="input-small" value={indexBloodGlucose} onChange={(e: any) => setIndexBloodGlucose(e.target.value)} />
+                <input type="number" min={0} className="input-small" value={indexBloodGlucose} onChange={(e: any) => {
+                  if (!isNaN(parseFloat(e.target.value))) {
+                    setIndexBloodGlucose(e.target.value)
+                  }
+                }} />
                 <span className="ms-1">mmol/L</span>
               </div>
             </div>
@@ -554,13 +568,21 @@ const DiagnosticReport = () => {
                 <div className="d-flex">
                   <div className="me-3">
                     <span className="me-2">Weight:</span>
-                    <input type="number" value={weight} onChange={(e: any) => setWeight(e.target.value)} className="input-small" />
+                    <input type="number" value={weight} min={0} onChange={(e: any) => {
+                      if (!isNaN(parseFloat(e.target.value))) {
+                        setWeight(e.target.value)
+                      }
+                    }} className="input-small" />
                     <span className="ms-1">kg</span>
                   </div>
 
                   <div>
                     <span className="me-2">Height:</span>
-                    <input type="number" value={height} onChange={(e: any) => setHeight(e.target.value)} className="input-small" />
+                    <input type="number" value={height} min={0} onChange={(e: any) => {
+                      if (!isNaN(parseFloat(e.target.value))) {
+                        setHeight(e.target.value)
+                      }
+                    }} className="input-small" />
                     <span className="ms-1">cm</span>
                   </div>
                 </div>
@@ -580,7 +602,11 @@ const DiagnosticReport = () => {
                 Heart Rate:
               </label>
               <div className="ms-2">
-                <input type="number" className="input-small" value={indexHeartRate} onChange={(e: any) => setIndexHeartRate(e.target.value)} />
+                <input type="number" className="input-small" min={0} value={indexHeartRate} onChange={(e: any) => {
+                  if (!isNaN(parseFloat(e.target.value))) {
+                    setIndexHeartRate(e.target.value)
+                  }
+                }} />
                 <span className="ms-1">bpm</span>
               </div>
             </div>
@@ -606,8 +632,6 @@ const DiagnosticReport = () => {
                 <th scope="col">Condition Name</th>
                 <th scope="col">Body site</th>
                 <th scope="col">Severity</th>
-                <th scope="col">Clinical Status</th>
-                <th scope="col">Onset</th>
                 <th scope="col">Recorded date</th>
                 <th scope="col">Note</th>
                 <th scope="col">Encounter</th>
@@ -621,8 +645,6 @@ const DiagnosticReport = () => {
                     <td>{item?.conditionName}</td>
                     <td>{item?.bodySite}</td>
                     <td>{item?.severity}</td>
-                    <td>{item?.clinicalStatus}</td>
-                    <td>{item?.onset}</td>
                     <td>{item.recordedDate ? moment(item.recordedDate).format(FORMAT_DATE) : ""}</td>
                     <td>{item?.note}</td>
                     <td>{item.encounterDate ? moment(item.encounterDate).format(FORMAT_DATE) : ""}</td>

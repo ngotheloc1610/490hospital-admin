@@ -11,7 +11,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
 import { error, success, warn } from "../../../Common/notify";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { setTriggerEdit } from "../../../redux/features/practitioner/practitionerSlice";
+import { setTriggerBack, setTriggerEdit } from "../../../redux/features/practitioner/practitionerSlice";
 import { KEY_LOCAL_STORAGE } from "../../../constants/general.constant";
 
 const validationSchema = Yup.object().shape({
@@ -62,7 +62,7 @@ const CreateEditDoctor = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const dispatch = useAppDispatch();
-  const { triggerEdit } = useAppSelector((state) => state.practitionerSlice)
+  const { triggerEdit, triggerBack } = useAppSelector((state) => state.practitionerSlice)
 
   useEffect(() => {
     getSpecialty();
@@ -849,7 +849,7 @@ const CreateEditDoctor = () => {
             </div>
           </Form>
           <div className="mt-3 d-flex justify-content-end">
-            <button className="button button--small button--danger me-3" onClick={() => navigate(`/doctor/overview/${params.doctorId}`)}>
+            <button className="button button--small button--danger me-3" onClick={() => { navigate(`/doctor/overview/${params.doctorId}`); dispatch(setTriggerBack(!triggerBack)) }}>
               Back
             </button>
 

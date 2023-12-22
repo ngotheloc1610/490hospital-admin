@@ -17,7 +17,7 @@ const InfoDoctor = () => {
   const dispatch = useAppDispatch();
   const url_api = process.env.REACT_APP_API_URL;
 
-  const { triggerEdit } = useAppSelector((state) => state.practitionerSlice)
+  const { triggerEdit, triggerBack } = useAppSelector((state) => state.practitionerSlice)
 
   useEffect(() => {
     const id = param.doctorId;
@@ -34,7 +34,7 @@ const InfoDoctor = () => {
       .catch((err) => {
         console.log("error get information practitioner (Doctor):", err);
       });
-  }, [param.doctorId, triggerEdit]);
+  }, [param.doctorId, triggerEdit, triggerBack]);
 
   const _renderBasicInfo = () => {
     return (
@@ -112,7 +112,7 @@ const InfoDoctor = () => {
               return (
                 <tr>
                   <th scope="row" style={{ width: "15%" }}>
-                    {moment(item.qualificationPeriodStart).format(FORMAT_DATE)} - {moment(item.qualificationPeriodEnd).format(FORMAT_DATE)}
+                    {item.qualificationPeriodStart ? moment(item.qualificationPeriodStart).format(FORMAT_DATE) : ""} - {item.qualificationPeriodEnd ? moment(item.qualificationPeriodEnd).format(FORMAT_DATE) : ""}
                   </th>
                   <td>
                     {item.qualificationText}
@@ -138,7 +138,7 @@ const InfoDoctor = () => {
               return (
                 <tr>
                   <th scope="row" style={{ width: "15%" }}>
-                    {moment(item.qualificationPeriodStart).format(FORMAT_DATE)} - {moment(item.qualificationPeriodEnd).format(FORMAT_DATE)}
+                    {item.qualificationPeriodStart ? moment(item.qualificationPeriodStart).format(FORMAT_DATE) : ""} - {item.qualificationPeriodEnd ? moment(item.qualificationPeriodEnd).format(FORMAT_DATE) : ""}
                   </th>
                   <td>
                     {item.qualificationText}
@@ -162,7 +162,7 @@ const InfoDoctor = () => {
               return (
                 <tr>
                   <th scope="row" style={{ width: "15%" }}>
-                    {moment(item.qualificationPeriodStart).format(FORMAT_DATE)} - {moment(item.qualificationPeriodEnd).format(FORMAT_DATE)}
+                    {item.qualificationPeriodStart ? moment(item.qualificationPeriodStart).format(FORMAT_DATE) : ""} - {item.qualificationPeriodEnd ? moment(item.qualificationPeriodEnd).format(FORMAT_DATE) : ""}
                   </th>
                   <td>
                     {item.qualificationText}

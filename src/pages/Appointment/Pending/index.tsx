@@ -117,7 +117,7 @@ const AppointmentPending = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {listData && listData.map((item: any, idx: number) => {
+                    {listData && listData.length > 0 ? listData.map((item: any, idx: number) => {
                         return (
                             <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
                                 <td >
@@ -148,7 +148,7 @@ const AppointmentPending = () => {
                                 </td>}
                             </tr>
                         );
-                    })}
+                    }) : <p>Không có dữ liệu!</p>}
                 </tbody>
             </table>
         );

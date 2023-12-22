@@ -18,12 +18,12 @@ import { TYPE_DOCTOR } from "../../constants/general.constant";
 
 const validationSchema = Yup.object().shape({
   username: Yup.string().email('Địa chỉ email không hợp lệ').required("Required"),
-  fullname: Yup.string().required("Required").matches(/^[a-zA-Z0-9_]+$/),
+  fullname: Yup.string().required("Required").matches(/^[a-zA-Z\s]*$/),
   type: Yup.string().required("Required"),
   room: Yup.string().optional(),
   specialty: Yup.string().required("Required"),
-  startDate: Yup.date().required("Required").max(Yup.ref('endDate'), 'Ngày bắt đầu phải nhỏ hơn ngày kết thúc'),
-  endDate: Yup.date().required("Required").min(Yup.ref('startDate'), 'Ngày kết thúc phải lớn hơn ngày bắt đầu'),
+  startDate: Yup.date().required("Required"),
+  endDate: Yup.date().required("Required"),
 });
 
 const defaultValue: IPractitioner = {
@@ -172,8 +172,20 @@ const Practitioner = () => {
   };
 
   const handleCreatePractitioner = (values: any, actions: any) => {
+    console.log("values:", values)
+
     if (values.password !== values.cfPassword) {
       warn("Mật khẩu không trùng khớp!");
+      return;
+    }
+    if (values.type === "DOCTOR" && values.room === "") {
+      warn("Chưa điền room!")
+      return;
+    }
+    const startDate = new Date(values.startDate).toISOString()
+    const endDate = new Date(values.endDate).toISOString()
+    if (startDate > endDate) {
+      warn("start working is greater than end working!")
       return;
     }
     createPractitioner(values, actions);
@@ -258,6 +270,7 @@ const Practitioner = () => {
               </label>
               <div className="input-group">
                 <input
+                  lang="vi"
                   id="fullname"
                   type="text"
                   className={`form-control ${errors?.fullname && touched?.fullname ? "is-invalid" : ""}`}

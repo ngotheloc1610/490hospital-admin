@@ -30,12 +30,6 @@ ChartJS.register(
 const PatientMonitorDetail = () => {
   const url_api = process.env.REACT_APP_API_URL;
 
-  const [isHeartRate, setIsHeartRate] = useState<boolean>(true);
-  const [isBloodPressure, setIsBloodPressure] = useState<boolean>(false);
-  const [isBloodGlucose, setIsBloodGlucose] = useState<boolean>(false);
-  const [isTemperature, setIsTemperature] = useState<boolean>(false);
-  const [isBMI, setIsBMI] = useState<boolean>(false);
-
   const [bookingDetail, setBookingDetail] = useState<any>({
     appointmentDate: "",
     time: "",
@@ -49,58 +43,15 @@ const PatientMonitorDetail = () => {
   const [listPreviousEncounter, setListPreviousEncounter] = useState<any>([]);
   const [listEncounterHistory, setListEncounterHistory] = useState<any>([]);
   const [listUpcomingAppointment, setListUpcomingAppointment] = useState<any>([]);
-  const [listObservation, setListObservation] = useState<any>([]);
+  const [indexHeartRate, setIndexHeartRate] = useState<any>(null);
+  const [indexBloodPressure, setIndexBloodPressure] = useState<any>(null);
+  const [indexBloodGlucose, setIndexBloodGlucose] = useState<any>(null);
+  const [indexTemperature, setIndexTemperature] = useState<any>(null);
+  const [indexBMI, setIndexBMI] = useState<any>(null);
 
   const params = useParams();
   const { appointment } = useAppSelector(state => state.appointmentSlice)
-  const options = {
-    plugins: {
-      title: {
-        display: true,
-        text: "Chart.js Bar Chart - Stacked",
-      },
-    },
-    responsive: true,
-    scales: {
-      x: {
-        stacked: true,
-      },
-      y: {
-        stacked: true,
-      },
-    },
-  };
-
-  const labels = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-  ];
-
-  const data = {
-    labels,
-    datasets: [
-      // {
-      //   label: 'Dataset 1',
-      //   data: labels.map(() => faker.datatype.number({ min: -1000, max: 1000 })),
-      //   backgroundColor: 'rgb(255, 99, 132)',
-      // },
-      // {
-      //   label: 'Dataset 2',
-      //   data: labels.map(() => faker.datatype.number({ min: -1000, max: 1000 })),
-      //   backgroundColor: 'rgb(75, 192, 192)',
-      // },
-      // {
-      //   label: 'Dataset 3',
-      //   data: labels.map(() => faker.datatype.number({ min: -1000, max: 1000 })),
-      //   backgroundColor: 'rgb(53, 162, 235)',
-      // },
-    ],
-  };
+  const { idAppointment } = useAppSelector(state => state.patientSlice)
 
   const getProfilePatient = (idAppointment: string) => {
     const url = `${url_api}${API_DIAGNOSTIC_PATIENT_PROFILE}${idAppointment}`;
@@ -184,7 +135,12 @@ const PatientMonitorDetail = () => {
       .get(url, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
-          setListObservation(resp.data);
+          const data = resp.data;
+          setIndexHeartRate(data?.filter((item: any) => item?.name === "Heart rate")?.[0])
+          setIndexBMI(data?.filter((item: any) => item?.name === "BMI")?.[0])
+          setIndexBloodGlucose(data?.filter((item: any) => item?.name === "Blood Glucose")?.[0])
+          setIndexBloodPressure(data?.filter((item: any) => item?.name === "Blood Pressure")?.[0])
+          setIndexTemperature(data?.filter((item: any) => item?.name === "Temperature")?.[0])
         }
       })
       .catch((err: any) => {
@@ -208,125 +164,14 @@ const PatientMonitorDetail = () => {
     }
   }, [appointment?.idAppointment])
 
-  const handleClickHeartRate = () => {
-    setIsHeartRate(true);
-    setIsBloodPressure(false);
-    setIsBloodGlucose(false);
-    setIsTemperature(false);
-    setIsBMI(false);
-  };
-
-  const handleClickBloodPressure = () => {
-    setIsHeartRate(false);
-    setIsBloodPressure(true);
-    setIsBloodGlucose(false);
-    setIsTemperature(false);
-    setIsBMI(false);
-  };
-
-  const handleClickBloodGlucose = () => {
-    setIsHeartRate(false);
-    setIsBloodPressure(false);
-    setIsBloodGlucose(true);
-    setIsTemperature(false);
-    setIsBMI(false);
-  };
-
-  const handleClickTemperature = () => {
-    setIsHeartRate(false);
-    setIsBloodPressure(false);
-    setIsBloodGlucose(false);
-    setIsTemperature(true);
-    setIsBMI(false);
-  };
-
-  const handleClickBMI = () => {
-    setIsHeartRate(false);
-    setIsBloodPressure(false);
-    setIsBloodGlucose(false);
-    setIsTemperature(false);
-    setIsBMI(true);
-  };
-
-  const _renderHeartRate = () => {
-    return (
-      <div className="box">
-        <div className="p-3">
-          <div>
-            <span className="fw-bold">Heart rate</span>
-          </div>
-
-          <div>
-            <Bar options={options} data={data} />
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const _renderBloodPressure = () => {
-    return (
-      <div className="box">
-        <div className="p-3">
-          <div>
-            <span className="fw-bold">Blood pressure</span>
-          </div>
-
-          <div>
-            <Bar options={options} data={data} />
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const _renderBloodGlucose = () => {
-    return (
-      <div className="box">
-        <div className="p-3">
-          <div>
-            <span className="fw-bold">Blood glucose</span>
-          </div>
-
-          <div>
-            <Bar options={options} data={data} />
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const _renderTemperature = () => {
-    return (
-      <div className="box">
-        <div className="p-3">
-          <div>
-            <span className="fw-bold">Temperature</span>
-          </div>
-
-          <div>
-            <Bar options={options} data={data} />
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const _renderBMI = () => {
-    return (
-      <div className="box">
-        <div className="p-3">
-          <div>
-            <span className="fw-bold">BMI</span>
-          </div>
-
-          <div>
-            <Bar options={options} data={data} />
-          </div>
-        </div>
-      </div>
-    );
-  };
+  useEffect(() => {
+    if (idAppointment) {
+      getProfilePatient(idAppointment)
+      getBookingDetail(idAppointment)
+      getUpcomingAppointment(idAppointment)
+      getEncounterHistory(idAppointment)
+    }
+  }, [idAppointment])
 
   const _renderReportedConditions = () => {
     return (
@@ -342,8 +187,6 @@ const PatientMonitorDetail = () => {
               <th scope="col">Condition Name</th>
               <th scope="col">Body site</th>
               <th scope="col">Severity</th>
-              <th scope="col">Clinical Status</th>
-              <th scope="col">Onset</th>
               <th scope="col">Recorded date</th>
               <th scope="col">Note</th>
               <th scope="col">Encounter</th>
@@ -351,14 +194,12 @@ const PatientMonitorDetail = () => {
             </tr>
           </thead>
           <tbody>
-            {listPreviousEncounter && listPreviousEncounter.length > 0 && listPreviousEncounter.map((item: any, idx: number) => {
+            {listPreviousEncounter && listPreviousEncounter.length > 0 ? listPreviousEncounter.map((item: any, idx: number) => {
               return (
                 <tr>
                   <td>{item?.conditionName}</td>
                   <td>{item?.bodySite}</td>
                   <td>{item?.severity}</td>
-                  <td>{item?.clinicalStatus}</td>
-                  <td>{item?.onset}</td>
                   <td>{item.recordedDate ? moment(item.recordedDate).format(FORMAT_DATE) : ""}</td>
                   <td>{item?.note}</td>
                   <td>{item.encounterDate ? moment(item.encounterDate).format(FORMAT_DATE) : ""}</td>
@@ -372,7 +213,7 @@ const PatientMonitorDetail = () => {
                   </td>
                 </tr>
               )
-            })}
+            }) : <p>Không có dữ liệu!</p>}
           </tbody>
         </table>
       </div>
@@ -388,7 +229,6 @@ const PatientMonitorDetail = () => {
               <div className="box p-3">
                 <div className="d-flex justify-content-between">
                   <h5 className="fw-bold">Patient details</h5>
-                  {/* <Link className="text-uppercase" to="">view full medial record</Link> */}
                 </div>
                 <div className="d-flex g-3">
                   <div className="w-25 me-3">
@@ -488,7 +328,6 @@ const PatientMonitorDetail = () => {
               <div className="d-flex mb-3">
                 <div
                   className="box box-item p-3 text-center"
-                  onClick={handleClickHeartRate}
                 >
                   <h6 className="fw-bold">Heart rate</h6>
                   <p>
@@ -497,13 +336,12 @@ const PatientMonitorDetail = () => {
                       style={{ color: "#FF0000" }}
                     ></i>
                   </p>
-                  <p className="fw-bold mb-1">N/A</p>
+                  <p className="fw-bold mb-1">{indexHeartRate?.value ? indexHeartRate?.value : "N/A"}</p>
                   <p className="mb-1">BPM</p>
-                  <p className="mb-0">N/A</p>
+                  <p className="mb-0">{indexHeartRate?.interpretations ? indexHeartRate?.interpretations : "N/A"}</p>
                 </div>
                 <div
                   className="box box-item p-3 text-center"
-                  onClick={handleClickBloodPressure}
                 >
                   <h6 className="fw-bold">Blood pressure</h6>
                   <p>
@@ -512,13 +350,12 @@ const PatientMonitorDetail = () => {
                       style={{ color: "#FF0000" }}
                     ></i>
                   </p>
-                  <p className="fw-bold mb-1">N/A</p>
+                  <p className="fw-bold mb-1">{indexBloodPressure?.value ? indexBloodPressure?.value : "N/A"}</p>
                   <p className="mb-1">mmHg</p>
-                  <p className="mb-0">N/A</p>
+                  <p className="mb-0">{indexBloodPressure?.interpretations ? indexBloodPressure?.interpretations : "N/A"}</p>
                 </div>
                 <div
                   className="box box-item p-3 text-center"
-                  onClick={handleClickBloodGlucose}
                 >
                   <h6 className="fw-bold">Blood glucose</h6>
                   <p>
@@ -527,41 +364,33 @@ const PatientMonitorDetail = () => {
                       style={{ color: "#FF0000" }}
                     ></i>
                   </p>
-                  <p className="fw-bold mb-1">N/A</p>
+                  <p className="fw-bold mb-1">{indexBloodGlucose?.value ? indexBloodGlucose?.value : "N/A"}</p>
                   <p className="mb-1">mmol/L</p>
-                  <p className="mb-0">N/A</p>
+                  <p className="mb-0">{indexBloodGlucose?.interpretations ? indexBloodGlucose?.interpretations : "N/A"}</p>
                 </div>
                 <div
                   className="box box-item p-3 text-center"
-                  onClick={handleClickTemperature}
                 >
                   <h6 className="fw-bold">Temperature</h6>
                   <p>
                     <i className="bi bi-thermometer-high fs-1"></i>
                   </p>
-                  <p className="fw-bold mb-1">N/A</p>
+                  <p className="fw-bold mb-1">{indexTemperature?.value ? indexTemperature?.value : "N/A"}</p>
                   <p className="mb-1">&deg;C</p>
-                  <p className="mb-0">N/A</p>
+                  <p className="mb-0">{indexTemperature?.interpretations ? indexTemperature?.interpretations : "N/A"}</p>
                 </div>
                 <div
                   className="box box-item p-3 text-center"
-                  onClick={handleClickBMI}
                 >
                   <h6 className="fw-bold">BMI</h6>
                   <p>
                     <i className="bi bi-person-fill fs-1"></i>
                   </p>
-                  <p className="fw-bold mb-1">N/A</p>
+                  <p className="fw-bold mb-1">{indexBMI?.value ? indexBMI?.value : "N/A"}</p>
                   <p className="mb-1">N/A</p>
-                  <p className="mb-0">N/A</p>
+                  <p className="mb-0">{indexBMI?.interpretations ? indexBMI?.interpretations : "N/A"}</p>
                 </div>
               </div>
-
-              {isHeartRate && _renderHeartRate()}
-              {isBloodPressure && _renderBloodPressure()}
-              {isBloodGlucose && _renderBloodGlucose()}
-              {isTemperature && _renderTemperature()}
-              {isBMI && _renderBMI()}
             </div>
           </div>
         </div>

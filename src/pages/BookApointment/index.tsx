@@ -194,8 +194,13 @@ const BookAppointment = () => {
     axios.post(url, params, defineConfigGet({ idPractitionerBook: accountID, namePractitionerBook: accountName })).then((resp: any) => {
       setIsLoading(false);
       if (resp) {
-        success(resp.data)
-        setIsBooking(true);
+        if (resp.data === "Book successful") {
+          success(resp.data)
+          setIsBooking(true);
+        } else {
+          error(resp.data)
+          setIsBooking(false);
+        }
       }
     }).catch((err: any) => {
       setIsLoading(false);

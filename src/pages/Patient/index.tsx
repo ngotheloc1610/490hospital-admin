@@ -180,7 +180,7 @@ const Patient = () => {
           <div className="col-6">
             <input
               type="text"
-              placeholder="Name"
+              placeholder="Name or phone number..."
               onChange={(e) => setName(e.target.value)}
               value={name}
               className="form-control"
@@ -208,7 +208,6 @@ const Patient = () => {
         <Outlet />
       ) : (
         <>
-          {/* <TotalView /> */}
           <section className="table-container">
             <div className="table-container-contain">
               <div className="d-flex justify-content-center align-item-center">

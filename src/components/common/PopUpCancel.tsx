@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setTriggerCancel } from "../../redux/features/appointment/appointmentSlice";
 import { KEY_LOCAL_STORAGE } from "../../constants/general.constant";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface IProps {
   handleShowPopUp: any;
@@ -18,6 +19,7 @@ const PopUpCancel = (props: IProps) => {
 
   const url_api = process.env.REACT_APP_API_URL;
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const navigate = useNavigate()
 
   const dispatch = useAppDispatch();
   const { triggerDeny, appointment } = useAppSelector(state => state.appointmentSlice)
@@ -34,6 +36,7 @@ const PopUpCancel = (props: IProps) => {
           dispatch(setTriggerCancel(!triggerDeny))
           success("Cancel Successfully");
           handleShowPopUp(false);
+          navigate('/book-appointment');
         }
       })
       .catch((err: any) => {

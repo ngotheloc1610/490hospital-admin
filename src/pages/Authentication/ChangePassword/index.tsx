@@ -64,15 +64,15 @@ const ChangePassword = () => {
 
   const handleChangePassword = () => {
     if (oldPassword) {
-      warn("Nhập mật khẩu cũ!");
+      warn("Please enter old password!");
       return;
     }
     if (oldPassword === newPassword) {
-      warn("Trùng với mật khẩu cũ ! Vui lòng nhập lại.");
+      warn("Same as old password! Please re-enter.");
       return;
     }
     if (newPassword === cfNewPassword) {
-      warn("Mật khẩu không trùng khớp!");
+      warn("Passwords do not match!");
       return;
     }
     changePassword();

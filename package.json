@@ -16,6 +16,8 @@
     "@reduxjs/toolkit": "^1.9.7",
     "@syncfusion/ej2-base": "^23.1.41",
     "@syncfusion/ej2-react-buttons": "^23.1.43",
+    "@syncfusion/ej2-react-calendars": "^24.1.41",
+    "@syncfusion/ej2-react-dropdowns": "^24.1.41",
     "@syncfusion/ej2-react-popups": "^23.1.44",
     "@syncfusion/ej2-react-schedule": "^23.1.40",
     "@testing-library/jest-dom": "^5.17.0",

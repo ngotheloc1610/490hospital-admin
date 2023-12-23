@@ -17,6 +17,8 @@ import Layout from "../../components/Layout";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setPractitioner, setShowPopUpConfirmBlock } from "../../redux/features/practitioner/practitionerSlice";
 import PopUpConfirmBlock from "../../components/common/PopupConfirmBlock";
+import moment from "moment";
+import { FORMAT_DATE } from "../../constants/general.constant";
 
 const Doctor = () => {
   const [listData, setListData] = useState([]);
@@ -159,10 +161,10 @@ const Doctor = () => {
                   {item.practitioner?.display}
                 </td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
-                  {item.practitionerTarget.gender}
+                  {item.practitionerTarget.gender?.toLowerCase()}
                 </td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
-                  {item.practitionerTarget?.birthDate !== "null" ? item.practitionerTarget?.birthDate : ""}
+                  {item.practitionerTarget?.birthDate !== "null" ? moment(item.practitionerTarget?.birthDate).format(FORMAT_DATE) : "-"}
                 </td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
                   {phone}

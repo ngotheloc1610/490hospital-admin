@@ -35,7 +35,7 @@ const ForgotPassword = () => {
 
   const handleSendMail = () => {
     if (!email) {
-      warn("Vui lòng nhập email!");
+      warn("Please enter email!");
       return;
     }
 
@@ -44,11 +44,11 @@ const ForgotPassword = () => {
 
   const handleChangePassword = () => {
     if (!password || !cfPassword) {
-      warn("Vui lòng điền mật khẩu!");
+      warn("Please enter password!");
       return;
     }
     if (password !== cfPassword) {
-      warn("Mật khẩu không trùng khớp!");
+      warn("Passwords do not match!");
       return;
     }
 

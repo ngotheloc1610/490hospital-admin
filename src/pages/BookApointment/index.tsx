@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 
 import Layout from "../../components/Layout";
 import { FORMAT_DATE, FORMAT_DATE_DEFAULT, FORMAT_DATE_TIME, KEY_LOCAL_STORAGE, TOTAL_STEP, TYPE_ADMIN } from "../../constants/general.constant";
-import { useAppSelector } from "../../redux/hooks";
 import { defineConfigGet, defineConfigPost } from "../../Common/utils";
 import { error, success, warn } from "../../Common/notify";
 import { API_CREATE_APPOINTMENT, API_GET_DOCTOR_APPOINTMENT, API_GET_PATIENT_APPOINTMENT, API_GET_SPECIALTY_APPOINTMENT, API_SCHEDULE_GET_APPOINTMENT } from "../../constants/api.constant";
@@ -15,7 +14,6 @@ import { ICON_GRADUATION, ICON_PEOPLE_TEAM, USER } from "../../assets";
 const BookAppointment = () => {
   const url_api = process.env.REACT_APP_API_URL;
 
-  const { isLogin } = useAppSelector((state) => state.authSlice)
   const navigate = useNavigate();
 
   const [step, setStep] = useState<number>(1);
@@ -28,7 +26,7 @@ const BookAppointment = () => {
   const [listDoctor, setListDoctor] = useState([]);
   const [listPatient, setListPatient] = useState([]);
 
-  const [patient, setPatient] = useState<any>({});
+  const [patient, setPatient] = useState<any>(null);
 
   const [date, setDate] = useState<string>(moment().format(FORMAT_DATE_DEFAULT));
   const [startTime, setStartTime] = useState<string>("")
@@ -211,20 +209,20 @@ const BookAppointment = () => {
   }
 
   const handleNext = () => {
-    if (patient && typeOfAppointment && specialty && doctor && date && startTime && endTime) {
+    if (!patient) {
+      warn("No patients have been selected yet!")
+      return
+    }
+    if (typeOfAppointment && specialty && doctor && date && startTime && endTime) {
       setIsPassStep1(true);
       setStep(step + 1);
     } else {
-      warn("Chưa điền hết thông tin!");
+      warn("Not filled in all information yet!");
     }
   };
 
   const handleBook = () => {
-    if (isLogin) {
-      createAppointment();
-    } else {
-      warn("Bạn chưa đăng nhập! Vui lòng đăng nhập trước khi book lịch");
-    }
+    createAppointment();
   };
 
   const handleCancel = () => {
@@ -238,10 +236,10 @@ const BookAppointment = () => {
 
   const handleNavigate = () => {
     const accountType = localStorage.getItem(KEY_LOCAL_STORAGE.TYPE);
-    if (accountType !== TYPE_ADMIN) {
-      navigate("/appointment-pending")
+    if (accountType?.toString() !== TYPE_ADMIN) {
+      navigate(`/appointment`)
     } else {
-      navigate("/appointment")
+      navigate(`/appointment-pending`)
     }
   }
 
@@ -410,8 +408,8 @@ const BookAppointment = () => {
                       <td >
                         {item.nameFirstRep.text}
                       </td>
-                      <td >{item.gender}</td>
-                      <td >{item.birthDate}</td>
+                      <td >{item.gender.toLowerCase()}</td>
+                      <td >{item.birthDate ? moment(item.birthDate).format(FORMAT_DATE) : ""}</td>
                       <td >
                         {phone}
                       </td>
@@ -466,8 +464,8 @@ const BookAppointment = () => {
 
                 return (
                   <div className={`col-6 row mb-3 ${item.id === doctor?.id ? "doctor-selected" : ""}`} onClick={() => setDoctor(item)}>
-                    <div className='col-4'>
-                      <img src={src} alt="img doctor" style={{ widows: "100px", height: "100px", objectFit: "cover" }} />
+                    <div className='col-4 border'>
+                      <img src={src} alt="img doctor" className="mt-2" style={{ widows: "100px", height: "100px", objectFit: "cover" }} />
                     </div>
                     <div className='col-8'>
                       <h3 className='mb-3'>{name}</h3>
@@ -486,7 +484,7 @@ const BookAppointment = () => {
                     </div>
                   </div>
                 )
-              }) : <p>No have doctor in {specialty}</p>}
+              }) : <p>{specialty ? `No have doctor in ${specialty}` : "Choose a specialty for the doctor"}</p>}
             </div>
           </div>
 
@@ -536,7 +534,7 @@ const BookAppointment = () => {
           <p className="fw-bold text-uppercase">patient details</p>
           <div className="row">
             <div className="col-3">
-              <img src={patient?.photo ? patient?.photo[0]?.url : USER} alt="img patient" style={{ width: "100%", height: "90%", objectFit: "cover" }} />
+              <img src={patient?.photo ? patient?.photo?.[0]?.url : USER} alt="img patient" style={{ width: "100%", height: "90%", objectFit: "cover" }} />
             </div>
             <div className="col-9">
               <table className="table table-borderless">
@@ -551,15 +549,15 @@ const BookAppointment = () => {
                   </tr>
                   <tr>
                     <td>Date of birth</td>
-                    <td>{moment(patient?.birthDate).format(FORMAT_DATE)}</td>
+                    <td>{patient?.birthDate ? moment(patient?.birthDate).format(FORMAT_DATE) : "-"}</td>
                   </tr>
                   <tr>
                     <td>Address</td>
-                    <td>{patient?.addressFirstRep?.text}</td>
+                    <td>{patient?.addressFirstRep?.text ? patient?.addressFirstRep?.text : "-"}</td>
                   </tr>
                   <tr>
                     <td>Citizen identification</td>
-                    <td>{patient?.identifierFirstRep?.value}</td>
+                    <td>{patient?.identifierFirstRep?.value && patient?.identifierFirstRep?.value !== "null" ? patient?.identifierFirstRep?.value : "-"}</td>
                   </tr>
                   <tr>
                     <td>Phone number</td>

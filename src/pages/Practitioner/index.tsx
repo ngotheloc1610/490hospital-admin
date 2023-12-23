@@ -172,14 +172,12 @@ const Practitioner = () => {
   };
 
   const handleCreatePractitioner = (values: any, actions: any) => {
-    console.log("values:", values)
-
     if (values.password !== values.cfPassword) {
-      warn("Mật khẩu không trùng khớp!");
+      warn("Passwords do not match!");
       return;
     }
     if (values.type === "DOCTOR" && values.room === "") {
-      warn("Chưa điền room!")
+      warn("Please fill in room!")
       return;
     }
     const startDate = new Date(values.startDate).toISOString()

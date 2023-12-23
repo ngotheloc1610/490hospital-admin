@@ -14,7 +14,7 @@ import {
 import { MONTHS } from "../../../constants";
 import { USER } from "../../../assets";
 import TotalView from "../../../components/common/TotalView";
-import { API_DASHBOARD_APPOINTMENT_BOOKED, API_DASHBOARD_APPOINTMENT_TODAY, API_DASHBOARD_APPOINTMENT_TOTAL } from "../../../constants/api.constant";
+import { API_DASHBOARD_APPOINTMENT_BOOKED, API_DASHBOARD_APPOINTMENT_TODAY, API_DASHBOARD_APPOINTMENT_TOTAL, API_DASHBOARD_SPECIALTY_BOOK } from "../../../constants/api.constant";
 import axios from "axios";
 import { defineConfigGet, defineConfigPost } from "../../../Common/utils";
 import moment from "moment";
@@ -97,7 +97,7 @@ const AppointmentDashboard = () => {
   }
 
   const getTopBookSpecialty = () => {
-    const url = `${url_api}${API_DASHBOARD_APPOINTMENT_TODAY}`;
+    const url = `${url_api}${API_DASHBOARD_SPECIALTY_BOOK}`;
 
     axios
       .get(url, defineConfigPost())
@@ -424,6 +424,9 @@ const AppointmentDashboard = () => {
                       <td>
                         <span className="fw-bold d-flex justify-content-end">{item.dateStart ? moment(item.dateStart).format(FORMAT_TIME) : ""}</span>
                       </td>
+                      <td>
+                        <span className="fw-bold d-flex justify-content-end">{item.status ? item.status : ""}</span>
+                      </td>
                     </tr>
                     )
                   }) : <span>Không có dữ liệu!</span>}
@@ -437,11 +440,14 @@ const AppointmentDashboard = () => {
               <p className="title">Top Book specialty</p>
               <table className="table m-3">
                 <tbody>
-                  {topBookSpecialty && topBookSpecialty.length > 0 ? <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                  </tr>
+                  {topBookSpecialty && topBookSpecialty.length > 0 ? topBookSpecialty.map((item: any) => {
+                    return (
+                      <tr>
+                        <td>{item?.name}</td>
+                        <td>{item?.totalBook}</td>
+                      </tr>
+                    )
+                  })
                     : <span>Không có dữ liệu!</span>}
                 </tbody>
               </table>

@@ -106,6 +106,7 @@ const PatientMonitor = () => {
         <div className="col-6">
           <button className="button-apply" onClick={() => handleSearch()}>Search</button>
         </div>
+
       </div>
     );
   };
@@ -148,25 +149,20 @@ const PatientMonitor = () => {
                   <span className={styleBloodPressure(indexBloodPressure)}> mmHg</span>
                 </td>
                 <td onClick={() => { navigate(`/monitor/${item.idEncounter}`); dispatch(setAppointment(item)) }}>
-                  <span className={styleBloodGlucose(indexBloodPressure)}>{indexBloodGlucose?.value || "-"}</span>
-                  <span className={styleBloodGlucose(indexBloodPressure)}> mmol/L</span>
+                  <span className={styleBloodGlucose(indexBloodGlucose)}>{indexBloodGlucose?.value || "-"}</span>
+                  <span className={styleBloodGlucose(indexBloodGlucose)}> mmol/L</span>
                 </td>
                 <td onClick={() => { navigate(`/monitor/${item.idEncounter}`); dispatch(setAppointment(item)) }}>
-                  <span className={styleHeartRate(indexBloodPressure)}>{indexHeartRate?.value || "-"}</span>
-                  <span className={styleHeartRate(indexBloodPressure)}> bpm</span>
+                  <span className={styleHeartRate(indexHeartRate)}>{indexHeartRate?.value || "-"}</span>
+                  <span className={styleHeartRate(indexHeartRate)}> bpm</span>
                 </td>
                 <td onClick={() => { navigate(`/monitor/${item.idEncounter}`); dispatch(setAppointment(item)) }}>
                   <span className={styleBMI(indexBMI)}>{indexBMI?.value || "-"}</span>
-                  <span className={styleBMI(indexBMI)}></span>
+                  <span className={styleBMI(indexBMI)}>kg/m2</span>
                 </td>
                 <td onClick={() => { navigate(`/monitor/${item.idEncounter}`); dispatch(setAppointment(item)) }}>
                   <span className={styleTemperature(indexTemperature)}>{indexTemperature?.value || "-"}</span>
-                  <span className={styleTemperature(indexTemperature)}></span>
-                </td>
-                <td>
-                  <span className="ms-1">
-                    <ICON_PENCIL />
-                  </span>
+                  <span className={styleTemperature(indexTemperature)}>&deg;C</span>
                 </td>
               </tr>
             );
@@ -186,6 +182,22 @@ const PatientMonitor = () => {
       ) : (
         <>
           <section className="table-container ">
+            <div className="d-flex justify-content-end align-items-end mt-3">
+              <div className="d-flex">
+                <div className="me-3">
+                  <span className="note note-normal me-1">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                  <span>Normal</span>
+                </div>
+                <div className="me-3">
+                  <span className="note note-moderately me-1">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                  <span>Moderately Low</span>
+                </div>
+                <div className="me-5">
+                  <span className="note note-high me-1">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                  <span>Significantly High</span>
+                </div>
+              </div>
+            </div>
             <div className="table-container-contain">
               <div className="d-flex justify-content-center align-item-center">
                 <h6 className="mb-0 text-center fw-bold p-3">

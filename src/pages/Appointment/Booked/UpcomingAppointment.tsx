@@ -128,7 +128,7 @@ const UpcomingAppointment = () => {
                                     <span>{convertToTime(item.appointmentTimeEnd)}</span>
                                 </td>
                                 <td >{item.doctorName}</td>
-                                <td ><span className={styleStatus(item.status)}>
+                                <td ><span className={styleStatus(item.status.toLowerCase())}>
                                     {item.status}</span></td>
                             </tr>
                         );

@@ -3,7 +3,7 @@ import Layout from "../../components/Layout";
 import { ICON_PENCIL, ICON_TRASH, USER } from "../../assets";
 import { useParams } from "react-router-dom";
 import { FORMAT_DATE, TOTAL_STEP } from "../../constants/general.constant";
-import { defineConfigGet, defineConfigPost } from "../../Common/utils";
+import { defineConfigGet, defineConfigPost, styleStatus } from "../../Common/utils";
 import axios from "axios";
 import { API_DIAGNOSTIC_BMI, API_DIAGNOSTIC_BODY_SITE, API_DIAGNOSTIC_BOOK_DETAIL, API_DIAGNOSTIC_CATEGORY, API_DIAGNOSTIC_CONDITION, API_DIAGNOSTIC_CONDITION_BY_PATIENT, API_DIAGNOSTIC_CREATE_DIAGNOSTIC, API_DIAGNOSTIC_PATIENT_PROFILE } from "../../constants/api.constant";
 import moment from "moment";
@@ -119,7 +119,7 @@ const DiagnosticReport = () => {
   const handleSubmit = () => {
     if (!indexBMI || !indexBloodGlucose || !indexBloodPressure1 || !indexBloodPressure2 || !indexHeartRate || !indexTemperature
     ) {
-      warn("Vui lòng điền đủ hết chỉ số bệnh nhân!");
+      warn("Please fill in all patient information!");
       return;
     }
 
@@ -635,11 +635,10 @@ const DiagnosticReport = () => {
                 <th scope="col">Recorded date</th>
                 <th scope="col">Note</th>
                 <th scope="col">Encounter</th>
-                <th scope="col"></th>
               </tr>
             </thead>
             <tbody>
-              {listPreviousEncounter && listPreviousEncounter.length > 0 && listPreviousEncounter.map((item: any, idx: number) => {
+              {listPreviousEncounter && listPreviousEncounter.length > 0 ? listPreviousEncounter.map((item: any, idx: number) => {
                 return (
                   <tr>
                     <td>{item?.conditionName}</td>
@@ -648,17 +647,9 @@ const DiagnosticReport = () => {
                     <td>{item.recordedDate ? moment(item.recordedDate).format(FORMAT_DATE) : ""}</td>
                     <td>{item?.note}</td>
                     <td>{item.encounterDate ? moment(item.encounterDate).format(FORMAT_DATE) : ""}</td>
-                    <td>
-                      <span className="ms-1 cursor-pointer">
-                        <ICON_PENCIL />
-                      </span>
-                      <span className="ms-1 cursor-pointer">
-                        <ICON_TRASH />
-                      </span>
-                    </td>
                   </tr>
                 )
-              })}
+              }) : <span>Không có dữ liệu!</span>}
             </tbody>
           </table>
         </div>
@@ -989,7 +980,7 @@ const DiagnosticReport = () => {
                 </div>
                 <div className="d-flex g-3">
                   <div className="w-25 me-3">
-                    <img src={patientDetail?.photo[0]?.url ? patientDetail?.photo[0]?.url : USER} alt="img patient" className="w-100 h-100 object-fit-cover" />
+                    <img src={patientDetail?.photo?.[0]?.url ? patientDetail?.photo?.[0]?.url : USER} alt="img patient" className="w-100 h-100 object-fit-cover" />
                   </div>
                   <div>
                     <p><span className="fw-bold">Name: </span><span>{patientDetail && patientDetail?.nameFirstRep?.text}</span></p>
@@ -1015,7 +1006,7 @@ const DiagnosticReport = () => {
                   <p><span className="fw-bold">Specialty: </span><span>{bookingDetail.specialty}</span></p>
                   <p><span className="fw-bold">Room: </span><span>{bookingDetail.room}</span></p>
                   <p><span className="fw-bold">Appointment Type: </span><span>{bookingDetail.typeOfAppointment}</span></p>
-                  <p><span className="fw-bold">Appointment Status: </span><span>{bookingDetail.appointmentStatus}</span></p>
+                  <p><span className="fw-bold">Appointment Status: </span><span className={styleStatus(bookingDetail?.appointmentStatus.toLowerCase())}>{bookingDetail.appointmentStatus}</span></p>
                 </div>
               </div>
             </div>

@@ -208,6 +208,16 @@ const CreateEditStaff = () => {
     inputRef.current.click();
   };
 
+  const handleUpdate = (values: any, actions: any) => {
+    const startDate = new Date(values.startDate).toISOString()
+    const endDate = new Date(values.endDate).toISOString()
+    if (startDate > endDate) {
+      warn("start working is greater than end working!")
+      return;
+    }
+    updatePractitioner(values, actions);
+  }
+
   const _renderBasicInfo = (props: any) => {
     const { errors, touched } = props;
 
@@ -425,7 +435,7 @@ const CreateEditStaff = () => {
       enableReinitialize={true}
       validationSchema={validationSchema}
       onSubmit={(values, actions) => {
-        updatePractitioner(values, actions)
+        handleUpdate(values, actions)
       }}
     >
       {({ errors, touched, submitForm }) => (

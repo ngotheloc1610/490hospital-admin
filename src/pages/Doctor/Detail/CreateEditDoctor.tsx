@@ -172,6 +172,7 @@ const CreateEditDoctor = () => {
             achievement: achievement,
             photo: data?.photo
           }
+          console.log("dataConverted:", dataConverted)
           setDoctor(dataConverted);
           setSpecialtyId(data?.idSpecialty)
         }
@@ -305,6 +306,16 @@ const CreateEditDoctor = () => {
     inputRef.current.click();
   };
 
+  const handleUpdate = (values: any, actions: any) => {
+    const startDate = new Date(values.startDate).toISOString()
+    const endDate = new Date(values.endDate).toISOString()
+    if (startDate > endDate) {
+      warn("start working is greater than end working!")
+      return;
+    }
+    updatePractitioner(values, actions);
+  }
+
   const _renderBasicInfo = (props: any) => {
     const { errors, touched } = props;
 
@@ -413,7 +424,7 @@ const CreateEditDoctor = () => {
   };
 
   const _renderWorkInfo = (props: any) => {
-    const { errors, touched, handleChange, setFieldValue } = props;
+    const { errors, touched, setFieldValue } = props;
 
     return (
       <div className="mt-5">
@@ -456,9 +467,18 @@ const CreateEditDoctor = () => {
                 id="room"
                 name="room"
                 className={`form-select ${errors?.room && touched?.room ? "is-invalid" : ""}`}
-                onChange={handleChange}
+                onChange={(e: any) => setFieldValue("room", e.target.value)}
               >
-                {_renderListRoom()}
+                <option hidden>Select a room</option>
+                {listRoom.length > 0 ? (
+                  listRoom.map((item: any) => (
+                    <option value={item.id} key={item.code}>
+                      {item.codeableConcept.coding[0].display}
+                    </option>
+                  ))
+                ) : (
+                  <option disabled>No option</option>
+                )}
               </select>
             </div>
           </div>
@@ -801,30 +821,13 @@ const CreateEditDoctor = () => {
     );
   };
 
-  const _renderListRoom = () => {
-    return (
-      <>
-        <option hidden>Select a room</option>
-        {listRoom ? (
-          listRoom.map((item: any) => (
-            <option value={item.id} key={item.code}>
-              {item.codeableConcept.coding[0].display}
-            </option>
-          ))
-        ) : (
-          <option disabled>No option</option>
-        )}
-      </>
-    );
-  };
-
   return (
     <Formik
       initialValues={doctor}
       enableReinitialize={true}
       validationSchema={validationSchema}
       onSubmit={(values, actions) => {
-        updatePractitioner(values, actions);
+        handleUpdate(values, actions);
       }}
     >
       {({ values, errors, touched, submitForm, handleChange, setFieldValue }) => (

@@ -204,6 +204,7 @@ button {
   background: #b3e5fc;
   color: #1a8fe3;
   padding: 5px;
+  text-transform: capitalize;
 }
 
 .canceled {
@@ -211,6 +212,7 @@ button {
   background: rgba(255, 59, 59, 0.14);
   color: #ff3b3b;
   padding: 5px;
+  text-transform: capitalize;
 }
 
 .fulfilled {
@@ -218,6 +220,7 @@ button {
   background: #c8e6c9;
   color: #0ea961;
   padding: 5px;
+  text-transform: capitalize;
 }
 
 .pending {
@@ -225,6 +228,7 @@ button {
   background: #172f71;
   color: #fff;
   padding: 5px;
+  text-transform: capitalize;
 }
 
 .proposed {
@@ -232,6 +236,23 @@ button {
   background: #c19db1;
   color: #8c044e;
   padding: 5px;
+  text-transform: capitalize;
+}
+
+.booked {
+  border-radius: 6px;
+  background: #c2d2e6;
+  color: #2161af;
+  padding: 5px;
+  text-transform: capitalize;
+}
+
+.arrived {
+  border-radius: 6px;
+  background: #aee6df;
+  color: #0a9e8d;
+  padding: 5px;
+  text-transform: capitalize;
 }
 
 .practitioner-active {
@@ -300,4 +321,22 @@ button {
 
 .catastrophic {
   color: #FF5454
+}
+
+.note {
+  width: 10px;
+  height: 10px;
+  border-radius: 100rem;
+
+  &-normal {
+    background-color: #32D16D;
+  }
+
+  &-moderately {
+    background-color: #FFC554;
+  }
+
+  &-high {
+    background-color: #FF5454;
+  }
 }

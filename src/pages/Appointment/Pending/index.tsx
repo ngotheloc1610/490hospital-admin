@@ -140,11 +140,11 @@ const AppointmentPending = () => {
                                 </td>
                                 <td >{item.doctorName}</td>
                                 <td >
-                                    <span className={styleStatus(item.status)}>{item.status}</span>
+                                    <span className={styleStatus(item.status.toLowerCase())}>{item.status}</span>
                                 </td>
                                 {type !== TYPE_DOCTOR && <td >
-                                    <button className="button button--small button--accept me-2" onClick={() => handleAccept(item)}>Accept</button>
-                                    <button className="button button--small button--deny" onClick={() => handleDeny(item)}>Deny</button>
+                                    <div className="d-flex"> <button className="button button--small button--accept me-2" onClick={() => handleAccept(item)}>Accept</button>
+                                        <button className="button button--small button--deny" onClick={() => handleDeny(item)}>Deny</button></div>
                                 </td>}
                             </tr>
                         );

@@ -7,7 +7,7 @@ import { API_DETAIL_PRACTITIONER } from "../../../constants/api.constant";
 import moment from "moment";
 import { FORMAT_DATE } from "../../../constants/general.constant";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { setPractitioner } from "../../../redux/features/practitioner/practitionerSlice";
+import { setPractitioner, setRoom } from "../../../redux/features/practitioner/practitionerSlice";
 
 const InfoDoctor = () => {
   const [doctor, setDoctor] = useState<any>({});
@@ -28,6 +28,7 @@ const InfoDoctor = () => {
       .then((resp: any) => {
         if (resp) {
           setDoctor(resp.data);
+          dispatch(setRoom(resp.data?.desRoom))
           dispatch(setPractitioner(resp.data))
         }
       })

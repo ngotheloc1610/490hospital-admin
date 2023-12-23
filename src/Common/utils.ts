@@ -28,16 +28,20 @@ export const convertToTime = (time: string) => {
 
 export const styleStatus = (status: string) => {
     switch (status) {
-        case "No Show":
+        case "no show":
             return "no-show";
-        case "Cancel":
+        case "cancel":
             return "canceled";
-        case "Fulfilled":
+        case "fulfilled":
             return "fulfilled";
-        case "Pending":
+        case "pending":
             return "pending";
-        case "Proposed":
+        case "proposed":
             return "proposed";
+        case "booked":
+            return "booked";
+        case "arrived":
+            return "arrived";
         default:
             return;
     }

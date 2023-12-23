@@ -82,6 +82,7 @@ export const API_DASHBOARD_PATIENT_CANCELED = "/dashboard/returning-list-patient
 export const API_DASHBOARD_APPOINTMENT_TODAY = "/dashboard/returning-list-appointment-today"
 export const API_DASHBOARD_APPOINTMENT_BOOKED = "/dashboard/returning-booked-appointment-per-day"
 export const API_DASHBOARD_APPOINTMENT_TOTAL = "/dashboard/returning-total-appointment-per-day"
+export const API_DASHBOARD_SPECIALTY_BOOK = "/dashboard/returning-list-spec-book"
 
 export const API_MONITOR_ALL = "/monitor/getAll"
 export const API_MONITOR_SEARCH = "/monitor/searchMonitor"

@@ -18,6 +18,8 @@ import PaginationComponent from "../../components/common/Pagination";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setPatient, setShowPopUpConfirmBlock } from "../../redux/features/patient/patientSlice";
 import PopUpConfirmBlock from "./PopupConfirmBlock";
+import moment from "moment";
+import { FORMAT_DATE } from "../../constants/general.constant";
 
 const Patient = () => {
   const [listData, setListData] = useState<any>([]);
@@ -133,8 +135,8 @@ const Patient = () => {
                 <td onClick={() => navigate(`information/${item.id}`)}>
                   {item.nameFirstRep.text}
                 </td>
-                <td onClick={() => navigate(`information/${item.id}`)}>{item.gender}</td>
-                <td onClick={() => navigate(`information/${item.id}`)}>{item.birthDate}</td>
+                <td onClick={() => navigate(`information/${item.id}`)}>{item.gender?.toLowerCase()}</td>
+                <td onClick={() => navigate(`information/${item.id}`)}>{item.birthDate ? moment(item.birthDate).format(FORMAT_DATE) : "-"}</td>
                 <td onClick={() => navigate(`information/${item.id}`)}>
                   {phone}
                 </td>

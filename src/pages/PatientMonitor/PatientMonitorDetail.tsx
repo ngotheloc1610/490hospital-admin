@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { ICON_PENCIL, ICON_TRASH, USER } from "../../assets";
-import { Bar } from "react-chartjs-2";
+import { USER } from "../../assets";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -190,7 +189,6 @@ const PatientMonitorDetail = () => {
               <th scope="col">Recorded date</th>
               <th scope="col">Note</th>
               <th scope="col">Encounter</th>
-              <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
@@ -203,14 +201,6 @@ const PatientMonitorDetail = () => {
                   <td>{item.recordedDate ? moment(item.recordedDate).format(FORMAT_DATE) : ""}</td>
                   <td>{item?.note}</td>
                   <td>{item.encounterDate ? moment(item.encounterDate).format(FORMAT_DATE) : ""}</td>
-                  <td>
-                    <span className="ms-1 cursor-pointer">
-                      <ICON_PENCIL />
-                    </span>
-                    <span className="ms-1 cursor-pointer">
-                      <ICON_TRASH />
-                    </span>
-                  </td>
                 </tr>
               )
             }) : <p>Không có dữ liệu!</p>}
@@ -239,7 +229,7 @@ const PatientMonitorDetail = () => {
                     <p><span className="fw-bold">Gender: </span><span>{patientDetail?.gender}</span></p>
                     <p><span className="fw-bold">Date of birth: </span><span>{moment(patientDetail?.birthDate).format(FORMAT_DATE)}</span></p>
                     <p><span className="fw-bold">Address: </span><span>{patientDetail?.addressFirstRep?.text}</span></p>
-                    <p><span className="fw-bold">Citizen identification: </span><span>{patientDetail?.identifierFirstRep?.value}</span></p>
+                    <p><span className="fw-bold">Citizen identification: </span><span>{patientDetail?.identifierFirstRep?.value && patientDetail?.identifierFirstRep?.value !== "null" ? patientDetail?.identifierFirstRep?.value : ""}</span></p>
                     <p><span className="fw-bold">Phone number: </span><span>{patientDetail?.telecom.filter((item: any) => item.system === "phone")[0]?.value}</span></p>
                     <p><span className="fw-bold">Email: </span><span>{patientDetail?.telecom.filter((item: any) => item.system === "email")[0]?.value}</span></p>
                   </div>
@@ -258,7 +248,7 @@ const PatientMonitorDetail = () => {
                   <p><span className="fw-bold">Specialty: </span><span>{bookingDetail.specialty}</span></p>
                   <p><span className="fw-bold">Room: </span><span>{bookingDetail.room}</span></p>
                   <p><span className="fw-bold">Appointment Type: </span><span>{bookingDetail.typeOfAppointment}</span></p>
-                  <p><span className="fw-bold">Appointment Status: </span><span>{bookingDetail.appointmentStatus}</span></p>
+                  <p><span className="fw-bold">Appointment Status: </span><span className={styleStatus(bookingDetail?.appointmentStatus.toLowerCase())}>{bookingDetail.appointmentStatus}</span></p>
                 </div>
               </div>
             </div>
@@ -270,7 +260,7 @@ const PatientMonitorDetail = () => {
         <div className="col-3">
           <div className="box h-100 p-3">
             <p className="fw-bold">Upcoming Appointment</p>
-            <div className="table-responsive">
+            <div className="table-responsive overflow-auto h-200">
               <table className="table table-sm">
                 <thead className="table-light">
                   <tr>
@@ -308,7 +298,7 @@ const PatientMonitorDetail = () => {
                         </td>
                         <td >{item.doctorName}</td>
                         <td >
-                          <span className={styleStatus(item.status)}>{item.status}</span>
+                          <span className={styleStatus(item.status.toLowerCase())}>{item.status}</span>
                         </td>
                       </tr>
                     );
@@ -376,7 +366,7 @@ const PatientMonitorDetail = () => {
                     <i className="bi bi-thermometer-high fs-1"></i>
                   </p>
                   <p className="fw-bold mb-1">{indexTemperature?.value ? indexTemperature?.value : "N/A"}</p>
-                  <p className="mb-1">&deg;C</p>
+                  <p className="mb-1"> &deg;C</p>
                   <p className="mb-0">{indexTemperature?.interpretations ? indexTemperature?.interpretations : "N/A"}</p>
                 </div>
                 <div
@@ -387,7 +377,7 @@ const PatientMonitorDetail = () => {
                     <i className="bi bi-person-fill fs-1"></i>
                   </p>
                   <p className="fw-bold mb-1">{indexBMI?.value ? indexBMI?.value : "N/A"}</p>
-                  <p className="mb-1">N/A</p>
+                  <p className="mb-1"> kg/m2</p>
                   <p className="mb-0">{indexBMI?.interpretations ? indexBMI?.interpretations : "N/A"}</p>
                 </div>
               </div>
@@ -401,7 +391,7 @@ const PatientMonitorDetail = () => {
             <div>
               {listEncounterHistory.length > 0 ? listEncounterHistory.map((item: any) => {
                 return (
-                  <div className="border-bottom">
+                  <div className="border-bottom mt-2">
                     <div className="d-flex">
                       <div className="me-3">
                         <img src={USER} alt="" style={{ height: "40px", width: "40px", borderRadius: "100rem" }} />

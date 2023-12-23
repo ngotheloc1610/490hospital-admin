@@ -158,11 +158,11 @@ const PatientMonitor = () => {
                 </td>
                 <td onClick={() => { navigate(`/monitor/${item.idEncounter}`); dispatch(setAppointment(item)) }}>
                   <span className={styleBMI(indexBMI)}>{indexBMI?.value || "-"}</span>
-                  <span className={styleBMI(indexBMI)}>kg/m2</span>
+                  <span className={styleBMI(indexBMI)}> kg/m2</span>
                 </td>
                 <td onClick={() => { navigate(`/monitor/${item.idEncounter}`); dispatch(setAppointment(item)) }}>
                   <span className={styleTemperature(indexTemperature)}>{indexTemperature?.value || "-"}</span>
-                  <span className={styleTemperature(indexTemperature)}>&deg;C</span>
+                  <span className={styleTemperature(indexTemperature)}> &deg;C</span>
                 </td>
               </tr>
             );

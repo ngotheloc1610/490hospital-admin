@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Layout from "../../components/Layout";
-import { ICON_PENCIL, ICON_TRASH, USER } from "../../assets";
+import { ICON_TRASH, USER } from "../../assets";
 import { useParams } from "react-router-dom";
 import { FORMAT_DATE, TOTAL_STEP } from "../../constants/general.constant";
 import { defineConfigGet, defineConfigPost, styleStatus } from "../../Common/utils";
@@ -10,7 +10,6 @@ import moment from "moment";
 import { ALERT_STATUS, BLOOD_GLUCOSE, BLOOD_PRESSURE, BMI, HEART_RATE, TEMPERATURE } from "../../constants";
 import PopUpArrived from "../../components/common/PopupArrvied";
 import PopUpNoShow from "../../components/common/PopupNoShow";
-import PopUpDeny from "../../components/common/PopUpDeny";
 import Select from 'react-select'
 import { success, warn } from "../../Common/notify";
 import { useAppSelector } from "../../redux/hooks";
@@ -214,7 +213,7 @@ const DiagnosticReport = () => {
     }))
 
     const rqParams = {
-      idEncounter: params.encounterId ? params.encounterId : idEncounter,
+      idEncounter: params.encounterId && params.encounterId !== "null" ? params.encounterId : idEncounter,
       subjectReferencePatient: patientDetail.id,
       subjectDisplay: patientDetail?.nameFirstRep?.text,
       categoryDisplay: category,
@@ -230,7 +229,6 @@ const DiagnosticReport = () => {
       .then((resp: any) => {
         if (resp) {
           success("Create diagnostic successfully!");
-          console.log("resp:", resp)
         }
       })
       .catch((err: any) => {

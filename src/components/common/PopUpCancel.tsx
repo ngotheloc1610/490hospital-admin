@@ -2,7 +2,7 @@ import { Button, Modal } from "react-bootstrap";
 import axios from "axios";
 
 import { API_PRACTITIONER_CANCEL_APPOINTMENT } from "../../constants/api.constant";
-import { defineConfigGet } from "../../Common/utils";
+import { defineConfigGet, defineConfigPost } from "../../Common/utils";
 import { error, success } from "../../Common/notify";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setTriggerCancel } from "../../redux/features/appointment/appointmentSlice";
@@ -26,10 +26,19 @@ const PopUpCancel = (props: IProps) => {
 
   const cancelAppointment = () => {
     const accountID: any = localStorage.getItem(KEY_LOCAL_STORAGE.ID);
-    const url = `${url_api}${API_PRACTITIONER_CANCEL_APPOINTMENT}${accountID}`;
+    const accountName: any = localStorage.getItem(KEY_LOCAL_STORAGE.NAME);
+    const url = `${url_api}${API_PRACTITIONER_CANCEL_APPOINTMENT}${appointment?.idAppointment}`;
     setIsLoading(true)
+
+    const params = {
+      reference: accountID,
+      display: accountName,
+      type: "",
+      identifier: null
+    }
+
     axios
-      .post(url, defineConfigGet({ idAppointment: appointment?.idAppointment }))
+      .post(url, params, defineConfigPost())
       .then((resp) => {
         setIsLoading(false)
         if (resp) {

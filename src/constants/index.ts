@@ -253,7 +253,7 @@ export const MONTHS = [
   },
   {
     value: "2",
-    title: "Marche",
+    title: "March",
   },
   {
     value: "3",

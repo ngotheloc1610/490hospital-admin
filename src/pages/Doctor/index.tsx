@@ -18,7 +18,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setPractitioner, setShowPopUpConfirmBlock } from "../../redux/features/practitioner/practitionerSlice";
 import PopUpConfirmBlock from "../../components/common/PopupConfirmBlock";
 import moment from "moment";
-import { FORMAT_DATE, KEY_LOCAL_STORAGE } from "../../constants/general.constant";
+import { FORMAT_DATE, KEY_LOCAL_STORAGE, TYPE_DOCTOR } from "../../constants/general.constant";
 
 const Doctor = () => {
   const [listData, setListData] = useState([]);
@@ -35,8 +35,6 @@ const Doctor = () => {
   const [isSearch, setIsSearch] = useState<boolean>(false);
 
   const url_api = process.env.REACT_APP_API_URL;
-
-  const type = localStorage.getItem(KEY_LOCAL_STORAGE.TYPE);
 
   const outlet = useOutlet();
   const navigate = useNavigate();
@@ -107,7 +105,7 @@ const Doctor = () => {
   const searchDoctor = () => {
     const url = `${url_api}${API_SEARCH_DOCTOR}`;
 
-    const params = { page: currentPage, size: itemPerPage, namePractitionerRole: name, nameSpecialty: specialty, gender: gender, status: status, role: type }
+    const params = { page: currentPage, size: itemPerPage, namePractitionerRole: name, nameSpecialty: specialty, gender: gender, status: status, role: TYPE_DOCTOR }
 
     axios
       .get(url, defineConfigGet(params))

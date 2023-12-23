@@ -17,7 +17,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setPractitioner, setShowPopUpConfirmBlock } from "../../redux/features/practitioner/practitionerSlice";
 import PopUpConfirmBlock from "../../components/common/PopupConfirmBlock";
 import moment from "moment";
-import { FORMAT_DATE, KEY_LOCAL_STORAGE } from "../../constants/general.constant";
+import { FORMAT_DATE, KEY_LOCAL_STORAGE, TYPE_STAFF } from "../../constants/general.constant";
 
 const Staff = () => {
   const outlet = useOutlet();
@@ -40,7 +40,6 @@ const Staff = () => {
   const url_api = process.env.REACT_APP_API_URL;
   const dispatch = useAppDispatch();
   const { showPopUpBlock, triggerBlock } = useAppSelector((state) => state.practitionerSlice)
-  const type = localStorage.getItem(KEY_LOCAL_STORAGE.TYPE);
 
   useEffect(() => {
     if (isSearch) {
@@ -89,7 +88,7 @@ const Staff = () => {
     const url = `${url_api}${API_SEARCH_STAFF}`;
 
     axios
-      .get(url, defineConfigGet({ page: currentPage, size: itemPerPage, namePractitionerRole: name, nameSpecialty: specialty, gender: gender, status: status, role: type }))
+      .get(url, defineConfigGet({ page: currentPage, size: itemPerPage, namePractitionerRole: name, nameSpecialty: specialty, gender: gender, status: status, role: TYPE_STAFF }))
       .then((resp: any) => {
         if (resp) {
           setListData(resp.data.content);

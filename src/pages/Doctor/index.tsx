@@ -15,10 +15,10 @@ import { defineConfigGet, styleStatusPractitioner } from "../../Common/utils";
 
 import Layout from "../../components/Layout";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setPractitioner, setShowPopUpConfirmBlock } from "../../redux/features/practitioner/practitionerSlice";
+import { setIdPractitioner, setPractitioner, setShowPopUpConfirmBlock } from "../../redux/features/practitioner/practitionerSlice";
 import PopUpConfirmBlock from "../../components/common/PopupConfirmBlock";
 import moment from "moment";
-import { FORMAT_DATE, KEY_LOCAL_STORAGE, TYPE_DOCTOR } from "../../constants/general.constant";
+import { FORMAT_DATE, TYPE_DOCTOR } from "../../constants/general.constant";
 
 const Doctor = () => {
   const [listData, setListData] = useState([]);
@@ -154,33 +154,33 @@ const Doctor = () => {
             const src = item?.practitionerTarget?.photo[0]?.url;
             return (
               <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
-                <th scope="row" onClick={() => navigate(`overview/${item.id}`)}>
+                <th scope="row" onClick={() => { navigate(`overview/${item.id}`); dispatch(setIdPractitioner(item.practitionerTarget?.id)) }}>
                   <img src={src} alt="img doctor" style={{ width: "50px", height: "50px", borderRadius: "100rem", objectFit: "cover" }} />
                 </th>
-                <td onClick={() => navigate(`overview/${item.id}`)}>
+                <td onClick={() => { navigate(`overview/${item.id}`); dispatch(setIdPractitioner(item.practitionerTarget?.id)) }}>
                   {item.practitioner?.display}
                 </td>
-                <td onClick={() => navigate(`overview/${item.id}`)}>
+                <td onClick={() => { navigate(`overview/${item.id}`); dispatch(setIdPractitioner(item.practitionerTarget?.id)) }}>
                   {item.practitionerTarget.gender?.toLowerCase()}
                 </td>
-                <td onClick={() => navigate(`overview/${item.id}`)}>
+                <td onClick={() => { navigate(`overview/${item.id}`); dispatch(setIdPractitioner(item.practitionerTarget?.id)) }}>
                   {item.practitionerTarget?.birthDate !== "null" ? moment(item.practitionerTarget?.birthDate).format(FORMAT_DATE) : "-"}
                 </td>
-                <td onClick={() => navigate(`overview/${item.id}`)}>
+                <td onClick={() => { navigate(`overview/${item.id}`); dispatch(setIdPractitioner(item.practitionerTarget?.id)) }}>
                   {phone}
                 </td>
-                <td onClick={() => navigate(`overview/${item.id}`)}>{email}</td>
-                <td onClick={() => navigate(`overview/${item.id}`)}>{
+                <td onClick={() => { navigate(`overview/${item.id}`); dispatch(setIdPractitioner(item.practitionerTarget?.id)) }}>{email}</td>
+                <td onClick={() => { navigate(`overview/${item.id}`); dispatch(setIdPractitioner(item.practitionerTarget?.id)) }}>{
                   item.specialty && item.specialty.map((spec: any) => {
                     return (
                       <span>{spec.coding[0].display}</span>
                     )
                   })
                 }</td>
-                <td onClick={() => navigate(`overview/${item.id}`)}>
+                <td onClick={() => { navigate(`overview/${item.id}`); dispatch(setIdPractitioner(item.practitionerTarget?.id)) }}>
                   <span className={styleStatusPractitioner(item.active)}>{item.active ? "Active" : "Inactive"}</span>
                 </td>
-                <td>
+                <td onClick={() => { navigate(`overview/${item.id}`); dispatch(setIdPractitioner(item.practitionerTarget?.id)) }}>
                   <span className={styleStatusPractitioner(item.practitionerTarget.active)}>{item.practitionerTarget.active ? "Active" : "Inactive"}</span>
                 </td>
                 <td>
@@ -194,7 +194,7 @@ const Doctor = () => {
               </tr>
             );
           }) : <div>
-            Không có dữ liệu.
+            No have data.
           </div>}
         </tbody>
       </table>

@@ -16,7 +16,7 @@ import { USER } from "../../../assets";
 import TotalView from "../../../components/common/TotalView";
 import { API_DASHBOARD_APPOINTMENT_BOOKED, API_DASHBOARD_APPOINTMENT_TODAY, API_DASHBOARD_APPOINTMENT_TOTAL, API_DASHBOARD_SPECIALTY_BOOK } from "../../../constants/api.constant";
 import axios from "axios";
-import { defineConfigGet, defineConfigPost } from "../../../Common/utils";
+import { defineConfigGet, defineConfigPost, styleStatus } from "../../../Common/utils";
 import moment from "moment";
 import { FORMAT_DATE, FORMAT_TIME } from "../../../constants/general.constant";
 import { endOfMonth, startOfMonth, format } from "date-fns";
@@ -303,6 +303,14 @@ const AppointmentDashboard = () => {
   };
 
   const optionsLine: any = {
+    scales: {
+      y: {
+        ticks: {
+          stepSize: 1, // Set the step size to 1 to display only integer values
+          beginAtZero: true, // Start the axis at zero
+        },
+      },
+    },
     plugins: {
       legend: {
         display: true,
@@ -422,14 +430,14 @@ const AppointmentDashboard = () => {
                         </div>
                       </td>
                       <td>
-                        <span className="fw-bold d-flex justify-content-end">{item.dateStart ? moment(item.dateStart).format(FORMAT_TIME) : ""}</span>
+                        <p className="fw-bold d-flex justify-content-end align-items-center mt-2">{item.dateStart ? moment(item.dateStart).format(FORMAT_TIME) : ""}</p>
                       </td>
                       <td>
-                        <span className="fw-bold d-flex justify-content-end">{item.status ? item.status : ""}</span>
+                        <p className={`fw-bold d-flex justify-content-end align-items-center mb-0 mt-2 ${styleStatus(item.status.toLowerCase())}`}>{item.status ? item.status : ""}</p>
                       </td>
                     </tr>
                     )
-                  }) : <span>Không có dữ liệu!</span>}
+                  }) : <span>No have data!</span>}
 
                 </tbody>
               </table>
@@ -448,7 +456,7 @@ const AppointmentDashboard = () => {
                       </tr>
                     )
                   })
-                    : <span>Không có dữ liệu!</span>}
+                    : <span>No have data!</span>}
                 </tbody>
               </table>
             </div>

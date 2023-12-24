@@ -143,7 +143,10 @@ const PatientMonitor = () => {
                   <p>{item?.email}</p>
                   <p>{item?.phone}</p>
                 </td>
-                <td onClick={() => { navigate(`/monitor/${item.idEncounter}`); dispatch(setAppointment(item)) }}>{item?.diagnosis}</td>
+                <td onClick={() => { navigate(`/monitor/${item.idEncounter}`); dispatch(setAppointment(item)) }}>
+                  <p>{item?.diagnosis}</p>
+                  <p>{item?.doctorName}</p>
+                </td>
                 <td onClick={() => { navigate(`/monitor/${item.idEncounter}`); dispatch(setAppointment(item)) }}>
                   <span className={styleBloodPressure(indexBloodPressure)}>{indexBloodPressure?.value || "-"}</span>
                   <span className={styleBloodPressure(indexBloodPressure)}> mmHg</span>

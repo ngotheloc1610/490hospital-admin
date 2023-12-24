@@ -132,7 +132,7 @@ const UpcomingAppointment = () => {
                                     {item.status}</span></td>
                             </tr>
                         );
-                    }) : <p>Không có dữ liệu!</p>}
+                    }) : <p>No have data!</p>}
                 </tbody>
             </table>
         );
@@ -184,6 +184,7 @@ const UpcomingAppointment = () => {
     const handleNavigate = (item: any) => {
         if (item.status === "Fulfilled") {
             navigate(`/monitor/${item.idEncounter}`)
+            dispatch(setAppointment(item))
         } else {
             dispatch(setAppointment(item))
             navigate(`/diagnostic-report/${item.idEncounter}`)

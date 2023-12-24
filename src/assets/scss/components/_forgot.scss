@@ -24,6 +24,7 @@
     border: 1px solid $gray-lighter-color;
     padding: 3px;
     border-radius: 20px;
+
     p {
       width: 35%;
       background-color: $white-color;
@@ -39,7 +40,8 @@
     width: 80px;
     height: 80px;
     border-radius: 100rem;
-    background-color: rgba(144, 131, 213, 0.13);;
+    background-color: rgba(144, 131, 213, 0.13);
+    ;
     margin: auto;
 
     position: relative;
@@ -58,6 +60,7 @@
     &-text:first-child {
       background: $gray-light-color;
       border-right: none;
+
       i {
         color: $primary-color;
       }
@@ -66,6 +69,94 @@
     &-text:last-child {
       background: $gray-light-color;
       border-left: none;
+
+      i {
+        color: #13b97d;
+      }
+    }
+
+    .form-control {
+      border-left: none;
+      border-right: none;
+      background: $gray-light-color;
+
+      &:focus {
+        box-shadow: none;
+      }
+    }
+  }
+
+  .form-control {
+    &:focus {
+      box-shadow: none;
+    }
+  }
+}
+
+.success {
+  width: 50%;
+  margin: auto;
+  margin-top: 30px;
+  padding-bottom: 40px;
+
+  &-container {
+    padding: 60px 70px;
+    background-color: $white-color;
+    border-radius: 10px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  }
+
+  .title-email {
+    background-color: $gray-light-color;
+    border: 1px solid $gray-lighter-color;
+    padding: 3px;
+    border-radius: 20px;
+
+    p {
+      width: 35%;
+      background-color: $white-color;
+      padding: 15px 20px;
+      border-radius: 20px;
+      margin-bottom: 0;
+      text-align: center;
+      color: $primary-color;
+    }
+  }
+
+  .icon-success {
+    width: 80px;
+    height: 80px;
+    border-radius: 100rem;
+    background-color: rgba(144, 131, 213, 0.13);
+    ;
+    margin: auto;
+
+    position: relative;
+
+    i {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+
+      color: $primary-color;
+    }
+  }
+
+  .input-group {
+    &-text:first-child {
+      background: $gray-light-color;
+      border-right: none;
+
+      i {
+        color: $primary-color;
+      }
+    }
+
+    &-text:last-child {
+      background: $gray-light-color;
+      border-left: none;
+
       i {
         color: #13b97d;
       }

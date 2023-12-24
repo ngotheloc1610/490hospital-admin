@@ -193,27 +193,27 @@ export const LIST_TIME = [
     endTime: "12:00:00",
   },
   {
-    title: "12:00 PM - 01:00 PM",
+    title: "12:00 PM - 13:00 PM",
     startTime: "12:00:00",
     endTime: "13:00:00",
   },
   {
-    title: "01:00 PM - 02:00 PM",
+    title: "13:00 PM - 14:00 PM",
     startTime: "13:00:00",
     endTime: "14:00:00",
   },
   {
-    title: "02:00 PM - 03:00 PM",
+    title: "14:00 PM - 15:00 PM",
     startTime: "14:00:00",
     endTime: "15:00:00",
   },
   {
-    title: "03:00 PM - 04:00 PM",
+    title: "15:00 PM - 16:00 PM",
     startTime: "15:00:00",
     endTime: "16:00:00",
   },
   {
-    title: "04:00 PM - 05:00 PM",
+    title: "16:00 PM - 17:00 PM",
     startTime: "16:00:00",
     endTime: "17:00:00",
   },
@@ -253,7 +253,7 @@ export const MONTHS = [
   },
   {
     value: "2",
-    title: "March",
+    title: "Marche",
   },
   {
     value: "3",
@@ -311,20 +311,20 @@ export const ALERT_STATUS = [
 
 export const RULE_BLOOD_PRESSURE = [
   {
-    title: "Greater Than",
-    value: "Greater Than",
+    title: "SystolicGreater Than",
+    value: "SystolicGreater Than",
   },
   {
-    title: "Less Than",
-    value: "Less Than",
+    title: "SystolicLess Than",
+    value: "SystolicLess Than",
   },
   {
-    title: "Greater Than",
-    value: "Greater Than",
+    title: "Blood Pressure Greater Than",
+    value: "Blood Pressure Greater Than",
   },
   {
-    title: "Less Than",
-    value: "Less Than",
+    title: "Blood Pressure Less Than",
+    value: "Blood Pressure Less Than",
   },
 ];
 

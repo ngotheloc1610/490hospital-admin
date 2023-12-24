@@ -340,3 +340,31 @@ button {
     background-color: #FF5454;
   }
 }
+
+.busy {
+  background-color: #DC2626;
+  color: #fff;
+  padding: 5px;
+  border-radius: 10px;
+}
+
+.busy-tentative {
+  background-color: #DACA37;
+  color: #fff;
+  padding: 5px;
+  border-radius: 10px;
+}
+
+.busy-unavailable {
+  background-color: #B3E5FC;
+  color: #fff;
+  padding: 5px;
+  border-radius: 10px;
+}
+
+.free {
+  background-color: #2215db;
+  color: #fff;
+  padding: 10px;
+  border-radius: 10px;
+}

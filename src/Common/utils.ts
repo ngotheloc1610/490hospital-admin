@@ -139,4 +139,19 @@ export const styleTemperature = (item: any) => {
 export const getTotalDaysInMonth = (year: number, month: number) => {
     const lastDayOfMonth = new Date(year, month + 1, 0);
     return lastDayOfMonth.getDate();
-}; 
+};
+
+export const styleSchedule = (status: any) => {
+    switch (status) {
+        case "free":
+            return "free";
+        case "busy":
+            return "busy";
+        case "busy-unavailable":
+            return "busy-unavailable";
+        case "busy-tentative":
+            return "busy-tentative";
+        default:
+            return "";
+    }
+}

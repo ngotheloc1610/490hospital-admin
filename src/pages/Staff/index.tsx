@@ -279,7 +279,7 @@ const Staff = () => {
               </tr>
             );
           }) : <div>
-            Không có dữ liệu.
+            No have data.
           </div>}
         </tbody>
       </table>

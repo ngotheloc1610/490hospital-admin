@@ -155,7 +155,7 @@ const Patient = () => {
               </tr>
             );
           }) : <div>
-            Không có dữ liệu.
+            No have data.
           </div>}
         </tbody>
       </table>

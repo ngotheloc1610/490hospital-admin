@@ -189,12 +189,12 @@ const Sidebar = () => {
           </li> */}
 
 
-          {type !== TYPE_DOCTOR && <li className={`${getClass(RouterUrl.CHAT)}`}>
+          {/* {type !== TYPE_DOCTOR && <li className={`${getClass(RouterUrl.CHAT)}`}>
             <a onClick={() => goToLink(RouterUrl.CHAT)} data-content-id="chat">
               <ICON_MESSAGE />
               <span>Inbox Message</span>
             </a>
-          </li>}
+          </li>} */}
 
           {type === TYPE_ADMIN && <li className={`${getClass(RouterUrl.SETTING)}`}>
             <a

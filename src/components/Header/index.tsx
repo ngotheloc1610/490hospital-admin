@@ -1,4 +1,4 @@
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { RouterUrl } from "../../constants";
 import { Link, useNavigate } from "react-router-dom";
 import { ICON_PATIENT, LOGO } from "../../assets";
@@ -7,9 +7,13 @@ import { useAppDispatch } from "../../redux/hooks";
 import { setLogin } from "../../redux/features/auth/authSlice";
 import { Avatar, Box, IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import { API_PROFILE_PRACTITIONER } from "../../constants/api.constant";
+import { defineConfigPost } from "../../Common/utils";
+import axios from "axios";
 
 const Header = () => {
   const navigate = useNavigate();
+  const url_api = process.env.REACT_APP_API_URL;
 
   const account = localStorage.getItem(KEY_LOCAL_STORAGE.SUB || "");
   const dispatch = useAppDispatch()
@@ -17,13 +21,34 @@ const Header = () => {
   const type = localStorage.getItem(KEY_LOCAL_STORAGE.TYPE);
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [imageSRC, setImageSRC] = useState<any>("")
   const open = Boolean(anchorEl);
+
+  useEffect(() => {
+    getProfilePractitioner()
+  }, [])
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const getProfilePractitioner = () => {
+    const url = `${url_api}${API_PROFILE_PRACTITIONER}`;
+
+    axios
+      .get(url, defineConfigPost())
+      .then((resp: any) => {
+        if (resp) {
+          setImageSRC(resp?.data?.photo)
+        }
+      })
+      .catch((err) => {
+        console.log("error get profile practitioner:", err);
+      });
+  }
 
   const handleLogout = () => {
     localStorage.removeItem(KEY_LOCAL_STORAGE.AUTHEN)
@@ -38,8 +63,6 @@ const Header = () => {
 
     navigate("/login")
   }
-
-  const imageSRC: any = localStorage.getItem(KEY_LOCAL_STORAGE.IMAGE);
 
   return (
     <header className="navbar-wrapper">

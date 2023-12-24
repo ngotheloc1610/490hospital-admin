@@ -231,9 +231,12 @@ const Setting = () => {
 
     let ruleList: any = [];
     bloodItem.rule.forEach((itemRule: any) => {
+      const ruleName = itemRule.ruleName
+      const type = `${ruleName.split(' ')[0]} ${ruleName.split(' ')[1]}`;
+      const rule = ruleName.split(type + " ")[1];
       ruleList.push({
-        type: "Blood Glucose",
-        rule: itemRule.ruleName,
+        type: type,
+        rule: rule,
         threshold: !isNaN(itemRule.threshold) ? parseFloat(itemRule.threshold) : 0.0
       })
     })
@@ -257,14 +260,17 @@ const Setting = () => {
         console.log("error create alert blood glucose", err);
       });
   }
-  const createAlertHeartRate = (bloodItem: any, id: string) => {
+  const createAlertHeartRate = (heartItem: any, id: string) => {
     const url = `${url_api}${API_ALERT_HEART_RATE}`;
 
     let ruleList: any = [];
-    bloodItem.rule.forEach((itemRule: any) => {
+    heartItem.rule.forEach((itemRule: any) => {
+      const ruleName = itemRule.ruleName
+      const type = `${ruleName.split(' ')[0]} ${ruleName.split(' ')[1]}`;
+      const rule = ruleName.split(type + " ")[1];
       ruleList.push({
-        type: "Heart Rate",
-        rule: itemRule.ruleName,
+        type: type,
+        rule: rule,
         threshold: !isNaN(itemRule.threshold) ? parseFloat(itemRule.threshold) : 0.0
       })
     })
@@ -272,8 +278,8 @@ const Setting = () => {
     const params = {
       id: id ? id : null,
       category: "Heart Rate",
-      alertName: bloodItem.alertName,
-      severity: bloodItem.alertSeverity,
+      alertName: heartItem.alertName,
+      severity: heartItem.alertSeverity,
       ruleList: ruleList
     };
 
@@ -288,14 +294,17 @@ const Setting = () => {
         console.log("error create alert heart rate", err);
       });
   }
-  const createAlertBMI = (bloodItem: any, id: string) => {
+  const createAlertBMI = (bmiItem: any, id: string) => {
     const url = `${url_api}${API_ALERT_BMI}`;
 
     let ruleList: any = [];
-    bloodItem.rule.forEach((itemRule: any) => {
+    bmiItem.rule.forEach((itemRule: any) => {
+      const ruleName = itemRule.ruleName
+      const type = ruleName.split(' ')[0];
+      const rule = ruleName.split(type + " ")[1];
       ruleList.push({
-        type: "BMI",
-        rule: itemRule.ruleName,
+        type: type,
+        rule: rule,
         threshold: !isNaN(itemRule.threshold) ? parseFloat(itemRule.threshold) : 0.0
       })
     })
@@ -303,8 +312,8 @@ const Setting = () => {
     const params = {
       id: id ? id : null,
       category: "BMI",
-      alertName: bloodItem.alertName,
-      severity: bloodItem.alertSeverity,
+      alertName: bmiItem.alertName,
+      severity: bmiItem.alertSeverity,
       ruleList: ruleList
     };
 
@@ -319,14 +328,17 @@ const Setting = () => {
         console.log("error create alert bmi", err);
       });
   }
-  const createAlertTemperature = (bloodItem: any, id: string) => {
+  const createAlertTemperature = (temItem: any, id: string) => {
     const url = `${url_api}${API_ALERT_TEMPERATURE}`;
 
     let ruleList: any = [];
-    bloodItem.rule.forEach((itemRule: any) => {
+    temItem.rule.forEach((itemRule: any) => {
+      const ruleName = itemRule.ruleName
+      const type = ruleName.split(' ')[0];
+      const rule = ruleName.split(type + " ")[1];
       ruleList.push({
-        type: "Temperature",
-        rule: itemRule.ruleName,
+        type: type,
+        rule: rule,
         threshold: !isNaN(itemRule.threshold) ? parseFloat(itemRule.threshold) : 0.0
       })
     })
@@ -334,8 +346,8 @@ const Setting = () => {
     const params = {
       id: id ? id : null,
       category: "Temperature",
-      alertName: bloodItem.alertName,
-      severity: bloodItem.alertSeverity,
+      alertName: temItem.alertName,
+      severity: temItem.alertSeverity,
       ruleList: ruleList
     };
 

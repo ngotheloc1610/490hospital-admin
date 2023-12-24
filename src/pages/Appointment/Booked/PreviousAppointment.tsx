@@ -90,6 +90,7 @@ const PreviousAppointment = () => {
     const handleNavigate = (item: any) => {
         if (item.status === "Fulfilled") {
             navigate(`/monitor/${item.idEncounter}`)
+            dispatch(setAppointment(item))
         } else {
             dispatch(setAppointment(item))
             navigate(`/diagnostic-report/${item.idEncounter}`)
@@ -138,7 +139,7 @@ const PreviousAppointment = () => {
                                     {item.status}</span></td>
                             </tr>
                         );
-                    }) : <span>Không có dữ liệu!</span>}
+                    }) : <span>No have data!</span>}
                 </tbody>
             </table>
         );

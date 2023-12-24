@@ -56,6 +56,8 @@ const DiagnosticReport = () => {
   const [isShowPopUpNoShow, setIsShowPopUpNoShow] = useState<boolean>(false);
   const [isShowPopUpCancel, setIsShowPopUpCancel] = useState<boolean>(false);
 
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
+
   const [listCurrentCondition, setListCurrentCondition] = useState<any>([{
     condition: "",
     bodySite: "",
@@ -107,7 +109,7 @@ const DiagnosticReport = () => {
     if (appointment?.idAppointment) {
       getBookingDetail(appointment?.idAppointment)
     }
-  }, [triggerArrived, triggerCancel, triggerNoShow])
+  }, [triggerArrived, triggerCancel, triggerNoShow, isSuccess])
 
   useEffect(() => {
     if (height !== 0 && weight !== 0) {
@@ -229,9 +231,11 @@ const DiagnosticReport = () => {
       .then((resp: any) => {
         if (resp) {
           success("Create diagnostic successfully!");
+          setIsSuccess(true);
         }
       })
       .catch((err: any) => {
+        setIsSuccess(false);
         console.log("error create diagnostic:", err);
       });
   }
@@ -488,13 +492,13 @@ const DiagnosticReport = () => {
               </label>
               <div className="ms-2">
                 <input type="number" min={0} className="input-small" value={indexBloodPressure1} onChange={(e: any) => {
-                  if (!isNaN(parseFloat(e.target.value))) {
+                  if (e.target.value >= 0) {
                     setIndexBloodPressure1(e.target.value)
                   }
                 }} />
                 <span> / </span>
                 <input type="number" min={0} className="input-small" value={indexBloodPressure2} onChange={(e: any) => {
-                  if (!isNaN(parseFloat(e.target.value))) {
+                  if (e.target.value >= 0) {
                     setIndexBloodPressure2(e.target.value)
                   }
                 }} />
@@ -516,7 +520,7 @@ const DiagnosticReport = () => {
               </label>
               <div className="ms-2">
                 <input type="number" className="input-small" min={0} value={indexTemperature} onChange={(e: any) => {
-                  if (!isNaN(parseFloat(e.target.value))) {
+                  if (e.target.value >= 0) {
                     setIndexTemperature(e.target.value)
                   }
                 }} />
@@ -538,7 +542,7 @@ const DiagnosticReport = () => {
               </label>
               <div className="ms-2">
                 <input type="number" min={0} className="input-small" value={indexBloodGlucose} onChange={(e: any) => {
-                  if (!isNaN(parseFloat(e.target.value))) {
+                  if (e.target.value >= 0) {
                     setIndexBloodGlucose(e.target.value)
                   }
                 }} />
@@ -567,7 +571,7 @@ const DiagnosticReport = () => {
                   <div className="me-3">
                     <span className="me-2">Weight:</span>
                     <input type="number" value={weight} min={0} onChange={(e: any) => {
-                      if (!isNaN(parseFloat(e.target.value))) {
+                      if (e.target.value >= 0) {
                         setWeight(e.target.value)
                       }
                     }} className="input-small" />
@@ -577,7 +581,7 @@ const DiagnosticReport = () => {
                   <div>
                     <span className="me-2">Height:</span>
                     <input type="number" value={height} min={0} onChange={(e: any) => {
-                      if (!isNaN(parseFloat(e.target.value))) {
+                      if (e.target.value >= 0) {
                         setHeight(e.target.value)
                       }
                     }} className="input-small" />
@@ -601,7 +605,7 @@ const DiagnosticReport = () => {
               </label>
               <div className="ms-2">
                 <input type="number" className="input-small" min={0} value={indexHeartRate} onChange={(e: any) => {
-                  if (!isNaN(parseFloat(e.target.value))) {
+                  if (e.target.value >= 0) {
                     setIndexHeartRate(e.target.value)
                   }
                 }} />
@@ -647,7 +651,7 @@ const DiagnosticReport = () => {
                     <td>{item.encounterDate ? moment(item.encounterDate).format(FORMAT_DATE) : ""}</td>
                   </tr>
                 )
-              }) : <span>Không có dữ liệu!</span>}
+              }) : <span>No have data!</span>}
             </tbody>
           </table>
         </div>
@@ -974,7 +978,6 @@ const DiagnosticReport = () => {
               <div className="box p-3">
                 <div className="d-flex justify-content-between">
                   <h5 className="fw-bold">Patient details</h5>
-                  {/* <Link className="text-uppercase" to="">view full medial record</Link> */}
                 </div>
                 <div className="d-flex g-3">
                   <div className="w-25 me-3">
@@ -1013,7 +1016,7 @@ const DiagnosticReport = () => {
 
           <div className="mt-4">
             <h5 className="fw-bold">Appointment Result</h5>
-            {bookingDetail?.appointmentStatus.toLowerCase() === "arrived" ? <div className="box">
+            {!isSuccess ? bookingDetail?.appointmentStatus.toLowerCase() === "arrived" ? <div className="box">
               {_renderAppointmentHeader()}
               <div className="appointment-container-body p-3">
                 {isPassStep1 ? _renderStep2() : _renderStep1()}
@@ -1021,11 +1024,23 @@ const DiagnosticReport = () => {
               {_renderAppointmentFooter()}
             </div> : <div className="text-danger text-reset">
               No result appointment
-            </div>}
+            </div> : <section className="success">
+              <div className="success-container">
+                <p className="icon-success mb-4">
+                  <i className="bi bi-check-lg fs-1"></i>
+                </p>
+                <h3 className="text-center mb-3 fw-bold">Success</h3>
+                <p className="text-center mb-4">
+                  Create diagnostic successfully!
+                </p>
+              </div>
+            </section>}
+
 
           </div>
         </div>
       </section>
+
 
       {isShowPopUpArrived && <PopUpArrived handleShowPopUp={setIsShowPopUpArrived} />}
       {isShowPopUpNoShow && <PopUpNoShow handleShowPopUp={setIsShowPopUpNoShow} />}

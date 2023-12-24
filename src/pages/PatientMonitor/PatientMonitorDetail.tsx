@@ -203,7 +203,7 @@ const PatientMonitorDetail = () => {
                   <td>{item.encounterDate ? moment(item.encounterDate).format(FORMAT_DATE) : ""}</td>
                 </tr>
               )
-            }) : <p>Không có dữ liệu!</p>}
+            }) : <p>No have data!</p>}
           </tbody>
         </table>
       </div>
@@ -302,7 +302,7 @@ const PatientMonitorDetail = () => {
                         </td>
                       </tr>
                     );
-                  }) : <span>Không có dữ liệu.</span>}
+                  }) : <span>No have data.</span>}
                 </tbody>
               </table>
             </div>
@@ -394,7 +394,7 @@ const PatientMonitorDetail = () => {
                   <div className="border-bottom mt-2">
                     <div className="d-flex">
                       <div className="me-3">
-                        <img src={USER} alt="" style={{ height: "40px", width: "40px", borderRadius: "100rem" }} />
+                        <img src={patientDetail?.photo[0]?.url ? patientDetail?.photo[0]?.url : USER} alt="" style={{ height: "40px", width: "40px", borderRadius: "100rem" }} />
                       </div>
                       <div>
                         <p className="fw-bold">{item?.nameDoctor}</p>
@@ -403,9 +403,10 @@ const PatientMonitorDetail = () => {
                       </div>
                     </div>
                     <p className="mt-2"><span className="fw-bold color-primary">Final diagnosis: </span> <span>{item?.finalDiagnosis}</span></p>
+                    <p><span>Note: </span>{item?.note}</p>
                   </div>
                 )
-              }) : <span>Không có dữ liệu.</span>}
+              }) : <span>No have data.</span>}
 
             </div>
 

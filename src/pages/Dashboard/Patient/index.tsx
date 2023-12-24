@@ -53,8 +53,16 @@ const PatientDashboard = () => {
   const [genderPatient, setGenderPatient] = useState<any>(null);
   const [appointmentFulfilled, setAppointmentFulfilled] = useState<any>(null);
   const [appointmentCanceled, setAppointmentCanceled] = useState<any>(null);
-  const [newPatient, setNewPatient] = useState<any>(null);
-  const [oldPatient, setOldPatient] = useState<any>(null);
+  const [newPatient, setNewPatient] = useState<any>({
+    newPatientCount: 0,
+    newPatientCountCompare: 0,
+    percentIncrease: 0
+  });
+  const [oldPatient, setOldPatient] = useState<any>({
+    newPatientCount: 0,
+    newPatientCountCompare: 0,
+    percentIncrease: 0
+  });
 
 
   useEffect(() => {
@@ -242,6 +250,11 @@ const PatientDashboard = () => {
         }
       })
       .catch((err: any) => {
+        setNewPatient({
+          newPatientCount: 0,
+          newPatientCountCompare: 0,
+          percentIncrease: 0
+        })
         console.log("error get new patients:", err);
       });
   }
@@ -265,6 +278,11 @@ const PatientDashboard = () => {
         }
       })
       .catch((err: any) => {
+        setOldPatient({
+          newPatientCount: 0,
+          newPatientCountCompare: 0,
+          percentIncrease: 0
+        })
         console.log("error get old patients:", err);
       });
   }
@@ -293,9 +311,7 @@ const PatientDashboard = () => {
       .get(url, defineConfigPost())
       .then((resp: any) => {
         if (resp) {
-          const appointment = Object.entries(resp.data).map(([name, value]) => ({ name, value }));
-          const sortedAppointment = appointment.sort((a: any, b: any) => { return b.value - a.value });
-          setAppointmentCanceled(sortedAppointment);
+          setAppointmentCanceled(resp.data);
         }
       })
       .catch((err: any) => {
@@ -350,6 +366,14 @@ const PatientDashboard = () => {
   };
 
   const optionsLine: any = {
+    scales: {
+      y: {
+        ticks: {
+          stepSize: 1, // Set the step size to 1 to display only integer values
+          beginAtZero: true, // Start the axis at zero
+        },
+      },
+    },
     plugins: {
       legend: {
         display: true,
@@ -511,7 +535,7 @@ const PatientDashboard = () => {
                 </div>
                 <div className="mt-3">
                   <p className="fw-bold">{newPatient?.newPatientCount}</p>
-                  <p className="fw-bold">{newPatient?.newPatientCountCompare}% Increase in {getTotalDaysInMonth(currentDate.getFullYear(), Number(monthNewPatient))} days</p>
+                  <p className="fw-bold">{newPatient?.percentIncrease}% Increase in {getTotalDaysInMonth(currentDate.getFullYear(), Number(monthNewPatient))} days</p>
                   <div className="progress">
                     <div
                       className="progress-bar"
@@ -546,7 +570,7 @@ const PatientDashboard = () => {
                 </div>
                 <div className="mt-3">
                   <p className="fw-bold">{oldPatient?.oldPatientCount}</p>
-                  <p className="fw-bold">{oldPatient?.oldPatientCountCompare}% Increase in {getTotalDaysInMonth(currentDate.getFullYear(), Number(monthOldPatient))} days</p>
+                  <p className="fw-bold">{oldPatient?.percentIncrease}% Increase in {getTotalDaysInMonth(currentDate.getFullYear(), Number(monthOldPatient))} days</p>
                   <div className="progress">
                     <div
                       className="progress-bar"
@@ -571,7 +595,7 @@ const PatientDashboard = () => {
               <p className="title">Patient with most appointment</p>
               <table className="table m-3">
                 <tbody>
-                  {appointmentFulfilled && appointmentFulfilled.length > 0 ? appointmentFulfilled.map((item: any, idx: number) => {
+                  {appointmentFulfilled && appointmentFulfilled?.length > 0 ? appointmentFulfilled.map((item: any, idx: number) => {
                     return (
                       <tr>
                         <th scope="row">{++idx}</th>
@@ -579,7 +603,7 @@ const PatientDashboard = () => {
                         <td>{item.value}</td>
                       </tr>
                     )
-                  }) : <span>Không có dữ liệu!</span>}
+                  }) : <span>No have data!</span>}
                 </tbody>
               </table>
             </div>
@@ -589,15 +613,15 @@ const PatientDashboard = () => {
               <p className="title">Spam Patient</p>
               <table className="table m-3">
                 <tbody>
-                  {appointmentCanceled && appointmentCanceled.length > 0 ? appointmentCanceled.map((item: any, idx: number) => {
+                  {appointmentCanceled && appointmentCanceled?.length > 0 ? appointmentCanceled.map((item: any, idx: number) => {
                     return (
                       <tr>
                         <th scope="row">{++idx}</th>
-                        <td>{item.name}</td>
-                        <td>{item.value}</td>
+                        <td>{item?.username}</td>
+                        <td>{item?.valueSpam}</td>
                       </tr>
                     )
-                  }) : <span>Không có dữ liệu!</span>}
+                  }) : <span>No have data!</span>}
                 </tbody>
               </table>
             </div>

@@ -53,7 +53,7 @@ export const API_GET_PATIENT_APPOINTMENT = "/appointment/patient";
 
 export const SCHEDULE_ALL = "/schedule/schedule-by-doctorId/"
 export const SCHEDULE_CREATE = "/schedule/createSchedule"
-export const SCHEDULE_CANCEL = "/schedule/cancel-Schedule/"
+export const SCHEDULE_UPDATE = "/schedule/update-Schedule/"
 
 export const API_INBOX_ROOM_LIST = "/inbox-room/lists"
 export const API_INBOX_ROOM_DETAIL = "/inbox-room"

@@ -42,7 +42,7 @@ export const appointmentSlice = createSlice({
     },
     setAppointment: (state, action: PayloadAction<any>) => {
       state.appointment = action.payload;
-    },
+    }
   },
 });
 

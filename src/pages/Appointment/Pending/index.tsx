@@ -148,7 +148,7 @@ const AppointmentPending = () => {
                                 </td>}
                             </tr>
                         );
-                    }) : <p>Không có dữ liệu!</p>}
+                    }) : <p>No have data!</p>}
                 </tbody>
             </table>
         );

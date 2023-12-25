@@ -231,13 +231,13 @@ const Staff = () => {
         </thead>
         <tbody>
           {listData ? listData.map((item: any, idx: number) => {
-            const email = item.practitionerTarget?.telecom?.find(
+            const email = item?.practitionerTarget?.telecom?.find(
               (i: any) => i?.system === "email"
             )?.value;
-            const phone = item.practitionerTarget?.telecom?.find(
+            const phone = item?.practitionerTarget?.telecom?.find(
               (i: any) => i?.system === "phone"
             )?.value;
-            const src = item.practitionerTarget?.photo[0]?.url;
+            const src = item?.practitionerTarget?.photo?.[0]?.url;
 
             return (
               <tr className={`${idx % 2 === 1 ? "table-light" : ""}`}>
@@ -245,28 +245,28 @@ const Staff = () => {
                   <img src={src} alt="img staff" style={{ width: "50px", height: "50px", borderRadius: "100rem", objectFit: "cover" }} />
                 </th>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
-                  {item.practitioner?.display}
+                  {item?.practitioner?.display}
                 </td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
-                  {item.practitionerTarget?.gender?.toLowerCase()}
+                  {item?.practitionerTarget?.gender?.toLowerCase()}
                 </td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
-                  {item.practitionerTarget?.birthDate && item.practitionerTarget?.birthDate !== "null" ? moment(item.practitionerTarget?.birthDate).format(FORMAT_DATE) : ""}
+                  {item?.practitionerTarget?.birthDate && item.practitionerTarget?.birthDate !== "null" ? moment(item?.practitionerTarget?.birthDate).format(FORMAT_DATE) : ""}
                 </td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
                   {phone}
                 </td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>{email}</td>
-                <td onClick={() => navigate(`overview/${item.id}`)}>{item.specialty && item.specialty.map((spec: any) => {
+                <td onClick={() => navigate(`overview/${item.id}`)}>{item?.specialty && item?.specialty.map((spec: any) => {
                   return (
-                    <span>{spec.coding[0].display}</span>
+                    <span>{spec?.coding?.[0]?.display}</span>
                   )
                 })}</td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
                   <span className={styleStatusPractitioner(item.active)}>{item.active ? "Active" : "Inactive"}</span>
                 </td>
                 <td onClick={() => navigate(`overview/${item.id}`)}>
-                  <span className={styleStatusPractitioner(item.practitionerTarget.active)}>{item.practitionerTarget.active ? "Active" : "Inactive"}</span>
+                  <span className={styleStatusPractitioner(item?.practitionerTarget?.active)}>{item?.practitionerTarget?.active ? "Active" : "Inactive"}</span>
                 </td>
                 <td>
                   <span className="ms-1 cursor-pointer" onClick={() => handleModify(item.id)}>

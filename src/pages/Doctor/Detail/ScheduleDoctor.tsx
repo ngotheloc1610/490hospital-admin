@@ -33,7 +33,7 @@ const ScheduleDoctor = () => {
     const url_api = process.env.REACT_APP_API_URL;
 
     const navigate = useNavigate();
-    const { practitioner, room, idPractitioner, idMap} = useAppSelector(state => state.practitionerSlice);
+    const { practitioner, room, idPractitioner} = useAppSelector(state => state.practitionerSlice);
     const dispatch = useAppDispatch()
 
     const [schedules, setSchedules] = useState<any>([]);

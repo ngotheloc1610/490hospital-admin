@@ -164,7 +164,7 @@ const InfoPatient = () => {
                   </td>
                   <td onClick={() => { navigate(`/monitor/${item.idEncounter}`); dispatch(setIdAppointment(item?.idAppointment)) }}>{item.doctorName}</td>
                   <td onClick={() => { navigate(`/monitor/${item.idEncounter}`); dispatch(setIdAppointment(item?.idAppointment)) }}>
-                    <span className={styleStatus(item.status)}>{item.status}</span>
+                    <span className={styleStatus(item.status?.toLowerCase())}>{item.status}</span>
                   </td>
                 </tr>
               );

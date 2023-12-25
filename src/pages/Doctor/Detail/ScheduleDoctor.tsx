@@ -33,7 +33,7 @@ const ScheduleDoctor = () => {
     const url_api = process.env.REACT_APP_API_URL;
 
     const navigate = useNavigate();
-    const { practitioner, room, idPractitioner } = useAppSelector(state => state.practitionerSlice);
+    const { practitioner, room, idPractitioner, idMap} = useAppSelector(state => state.practitionerSlice);
     const dispatch = useAppDispatch()
 
     const [schedules, setSchedules] = useState<any>([]);
@@ -63,22 +63,31 @@ const ScheduleDoctor = () => {
 
     useEffect(() => {
         getAllScheduler()
-    }, [triggerScheduler])
+    }, [])
 
     useEffect(() => {
+        const uniqueIds = new Set();
         schedules && schedules.length > 0 && schedules.forEach((item: any) => {
-            dataSchedule.push({
-                Subject: item?.title,
-                Location: practitioner?.desRoom,
-                StartTime: new Date(item?.planningHorizon.start),
-                EndTime: new Date(item?.planningHorizon.end),
-                IsAllDay: false,
-                Description: item?.comment,
-                Status: item?.slotStatus,
-                Id: item.id,
-                ResourceID: item?.slotStatus?.toLowerCase() === "busy" ? 1 : item?.slotStatus?.toLowerCase() === "busy-unavailable" ? 2 : item?.slotStatus?.toLowerCase() === "busy-tentative" ? 3 : 4
-            })
-        })
+            const itemId = item.id;
+        
+            if (!uniqueIds.has(itemId)) {
+                dataSchedule.push({
+                    Subject: item?.title,
+                    Location: practitioner?.desRoom,
+                    StartTime: new Date(item?.planningHorizon.start),
+                    EndTime: new Date(item?.planningHorizon.end),
+                    Description: item?.comment,
+                    Status: item?.slotStatus,
+                    Id: itemId,
+                    ResourceID: item?.slotStatus?.toString()?.toLowerCase() === "busy" ? 1 :
+                                 item?.slotStatus?.toString()?.toLowerCase() === "busy-unavailable" ? 2 :
+                                 item?.slotStatus?.toString()?.toLowerCase() === "busy-tentative" ? 3 : 4
+                });
+                
+                uniqueIds.add(itemId);
+            }
+        });
+
     }, [schedules])
 
     const getAllScheduler = () => {
@@ -201,7 +210,7 @@ const ScheduleDoctor = () => {
                 </div>
                 <div className="mb-3">
                     <label className="fw-bold">Status: </label>
-                    <span className={styleSchedule(props?.Status?.toLowerCase())}> {props?.Status}</span>
+                    <span className={styleSchedule(props?.Status?.toString()?.toLowerCase())}> {props?.Status}</span>
                 </div>
                 <div className="mb-3">
                     <label className="fw-bold">Notes: </label>
